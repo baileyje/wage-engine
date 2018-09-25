@@ -1,0 +1,9 @@
+{
+    "name": "nge",
+    "description": "node game engine",
+    "version": "0.0.1",
+    "dependencies": {
+        "coffeescript": "2.3.1",
+        "terminal-kit": "^1.26.2"
+    }
+}
