@@ -1,14 +1,7 @@
 #include "jsrt/util.h"
 
-std::string jsErrorCodeToString(JsErrorCode jsErrorCode) {
-    bool hasException = false;
-    JsHasException(&hasException);
-    if (hasException) {
-      JsValueRef exception;
-      JsGetAndClearException(&exception);
-      printException(exception);
-    }
-    switch (jsErrorCode) {
+std::string errorCodeToString(int code) {
+   switch (code) {
     case JsNoError:                            return "JsNoError";
     case JsErrorCategoryUsage:                 return "JsErrorCategoryUsage";
     case JsErrorInvalidArgument:               return "JsErrorInvalidArgument";
@@ -66,6 +59,19 @@ std::string jsErrorCodeToString(JsErrorCode jsErrorCode) {
     }
 }
 
+void handleJsError(JsErrorCode errCode, const char* cmd) {
+  if (errCode != JsErrorScriptCompile && errCode != JsErrorScriptException) {
+    printf("Error %s at '%s'\n", errorCodeToString(errCode).c_str(), cmd);  
+  }
+  bool hasException = false;
+  JsHasException(&hasException);
+  if (hasException) {
+    JsValueRef exception;
+    JsGetAndClearException(&exception);
+    printException(errCode, exception);
+  }  
+}
+
 char* stringFromValue(JsValueRef valueRef) {
   JsValueRef strValue;
   JsValueType type;
@@ -84,76 +90,81 @@ char* stringFromValue(JsValueRef valueRef) {
   return cStr;
 }
 
-JsValueRef valueFromString(const char* string) {
+JsValueRef valueFromString(std::string string) {
   JsValueRef value;
-  FAIL_CHECK(JsCreateString(string, strlen(string), &value));
+  FAIL_CHECK(JsCreateString(string.c_str(), string.length(), &value));
   return value;
 }
 
-void printException(JsValueRef exception) {
-  int line;
-  JsValueRef lineProperty = getProperty(exception, "line");
-  JsNumberToInt(lineProperty, &line);
-
-  int column;
-  JsValueRef columnProperty = getProperty(exception, "column");
-  JsNumberToInt(columnProperty, &column);
- 
+void printException(JsErrorCode errCode, JsValueRef exception) {
   char *exceptionStr = stringFromValue(exception);
   printf("Exception -> %s \n", exceptionStr);
-  printf("At: %d:%d\n", line, column);
   free(exceptionStr);
+  printf("%s\n", errorCodeToString(errCode).c_str());
+  if (errCode == JsErrorScriptCompile) {
+    int line;
+    FAIL_CHECK(JsNumberToInt(JsProperty("line").get(exception), &line));
+
+    int column;
+    FAIL_CHECK(JsNumberToInt(JsProperty("column").get(exception), &column));   
+    printf("At: %d:%d\n", line, column);
+  }
+}
+
+JsPropertyIdRef createProperty(std::string name) {
+  JsPropertyIdRef propertyId = JS_INVALID_REFERENCE;
+  FAIL_CHECK(JsCreatePropertyId(name.c_str(), name.length(),  &propertyId));
+  return propertyId;
 }
 
 JsValueRef getProperty(JsValueRef object, std::string name) {
-  JsPropertyIdRef propertyId = JS_INVALID_REFERENCE;
   JsValueRef property = JS_INVALID_REFERENCE;
-  JsCreatePropertyId(name.c_str(), name.length(),  &propertyId);
-  JsGetProperty(object, propertyId, &property);
+  FAIL_CHECK(JsGetProperty(object, createProperty(name), &property));
+  return property;
 }
 
-bool createNamedFunction(const char* nameString, JsNativeFunction callback, JsValueRef* functionVar) {
-  FAIL_CHECK(JsCreateNamedFunction(valueFromString(nameString), callback, nullptr, functionVar));
-  return true;
+// JsStringWrapper
+
+JsStringWrapper::JsStringWrapper(JsValueRef valueRef) {
+  char* cStr = stringFromValue(valueRef);
+  str.assign(cStr);
+  free(cStr);
 }
 
-bool installObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction) {
-  JsValueRef propertyValueRef;
-  JsPropertyIdRef propertyId;
-  FAIL_CHECK(JsCreatePropertyId(name, strlen(name), &propertyId));
-  if (!createNamedFunction(name, nativeFunction, &propertyValueRef)) {
-      return false;
-  }
-  FAIL_CHECK(JsSetProperty(object, propertyId, propertyValueRef, true));
-  return true;
+JsStringWrapper::JsStringWrapper(std::string str) : str(str) {
 }
 
-JSString::JSString(JsValueRef ref) : valueRef(ref)  {  
+JsStringWrapper::~JsStringWrapper() {  
 }
 
-JSString::JSString(char* cSrt)  {
-  str.assign(cSrt);
-}
-
-JSString::JSString(std::string str) : str(str) {
-}
-
-JSString::~JSString() {  
-}
-
-std::string JSString::getString() {
-  if (str.empty()) {
-    char* cStr = stringFromValue(valueRef);
-    str.assign(cStr);
-    free(cStr);    
-  }
+std::string JsStringWrapper::getString() {
   return str;
 }
 
-const char* JSString::getCString() {
+const char* JsStringWrapper::getCString() {
   return getString().c_str();
 }
 
-JsValueRef JSString::getJSRef() {
-  return valueRef;
+JsValueRef JsStringWrapper::getJsRef() {
+  return valueFromString(str);
+}
+
+// JS Property
+
+JsProperty::JsProperty(std::string name) {
+  FAIL_CHECK(JsCreatePropertyId(name.c_str(), name.length(),  &propertyId));
+}
+
+JsProperty::~JsProperty() {  
+  // printf("DEINIT\n");
+}
+
+JsValueRef JsProperty::get(JsValueRef object) {
+  JsValueRef property = JS_INVALID_REFERENCE;
+  FAIL_CHECK(JsGetProperty(object, propertyId, &property));
+  return property;
+}
+
+void JsProperty::set(JsValueRef object, JsValueRef value) {
+  FAIL_CHECK(JsSetProperty(object, propertyId, value, true));
 }

@@ -4,13 +4,13 @@
 ModuleManager* ModuleManager::shared;
 
 // TODO: Move to singleton
-ModuleManager::ModuleManager(std::string moduleRoot) : moduleRoot(moduleRoot), currentSourceContext(0), loadedModulesLength(0), loadQueue(new LoadQueue()) {
+ModuleManager::ModuleManager(std::string moduleRoot) : moduleRoot(moduleRoot), currentSourceContext(0), loadQueue(new LoadQueue()) {
 }
 
 ModuleManager::~ModuleManager() {
   delete loadQueue;
-  for (int i = 0; i < loadedModulesLength; i++) {
-    free(loadedModules[i]);
+  for (const auto &pair : loadedModules) {
+    free(pair.second);
   }
 }
 
@@ -29,67 +29,55 @@ void ModuleManager::update() {
 
 JsModuleRecord ModuleManager::loadModule(JsModuleRecord importer, std::string path) {
   // printf("Requested: %s\n", path);
-  JsValueRef sepcifierRef;
-  JsCreateString(path.c_str(), path.length(), &sepcifierRef);
   bool is_new_module;
 
-  for (int i = 0; i < loadedModulesLength; i++) {
-    LoadedModule* loaded = loadedModules[i];
-    // printf("requesting: %s\n", path);
-    // printf("checking: %s\n", loaded->path);    
-    if (loaded->path.compare(path) == 0) {
-      // printf("Returning same: %s\n", path);
-      return loaded->module;
-    }    
+  LoadedModule* loaded = loadedModules[path];
+  if (loaded != NULL) {
+    return loaded;
   }
-
-  JsModuleRecord module_record = createModule(path, importer, path.c_str(), &is_new_module);
-  
-  LoadedModule* loaded = (LoadedModule*)malloc(sizeof(LoadedModule));
-  loaded->module = module_record;
+  JsModuleRecord moduleRecord = createModule(path, importer, path, &is_new_module);  
+  loaded = (LoadedModule*)malloc(sizeof(LoadedModule));
+  loaded->module = moduleRecord;
   loaded->path = path;  
-  loadedModules[loadedModulesLength++] = loaded;
+  loadedModules[path] = loaded;
   // printf("ModuleRoot: %s\n", moduleRoot.c_str());
   // printf("ModulePath: %s\n", (moduleRoot +  path).c_str());
   char* source = readFile( (moduleRoot +  path).c_str() );
   // printf("SRC: %s\n", source);
   LoadQueue::Task* task = (LoadQueue::Task*)malloc(sizeof(LoadQueue::Task));  
   task->sourceContext = currentSourceContext++;
-  task->module = module_record;
+  task->module = moduleRecord;
   task->source = source;
   task->sourceLength = strlen(source);
   loadQueue->push(task);  
-  return module_record; 
+  return moduleRecord; 
 }
 
-JsModuleRecord ModuleManager::createModule(std::string specifier, JsModuleRecord parent_record, const char* url, bool *out_is_new) {
+JsModuleRecord ModuleManager::createModule(std::string specifier, JsModuleRecord parentRecord, std::string url, bool *out_is_new) {
   // printf("Module: %s\n", specifier);
-  JsModuleRecord module_record;
-  JsValueRef     specifier_ref;
-	JsValueRef     url_ref;
-  *out_is_new = true;
-	JsCreateString(specifier.c_str(), specifier.length(), &specifier_ref);
-	JsCreateString(url, strlen(url), &url_ref);
-  JsInitializeModuleRecord(parent_record, specifier_ref, &module_record);
-  JsSetModuleHostInfo(module_record, JsModuleHostInfo_HostDefined, specifier_ref);
+  JsModuleRecord moduleRecord;  	
+  *out_is_new = true;  
+  JsValueRef sepcifierRef = valueFromString(specifier);  
+  // JsValueRef urlRef = valueFromString(url);
+  JsInitializeModuleRecord(parentRecord, sepcifierRef, &moduleRecord);
+  JsSetModuleHostInfo(moduleRecord, JsModuleHostInfo_HostDefined, sepcifierRef);
   // Setup callbacks
-  JsSetModuleHostInfo(module_record, JsModuleHostInfo_FetchImportedModuleCallback, (void*)ModuleManager::fetchImportedModule);
-  JsSetModuleHostInfo(module_record, JsModuleHostInfo_FetchImportedModuleFromScriptCallback, (void*)ModuleManager::fetchDynamicImport);
-  JsSetModuleHostInfo(module_record, JsModuleHostInfo_NotifyModuleReadyCallback, (void*)ModuleManager::notifyModuleReady);
-  JsAddRef(module_record, NULL);
-  return module_record;
+  JsSetModuleHostInfo(moduleRecord, JsModuleHostInfo_FetchImportedModuleCallback, (void*)ModuleManager::fetchImportedModule);
+  JsSetModuleHostInfo(moduleRecord, JsModuleHostInfo_FetchImportedModuleFromScriptCallback, (void*)ModuleManager::fetchDynamicImport);
+  JsSetModuleHostInfo(moduleRecord, JsModuleHostInfo_NotifyModuleReadyCallback, (void*)ModuleManager::notifyModuleReady);
+  JsAddRef(moduleRecord, NULL);
+  return moduleRecord;
 }
 
 void ModuleManager::parseModule(LoadQueue::Task* task) {
   // printf("SRC %s\n", task->source);
   JsValueRef exception;  
-  JsErrorCode  errorCode = JsParseModuleSource(task->module, task->sourceContext, (BYTE*)task->source, (unsigned int)task->sourceLength, JsParseModuleSourceFlags_DataIsUTF8, &exception);
-  FAIL_CHECK(errorCode);
-  // if (errorCode == JsErrorScriptCompile) {
-  //   printException(exception);
-  // } else {
-    
-  // }
+  JsErrorCode  errorCode = JsParseModuleSource(task->module, task->sourceContext, (BYTE*)task->source, (unsigned int)task->sourceLength, JsParseModuleSourceFlags_DataIsUTF8, &exception);  
+  if (errorCode == JsErrorScriptCompile) {
+    printException(errorCode, exception);
+  } else {
+    FAIL_CHECK(errorCode);  
+  }
 }
 
 void ModuleManager::evaluateModule(LoadQueue::Task* task) {
@@ -97,11 +85,12 @@ void ModuleManager::evaluateModule(LoadQueue::Task* task) {
   FAIL_CHECK(JsModuleEvaluation(task->module, &result));  
 }
 
-JsErrorCode CHAKRA_CALLBACK ModuleManager::fetchImportedModule(JsModuleRecord importer, JsValueRef module_name, JsModuleRecord *outModule) {
-  char* moduleName = stringFromValue(module_name); 
+JsErrorCode CHAKRA_CALLBACK ModuleManager::fetchImportedModule(JsModuleRecord importer, JsValueRef fetchName, JsModuleRecord *outModule) {
+  // printf("Imported\n");
+  char* moduleName = stringFromValue(fetchName);
   // printf("Importing - %s\n", moduleName);
-  JsModuleRecord module_record = ModuleManager::shared->loadModule(importer, moduleName);  
-  *outModule = module_record;
+  JsModuleRecord moduleRecord = ModuleManager::shared->loadModule(importer, moduleName);  
+  *outModule = moduleRecord;
   free(moduleName);
   return JsNoError;
 }

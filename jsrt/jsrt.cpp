@@ -4,11 +4,13 @@
 
 #include "jsrt/util.h"
 #include "jsrt/module_manager.h"
+#include "jsrt/js_object_wrapper.h"
 
 /**
  * Global callback
  **/
 static JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
+static void CHAKRA_CALLBACK promiseContinuationCallback(JsValueRef task, void *callbackState);
 
 Jsrt::Jsrt() {
 }
@@ -43,6 +45,8 @@ void Jsrt::init(Context* context) {
   FAIL_CHECK(JsSetModuleHostInfo(moduleRecord, JsModuleHostInfo_FetchImportedModuleFromScriptCallback, (void*)ModuleManager::fetchDynamicImport));
   FAIL_CHECK(JsSetModuleHostInfo(moduleRecord, JsModuleHostInfo_NotifyModuleReadyCallback, (void*)ModuleManager::notifyModuleReady));
 
+  FAIL_CHECK(JsSetPromiseContinuationCallback(promiseContinuationCallback, (void*)this));
+
   attachGlobals();
 
   loadModule("boot.js");
@@ -50,13 +54,11 @@ void Jsrt::init(Context* context) {
   JsAddRef(jsRuntime, nullptr);  
 }
 
-
 void Jsrt::start(Context* context) {
   invoke("core.engine.start();");
 }
 
 void Jsrt::stop(Context* context) {
-  printf("WTF!!\n");
   invoke("core.engine.stop();");
 }
 
@@ -68,51 +70,60 @@ void Jsrt::deinit(Context* context) {
 }
 
 void Jsrt::attachGlobals() {
-  JsValueRef global;
-  FAIL_CHECK(JsGetGlobalObject(&global));
-  
-  JsValueRef console;
-  FAIL_CHECK(JsCreateObject(&console));
-  installObjectsOnObject(console, "log", consoleLogCallback);
-
-  JsPropertyIdRef consoleName;
-  FAIL_CHECK(JsCreatePropertyId("console", strlen("console"), &consoleName));
-  FAIL_CHECK(JsSetProperty(global, consoleName, console, true));
-
-  JsValueRef core;
-  FAIL_CHECK(JsCreateObject(&core));
-  JsPropertyIdRef coreName;
-  FAIL_CHECK(JsCreatePropertyId("core", strlen("core"), &coreName));
-  FAIL_CHECK(JsSetProperty(global, coreName, core, true));
+  JsValueRef globalRef;
+  FAIL_CHECK(JsGetGlobalObject(&globalRef));
+  JsObjectWrapper global(globalRef);  
+  JsObjectWrapper console;
+  console.set("log", consoleLogCallback);
+  global.set("console", console);  
+  global.set("core", JsObjectWrapper());
 }
 
 void Jsrt::update(Context* context) {
-  // Module work first
+  // Callback work
+  JsValueRef globalRef;
+  FAIL_CHECK(JsGetGlobalObject(&globalRef));
+  while(!callbackQueue.empty()) {
+    printf("Here2!\n");
+    Callback* callback = callbackQueue.front();
+    callbackQueue.pop();
+    JsValueRef result;
+    FAIL_CHECK(JsCallFunction(callback->function, &globalRef, 1, &result));
+    JsRelease(callback->function, nullptr);
+    free(callback);
+    
+  }
+  // Module work
   moduleManager->update();
-  // Engine next
+  // Engine upate
   invoke("core.engine.update();");
 }
 
 void Jsrt::loadModule(std::string name) {
-  moduleManager->loadModule(NULL, name.c_str());
+  moduleManager->loadModule(NULL, name);
 }
 
 JsValueRef Jsrt::invoke(std::string source) {
   JsValueRef result;
-  FAIL_CHECK(JsRun(valueFromString(source.c_str()), moduleManager->currentSourceContext++, valueFromString("jsrt"), JsParseScriptAttributeNone, &result));
+  FAIL_CHECK(JsRun(valueFromString(source), moduleManager->currentSourceContext++, valueFromString("jsrt"), JsParseScriptAttributeNone, &result));
   return result;
+}
+
+void Jsrt::pushCallback(Callback* callback) {
+  callbackQueue.push(callback);
 }
 
 /**
  * Global callbacks
  * */
 
-static JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
+JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
     printf("-: ");
     for (unsigned int i = 1; i < argumentCount; i++) {
-      printf(" ");
-      JSString value(arguments[i]);
-      printf("%s", value.getCString());
+      printf(" ");      
+      char* value = stringFromValue(arguments[i]);
+      printf("%s", value);
+      free(value);
     }
     printf("\n");
     JsValueRef undefinedValue;
@@ -122,6 +133,22 @@ static JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, Js
     else {
         return nullptr;
     }
+}
+
+void promiseContinuationCallback(JsValueRef task, void *callbackState) {
+    printf("Prom!\n");
+    // Assert(task != JS_INVALID_REFERENCE);
+    // Assert(callbackState != JS_INVALID_REFERENCE);
+    Jsrt * runtime = (Jsrt *)callbackState;
+
+    Callback* callback = (Callback*)malloc(sizeof(Callback));  
+    callback->function = task;
+
+    runtime->pushCallback(callback);
+
+    JsAddRef(task, nullptr);
+    // WScriptJsrt::CallbackMessage *msg = new WScriptJsrt::CallbackMessage(0, task);
+    // messageQueue->InsertSorted(msg);
 }
 
 

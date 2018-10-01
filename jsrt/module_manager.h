@@ -3,6 +3,8 @@
 
 #include "ChakraCore.h"
 #include <string>
+#include <unordered_map>
+
 
 #include "jsrt/load_queue.h"
 
@@ -27,7 +29,7 @@ public:
 
   JsModuleRecord loadModule(JsModuleRecord importer, std::string path);
   
-  JsModuleRecord createModule(std::string specifier, JsModuleRecord parentRecord, const char* url, bool *out_is_new);
+  JsModuleRecord createModule(std::string specifier, JsModuleRecord parentRecord, const std::string, bool *out_is_new);
 
   static ModuleManager* shared;
 
@@ -48,9 +50,7 @@ private:
 
   void evaluateModule(LoadQueue::Task* task);
 
-  LoadedModule* loadedModules[128];
-
-  int loadedModulesLength;
+  std::unordered_map<std::string, LoadedModule*> loadedModules;
 
   LoadQueue* loadQueue;
 

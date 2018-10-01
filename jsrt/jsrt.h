@@ -6,6 +6,13 @@
 
 #include "core/system.h"
 #include "jsrt/module_manager.h"
+#include "jsrt/js_object_wrapper.h"
+
+struct Callback {
+	
+  JsValueRef function;
+
+};
 
 class Jsrt : public System {
 
@@ -27,6 +34,8 @@ public:
   
   void loadModule(std::string name);
 
+  void pushCallback(Callback* callback);
+
 private:
 
   void attachGlobals();
@@ -37,7 +46,7 @@ private:
   
   JsValueRef invoke(std::string source);
 
-  JsValueRef undefinedValue;
+  std::queue<Callback*> callbackQueue;
 };
 
 #endif // JSRT_H

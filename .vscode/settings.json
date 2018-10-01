@@ -39,6 +39,9 @@
         "__string": "cpp",
         "istream": "cpp",
         "__functional_base_03": "cpp",
-        "__tuple": "cpp"
+        "__tuple": "cpp",
+        "__functional_03": "cpp",
+        "unordered_map": "cpp",
+        "__hash_table": "cpp"
     }
 }

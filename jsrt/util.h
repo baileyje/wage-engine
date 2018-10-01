@@ -6,17 +6,17 @@
 
 std::string jsErrorCodeToString(JsErrorCode jsErrorCode);
 
-bool installObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
-
-bool createNamedFunction(const char* nameString, JsNativeFunction callback, JsValueRef* functionVar);
-
 char* stringFromValue(JsValueRef value);
 
-JsValueRef valueFromString(const char* string);
+JsValueRef valueFromString(std::string);
 
-void printException(JsValueRef exception);
+void printException(JsErrorCode errCode, JsValueRef exception);
+
+JsPropertyIdRef createProperty(std::string name);
 
 JsValueRef getProperty(JsValueRef object, std::string name);
+
+void handleJsError(JsErrorCode errCode, const char* cmd);
 
 #define FAIL_CHECK(cmd)                     \
     do                                      \
@@ -24,35 +24,54 @@ JsValueRef getProperty(JsValueRef object, std::string name);
         JsErrorCode errCode = cmd;          \
         if (errCode != JsNoError)           \
         {                                   \
-            printf("Error %s at '%s'\n",    \
-              jsErrorCodeToString(errCode).c_str(), #cmd);             \
+            handleJsError(errCode, #cmd);   \
         }                                   \
-    } while(0)
+    } while(0)                              \
 
 
-class JSString {
+
+/**
+ * JS String Wrapper
+ */
+
+class JsStringWrapper {
 
 public:
 
-  JSString(JsValueRef ref);
+  JsStringWrapper(JsValueRef ref);
 
-  JSString(char* cSrt);
+  JsStringWrapper(std::string str);  
 
-  JSString(std::string str);  
-
-  ~JSString();
+  ~JsStringWrapper();
 
   std::string getString();
 
   const char* getCString();
 
-  JsValueRef getJSRef();
+  JsValueRef getJsRef();
 
 private:
 
-  JsValueRef valueRef;
-
   std::string str;
+
+};
+
+
+class JsProperty {
+
+public:
+
+  JsProperty(std::string name);
+
+  ~JsProperty();
+
+  JsValueRef get(JsValueRef object);
+
+  void set(JsValueRef object, JsValueRef value);
+
+private:
+
+  JsPropertyIdRef propertyId;
 
 };
 
