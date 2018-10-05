@@ -1,6 +1,6 @@
 class Engine {
 
-  constructor(config = {}) {    
+  constructor(config = {}) {
   }
 
   init() {    
@@ -12,8 +12,12 @@ class Engine {
     console.log('Starting Engine');
   }
 
-  update() {
-    // console.log('Updating Engine');
+  update(ctx) {
+    // console.log('Update');
+  }
+
+  fixedUpdate(ctx) {
+    // console.log('Fixed Update');
   }
 
   stop() {

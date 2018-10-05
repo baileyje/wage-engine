@@ -22,6 +22,7 @@ module.exports = class Engine
     @phys = config.phys or new SimplePhysicsEngine()
     @renderer = config.renderer or new TextRenderEngine()
     @input_manager = config.input_manager or new DefaultInputManager()
+    @accum
 
   ###
     Start the enging and starts the game loop.

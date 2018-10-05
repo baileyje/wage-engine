@@ -5,12 +5,15 @@
 #include "jsrt/util.h"
 #include "jsrt/module_manager.h"
 #include "jsrt/js_object_wrapper.h"
+#include "jsrt/js_system.h"
 
 /**
  * Global callback
  **/
 static JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
+static JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 static void CHAKRA_CALLBACK promiseContinuationCallback(JsValueRef task, void *callbackState);
+
 
 Jsrt::Jsrt() {
 }
@@ -20,6 +23,7 @@ Jsrt::~Jsrt() {
   
 void Jsrt::init(Context* context) {
   printf("Initializing JSRT.\n");
+  core = context->core;
   
   moduleManager = new ModuleManager(context->rootPath + "/engine/");
   ModuleManager::shared = moduleManager;
@@ -54,17 +58,8 @@ void Jsrt::init(Context* context) {
   JsAddRef(jsRuntime, nullptr);  
 }
 
-void Jsrt::start(Context* context) {
-  invoke("core.engine.start();");
-}
-
-void Jsrt::stop(Context* context) {
-  invoke("core.engine.stop();");
-}
-
 void Jsrt::deinit(Context* context) {
     printf("Deinitializing JSRT.\n");
-    invoke("core.engine.deinit();");
     // FAIL_CHECK(JsSetCurrentContext(JS_INVALID_REFERENCE));
     // FAIL_CHECK(JsDisposeRuntime(jsRuntime));
 }
@@ -76,7 +71,9 @@ void Jsrt::attachGlobals() {
   JsObjectWrapper console;
   console.set("log", consoleLogCallback);
   global.set("console", console);  
-  global.set("core", JsObjectWrapper());
+  JsObjectWrapper core;
+  core.set("addSystem", addSystemCallback, this);
+  global.set("core", core);  
 }
 
 void Jsrt::update(Context* context) {
@@ -84,19 +81,15 @@ void Jsrt::update(Context* context) {
   JsValueRef globalRef;
   FAIL_CHECK(JsGetGlobalObject(&globalRef));
   while(!callbackQueue.empty()) {
-    printf("Here2!\n");
     Callback* callback = callbackQueue.front();
     callbackQueue.pop();
     JsValueRef result;
     FAIL_CHECK(JsCallFunction(callback->function, &globalRef, 1, &result));
     JsRelease(callback->function, nullptr);
-    free(callback);
-    
+    free(callback);  
   }
   // Module work
   moduleManager->update();
-  // Engine upate
-  invoke("core.engine.update();");
 }
 
 void Jsrt::loadModule(std::string name) {
@@ -113,30 +106,7 @@ void Jsrt::pushCallback(Callback* callback) {
   callbackQueue.push(callback);
 }
 
-/**
- * Global callbacks
- * */
-
-JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
-    printf("-: ");
-    for (unsigned int i = 1; i < argumentCount; i++) {
-      printf(" ");      
-      char* value = stringFromValue(arguments[i]);
-      printf("%s", value);
-      free(value);
-    }
-    printf("\n");
-    JsValueRef undefinedValue;
-    if (JsGetUndefinedValue(&undefinedValue) == JsNoError) {
-        return undefinedValue;
-    }
-    else {
-        return nullptr;
-    }
-}
-
 void promiseContinuationCallback(JsValueRef task, void *callbackState) {
-    printf("Prom!\n");
     // Assert(task != JS_INVALID_REFERENCE);
     // Assert(callbackState != JS_INVALID_REFERENCE);
     Jsrt * runtime = (Jsrt *)callbackState;
@@ -147,8 +117,41 @@ void promiseContinuationCallback(JsValueRef task, void *callbackState) {
     runtime->pushCallback(callback);
 
     JsAddRef(task, nullptr);
-    // WScriptJsrt::CallbackMessage *msg = new WScriptJsrt::CallbackMessage(0, task);
-    // messageQueue->InsertSorted(msg);
 }
 
+/**
+ * Global callbacks
+ * */
 
+JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
+  printf("-: ");
+  for (unsigned int i = 1; i < argumentCount; i++) {
+    printf(" ");      
+    char* value = stringFromValue(arguments[i]);
+    printf("%s", value);
+    free(value);
+  }
+  printf("\n");
+  JsValueRef undefinedValue;
+  if (JsGetUndefinedValue(&undefinedValue) == JsNoError) {
+      return undefinedValue;
+  }
+  else {
+      return nullptr;
+  }
+}
+
+JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
+  // printf("Added JS system...\n");
+  Jsrt * runtime = (Jsrt *)callbackState;
+  JsSystem* system = new JsSystem(arguments[1]);
+  runtime->core->add(system);
+  // TODO: Break this out
+  JsValueRef undefinedValue;
+  if (JsGetUndefinedValue(&undefinedValue) == JsNoError) {
+      return undefinedValue;
+  }
+  else {
+      return nullptr;
+  }
+}

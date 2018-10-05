@@ -23,18 +23,16 @@ public:
   ~Jsrt();
 
   void init(Context* context);
-  
-  void start(Context* context);
-  
-  void update(Context* context);
 
-  void stop(Context* context);
+  void update(Context* context);
 
   void deinit(Context* context);
   
   void loadModule(std::string name);
 
   void pushCallback(Callback* callback);
+
+  Core* core;
 
 private:
 
@@ -47,6 +45,7 @@ private:
   JsValueRef invoke(std::string source);
 
   std::queue<Callback*> callbackQueue;
+  
 };
 
 #endif // JSRT_H

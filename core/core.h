@@ -4,7 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "core/system.h"
+
+
+class Context;
+class System;
 
 class Core {
 
@@ -26,9 +29,11 @@ private:
 
   void update();
 
+  void fixedUpdate();
+
   void deinit();
 
-  Context context;
+  Context* context;
 
   std::vector<System *> systems;
   

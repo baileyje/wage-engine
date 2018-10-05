@@ -4,19 +4,19 @@
 ModuleManager* ModuleManager::shared;
 
 // TODO: Move to singleton
-ModuleManager::ModuleManager(std::string moduleRoot) : moduleRoot(moduleRoot), currentSourceContext(0), loadQueue(new LoadQueue()) {
+ModuleManager::ModuleManager(std::string moduleRoot) : currentSourceContext(0), moduleRoot(moduleRoot) {
 }
 
 ModuleManager::~ModuleManager() {
-  delete loadQueue;
   for (const auto &pair : loadedModules) {
     free(pair.second);
   }
 }
 
 void ModuleManager::update() {
-  while(!loadQueue->empty()) {    
-    LoadQueue::Task* task = loadQueue->pop();
+  while(!loadQueue.empty()) {    
+    LoadTask* task = loadQueue.front();
+    loadQueue.pop();
     if (task->source != NULL) {
       parseModule(task);
       free(task->source);          
@@ -44,12 +44,12 @@ JsModuleRecord ModuleManager::loadModule(JsModuleRecord importer, std::string pa
   // printf("ModulePath: %s\n", (moduleRoot +  path).c_str());
   char* source = readFile( (moduleRoot +  path).c_str() );
   // printf("SRC: %s\n", source);
-  LoadQueue::Task* task = (LoadQueue::Task*)malloc(sizeof(LoadQueue::Task));  
+  LoadTask* task = (LoadTask*)malloc(sizeof(LoadTask));  
   task->sourceContext = currentSourceContext++;
   task->module = moduleRecord;
   task->source = source;
-  task->sourceLength = strlen(source);
-  loadQueue->push(task);  
+  task->sourceLength = strlen(source); 
+  loadQueue.push(task);  
   return moduleRecord; 
 }
 
@@ -69,7 +69,7 @@ JsModuleRecord ModuleManager::createModule(std::string specifier, JsModuleRecord
   return moduleRecord;
 }
 
-void ModuleManager::parseModule(LoadQueue::Task* task) {
+void ModuleManager::parseModule(LoadTask* task) {
   // printf("SRC %s\n", task->source);
   JsValueRef exception;  
   JsErrorCode  errorCode = JsParseModuleSource(task->module, task->sourceContext, (BYTE*)task->source, (unsigned int)task->sourceLength, JsParseModuleSourceFlags_DataIsUTF8, &exception);  
@@ -80,7 +80,7 @@ void ModuleManager::parseModule(LoadQueue::Task* task) {
   }
 }
 
-void ModuleManager::evaluateModule(LoadQueue::Task* task) {
+void ModuleManager::evaluateModule(LoadTask* task) {
   JsValueRef result;
   FAIL_CHECK(JsModuleEvaluation(task->module, &result));  
 }
@@ -102,10 +102,10 @@ JsErrorCode CHAKRA_CALLBACK ModuleManager::fetchDynamicImport(JsSourceContext im
   
 JsErrorCode CHAKRA_CALLBACK ModuleManager::notifyModuleReady(JsModuleRecord module, JsValueRef exception) {
   // printf("Module Ready\n");
-  LoadQueue::Task* task = (LoadQueue::Task*)malloc(sizeof(LoadQueue::Task));  
+  LoadTask* task = (LoadTask*)malloc(sizeof(LoadTask));  
   task->module = module;
   task->source = NULL;
-  ModuleManager::shared->loadQueue->push(task);    
+  ModuleManager::shared->loadQueue.push(task);    
 	return JsNoError;
 }
 

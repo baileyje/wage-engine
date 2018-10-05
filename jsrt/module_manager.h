@@ -4,10 +4,14 @@
 #include "ChakraCore.h"
 #include <string>
 #include <unordered_map>
+#include <queue>
 
-
-#include "jsrt/load_queue.h"
-
+struct LoadTask {
+  JsModuleRecord module;
+  char* source;
+  size_t sourceLength;
+  JsSourceContext sourceContext;	
+};
 
 struct LoadedModule {
 	
@@ -46,13 +50,13 @@ public:
 
 private: 
   
-  void parseModule(LoadQueue::Task* task);
+  void parseModule(LoadTask* task);
 
-  void evaluateModule(LoadQueue::Task* task);
+  void evaluateModule(LoadTask* task);
 
   std::unordered_map<std::string, LoadedModule*> loadedModules;
 
-  LoadQueue* loadQueue;
+  std::queue<LoadTask*> loadQueue;
 
   std::string moduleRoot;
 };

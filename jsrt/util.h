@@ -69,6 +69,10 @@ public:
 
   void set(JsValueRef object, JsValueRef value);
 
+  void set(JsValueRef object, double value);
+
+  JsValueRef invoke(JsValueRef object, JsValueRef* args, size_t argCount);
+
 private:
 
   JsPropertyIdRef propertyId;

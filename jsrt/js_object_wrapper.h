@@ -19,9 +19,17 @@ public:
 
   void set(std::string propertyName, JsValueRef value);
 
+  void set(std::string propertyName, double value);
+
   void set(std::string propertyName, JsObjectWrapper object);
 
   void set(std::string propertyName, JsNativeFunction nativeFunction);
+
+  void set(std::string propertyName, JsNativeFunction nativeFunction, void* callbackState);
+
+  JsValueRef invoke(std::string propertyName, JsValueRef* args, size_t argCount);
+
+  JsValueRef invoke(std::string propertyName);
 
   JsValueRef get();
 

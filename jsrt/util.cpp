@@ -168,3 +168,21 @@ JsValueRef JsProperty::get(JsValueRef object) {
 void JsProperty::set(JsValueRef object, JsValueRef value) {
   FAIL_CHECK(JsSetProperty(object, propertyId, value, true));
 }
+
+void JsProperty::set(JsValueRef object, double value) {
+  JsValueRef valueRef;
+  FAIL_CHECK(JsDoubleToNumber(value, &valueRef));
+  set(object, valueRef);
+}
+
+JsValueRef JsProperty::invoke(JsValueRef object, JsValueRef* args, size_t argCount) {  
+  int fullCount = argCount + 1;
+  JsValueRef fullArgs[fullCount];
+  fullArgs[0] = object;
+  for(int i = 0; i < argCount; i++) {
+    fullArgs[i + 1] = args[i];
+  }
+  JsValueRef result;
+  FAIL_CHECK(JsCallFunction(get(object), fullArgs, (unsigned short) fullCount, &result));
+  return result;
+}

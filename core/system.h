@@ -8,11 +8,15 @@ class System {
 
 public:
 
+  virtual ~System();
+
   virtual void init(Context* context);
   
   virtual void start(Context* context);
 
   virtual void update(Context* context);
+
+  virtual void fixedUpdate(Context* context);
   
   virtual void stop(Context* context);
 

@@ -2,10 +2,21 @@
 #define CORE_CONTEXT_H
 
 #include <string>
+#include "core/core.h"
 
-struct Context {
-  
+class Context {
+
+public: 
+
   std::string rootPath;
+
+  Core* core;
+
+  double timeStep;
+
+  double time;
+
+  double deltaTime;
 
 };
 
