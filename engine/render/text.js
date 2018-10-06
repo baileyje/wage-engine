@@ -10,19 +10,16 @@ class ScreenBuffer{
     this.cells = [];
   }
 
-  reunder(entities) {
+  render(entities) {
+    this.clear();
     entities.forEach(entity => {
-      // console.log(entity.position.x);
-      const baseIndex = entity.position.y * this.width + entity.position.x;
-      // console.log(baseIndex);
-      
+      const baseIndex = Math.floor(entity.position.y) * this.width + Math.floor(entity.position.x);
       for (var row = 0; row < entity.textCells.length; row++) {
         const cols = entity.textCells[row];
         for (var col = 0; col < cols.length; col++) {
-          const effectiveInex = baseIndex + row * this.width + col;
-          // console.log(effectiveInex);
+          const effectiveIndex = baseIndex + row * this.width + col;
           const text = entity.textCells[row][col];
-          this.cells[effectiveInex] = text;
+          this.cells[effectiveIndex] = text;
         }
       }
       
@@ -36,7 +33,7 @@ class TextRenderer {
   constructor(entities, config = {}) {
     this.entities = entities;
     this.width = 80;
-    this.height = 20;
+    this.height = 40;
     this.topLine = this.renderHorzLine(this.width,'┌', '┐');
     this.bottomLine = this.renderHorzLine(this.width, '└', '┘'); 
     this.screenBuffer = new ScreenBuffer(this.width, this.height);
@@ -75,7 +72,7 @@ class TextRenderer {
 
   fixedUpdate(ctx) {
     // TODO - Should be update.
-    this.screenBuffer.reunder(this.entities);
+    this.screenBuffer.render(this.entities);
     var out = '\x1Bc';
     out += this.topLine;
     for (var row = 0; row < this.height; row++) {
@@ -92,7 +89,8 @@ class TextRenderer {
       out += '│\n'
     }
     out += this.bottomLine;
-    console.log(out);    
+    out += this.entities[0].position.x + ':' + this.entities[0].position.y + '\n';    
+    console.log(out);
     
   }
 

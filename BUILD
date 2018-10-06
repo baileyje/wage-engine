@@ -4,7 +4,8 @@ cc_binary(
 	srcs = ["wage.cpp"],
 	deps = [
     "//core",
-    "//jsrt"
+    "//jsrt",
+    "//physics"
   ],
   visibility = ["//visibility:public"]
 )

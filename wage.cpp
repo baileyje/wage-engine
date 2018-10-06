@@ -5,6 +5,7 @@
 
 #include "core/core.h"
 #include "jsrt/jsrt.h"
+#include "physics/physics.h"
 
 Core* core;
 
@@ -18,6 +19,7 @@ int main(int argc, char* argv[]) {
   signal(SIGINT, intHandler);  
   core = new Core(path);  
   core->add(new Jsrt());
+  core->add(new Physics());
   core->start();
   delete core;
   return 0;

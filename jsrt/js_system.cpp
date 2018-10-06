@@ -22,6 +22,7 @@ void JsSystem::fixedUpdate(Context* context) {
   JsObjectWrapper jsContext;
   jsContext.set("time", context->time);
   jsContext.set("deltaTime", context->deltaTime);
+  jsContext.set("timeStep", context->timeStep);
   JsValueRef args[] = { jsContext.get() };
   object.invoke("fixedUpdate", args, 1); 
 }
@@ -31,6 +32,7 @@ void JsSystem::update(Context* context) {
   JsObjectWrapper jsContext;
   jsContext.set("time", context->time);
   jsContext.set("deltaTime", context->deltaTime);
+  jsContext.set("timeStep", context->timeStep);
   JsValueRef args[] = { jsContext.get() };
   object.invoke("update", args, 1); 
 }
