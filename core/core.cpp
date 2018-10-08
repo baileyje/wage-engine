@@ -3,70 +3,75 @@
 #include <iostream>
 #include <chrono>
 
-#include "core/context.h"
 #include "core/system.h"
 
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
-Core::Core(std::string path) : context(new Context()), running(false) {  
-  context->rootPath = path;
-  context->core = this;
-  context->timeStep = 1.0/60.0;
+Core::Core(std::string path) : Context(), running(false) {  
+  rootPath = path;
+  timeStep = 1.0/60.0;
 }
 
 Core::~Core() {
   for (auto system : systems) {
-    delete system;
+    // delete system;
+    // TODO: Evaluate whether this makes any sense.
   }
 }
 
 void Core::add(System* system) {  
   systems.push_back(system);
-  system->init(context);
+  system->init(this);
   if (running) {
-    system->start(context);
+    system->start(this);  
   }
+}
+
+System* Core::get(std::string name) {
+  for (auto system : systems) {
+    if (system->getName() == name) {
+      return system;
+    }
+  }
+  return NULL;
 }
 
 void Core::start() {  
   if (running) {
     return;
   }
-  running = true;  
-  init();  
+  running = true;    
   printf("Starting WAGE Core.\n");
   for (auto system : systems) {
-    system->start(context);
+    system->start(this);
   } 
   TimePoint lastTime = std::chrono::high_resolution_clock::now();
-  double time = 0;
   double accumulator = 0;
   while (running) {    
     TimePoint currentTime = std::chrono::high_resolution_clock::now();
     double delta = (std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime)).count();
     time += delta;
     lastTime = currentTime;
-    context->time = time;
-    context->deltaTime = delta;    
+    deltaTime = delta;    
     accumulator += delta;
-    if (accumulator >= context->timeStep) {
+    if (accumulator >= timeStep) {
       fixedUpdate();
-      accumulator -= context->timeStep;
+      accumulator -= timeStep;
     }
     // printf("Current: %f - Delta: %f\n", time, delta);
     update();
-  }  
+  }
 }
 
 void Core::update() {
   for (auto system : systems) {
-    system->update(context);
+    system->update(this);
   }
 }
 
 void Core::fixedUpdate() {
   for (auto system : systems) {
-    system->fixedUpdate(context);
+    system->fixedUpdate(this);
   }
 }
 
@@ -77,21 +82,22 @@ void Core::stop() {
   printf("Stopping WAGE Core.\n");
   running = false;  
   for (auto system : systems) {
-    system->stop(context);
+    system->stop(this);
   }
+  // printf("Stopped Systems.\n");
   deinit();
 }
 
 void Core::init() {
   printf("Initializing WAGE Core.\n");
   for (auto system : systems) {    
-    system->init(context);
+    system->init(this);
   }
 }
 
 void Core::deinit() {
   printf("Deinitializing WAGE Core.\n");
   for (auto system : systems) {
-    system->deinit(context);
+    system->deinit(this);
   }
 }

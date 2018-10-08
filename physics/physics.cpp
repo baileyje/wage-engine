@@ -1,6 +1,6 @@
 #include "physics/physics.h"
 
-Physics::Physics() {}
+Physics::Physics() : System("bullet_physics") {}
 
 Physics::~Physics() {}
 

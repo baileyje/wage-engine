@@ -15,7 +15,7 @@ static JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsV
 static void CHAKRA_CALLBACK promiseContinuationCallback(JsValueRef task, void *callbackState);
 
 
-Jsrt::Jsrt() {
+Jsrt::Jsrt() : System("jsrt") {
 }
 
 Jsrt::~Jsrt() {
@@ -23,7 +23,7 @@ Jsrt::~Jsrt() {
   
 void Jsrt::init(Context* context) {
   printf("Initializing JSRT.\n");
-  core = context->core;
+  this->context = context;
   
   moduleManager = new ModuleManager(context->rootPath + "/engine/");
   ModuleManager::shared = moduleManager;
@@ -53,8 +53,6 @@ void Jsrt::init(Context* context) {
 
   attachGlobals();
 
-  loadModule("boot.js");
-
   JsAddRef(jsRuntime, nullptr);  
 }
 
@@ -62,6 +60,12 @@ void Jsrt::deinit(Context* context) {
     printf("Deinitializing JSRT.\n");
     // FAIL_CHECK(JsSetCurrentContext(JS_INVALID_REFERENCE));
     // FAIL_CHECK(JsDisposeRuntime(jsRuntime));
+}
+
+void attachGlobal(std::string name, JsValueRef valueRef) {
+  JsValueRef globalRef;
+  FAIL_CHECK(JsGetGlobalObject(&globalRef));
+  JsObjectWrapper(globalRef).set(name, valueRef);
 }
 
 void Jsrt::attachGlobals() {
@@ -144,8 +148,8 @@ JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRe
 JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
   // printf("Added JS system...\n");
   Jsrt * runtime = (Jsrt *)callbackState;
-  JsSystem* system = new JsSystem(arguments[1]);
-  runtime->core->add(system);
+  JsSystem* system = new JsSystem(stringFromValue(arguments[1]),  arguments[2]);
+  runtime->getContext()->add(system);
   // TODO: Break this out
   JsValueRef undefinedValue;
   if (JsGetUndefinedValue(&undefinedValue) == JsNoError) {

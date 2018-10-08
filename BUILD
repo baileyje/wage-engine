@@ -5,7 +5,10 @@ cc_binary(
 	deps = [
     "//core",
     "//jsrt",
-    "//physics"
+    "//physics",
+    "//engine",
+    "//render"
   ],
+  linkopts = ["-framework Cocoa -framework OpenGL"],
   visibility = ["//visibility:public"]
 )

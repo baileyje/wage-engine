@@ -6,9 +6,9 @@ import Renderer from 'render/text.js';
 // TODO This should be in context.
 let entities = [];
 
-core.addSystem(new Engine(entities));
-core.addSystem(new Physics(entities));
-core.addSystem(new Renderer(entities));
+core.addSystem("js_engine", new Engine(entities));
+core.addSystem("simple_physics", new Physics(entities));
+core.addSystem("text_renderer", new Renderer(entities));
 
 let A = {
   position: {

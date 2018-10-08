@@ -1,11 +1,10 @@
 
 cc_library(
-	name = "physics",
+	name = "entity",
 	srcs = glob(["*.cpp"]),
 	hdrs = glob(["*.h"]),
 	deps = [
-		"//core",
-		"@bullet"
+		"//core"
 	],
 	visibility = ["//visibility:public"]
 )

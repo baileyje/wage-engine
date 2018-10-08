@@ -2,10 +2,9 @@
 licenses(["permissive"])
 
 cc_library(
-	name = "bullet",  
+	name = "glfw",  
   includes = ["lib", "include"],
 	srcs = glob(["**/*.dylib"]),
 	hdrs = glob(["**/*.h"]),
-	strip_include_prefix = "include/bullet",
   visibility = ["//visibility:public"]
 )

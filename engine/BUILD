@@ -1,11 +1,13 @@
 
 cc_library(
-	name = "physics",
+	name = "engine",
 	srcs = glob(["*.cpp"]),
 	hdrs = glob(["*.h"]),
 	deps = [
 		"//core",
-		"@bullet"
+		"//entity",
+		"//jsrt",
+		"//third_party/chakracore"
 	],
 	visibility = ["//visibility:public"]
 )

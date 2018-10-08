@@ -32,7 +32,9 @@ public:
 
   void pushCallback(Callback* callback);
 
-  Core* core;
+  Context* getContext() { return context; };
+
+  void attachGlobal(std::string name, JsValueRef valueRef);
 
 private:
 
@@ -45,6 +47,8 @@ private:
   JsValueRef invoke(std::string source);
 
   std::queue<Callback*> callbackQueue;
+
+  Context* context;
   
 };
 

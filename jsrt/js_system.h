@@ -11,7 +11,7 @@ class JsSystem : public System {
   
 public:
   
-  JsSystem(JsValueRef objectRef);
+  JsSystem(std::string name, JsValueRef objectRef);
 
   ~JsSystem();
 
@@ -30,7 +30,7 @@ public:
 private:
   
   JsObjectWrapper object;
-
+  
 };
 
 

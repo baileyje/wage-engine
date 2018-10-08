@@ -1,7 +1,6 @@
 #include "jsrt/js_system.h"
 
-JsSystem::JsSystem(JsValueRef objectRef) : object(objectRef) {
-  
+JsSystem::JsSystem(std::string name, JsValueRef objectRef) : System(name), object(objectRef) {  
 }
 
 JsSystem::~JsSystem() {

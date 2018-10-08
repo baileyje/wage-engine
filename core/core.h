@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
+#include "core/context.h"
 
 
-class Context;
 class System;
 
-class Core {
+class Core : public Context {
 
 public:
   
@@ -17,23 +17,28 @@ public:
 
   ~Core();
   
+  void init();
+
   void start();
   
   void stop();  
 
   void add(System* system);
 
-private:
+  System* get(std::string name);
 
-  void init();
+  void shouldStop() { 
+    // TODO: Clean this
+    stop();
+  }
+  
+private:
 
   void update();
 
   void fixedUpdate();
 
   void deinit();
-
-  Context* context;
 
   std::vector<System *> systems;
   
