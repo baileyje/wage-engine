@@ -1,10 +1,11 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-// #include <glad/glad.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "core/system.h"
+#include "render/shader.h"
 
 class Renderer : public System {
 
@@ -26,6 +27,10 @@ private:
 
   GLFWwindow* window;
   
+  Shader* defaultShaderProgram;
+
+  Shader* loadJankyShader();
+
 };
 
 #endif //RENDERER_H

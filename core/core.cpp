@@ -20,9 +20,9 @@ Core::~Core() {
 }
 
 void Core::add(System* system) {  
-  systems.push_back(system);
-  system->init(this);
+  systems.push_back(system);  
   if (running) {
+    // system->init(this);
     system->start(this);  
   }
 }
@@ -78,9 +78,9 @@ void Core::fixedUpdate() {
 void Core::stop() {
   if(!running) {
     return;
-  }  
+  }
   printf("Stopping WAGE Core.\n");
-  running = false;  
+  running = false;
   for (auto system : systems) {
     system->stop(this);
   }

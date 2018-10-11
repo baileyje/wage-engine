@@ -42,6 +42,7 @@
         "__tuple": "cpp",
         "__functional_03": "cpp",
         "unordered_map": "cpp",
-        "__hash_table": "cpp"
+        "__hash_table": "cpp",
+        "__tree": "cpp"
     }
 }
