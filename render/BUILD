@@ -6,6 +6,7 @@ cc_library(
 	deps = [
 		"//core",		
 		"@glfw",
+		"@glm",
 		"//third_party/glad"
 	],
 	visibility = ["//visibility:public"]	

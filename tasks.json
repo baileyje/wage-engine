@@ -9,7 +9,7 @@
           "windows": {
             "command": ".\\scripts\\test.cmd"
           },
-          "group": "build",
+          "group": "build", 
           "presentation": {
               "reveal": "always",
               "panel": "new"

@@ -43,6 +43,7 @@
         "__functional_03": "cpp",
         "unordered_map": "cpp",
         "__hash_table": "cpp",
-        "__tree": "cpp"
+        "__tree": "cpp",
+        "map": "cpp"
     }
 }

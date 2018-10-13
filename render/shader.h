@@ -21,6 +21,10 @@ public:
 
   void unlink();
 
+  inline unsigned int getId() {
+    return id;
+  }
+
 private:
 
   unsigned int vertexId;
