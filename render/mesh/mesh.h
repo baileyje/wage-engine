@@ -12,9 +12,11 @@ public:
 
   Mesh(const VertexBuffer* vbo, const IndexBuffer* ibo, const VertexBufferLayout* layout);
   
-  ~Mesh();
+  virtual ~Mesh();
 
-  void bind(VertexArray* vao);
+  virtual void bind(VertexArray* vao) const;
+  
+  virtual void unbind() const;
 
   inline unsigned int getElementCount() {
     return ibo->getCount();

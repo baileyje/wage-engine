@@ -2,6 +2,9 @@
 #define CORE_CONTEXT_H
 
 #include <string>
+#include <vector>
+
+#include "entity/entity.h"
 
 class System;
 
@@ -28,6 +31,10 @@ public:
   double deltaTime;
 
   virtual void shouldStop() = 0;
+
+  virtual void add(Entity* entity) = 0;
+
+  virtual std::vector<Entity*>* getEntities() = 0;
 };
 
 #endif // CORE_CONTEXT_H

@@ -31,6 +31,14 @@ public:
     // TODO: Clean this
     stop();
   }
+
+  void add(Entity* entity) {
+    entities.push_back(entity);
+  }
+
+  std::vector<Entity*>* getEntities() {
+    return &entities;
+  }
   
 private:
 
@@ -43,6 +51,9 @@ private:
   std::vector<System *> systems;
   
   bool running;
+
+    // TODO: Doe these belong here??
+  std::vector<Entity*> entities;
 
 };
 

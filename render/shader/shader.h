@@ -7,6 +7,10 @@ class Shader {
 
 public:
 
+  static Shader* Default;
+
+  static void initDefault();
+
   Shader(std::string vertexSource, std::string fragmentSource);
 
   ~Shader();

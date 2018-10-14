@@ -1,4 +1,4 @@
-#include "render/shader.h"
+#include "render/shader/shader.h"
 
 #include <glad/glad.h>
 #include <vector>
@@ -19,6 +19,29 @@ void compileGLShader(unsigned int shaderId, const char* source) {
 		printf("%s\n", &errrorMessage[0]);
 	}
 }
+
+Shader* Shader::Default;
+
+void Shader::initDefault() {
+  Default = new Shader(
+    std::string(
+      "#version 330 core\n"
+      "layout(location = 0) in vec3 vertexPosition_modelspace;\n"
+      "uniform mat4 mvp;\n"
+      "void main() {\n"
+      "  gl_Position = mvp * vec4(vertexPosition_modelspace,1);\n"
+      "}"),
+    std::string(
+      "#version 330 core\n"
+      "out vec3 color;\n" 
+      "void main() {\n"
+      "  color = vec3(1,1,1);\n"
+      "}")
+  );
+  Default->compile();
+  Default->link();
+}
+
 
 Shader::Shader(std::string vertexSource, std::string fragmentSource) 
   : vertexSource(vertexSource), fragmentSource(fragmentSource) {  

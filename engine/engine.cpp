@@ -8,7 +8,7 @@ void Engine::start(Context* context) {
 void Engine::update(Context* context) {
   for (auto entity : entities) {
     for (auto component : *entity->getComponents()) {
-      component->update(context);
+      component->update();
     }
   }
 }
@@ -16,7 +16,7 @@ void Engine::update(Context* context) {
 void Engine::fixedUpdate(Context* context) {
   for (auto entity : entities) {
     for (auto component : *entity->getComponents()) {
-      component->fixedUpdate(context);
+      component->fixedUpdate();
     }
   }
 }

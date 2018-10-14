@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "render/shader.h"
+#include "render/shader/shader.h"
 
 struct Uniform {
   
@@ -44,7 +44,9 @@ public:
     uniforms[name] = { 999, count, (void*)value };
   }
 
-  void bind();
+  void bind() const;
+
+  void unbind() const;
 
 private:
 

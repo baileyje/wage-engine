@@ -11,7 +11,7 @@ Material::Material(Shader* shader) : shader(shader) {
 Material::~Material() {
 }
 
-void Material::bind() {
+void Material::bind() const {
   shader->bind();
   for (auto uni : uniforms) {
     switch(uni.second.type) {
@@ -23,4 +23,8 @@ void Material::bind() {
         break;
     }
   }
+}
+
+void Material::unbind() const {
+  shader->unbind();
 }

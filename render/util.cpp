@@ -1,6 +1,6 @@
 #include "render/util.h"
 
-void checkGLError(char* command) {
+void checkGLError(const char* command) {
   GLenum err = glGetError();
   if (err != GL_NO_ERROR) {
     for (; err != GL_NO_ERROR; err = glGetError()) {

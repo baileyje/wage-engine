@@ -18,10 +18,12 @@ public:
   }
 
 private:
-  
-  unsigned int id;
+
+  // const unsigned int* data;
   
   unsigned int count;
+
+  unsigned int id;
 
 };
 

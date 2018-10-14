@@ -5,7 +5,7 @@ class VertexBuffer {
 
 public:
   
-  VertexBuffer(const void* data,  unsigned int size);
+  VertexBuffer(const void* data,  const unsigned int size);
 
   ~VertexBuffer();
 
@@ -14,7 +14,7 @@ public:
   void unbind() const;
 
 private:
-  
+
   unsigned int id;
 
 };

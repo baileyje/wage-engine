@@ -12,11 +12,11 @@
 
 class DorkComp : public Component {
 
-  void update(Context* context) {
+  void update() {
     // printf("Comp Called!\n");
   }
 
-  void fixedUpdate(Context* context) {
+  void fixedUpdate() {
     // printf("Comp Fixed Called!\n");
   }
 
@@ -45,8 +45,17 @@ int main(int argc, char* argv[]) {
   core.add(new Renderer());
 
   Entity entity;
+  entity.getTransform()->setPosition(Vector(20.0, 20.0, 0.0));
+  entity.getTransform()->setScale(Vector(20.0, 20.0));
   entity.add(new DorkComp());
-  engine.add(&entity);
+  core.add(&entity);
+
+  Entity entity2;
+  entity2.getTransform()->setPosition(Vector(200.0, 200.0, 0.0));
+  entity2.getTransform()->setScale(Vector(25.0, 25.0));
+  entity2.getTransform()->setRotation(Vector(0.0, 0.0, 3.6));
+  entity2.add(new DorkComp());
+  core.add(&entity2);
 
   // FULL NONSENSE HERE!
   core.init();

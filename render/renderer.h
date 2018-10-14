@@ -6,12 +6,8 @@
 #include <glm/glm.hpp>
 
 #include "core/system.h"
-#include "render/shader.h"
-#include "render/vertex_buffer.h"
-#include "render/index_buffer.h"
-#include "render/vertex_array.h"
 #include "render/material.h"
-#include "render/mesh.h"
+#include "render/mesh/mesh.h"
 
 class Renderer : public System {
 
@@ -25,30 +21,22 @@ public:
 
   void start(Context* context);
 
-  void update(Context* context);
+  void fixedUpdate(Context* context);
 
   void stop(Context* context);
 
   void deinit(Context* context);
 
-  void draw(VertexArray* vao, Mesh* mesh, Material* material);
+  void draw(Mesh* mesh, Material* material);
+
+  void draw(Entity* entity);
 
 private:
 
   GLFWwindow* window;
   
-  Shader* defaultShaderProgram;
+  glm::mat4 screenProjection; // TODO: should come from camera
 
-  Shader* loadJankyShader();
-
-  glm::mat4 screenProjection;
-  
-  // TODO: These will be per entity
-  Mesh* mesh;
-
-  Material* material;
-
-  VertexArray* vao;
 };
 
 #endif //RENDERER_H

@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <iostream>
 
-void checkGLError(char* command);
+void checkGLError(const char* command);
 
 
 #define FAIL_CHECK(cmd)    \

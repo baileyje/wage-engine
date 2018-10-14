@@ -30,14 +30,16 @@ public:
 
   ~VertexBufferLayout() {}
 
-  void pushFloat(unsigned int count) { 
+  VertexBufferLayout* pushFloat(unsigned int count) { 
     elements.push_back({ GL_FLOAT, count, GL_FALSE });
     stride += count * VertexBufferElement::getSizeOf(GL_FLOAT);
+    return this;
   } 
 
-  void pushUInt(unsigned int count) { 
+  VertexBufferLayout* pushUInt(unsigned int count) { 
     elements.push_back({ GL_UNSIGNED_INT, count, GL_TRUE });
     stride += count * VertexBufferElement::getSizeOf(GL_UNSIGNED_INT);
+    return this;
   } 
 
   inline unsigned int getStride() const {

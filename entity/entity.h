@@ -19,7 +19,7 @@ public:
   
   Transform* getTransform() { return &transform; }
 
-  void add(Component* component);
+  void add(Component* component) { components.push_back(component); }
 
   std::vector<Component*>* getComponents() { return &components; }
   
