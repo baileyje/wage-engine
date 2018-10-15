@@ -42,7 +42,7 @@ void Renderer::init(Context* context)  {
 
   window = glfwCreateWindow(1024, 768, "Wage Bro!", NULL, NULL);
   glfwSetKeyCallback(window, keyCallback);   
-  screenProjection = glm::ortho(0.0f, (float)1024, 0.0f, (float)768, -1.0f, 1.0f);  
+  screenProjection = glm::ortho(0.0f, (float)102.4, 0.0f, (float)76.8, -1.0f, 1.0f);  
 }
 
 void Renderer::start(Context* context) {
@@ -87,10 +87,9 @@ void Renderer::draw(Entity* entity) {
   Material material(Shader::Default);
   // TODO: Set position!
   Transform* transform = entity->getTransform();
-  glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(transform->getPosition()->getX(), transform->getPosition()->getY(), transform->getPosition()->getZ()));
-  glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(transform->getScale()->getX(), transform->getScale()->getY(), transform->getScale()->getZ()));
-
-  glm::quat rotation(glm::vec3(transform->getRotation()->getX(), transform->getRotation()->getY(), transform->getRotation()->getZ()));
+  glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(transform->getPosition()->x, transform->getPosition()->y, transform->getPosition()->z));
+  glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(transform->getScale()->x, transform->getScale()->y, transform->getScale()->z));
+  glm::quat rotation(glm::vec3(transform->getRotation()->x, transform->getRotation()->y, transform->getRotation()->z));
   glm::mat4 rotate = glm::toMat4(rotation);
 
   glm::mat4 model = translation * rotate * scale;

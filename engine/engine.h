@@ -21,12 +21,6 @@ public:
 
   void fixedUpdate(Context* context);  
 
-  void add(Entity* entity);
-
-private: 
-
-  std::vector<Entity*> entities;
-
 };
 
 #endif //ENGINE_H

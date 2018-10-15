@@ -9,14 +9,17 @@
 #include "render/renderer.h"
 #include "engine/engine.h"
 #include "entity/entity.h"
+#include "entity/component.h"
 
 class DorkComp : public Component {
 
-  void update() {
+  void update(EntityContext* context) {
     // printf("Comp Called!\n");
+    *context->getEntity()->getTransform()->getPosition() += Vector(100 * context->getDeltaTime(), 0, 0);
+    // printf("Hmm: %f\n", context->getEntity()->getTransform()->getPosition()->x);
   }
 
-  void fixedUpdate() {
+  void fixedUpdate(EntityContext* context) {
     // printf("Comp Fixed Called!\n");
   }
 
@@ -37,25 +40,22 @@ int main(int argc, char* argv[]) {
   coreRef = &core;
   Jsrt jsrt;
   core.add(&jsrt);
-  // core.add(new Physics());
+  core.add(new Physics());
   
   Engine engine;
   core.add(&engine);
 
   core.add(new Renderer());
 
-  Entity entity;
-  entity.getTransform()->setPosition(Vector(20.0, 20.0, 0.0));
-  entity.getTransform()->setScale(Vector(20.0, 20.0));
-  entity.add(new DorkComp());
-  core.add(&entity);
-
-  Entity entity2;
-  entity2.getTransform()->setPosition(Vector(200.0, 200.0, 0.0));
-  entity2.getTransform()->setScale(Vector(25.0, 25.0));
-  entity2.getTransform()->setRotation(Vector(0.0, 0.0, 3.6));
-  entity2.add(new DorkComp());
-  core.add(&entity2);
+  for (int i = 1; i <= 5; i++) {
+    {
+      Entity* entity = new Entity();
+      entity->getTransform()->setPosition(Vector(4 * i, 100 + i * 30.0, 0.0));
+      entity->getTransform()->setScale(Vector(5.0, 5.0));
+      entity->add(new DorkComp());
+      core.add(entity);
+    }
+  }
 
   // FULL NONSENSE HERE!
   core.init();

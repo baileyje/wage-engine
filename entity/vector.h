@@ -14,25 +14,25 @@ public:
 
   ~Vector() {}
 
-  double getX() { return x; }
-
-  double getY() { return y; }
-
-  double getZ() { return z; }
-
-  void setX(double value) { x = value; }
-
-  void setY(double value) { y = value; }
-
-  void setZ(double value) { z = value; }
-
-private:
-
   double x;
 
   double y;
 
   double z;
+  
+  friend Vector operator+(Vector left, const Vector& right) {
+    left += right;
+    return left;
+  }
+
+  inline Vector& operator+=(Vector other) {
+    x += other.x;
+    y += other.y;
+    z += other.z;    
+    return *this;
+  }
+
+private:
 
 };
 

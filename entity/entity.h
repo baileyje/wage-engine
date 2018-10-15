@@ -5,7 +5,8 @@
 #include <vector>
 
 #include "entity/transform.h"
-#include "entity/component.h"
+
+class Component;
 
 class Entity {
 
