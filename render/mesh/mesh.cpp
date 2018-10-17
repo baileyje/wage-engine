@@ -9,11 +9,11 @@ Mesh::~Mesh() {
 void Mesh::bind(VertexArray* vao) const {
   vao->bind();
   vao->addBuffer(vbo, layout);
-  ibo->bind();
+  // ibo->bind();  TODO: Figure out if we are going tod do this.....
 }
 
 void Mesh::unbind() const {
-  ibo->unbind();
+  // ibo->unbind();
   vbo->unbind();
 }
 

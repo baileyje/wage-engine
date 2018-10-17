@@ -26,17 +26,44 @@ void Shader::initDefault() {
   Default = new Shader(
     std::string(
       "#version 330 core\n"
-      "layout(location = 0) in vec3 vertexPosition_modelspace;\n"
-      "uniform mat4 mvp;\n"
+      "layout(location = 0) in vec3 vertPos;\n"
+      "layout(location = 1) in vec3 normalIn;\n"
+      "out vec3 fragPos;\n"
+      "out vec3 normal;\n"
+      "uniform mat4 model;\n"
+      "uniform mat4 view;\n"
+      "uniform mat4 projection;\n"
       "void main() {\n"
-      "  gl_Position = mvp * vec4(vertexPosition_modelspace,1);\n"
-      "}"),
+        "fragPos = vec3(model * vec4(vertPos, 1.0));\n"
+        "normal = mat3(transpose(inverse(model))) * normalIn;\n"
+        "gl_Position = projection * view * vec4(fragPos, 1.0);\n"
+      "}"
+    ),
     std::string(
       "#version 330 core\n"
-      "out vec3 color;\n" 
+      "out vec4 fragColor;\n"
+      "in vec3 normal;\n"
+      "in vec3 fragPos;\n"
+      "uniform vec3 lightPos;\n"
+      "uniform vec3 viewPos;\n"
+      "uniform vec3 lightColor;\n"
+      "uniform vec3 objectColor;\n"
       "void main() {\n"
-      "  color = vec3(1,1,1);\n"
-      "}")
+          "float ambientStrength = 0.1;\n"
+          "vec3 ambient = ambientStrength * lightColor;\n"
+          "vec3 norm = normalize(normal);\n"
+          "vec3 lightDir = normalize(lightPos - fragPos);\n"
+          "float diff = max(dot(norm, lightDir), 0.0);\n"
+          "vec3 diffuse = diff * lightColor;\n"
+          "float specularStrength = 0.5;\n"
+          "vec3 viewDir = normalize(viewPos - fragPos);\n"
+          "vec3 reflectDir = reflect(-lightDir, norm);\n"
+          "float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);\n"
+          "vec3 specular = specularStrength * spec * lightColor;\n"              
+          "vec3 result = (ambient + diffuse + specular) * objectColor;\n"
+          "fragColor = vec4(result, 1.0);\n"
+      "}" 
+    )
   );
   Default->compile();
   Default->link();

@@ -29,7 +29,7 @@ public:
 
   void draw(Mesh* mesh, Material* material);
 
-  void draw(Entity* entity);
+  void draw(Camera* camera, Entity* entity);
 
 private:
 

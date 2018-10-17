@@ -56,8 +56,8 @@ void Physics::init(Context* context) {
 void Physics::start(Context* context) {
 	int usrIdx = 0; // Super jank
   for (auto entity : *context->getEntities()) {
-		printf("SX: %f", entity->getTransform()->getScale()->x/2.0);
-		btBoxShape* shape = createBoxShape(btVector3(entity->getTransform()->getScale()->x/2.0, entity->getTransform()->getScale()->y/2.0, 1 /*entity->getTransform()->getScale()->z/2.0*/));
+		printf("SZ: %f\n", entity->getTransform()->getScale()->z/2.0);
+		btBoxShape* shape = createBoxShape(btVector3(entity->getTransform()->getScale()->x/2.0, entity->getTransform()->getScale()->y/2.0, entity->getTransform()->getScale()->z/2.0));
 		btTransform transform;
 		transform.setIdentity();
 		transform.setOrigin(
@@ -72,10 +72,10 @@ void Physics::start(Context* context) {
 		bodies.push_back(body);
 		dynamicsWorld.addRigidBody(body);
 	}
-	btBoxShape* grndShape = createBoxShape(btVector3(100, 1.5, 1.5));
+	btBoxShape* grndShape = createBoxShape(btVector3(100, 1.5, 100));
 	btTransform grndTransform;
 	grndTransform.setIdentity();
-	grndTransform.setOrigin(btVector3(0, 30, 0));
+	grndTransform.setOrigin(btVector3(0, -1.0, 0));
 	btRigidBody* ground = createRigidBody(0.0, grndTransform, grndShape);
 	ground->setUserIndex(usrIdx++);
 	// bodies.push_back(ground);
@@ -104,6 +104,13 @@ void Physics::fixedUpdate(Context* context) {
 			Entity* entity = (*context->getEntities())[userIdx];
 			// printf("X: %f, Y: %f, Z: %f \n", transform.getOrigin().getX(), transform.getOrigin().getY(), transform.getOrigin().getZ());
 			entity->getTransform()->setPosition(Vector(transform.getOrigin().getX(), transform.getOrigin().getY(), 0.0 /*transform.getOrigin().getZ()*/ ));
+			btQuaternion rotation = transform.getRotation();
+			Vector* entityRotation = entity->getTransform()->getRotation();
+			btScalar yawZ, pitchY, rollX;
+			rotation.getEulerZYX(yawZ, pitchY, rollX);
+			entityRotation->x = rollX;
+			entityRotation->y = pitchY;
+			entityRotation->z = yawZ;
 	}
 }
 

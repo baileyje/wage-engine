@@ -5,6 +5,8 @@
 #include <vector>
 
 #include "entity/entity.h"
+#include "entity/camera.h"
+
 
 class System;
 
@@ -35,6 +37,8 @@ public:
   virtual void add(Entity* entity) = 0;
 
   virtual std::vector<Entity*>* getEntities() = 0;
+
+  virtual Camera* getCamera() = 0;
 };
 
 #endif // CORE_CONTEXT_H

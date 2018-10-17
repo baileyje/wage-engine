@@ -39,6 +39,10 @@ public:
   std::vector<Entity*>* getEntities() {
     return &entities;
   }
+
+  Camera* getCamera() {
+    return &camera;
+  }
   
 private:
 
@@ -52,8 +56,9 @@ private:
   
   bool running;
 
-    // TODO: Doe these belong here??
+  // TODO: Doe these belong here??
   std::vector<Entity*> entities;
+  Camera camera;
 
 };
 

@@ -15,7 +15,7 @@ class DorkComp : public Component {
 
   void update(EntityContext* context) {
     // printf("Comp Called!\n");
-    *context->getEntity()->getTransform()->getPosition() += Vector(100 * context->getDeltaTime(), 0, 0);
+    // *context->getEntity()->getTransform()->getPosition() += Vector(100 * context->getDeltaTime(), 0, 0);
     // printf("Hmm: %f\n", context->getEntity()->getTransform()->getPosition()->x);
   }
 
@@ -40,23 +40,35 @@ int main(int argc, char* argv[]) {
   coreRef = &core;
   Jsrt jsrt;
   core.add(&jsrt);
-  core.add(new Physics());
+  // core.add(new Physics());
   
   Engine engine;
   core.add(&engine);
-
   core.add(new Renderer());
 
-  for (int i = 1; i <= 5; i++) {
-    {
-      Entity* entity = new Entity();
-      entity->getTransform()->setPosition(Vector(4 * i, 100 + i * 30.0, 0.0));
-      entity->getTransform()->setScale(Vector(5.0, 5.0));
-      entity->add(new DorkComp());
-      core.add(entity);
-    }
-  }
+  core.getCamera()->getTransform()->setPosition(Vector(0, 5, -20));
+  core.getCamera()->getTransform()->setRotation(Vector(0.3, 0.0, 0));
 
+  // for (int i = 0; i < 5; i++) {
+  //   {
+  //     Entity* entity = new Entity();
+  //     entity->getTransform()->setPosition(Vector(3 * i,10 + 5 * i, 0));
+  //     printf("X: %f : Y: %f, Z: %f\n", 
+  //       entity->getTransform()->getPosition()->x,
+  //       entity->getTransform()->getPosition()->y,
+  //       entity->getTransform()->getPosition()->x
+  //     );
+  //     entity->getTransform()->setScale(Vector(1, 1, 1));
+  //     // entity->getTransform()->setRotation(Vector(0.2, 0.2, 0.2));
+  //     entity->add(new DorkComp());
+  //     core.add(entity);
+  //   }
+  // }
+
+  Entity* entity = new Entity();
+  entity->getTransform()->setPosition(Vector(0, 0, 0));
+  entity->getTransform()->setScale(Vector(1, 1, 1));
+  core.add(entity);
   // FULL NONSENSE HERE!
   core.init();
   // jsrt->loadModule("boot.js");

@@ -36,12 +36,16 @@ public:
     return shader;
   }
 
-  inline void setFloat( std::string name, float* value, unsigned int count) {
+  inline void setFloat(std::string name, float* value, unsigned int count) {
     uniforms[name] = { GL_FLOAT, count, (void*)value };
   }
 
-  inline void setMat4( std::string name, glm::mat4* value, unsigned int count) {
+  inline void setMat4(std::string name, glm::mat4* value, unsigned int count) {
     uniforms[name] = { 999, count, (void*)value };
+  }
+
+  inline void  setVec3(std::string name, glm::vec3* value, unsigned int count) {
+    uniforms[name] = { 1000, count, (void*)value };
   }
 
   void bind() const;

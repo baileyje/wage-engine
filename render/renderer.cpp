@@ -13,7 +13,7 @@
 #include "render/util.h"
 #include "render/material.h"
 #include "render/mesh/mesh.h"
-#include "render/mesh/quad.h"
+#include "render/mesh/cube.h"
 #include "render/shader/shader.h"
 
 
@@ -42,7 +42,8 @@ void Renderer::init(Context* context)  {
 
   window = glfwCreateWindow(1024, 768, "Wage Bro!", NULL, NULL);
   glfwSetKeyCallback(window, keyCallback);   
-  screenProjection = glm::ortho(0.0f, (float)102.4, 0.0f, (float)76.8, -1.0f, 1.0f);  
+  // screenProjection = glm::ortho(0.0f, (float)102.4, 0.0f, (float)76.8, -10.0f, 10.0f);  
+  screenProjection = glm::perspective(glm::radians(45.0), 1024.0 / 768.0, 0.1, 100.0);
 }
 
 void Renderer::start(Context* context) {
@@ -52,9 +53,11 @@ void Renderer::start(Context* context) {
   glfwSwapInterval(1);
   // glEnable(GL_BLEND);
   // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_DEPTH_TEST);
+  // Accept fragment if it closer to the camera than the former one
+  glDepthFunc(GL_LESS);
   FAIL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
-  Shader::initDefault();
-  
+  Shader::initDefault();  
 }
 
 
@@ -72,18 +75,16 @@ void Renderer::fixedUpdate(Context* context) {
   // FAIL_CHECK(glViewport(0, 0, width, height));
   FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-
-
   for (auto entity : *context->getEntities()) {
-    draw(entity);    
+    draw(context->getCamera(), entity);    
   }
 
   FAIL_CHECK(glfwSwapBuffers(window));
   FAIL_CHECK(glfwPollEvents());
 }
 
-void Renderer::draw(Entity* entity) {
-  Quad quad;
+void Renderer::draw(Camera* camera, Entity* entity) {
+  Cube cube;
   Material material(Shader::Default);
   // TODO: Set position!
   Transform* transform = entity->getTransform();
@@ -93,10 +94,38 @@ void Renderer::draw(Entity* entity) {
   glm::mat4 rotate = glm::toMat4(rotation);
 
   glm::mat4 model = translation * rotate * scale;
+   
+  // Camera
+  Transform* cameraTrans = camera->getTransform();
+  glm::vec3 camPos(cameraTrans->getPosition()->x, cameraTrans->getPosition()->y, cameraTrans->getPosition()->z);
+  glm::quat camRotation(glm::vec3(cameraTrans->getRotation()->x, cameraTrans->getRotation()->y, cameraTrans->getRotation()->z));
+  // glm::vec3 camPos(0,0,-100);
+  glm::vec3 camFront(
+    2 * (camRotation.x * camRotation.z + camRotation.w * camRotation.y), 
+    2 * (camRotation.y * camRotation.z - camRotation.w * camRotation.x),
+    1 - 2 * (camRotation.x * camRotation.x + camRotation.y * camRotation.y)
+  );
+  glm::vec3 camUp(
+    2 * (camRotation.x * camRotation.y - camRotation.w * camRotation.z), 
+    1 - 2 * (camRotation.x * camRotation.x + camRotation.z * camRotation.z),
+    2 * (camRotation.y * camRotation.z + camRotation.w * camRotation.x)
+  );
+  glm::mat4 view = glm::lookAt(camPos, camPos + camFront, camUp);
+
+  material.setMat4("model", &model, 1);
+  material.setMat4("view", &view, 1); // TODO Add camera
+  material.setMat4("projection", &screenProjection, 1);
+
+  glm::vec3 lightPos(0.0f, 0.0f, -10.0f);
+  glm::vec3 objColor(1.0f, 0.5f, 0.31f);
+  glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+  material.setVec3("objectColor", &objColor, 1);
+  material.setVec3("lightColor", &lightColor, 1);
+  material.setVec3("lightPos", &lightPos, 1);
   
-  glm::mat4 mvp = screenProjection * model;  
-  material.setMat4("mvp", &mvp, 1);
-  draw(&quad, &material);
+  material.setVec3("viewPos", &camPos, 1);
+
+  draw(&cube, &material);
 }
 
 void Renderer::draw(Mesh* mesh, Material* material) {
@@ -104,10 +133,11 @@ void Renderer::draw(Mesh* mesh, Material* material) {
   vao.bind();  
   material->bind();
   mesh->bind(&vao);
-  FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
+  // FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
+  FAIL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 36));
   mesh->unbind();
   material->unbind();
-  vao.unbind();  
+  vao.unbind();
 }
 
 void Renderer::stop(Context* context) {
