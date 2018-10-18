@@ -7,7 +7,7 @@
 
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
-Core::Core(std::string path) : Context(), running(false) {  
+Core::Core(std::string path) : Context(), running(false), fileSystem(new LocalFileSystem(path)) {  
   rootPath = path;
   timeStep = 1.0/60.0;
 }
@@ -81,6 +81,7 @@ void Core::stop() {
   }
   printf("Stopping WAGE Core.\n");
   running = false;
+  // TODO: Reverse order
   for (auto system : systems) {
     system->stop(this);
   }
@@ -97,6 +98,7 @@ void Core::init() {
 
 void Core::deinit() {
   printf("Deinitializing WAGE Core.\n");
+  // TODO: Reverse order
   for (auto system : systems) {
     system->deinit(this);
   }

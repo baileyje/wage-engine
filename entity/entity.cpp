@@ -8,4 +8,8 @@ long Entity::CurrentId = 0;
 Entity::Entity() : id(Entity::CurrentId++) {
 }
 
+ Entity::Entity(Transform transform) : id(Entity::CurrentId++), transform(transform) {    
+}
+
+
 Entity::~Entity() {}

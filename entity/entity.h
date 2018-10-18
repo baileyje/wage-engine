@@ -14,11 +14,15 @@ public:
   
   Entity();
 
+  Entity(Transform transform);
+  
   virtual ~Entity();
 
   long getId() { return id; }
   
   Transform* getTransform() { return &transform; }
+
+  void setTransform(Transform transform) { this->transform = transform; }
 
   void add(Component* component) { components.push_back(component); }
 

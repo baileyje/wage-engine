@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "core/context.h"
+#include "fs/local_file_system.h"
 
 
 class System;
@@ -43,6 +44,10 @@ public:
   Camera* getCamera() {
     return &camera;
   }
+
+  FileSystem* getFileSystem() { 
+    return fileSystem;
+  }
   
 private:
 
@@ -60,6 +65,7 @@ private:
   std::vector<Entity*> entities;
   Camera camera;
 
+  FileSystem* fileSystem;
 };
 
 #endif // CORE_H

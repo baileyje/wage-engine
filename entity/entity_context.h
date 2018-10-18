@@ -16,7 +16,7 @@ public:
   double getTime() const { return time; }
 
   double getDeltaTime() const { return deltaTime; }
-
+  
 private:
 
   Entity* entity;

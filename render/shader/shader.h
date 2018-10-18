@@ -2,6 +2,7 @@
 #define RENDERER_SHADER_H
 
 #include <string>
+#include "fs/file_system.h"
 
 class Shader {
 
@@ -9,7 +10,7 @@ public:
 
   static Shader* Default;
 
-  static void initDefault();
+  static void initDefault(FileSystem* fileSystem);
 
   Shader(std::string vertexSource, std::string fragmentSource);
 

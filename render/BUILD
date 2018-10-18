@@ -4,7 +4,9 @@ cc_library(
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
-		"//core",		
+		"//core",
+		"//fs",
+		"//platform",
 		"@glfw",
 		"@glm",
 		"//third_party/glad"

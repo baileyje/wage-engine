@@ -50,13 +50,12 @@ Physics::~Physics() {}
 
 
 void Physics::init(Context* context) {
-  dynamicsWorld.setGravity(btVector3(0, -10, 0));
+  dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
 }
 
 void Physics::start(Context* context) {
 	int usrIdx = 0; // Super jank
   for (auto entity : *context->getEntities()) {
-		printf("SZ: %f\n", entity->getTransform()->getScale()->z/2.0);
 		btBoxShape* shape = createBoxShape(btVector3(entity->getTransform()->getScale()->x/2.0, entity->getTransform()->getScale()->y/2.0, entity->getTransform()->getScale()->z/2.0));
 		btTransform transform;
 		transform.setIdentity();
@@ -72,10 +71,10 @@ void Physics::start(Context* context) {
 		bodies.push_back(body);
 		dynamicsWorld.addRigidBody(body);
 	}
-	btBoxShape* grndShape = createBoxShape(btVector3(100, 1.5, 100));
+	btBoxShape* grndShape = createBoxShape(btVector3(100, 0.1, 100));
 	btTransform grndTransform;
 	grndTransform.setIdentity();
-	grndTransform.setOrigin(btVector3(0, -1.0, 0));
+	grndTransform.setOrigin(btVector3(0, 0.0, 0));
 	btRigidBody* ground = createRigidBody(0.0, grndTransform, grndShape);
 	ground->setUserIndex(usrIdx++);
 	// bodies.push_back(ground);

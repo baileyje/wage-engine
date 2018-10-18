@@ -4,6 +4,8 @@
 #include <string>
 
 #include "core/core.h"
+#include "platform/platform.h"
+#include "input/input.h"
 #include "jsrt/jsrt.h"
 #include "physics/physics.h"
 #include "render/renderer.h"
@@ -14,9 +16,21 @@
 class DorkComp : public Component {
 
   void update(EntityContext* context) {
-    // printf("Comp Called!\n");
-    // *context->getEntity()->getTransform()->getPosition() += Vector(100 * context->getDeltaTime(), 0, 0);
-    // printf("Hmm: %f\n", context->getEntity()->getTransform()->getPosition()->x);
+    if (Input::isPressed(GLFW_KEY_W)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
+    }
+    if (Input::isPressed(GLFW_KEY_S)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, -0.3);
+    } 
+    if (Input::isPressed(GLFW_KEY_A)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(0.3, 0, 0);
+    }
+    if (Input::isPressed(GLFW_KEY_D)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(-0.3, 0, 0);
+    }
+    if (Input::isPressed(GLFW_KEY_SPACE)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0.5, 0);
+    }
   }
 
   void fixedUpdate(EntityContext* context) {
@@ -38,8 +52,10 @@ int main(int argc, char* argv[]) {
   signal(SIGINT, intHandler);  
   Core core(path);  
   coreRef = &core;
-  Jsrt jsrt;
-  core.add(&jsrt);
+  core.add(new Platform());
+  core.add(new Input());
+  // Jsrt jsrt;
+  // core.add(&jsrt);
   // core.add(new Physics());
   
   Engine engine;
@@ -47,7 +63,7 @@ int main(int argc, char* argv[]) {
   core.add(new Renderer());
 
   core.getCamera()->getTransform()->setPosition(Vector(0, 5, -20));
-  core.getCamera()->getTransform()->setRotation(Vector(0.3, 0.0, 0));
+  core.getCamera()->getTransform()->setRotation(Vector(0.0, 0.0, 0));
 
   // for (int i = 0; i < 5; i++) {
   //   {
@@ -66,8 +82,10 @@ int main(int argc, char* argv[]) {
   // }
 
   Entity* entity = new Entity();
-  entity->getTransform()->setPosition(Vector(0, 0, 0));
+  entity->getTransform()->setPosition(Vector(0, 2, 0));
   entity->getTransform()->setScale(Vector(1, 1, 1));
+  entity->getTransform()->setRotation(Vector(0, 0, 0));
+  entity->add(new DorkComp());
   core.add(entity);
   // FULL NONSENSE HERE!
   core.init();

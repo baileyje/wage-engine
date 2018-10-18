@@ -22,12 +22,19 @@ void Material::bind() const {
         FAIL_CHECK(glUniformMatrix4fv(matId, 1, GL_FALSE, glm::value_ptr(*mat)));
         break;
       }
-      case 1000:
+      case 1000: {
         GLuint vec3Id;
         FAIL_CHECK(vec3Id = glGetUniformLocation(shader->getId(), uni.first.c_str())); 
         glm::vec3* vec3 = (glm::vec3*)uni.second.value;
         FAIL_CHECK(glUniform3fv(vec3Id, 1, glm::value_ptr(*vec3)));
         break;
+      }
+      case 1001:
+        GLuint vec4Id;
+        FAIL_CHECK(vec4Id = glGetUniformLocation(shader->getId(), uni.first.c_str())); 
+        glm::vec4* vec4 = (glm::vec4*)uni.second.value;
+        FAIL_CHECK(glUniform4fv(vec4Id, 1, glm::value_ptr(*vec4)));
+        break;        
     }
   }
 }

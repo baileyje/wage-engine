@@ -1,27 +1,14 @@
-#ifndef RENDERER_CAMERA_H
-#define RENDERER_CAMERA_H
+#ifndef ENTITY_CAMERA_H
+#define ENTITY_CAMERA_H
 
-#include "entity/transform.h"
+#include "entity/entity.h"
 
-class Camera {
+class Camera : public Entity  {
 
 public:
-  
-  Camera() {}
-
-  Camera(Transform transform) : transform(transform) {    
-  }
-
-  ~Camera() {}
-
-  Transform* getTransform() {
-    return &transform;
-  }
 
 private:
 
-  Transform transform;
-
 };
 
-#endif //RENDERER_CAMERA_H
+#endif //ENTITY_CAMERA_H

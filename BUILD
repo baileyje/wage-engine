@@ -4,6 +4,8 @@ cc_binary(
 	srcs = ["wage.cpp"],
 	deps = [
     "//core",
+    "//platform",
+    "//input",
     "//jsrt",
     "//physics",
     "//engine",

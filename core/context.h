@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "fs/file_system.h"
+
 #include "entity/entity.h"
 #include "entity/camera.h"
 
@@ -39,6 +41,8 @@ public:
   virtual std::vector<Entity*>* getEntities() = 0;
 
   virtual Camera* getCamera() = 0;
+
+  virtual FileSystem* getFileSystem() = 0;
 };
 
 #endif // CORE_CONTEXT_H

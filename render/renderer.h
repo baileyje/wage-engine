@@ -35,8 +35,14 @@ private:
 
   GLFWwindow* window;
   
-  glm::mat4 screenProjection; // TODO: should come from camera
+  glm::mat4 screenProjection;
 
+  glm::mat4 viewProjectionFrom(Camera* camera);
+
+  glm::mat4 modelProjectionFrom(Entity* entity);
+
+  void draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity);
+  
 };
 
 #endif //RENDERER_H

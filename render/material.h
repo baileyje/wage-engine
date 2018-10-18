@@ -48,6 +48,10 @@ public:
     uniforms[name] = { 1000, count, (void*)value };
   }
 
+  inline void setVec4(std::string name, glm::vec4* value, unsigned int count) {
+    uniforms[name] = { 1001, count, (void*)value };
+  }
+
   void bind() const;
 
   void unbind() const;
