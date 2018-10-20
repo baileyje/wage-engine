@@ -1,0 +1,20 @@
+#ifndef PHYSICS_UTIL_H
+#define PHYSICS_UTIL_H
+
+#include <btBulletDynamicsCommon.h>
+
+#include "entity/transform.h"
+
+inline btVector3 fromVector(Vector* vector) {
+  return btVector3(vector->x, vector->y, vector->z);
+}
+
+inline Vector fromBTVector(btVector3* vector) {
+  return Vector(vector->x(), vector->y(), vector->z());
+}
+
+btRigidBody* createRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape);
+
+btTransform fromTransform(Transform* transform);
+
+#endif //PHYSICS_UTIL_H

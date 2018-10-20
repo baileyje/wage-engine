@@ -3,7 +3,11 @@
 
 #include <btBulletDynamicsCommon.h>
 
+#include <vector>
+
 #include "core/system.h"
+
+#include "physics/entity.h"
 
 class Physics : public System {
 
@@ -21,7 +25,11 @@ public:
 
   void deinit(Context* context);
 
+  void add(Entity* entity);
+
 private:
+
+  btCollisionShape* shapeFor(Entity* entity);
 
 	btDefaultCollisionConfiguration collisionConfiguration;
   
@@ -33,9 +41,7 @@ private:
 
   btDiscreteDynamicsWorld dynamicsWorld;  
 
-  btAlignedObjectArray<btCollisionShape*> collisionShapes;
-
-  btAlignedObjectArray<btRigidBody*> bodies;
+  std::vector<PhysicsEntity*> entities;
 };
 
 #endif // PHYSICS_H

@@ -57,6 +57,29 @@ public:
 
 };
 
+class CamMove : public Component {
+
+public:
+
+  CamMove() : Component("CamMove") {    
+  }
+
+  void update(EntityContext* context) {
+    if (Input::isPressed(GLFW_KEY_UP)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
+    }
+    if (Input::isPressed(GLFW_KEY_DOWN)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, -0.3);
+    } 
+    if (Input::isPressed(GLFW_KEY_LEFT)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(0.3, 0, 0);
+    }
+    if (Input::isPressed(GLFW_KEY_RIGHT)) {
+      *context->getEntity()->getTransform()->getPosition() += Vector(-0.3, 0, 0);
+    }    
+  }
+};
+
 class DorkComp2 : public Component {
 
 public:
@@ -97,8 +120,8 @@ int main(int argc, char* argv[]) {
   core.add(&engine);
   core.add(new Renderer());
 
-  // core.getCamera()->add(new DorkComp());
-  // core.add(core.getCamera());
+  core.getCamera()->add(new CamMove());
+  core.add(core.getCamera());
 
   core.getCamera()->getTransform()->setPosition(Vector(0, 5, -20));
   core.getCamera()->getTransform()->setRotation(Vector(0.0, 0.0, 0));
