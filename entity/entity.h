@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "entity/transform.h"
+#include "entity/type_index.h"
 
 class Component;
 
@@ -15,18 +16,23 @@ public:
   Entity();
 
   Entity(Transform transform);
-  
+
   virtual ~Entity();
 
   long getId() { return id; }
   
   Transform* getTransform() { return &transform; }
 
-  void setTransform(Transform transform) { this->transform = transform; }
+  inline void setTransform(Transform transform) { this->transform = transform; }
 
-  void add(Component* component) { components.push_back(component); }
+  template <typename C>
+  inline void add(C* component) { 
+    components.push_back(component); 
+  }
 
-  std::vector<Component*>* getComponents() { return &components; }
+  inline std::vector<Component*>* getComponents() { return &components; }
+
+  Component* getComponent(std::string name);
   
 private:
   

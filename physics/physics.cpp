@@ -1,17 +1,15 @@
 #include "physics/physics.h"
 
+#include "entity/component/rigid_body.h"
+
 btRigidBody* createRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape) {
 	btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
 
-	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
-	printf("Dyn: %d\n", isDynamic);
-
+	
 	btVector3 localInertia(0, 0, 0);
 	if (isDynamic)
 		shape->calculateLocalInertia(mass, localInertia);
-
-			//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
 #define USE_MOTIONSTATE 1
 #ifdef USE_MOTIONSTATE
@@ -37,11 +35,7 @@ btBoxShape* createBoxShape(const btVector3& halfExtents) {
 	return box;
 }
 
-
-
-
-Physics::Physics() : 
-	System("bullet_physics"), 
+Physics::Physics() : System("bullet_physics"), 
 	dispatcher(&collisionConfiguration), 
 	dynamicsWorld(&dispatcher, &overlappingPairCache, &solver, &collisionConfiguration)
 {}
@@ -51,65 +45,92 @@ Physics::~Physics() {}
 
 void Physics::init(Context* context) {
   dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
+	// dynamicsWorld.setGravity(btVector3(0, 0, 0));
 }
 
 void Physics::start(Context* context) {
 	int usrIdx = 0; // Super jank
   for (auto entity : *context->getEntities()) {
+		RigidBody* entityBody = (RigidBody*)entity->getComponent("RigidBody");
+		if (!entityBody) {
+			continue;
+		}
 		btBoxShape* shape = createBoxShape(btVector3(entity->getTransform()->getScale()->x/2.0, entity->getTransform()->getScale()->y/2.0, entity->getTransform()->getScale()->z/2.0));
 		btTransform transform;
 		transform.setIdentity();
 		transform.setOrigin(
 			btVector3(
-				(btScalar)entity->getTransform()->getPosition()->x, 
-				(btScalar)entity->getTransform()->getPosition()->y, 
-				(btScalar)entity->getTransform()->getPosition()->z
+				(btScalar)entity->getTransform()->position.x, 
+				(btScalar)entity->getTransform()->position.y, 
+				(btScalar)entity->getTransform()->position.z
 			)
 		);		
-		btRigidBody* body = createRigidBody(1.0, transform, shape);
+		btRigidBody* body = createRigidBody(entityBody->mass, transform, shape);
 		body->setUserIndex(usrIdx++);
 		bodies.push_back(body);
 		dynamicsWorld.addRigidBody(body);
-	}
-	btBoxShape* grndShape = createBoxShape(btVector3(100, 0.1, 100));
-	btTransform grndTransform;
-	grndTransform.setIdentity();
-	grndTransform.setOrigin(btVector3(0, 0.0, 0));
-	btRigidBody* ground = createRigidBody(0.0, grndTransform, grndShape);
-	ground->setUserIndex(usrIdx++);
-	// bodies.push_back(ground);
-	dynamicsWorld.addRigidBody(ground);
+	}	
 }
 
 void Physics::fixedUpdate(Context* context) {
   // printf("Bullet Phys!\n");
-  dynamicsWorld.stepSimulation(context->timeStep, 10);	
 	for (int j = dynamicsWorld.getNumCollisionObjects() - 1; j >= 0; j--) {
-			btCollisionObject* obj = dynamicsWorld.getCollisionObjectArray()[j];
-			btRigidBody* body = btRigidBody::upcast(obj);
-			btMotionState* motionState = body->getMotionState();
-			btTransform transform;
-			if (body && body->getMotionState()) {
-				body->getMotionState()->getWorldTransform(transform);
-			}
-			else {
-				transform = obj->getWorldTransform();
-			}
-			int userIdx = body->getUserIndex();
-			std::vector<Entity*> entities = *context->getEntities();
-			if (userIdx >= entities.size()) {
-				continue;
-			}
-			Entity* entity = (*context->getEntities())[userIdx];
-			// printf("X: %f, Y: %f, Z: %f \n", transform.getOrigin().getX(), transform.getOrigin().getY(), transform.getOrigin().getZ());
-			entity->getTransform()->setPosition(Vector(transform.getOrigin().getX(), transform.getOrigin().getY(), 0.0 /*transform.getOrigin().getZ()*/ ));
-			btQuaternion rotation = transform.getRotation();
-			Vector* entityRotation = entity->getTransform()->getRotation();
-			btScalar yawZ, pitchY, rollX;
-			rotation.getEulerZYX(yawZ, pitchY, rollX);
-			entityRotation->x = rollX;
-			entityRotation->y = pitchY;
-			entityRotation->z = yawZ;
+		btCollisionObject* obj = dynamicsWorld.getCollisionObjectArray()[j];
+		btRigidBody* body = btRigidBody::upcast(obj);
+		body->activate(true);
+		int userIdx = body->getUserIndex();
+		std::vector<Entity*> entities = *context->getEntities();
+		if (userIdx >= entities.size()) {
+			printf("WTF!\n");
+			continue;
+		}
+		Entity* entity = (*context->getEntities())[userIdx];
+		RigidBody* entityBody = (RigidBody*)entity->getComponent("RigidBody");
+		if (!entityBody) {
+			printf("WTF2!\n");
+			continue;
+		}
+		body->activate(true);
+		// printf("x: %f y: %f, z: %f\n", entityBody->currentForce.x, entityBody->currentForce.y, entityBody->currentForce.z);
+		btVector3 impulse(
+				(btScalar)entityBody->currentForce.x, 
+				(btScalar)entityBody->currentForce.y, 
+				(btScalar)entityBody->currentForce.z
+			);
+		if (impulse.length() > 0) {
+			printf("x: %;f y: %lf, z: %lf\n", impulse.x(), impulse.y(), impulse.z());
+			body->applyCentralImpulse(impulse);	
+			entityBody->currentForce = Vector();
+		}		
+		body->activate(true);
+	}	
+  dynamicsWorld.stepSimulation(context->timeStep, 3);	
+	// printf("CNT: %d\n", dynamicsWorld.getNumCollisionObjects());
+	for (int j = dynamicsWorld.getNumCollisionObjects() - 1; j >= 0; j--) {
+		btCollisionObject* obj = dynamicsWorld.getCollisionObjectArray()[j];
+		btRigidBody* body = btRigidBody::upcast(obj);
+		btMotionState* motionState = body->getMotionState();
+		btTransform transform;
+		if (body && body->getMotionState()) {
+			body->getMotionState()->getWorldTransform(transform);
+		}
+		else {
+			transform = obj->getWorldTransform();
+		}
+		int userIdx = body->getUserIndex();
+		std::vector<Entity*> entities = *context->getEntities();
+		if (userIdx >= entities.size()) {
+			continue;
+		}
+		Entity* entity = (*context->getEntities())[userIdx];	
+		entity->getTransform()->setPosition(Vector(transform.getOrigin().getX(), transform.getOrigin().getY(), transform.getOrigin().getZ() ));
+		btQuaternion rotation = transform.getRotation();
+		Vector* entityRotation = entity->getTransform()->getRotation();
+		btScalar yawZ, pitchY, rollX;
+		rotation.getEulerZYX(yawZ, pitchY, rollX);
+		entityRotation->x = rollX;
+		entityRotation->y = pitchY;
+		entityRotation->z = yawZ;
 	}
 }
 

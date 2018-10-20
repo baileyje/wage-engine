@@ -8,8 +8,17 @@ long Entity::CurrentId = 0;
 Entity::Entity() : id(Entity::CurrentId++) {
 }
 
- Entity::Entity(Transform transform) : id(Entity::CurrentId++), transform(transform) {    
+Entity::Entity(Transform transform) : id(Entity::CurrentId++), transform(transform) {    
 }
 
-
 Entity::~Entity() {}
+
+// TODO:  Need some kind of efficient store for this.
+Component* Entity::getComponent(std::string name) { 
+  for (auto comp : components) {
+    if (comp->getName() ==  name) {
+      return comp;
+    }
+  }
+  return nullptr;
+}

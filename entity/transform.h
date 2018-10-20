@@ -25,14 +25,16 @@ public:
 
   void setRotation(Vector rotation) { this->rotation = rotation; }
 
-private:
-
   Vector position;
   
   Vector scale;
 
   // TODO: Quaternion?
   Vector rotation;
+
+private:
+
+
 
 };
 

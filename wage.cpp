@@ -12,33 +12,68 @@
 #include "engine/engine.h"
 #include "entity/entity.h"
 #include "entity/component.h"
+#include "entity/component/rigid_body.h"
 
-class DorkComp : public Component {
+class MoveIt : public Component {
+
+public:
+
+  MoveIt() : Component("MoveIt") {    
+  }
 
   void update(EntityContext* context) {
+    Entity* entity = context->getEntity();
+    RigidBody* body = (RigidBody*)entity->getComponent("RigidBody");
+    // body->addForce(Vector(0, 0.0000000001, 0));
     if (Input::isPressed(GLFW_KEY_W)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
+      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
+      body->addForce(Vector(0, 0, 0.0004));
     }
     if (Input::isPressed(GLFW_KEY_S)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, -0.3);
+      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, -0.3);
+      body->addForce(Vector(0, 0, -0.0004));
     } 
     if (Input::isPressed(GLFW_KEY_A)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(0.3, 0, 0);
+      // *context->getEntity()->getTransform()->getPosition() += Vector(0.3, 0, 0);
+      body->addForce(Vector(0.0004, 0, 0));
     }
     if (Input::isPressed(GLFW_KEY_D)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(-0.3, 0, 0);
+      // *context->getEntity()->getTransform()->getPosition() += Vector(-0.3, 0, 0);
+      body->addForce(Vector(-0.0004, 0, 0));
     }
     if (Input::isPressed(GLFW_KEY_SPACE)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0.5, 0);
+      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0.5, 0);
+      body->addForce(Vector(0, 0.0005, 0));
+    }
+    if (Input::isPressed(GLFW_KEY_LEFT_SHIFT)) {
+      // *context->getEntity()->getTransform()->getPosition() += Vector(0, -0.5, 0);
+      body->addForce(Vector(0, -0.0001, 0));
     }
   }
 
-  void fixedUpdate(EntityContext* context) {
-    // printf("Comp Fixed Called!\n");
-  }
+  // void fixedUpdate(EntityContext* context) {
+  //   // printf("Comp Fixed Called!\n");
+  // }
 
 };
 
+class DorkComp2 : public Component {
+
+public:
+
+  DorkComp2() : Component("DorkComp2") {    
+  }
+
+  void update(EntityContext* context) {    
+    if (Input::isPressed(GLFW_KEY_M)) {
+      Entity* entity = context->getEntity();
+      RigidBody* body = (RigidBody*)entity->getComponent("RigidBody");
+      body->addForce(Vector(0, 0.0001, 0));
+      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
+    }
+  }
+
+};
 
 Core* coreRef;
 
@@ -56,40 +91,49 @@ int main(int argc, char* argv[]) {
   core.add(new Input());
   // Jsrt jsrt;
   // core.add(&jsrt);
-  // core.add(new Physics());
+  core.add(new Physics());
   
   Engine engine;
   core.add(&engine);
   core.add(new Renderer());
 
+  // core.getCamera()->add(new DorkComp());
+  // core.add(core.getCamera());
+
   core.getCamera()->getTransform()->setPosition(Vector(0, 5, -20));
   core.getCamera()->getTransform()->setRotation(Vector(0.0, 0.0, 0));
 
-  // for (int i = 0; i < 5; i++) {
-  //   {
-  //     Entity* entity = new Entity();
-  //     entity->getTransform()->setPosition(Vector(3 * i,10 + 5 * i, 0));
-  //     printf("X: %f : Y: %f, Z: %f\n", 
-  //       entity->getTransform()->getPosition()->x,
-  //       entity->getTransform()->getPosition()->y,
-  //       entity->getTransform()->getPosition()->x
-  //     );
-  //     entity->getTransform()->setScale(Vector(1, 1, 1));
-  //     // entity->getTransform()->setRotation(Vector(0.2, 0.2, 0.2));
-  //     entity->add(new DorkComp());
-  //     core.add(entity);
-  //   }
-  // }
+  for (int i = 0; i < 10; i++) {
+      Entity* entity = new Entity();
+      entity->getTransform()->setPosition(Vector(3, 3 * i, 0));   
+      RigidBody* body = new RigidBody();
+      body->mass = 0.001;
+      entity->getTransform()->setScale(Vector(1, 1, 1));
+      // entity->getTransform()->setRotation(Vector(0.2, 0.2, 0.2));
+      entity->add(body);
+      entity->add(new DorkComp2());
+      core.add(entity);
+  }
 
-  Entity* entity = new Entity();
-  entity->getTransform()->setPosition(Vector(0, 2, 0));
-  entity->getTransform()->setScale(Vector(1, 1, 1));
-  entity->getTransform()->setRotation(Vector(0, 0, 0));
-  entity->add(new DorkComp());
-  core.add(entity);
-  // FULL NONSENSE HERE!
+  Entity* mover = new Entity();
+  mover->getTransform()->setPosition(Vector(0, 2, 0));
+  mover->getTransform()->setScale(Vector(1, 1, 1));
+  mover->getTransform()->setRotation(Vector(0, 0, 0));
+  RigidBody* body = new RigidBody();
+  body->mass = 0.001;
+  mover->add(body);
+  mover->add(new MoveIt());
+  core.add(mover);
+
+  Entity* ground = new Entity();
+  ground->getTransform()->setPosition(Vector(0, -2, 0));
+  ground->getTransform()->setScale(Vector(100, 0.1, 100));
+  ground->getTransform()->setRotation(Vector(0, 0, 0));
+  RigidBody* groundBody = new RigidBody();
+  ground->add(groundBody);
+  core.add(ground);
+
   core.init();
-  // jsrt->loadModule("boot.js");
   core.start();
   return 0;
 }

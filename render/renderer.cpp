@@ -39,7 +39,6 @@ void Renderer::start(Context* context) {
   // glEnable(GL_BLEND);
   // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_DEPTH_TEST);
-  // Accept fragment if it closer to the camera than the former one
   glDepthFunc(GL_LESS);
   FAIL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
   Shader::initDefault(context->getFileSystem());  
@@ -98,7 +97,7 @@ void Renderer::draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity
   material.setMat4("projection", &screenProjection, 1);  
   material.setVec3("viewPos", &cameraPosition, 1);
 
-  glm::vec3 lightPos(0.0f, 0.0f, -10.0f);
+  glm::vec3 lightPos(0.0f, 10.0f, -1.0f);
   glm::vec4 objColor(1.0f, 0.5f, 0.31f, 1.0f);
   glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
   material.setVec4("objectColor", &objColor, 1);
