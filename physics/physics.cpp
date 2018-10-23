@@ -1,6 +1,7 @@
 #include "physics/physics.h"
 
 #include "entity/component/rigid_body.h"
+#include "entity/component/collider.h"
 
 
 Physics::Physics() : System("bullet_physics"), 
@@ -41,19 +42,34 @@ void Physics::deinit(Context* context) {
 }
 
 void Physics::add(Entity* entity) {	
-	RigidBody* entityBody = (RigidBody*)entity->getComponent("RigidBody");
-	if (!entityBody) {
-		return;
-	}
 	btCollisionShape* shape = shapeFor(entity);
-	btRigidBody* body = createRigidBody(entityBody->mass, fromTransform(entity->getTransform()), shape);
+	btRigidBody* body = nullptr;
+	RigidBody* entityBody = (RigidBody*)entity->getComponent("RigidBody");
+	if (entityBody) {
+		body = createRigidBody(entityBody->mass, fromTransform(entity->getTransform()), shape);
+		dynamicsWorld.addRigidBody(body);
+	}	else {
+		btCollisionObject* object = new btCollisionObject();
+		object->setCollisionShape(shape);
+		dynamicsWorld.addCollisionObject(object);
+	}
 	entities.push_back(new PhysicsEntity(entity, shape, body));
-	dynamicsWorld.addRigidBody(body);
+	
 }
 
 btCollisionShape* Physics::shapeFor(Entity* entity) {
-	btVector3 halfExtents = btVector3(entity->getTransform()->getScale()->x/2.0, entity->getTransform()->getScale()->y/2.0, entity->getTransform()->getScale()->z/2.0);
-	// TODO: Support more shapes
-	btBoxShape* box = new btBoxShape(halfExtents);
-	return box;
+	Collider* collider = (Collider*)entity->getComponent("Collider");
+	if (!collider) {
+		printf("No Collider!!\n");
+		return new btEmptyShape();
+	}
+	switch(collider->getType()) {
+		// TODO: Support more shapes
+		case box: {
+			btVector3 halfExtents = btVector3(entity->getTransform()->getScale()->x/2.0, entity->getTransform()->getScale()->y/2.0, entity->getTransform()->getScale()->z/2.0);
+			
+			return new btBoxShape(halfExtents);
+		}
+		default: return nullptr;
+	}	
 }

@@ -8,17 +8,17 @@ public:
 
   Vector() : x(0), y(0), z(0) {}
 
-  Vector(double x, double y) : x(x), y(y), z(0) {}
+  Vector(float x, float y) : x(x), y(y), z(0) {}
   
-  Vector(double x, double y, double z) : x(x), y(y), z(z) {}
+  Vector(float x, float y, float z) : x(x), y(y), z(z) {}
 
   ~Vector() {}
 
-  double x;
+  float x;
 
-  double y;
+  float y;
 
-  double z;
+  float z;
   
   friend Vector operator+(Vector left, const Vector& right) {
     left += right;

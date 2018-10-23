@@ -13,6 +13,9 @@
 #include "entity/entity.h"
 #include "entity/component.h"
 #include "entity/component/rigid_body.h"
+#include "entity/component/box_collider.h"
+#include "entity/component/mesh.h"
+#include "entity/component/material.h"
 
 class MoveIt : public Component {
 
@@ -123,10 +126,14 @@ int main(int argc, char* argv[]) {
   core.getCamera()->add(new CamMove());
   core.add(core.getCamera());
 
-  core.getCamera()->getTransform()->setPosition(Vector(0, 5, -20));
-  core.getCamera()->getTransform()->setRotation(Vector(0.0, 0.0, 0));
+  core.getCamera()->getTransform()->setPosition(Vector(0, 20, -15));
+  core.getCamera()->getTransform()->setRotation(Vector(1.0, 0.0, 0));
 
-  for (int i = 0; i < 10; i++) {
+  Mesh mesh = Mesh::Cube;
+  
+  Material blueMat(Color(0, 0, 1, 1));
+
+  for (int i = 0; i < 200; i++) {
       Entity* entity = new Entity();
       entity->getTransform()->setPosition(Vector(3, 3 * i, 0));   
       RigidBody* body = new RigidBody();
@@ -135,6 +142,9 @@ int main(int argc, char* argv[]) {
       // entity->getTransform()->setRotation(Vector(0.2, 0.2, 0.2));
       entity->add(body);
       entity->add(new DorkComp2());
+      entity->add(&Mesh::Cube);
+      entity->add(&blueMat);
+      entity->add(new BoxCollider());
       core.add(entity);
   }
 
@@ -146,14 +156,22 @@ int main(int argc, char* argv[]) {
   body->mass = 0.001;
   mover->add(body);
   mover->add(new MoveIt());
+  mover->add(&Mesh::Cube);
+  Material redMat(Color(1, 0, 0, 1));
+  mover->add(&redMat);
+  mover->add(new BoxCollider());
   core.add(mover);
 
   Entity* ground = new Entity();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
   ground->getTransform()->setScale(Vector(100, 0.1, 100));
-  ground->getTransform()->setRotation(Vector(0, 0, 0));
+  // ground->getTransform()->setRotation(Vector(90, 0, 0));
   RigidBody* groundBody = new RigidBody();
   ground->add(groundBody);
+  ground->add(&Mesh::Cube);
+  ground->add(new BoxCollider());
+  Material whiteMat(Color(1, 1, 1, 1));
+  ground->add(&whiteMat);
   core.add(ground);
 
   core.init();

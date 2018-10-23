@@ -7,7 +7,7 @@
 
 #include "core/system.h"
 #include "render/material.h"
-#include "render/mesh/mesh.h"
+#include "entity/component/mesh.h"
 
 class Renderer : public System {
 
@@ -27,7 +27,7 @@ public:
 
   void deinit(Context* context);
 
-  void draw(Mesh* mesh, Material* material);
+  void draw(Mesh* mesh, GlMaterial* material);
 
   void draw(Camera* camera, Entity* entity);
 

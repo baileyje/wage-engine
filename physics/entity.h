@@ -34,6 +34,9 @@ public:
   }
 
   void applyForces() {
+    if (!rigidBody) {
+      return;
+    }
     RigidBody* entityBody = (RigidBody*)entity->getComponent("RigidBody");
 		if (!entityBody) {
 			return;
@@ -47,6 +50,9 @@ public:
   }
 
   void updateTransform() {
+    if (!rigidBody) {
+      return;
+    }
     btTransform transform = getTransform();		
 		entity->getTransform()->setPosition(fromBTVector(&transform.getOrigin()));
 		btQuaternion rotation = transform.getRotation();

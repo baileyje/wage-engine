@@ -14,9 +14,10 @@
 #include "render/vertex_array.h"
 #include "render/util.h"
 #include "render/material.h"
-#include "render/mesh/mesh.h"
-#include "render/mesh/cube.h"
 #include "render/shader/shader.h"
+
+#include "entity/component/mesh.h"
+#include "entity/component/material.h"
 
 Renderer::~Renderer() {
 }
@@ -88,8 +89,11 @@ glm::mat4 Renderer::modelProjectionFrom(Entity* entity) {
 }
 
 void Renderer::draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity) {
-  Cube cube;
-  Material material(Shader::Default);
+  Mesh* mesh = (Mesh*)entity->getComponent("Mesh");
+  if (!mesh) {
+    return;
+  }
+  GlMaterial material(Shader::Default);
   glm::mat4 model = modelProjectionFrom(entity);
   
   material.setMat4("model", &model, 1);
@@ -97,10 +101,8 @@ void Renderer::draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity
   material.setMat4("projection", &screenProjection, 1);  
   material.setVec3("viewPos", &cameraPosition, 1);
 
-  glm::vec3 lightPos(0.0f, 10.0f, -1.0f);
-  glm::vec4 objColor(1.0f, 0.5f, 0.31f, 1.0f);
-  glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-  material.setVec4("objectColor", &objColor, 1);
+  glm::vec3 lightPos(0.0f, -0.5f, 1.0f);
+  glm::vec3 lightColor(1.0f, 1.0f, 1.0f);  
   
   material.setVec3("allLights[0].position", &lightPos, 1);
   material.setVec3("allLights[0].intensities", &lightColor, 1);
@@ -110,10 +112,17 @@ void Renderer::draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity
   material.setFloat("allLights[0].ambientCoefficient", &ambientCoefficient, 1);
   float coneAngle = 1.5f;
   material.setFloat("allLights[0].coneAngle", &coneAngle, 1);
-  glm::vec3 coneDirection = glm::vec3(0,0,-1);
+  glm::vec3 coneDirection = glm::vec3(0,0,1);
   material.setVec3("allLights[0].coneDirection", &coneDirection, 1);
-  
-  draw(&cube, &material);
+
+  glm::vec4 objColor(1.0f, 0.0f, 1.0f, 1.0f);
+  Material* matComp = (Material*)entity->getComponent("Material");
+  if (matComp) {
+    Color matColor = matComp->getColor();
+    objColor = glm::vec4(matColor.r, matColor.g, matColor.b, matColor.a);
+  }   
+  material.setVec4("objectColor", &objColor, 1);
+  draw(mesh, &material);
 }
 
 void Renderer::draw(Camera* camera, Entity* entity) {  
@@ -122,14 +131,27 @@ void Renderer::draw(Camera* camera, Entity* entity) {
   draw(cameraPosition, viewProjectionFrom(camera), entity);
 }
 
-void Renderer::draw(Mesh* mesh, Material* material) {
+void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   VertexArray vao;
   vao.bind();  
   material->bind();
-  mesh->bind(&vao);
-  // FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
-  FAIL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 36));
-  mesh->unbind();
+  // TODO: I think this could be cached for sure.  
+  // Create Verts Buff
+  VertexBuffer verts(mesh->getVertices()->data(), mesh->getVertices()->size() * 3 * sizeof(float));
+  verts.getLayout()->pushFloat(3);
+  vao.addBuffer(&verts);
+  // Create Norms Buff
+  VertexBuffer norms(mesh->getNormals()->data(), mesh->getNormals()->size() * 3 * sizeof(float));
+  norms.getLayout()->pushFloat(3);
+  vao.addBuffer(&norms);
+  // Create Index Buff
+  IndexBuffer indices((const unsigned int*)mesh->getIndices()->data(), mesh->getIndices()->size());
+  indices.bind();
+  FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
+  // FAIL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 36));
+  indices.unbind();
+  norms.unbind();
+  verts.unbind();
   material->unbind();
   vao.unbind();
 }

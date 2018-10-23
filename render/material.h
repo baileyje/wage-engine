@@ -20,13 +20,13 @@ struct Uniform {
 
 typedef std::unordered_map<std::string, Uniform> UniformMap;
 
-class Material {
+class GlMaterial {
 
 public:
 
-  Material(Shader* shader);
+  GlMaterial(Shader* shader);
 
-  ~Material();
+  ~GlMaterial();
 
   inline void setShader(Shader* shader) {
     this->shader = shader;

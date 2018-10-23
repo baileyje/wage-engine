@@ -20,3 +20,7 @@ void VertexBuffer::bind() const {
 void VertexBuffer::unbind() const {
   FAIL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
+
+ VertexBufferLayout* VertexBuffer::getLayout() {
+  return &layout;
+}

@@ -5,13 +5,13 @@
 #include "render/util.h"
 
 
-Material::Material(Shader* shader) : shader(shader) {
+GlMaterial::GlMaterial(Shader* shader) : shader(shader) {
 }
 
-Material::~Material() {
+GlMaterial::~GlMaterial() {
 }
 
-void Material::bind() const {
+void GlMaterial::bind() const {
   shader->bind();
   for (auto uni : uniforms) {
     switch(uni.second.type) {
@@ -39,6 +39,6 @@ void Material::bind() const {
   }
 }
 
-void Material::unbind() const {
+void GlMaterial::unbind() const {
   shader->unbind();
 }

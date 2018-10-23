@@ -1,6 +1,8 @@
 #ifndef RENDERER_VERTEX_BUFFER_H
 #define RENDERER_VERTEX_BUFFER_H
 
+#include "render/vertex_buffer_layout.h"
+
 class VertexBuffer {
 
 public:
@@ -13,10 +15,13 @@ public:
 
   void unbind() const;
 
+  VertexBufferLayout* getLayout();
+
 private:
 
   unsigned int id;
 
+  VertexBufferLayout layout;
 };
 
 

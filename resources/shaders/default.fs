@@ -28,7 +28,7 @@ vec3 applyLight(Light light, vec3 surfaceColor, vec3 normal, vec3 surfacePos, ve
   float attenuation = 1.0;
   // if(light.position.w == 0.0) {
   //     //directional light
-      surfaceToLight = normalize(light.position.xyz);
+      surfaceToLight = -normalize(light.position.xyz);
       attenuation = 1.0; //no attenuation for directional lights
   // } else {
   //     //point light

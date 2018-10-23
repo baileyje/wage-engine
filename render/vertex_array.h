@@ -15,7 +15,7 @@ public:
 
   ~VertexArray();
 
-  void addBuffer(const VertexBuffer* buffer, const VertexBufferLayout* layout);
+  void addBuffer(VertexBuffer* buffer);
 
   void bind() const;
 
@@ -25,6 +25,7 @@ private:
   
   unsigned int id;
 
+  unsigned int index;
 };
 
 
