@@ -1,10 +1,8 @@
 #include "render/renderer.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-
 #include <vector>
+#include <sstream>
 #include "glm/gtc/matrix_transform.hpp"
-#include <glm/gtx/quaternion.hpp>
 #include "glm/ext.hpp"
 
 #include "platform/platform.h"
@@ -14,10 +12,16 @@
 #include "render/vertex_array.h"
 #include "render/util.h"
 #include "render/material.h"
+#include "render/texture.h"
 #include "render/shader/shader.h"
 
 #include "entity/component/mesh.h"
 #include "entity/component/material.h"
+#include "entity/component/camera.h"
+#include "entity/component/directional_light.h"
+#include "entity/component/point_light.h"
+#include "entity/component/spotlight.h"
+
 
 Renderer::~Renderer() {
 }
@@ -43,15 +47,19 @@ void Renderer::start(Context* context) {
   glDepthFunc(GL_LESS);
   FAIL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
   Shader::initDefault(context->getFileSystem());  
+  
+  // TODO: Listen for changes to entities and figure out how to get these!!!
+  dirLights = context->getEntitiesWith("DirectionalLight");
+  pointLights = context->getEntitiesWith("PointLight");
+  spotlights = context->getEntitiesWith("Spotlight");
 }
-
 
 void Renderer::fixedUpdate(Context* context) {
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
   FAIL_CHECK(glViewport(0, 0, width, height));
   FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-  Camera* camera = context->getCamera();
+  Entity* camera = context->getCamera();
   Transform* cameraTransform = camera->getTransform();
   glm::vec3 cameraPosition = vec3From(cameraTransform->getPosition());
   glm::mat4 cameraProjection = viewProjectionFrom(camera);
@@ -62,10 +70,10 @@ void Renderer::fixedUpdate(Context* context) {
   FAIL_CHECK(glfwPollEvents());
 }
 
-glm::mat4 Renderer::viewProjectionFrom(Camera* camera) {
+glm::mat4 Renderer::viewProjectionFrom(Entity* camera) {
   Transform* cameraTrans = camera->getTransform();
   glm::vec3 camPos = vec3From(cameraTrans->getPosition());
-  glm::quat camRotation(vec3From(cameraTrans->getRotation()));
+  glm::quat camRotation(quatFromEulers(cameraTrans->getRotation()));
   glm::vec3 camFront(
     2 * (camRotation.x * camRotation.z + camRotation.w * camRotation.y), 
     2 * (camRotation.y * camRotation.z - camRotation.w * camRotation.x),
@@ -83,7 +91,7 @@ glm::mat4 Renderer::modelProjectionFrom(Entity* entity) {
   Transform* transform = entity->getTransform();
   glm::mat4 translation = glm::translate(glm::mat4(1), vec3From(transform->getPosition()));
   glm::mat4 scale = glm::scale(glm::mat4(1), vec3From(transform->getScale()));
-  glm::quat rotation(vec3From(transform->getRotation()));
+  glm::quat rotation = quatFromEulers(transform->getRotation());
   glm::mat4 rotate = glm::toMat4(rotation);
   return translation * rotate * scale;
 }
@@ -94,38 +102,69 @@ void Renderer::draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity
     return;
   }
   GlMaterial material(Shader::Default);
+  material.bind();
+  
   glm::mat4 model = modelProjectionFrom(entity);
   
-  material.setMat4("model", &model, 1);
-  material.setMat4("view", &cameraProjection, 1);
-  material.setMat4("projection", &screenProjection, 1);  
-  material.setVec3("viewPos", &cameraPosition, 1);
-
-  glm::vec3 lightPos(0.0f, -0.5f, 1.0f);
-  glm::vec3 lightColor(1.0f, 1.0f, 1.0f);  
+  material.setMat4("model", model);
+  material.setMat4("view", cameraProjection);
+  material.setMat4("projection", screenProjection);  
   
-  material.setVec3("allLights[0].position", &lightPos, 1);
-  material.setVec3("allLights[0].intensities", &lightColor, 1);
-  float attenuation = 0.1;
-  material.setFloat("allLights[0].attenuation", &attenuation, 1);
-  float ambientCoefficient = 1.0;
-  material.setFloat("allLights[0].ambientCoefficient", &ambientCoefficient, 1);
-  float coneAngle = 1.5f;
-  material.setFloat("allLights[0].coneAngle", &coneAngle, 1);
-  glm::vec3 coneDirection = glm::vec3(0,0,1);
-  material.setVec3("allLights[0].coneDirection", &coneDirection, 1);
+  material.setVec3("viewPos", cameraPosition);
+  material.setInt("numDirLights", dirLights.size());
 
-  glm::vec4 objColor(1.0f, 0.0f, 1.0f, 1.0f);
-  Material* matComp = (Material*)entity->getComponent("Material");
-  if (matComp) {
-    Color matColor = matComp->getColor();
-    objColor = glm::vec4(matColor.r, matColor.g, matColor.b, matColor.a);
-  }   
-  material.setVec4("objectColor", &objColor, 1);
+  int idx = 0;
+  for (auto dirLightEnt : dirLights) {
+    std::stringstream base;
+    base << "dirLights[" << idx++ << "]";
+    DirectionalLight* light = (DirectionalLight*)dirLightEnt->getComponent("DirectionalLight");
+    glm::vec3 lightDir = directionFromEulers(dirLightEnt->getTransform()->getRotation());
+    material.setVec3(base.str() + ".direction", directionFromEulers(dirLightEnt->getTransform()->getRotation()));
+    material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
+    material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
+    material.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
+  }
+  
+  material.setInt("numPointLights", pointLights.size());
+  idx = 0;
+  for (auto lightEnt : pointLights) {
+    std::stringstream base;
+    base << "pointLights[" << idx++ << "]";
+    PointLight* light = (PointLight*)lightEnt->getComponent("PointLight");
+    material.setVec3(base.str() + ".position", vec3From(lightEnt->getTransform()->getPosition()));
+    material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
+    material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
+    material.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
+    material.setFloat(base.str() + ".constant", light->getConstant());
+    material.setFloat(base.str() + ".linear", light->getLinear());
+    material.setFloat(base.str() + ".quadratic", light->getQuadratic());
+  }
+
+  material.setInt("numSpotLights", spotlights.size());
+  idx = 0;
+  for (auto lightEnt : spotlights) {
+    std::stringstream base;
+    base << "spotLights[" << idx++ << "]";
+    Spotlight* light = (Spotlight*)lightEnt->getComponent("Spotlight");
+    material.setVec3(base.str() + ".position", vec3From(lightEnt->getTransform()->getPosition()));
+    material.setVec3(base.str() + ".direction", directionFromEulers(lightEnt->getTransform()->getRotation()));
+    material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
+    material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
+    material.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
+    material.setFloat(base.str() + ".constant", light->getConstant());
+    material.setFloat(base.str() + ".linear", light->getLinear());
+    material.setFloat(base.str() + ".quadratic", light->getQuadratic());
+    material.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->getCutOff())));
+    material.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->getOuterCutOff())));
+  }
+
+  GlTexture::Default.bind();
+  material.setInt("material.diffuse", 0);
+  material.setFloat("material.shininess ", 32.0f);
   draw(mesh, &material);
 }
 
-void Renderer::draw(Camera* camera, Entity* entity) {  
+void Renderer::draw(Entity* camera, Entity* entity) {  
   Transform* cameraTransform = camera->getTransform();
   glm::vec3 cameraPosition = vec3From(cameraTransform->getPosition());  
   draw(cameraPosition, viewProjectionFrom(camera), entity);
@@ -134,7 +173,8 @@ void Renderer::draw(Camera* camera, Entity* entity) {
 void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   VertexArray vao;
   vao.bind();  
-  material->bind();
+  // material->bind();
+
   // TODO: I think this could be cached for sure.  
   // Create Verts Buff
   VertexBuffer verts(mesh->getVertices()->data(), mesh->getVertices()->size() * 3 * sizeof(float));
@@ -144,6 +184,10 @@ void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   VertexBuffer norms(mesh->getNormals()->data(), mesh->getNormals()->size() * 3 * sizeof(float));
   norms.getLayout()->pushFloat(3);
   vao.addBuffer(&norms);
+
+  VertexBuffer uvs(mesh->getUvs()->data(), mesh->getUvs()->size() * 3 * sizeof(float));
+  uvs.getLayout()->pushFloat(3);
+  vao.addBuffer(&uvs);  
   // Create Index Buff
   IndexBuffer indices((const unsigned int*)mesh->getIndices()->data(), mesh->getIndices()->size());
   indices.bind();

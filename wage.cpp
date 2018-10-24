@@ -13,9 +13,13 @@
 #include "entity/entity.h"
 #include "entity/component.h"
 #include "entity/component/rigid_body.h"
-#include "entity/component/box_collider.h"
+#include "entity/component/collider.h"
 #include "entity/component/mesh.h"
 #include "entity/component/material.h"
+#include "entity/component/camera.h"
+#include "entity/component/directional_light.h"
+#include "entity/component/point_light.h"
+#include "entity/component/spotlight.h"
 
 class MoveIt : public Component {
 
@@ -79,6 +83,12 @@ public:
     }
     if (Input::isPressed(GLFW_KEY_RIGHT)) {
       *context->getEntity()->getTransform()->getPosition() += Vector(-0.3, 0, 0);
+    }
+    if (Input::isPressed(GLFW_KEY_COMMA)) {
+      *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, -0.1);
+    }
+    if (Input::isPressed(GLFW_KEY_PERIOD)) {
+      *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, 0.1);
     }    
   }
 };
@@ -94,7 +104,7 @@ public:
     if (Input::isPressed(GLFW_KEY_M)) {
       Entity* entity = context->getEntity();
       RigidBody* body = (RigidBody*)entity->getComponent("RigidBody");
-      body->addForce(Vector(0, 0.0001, 0));
+      body->addForce(Vector(0, 0.0004, 0));
       // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
     }
   }
@@ -123,28 +133,53 @@ int main(int argc, char* argv[]) {
   core.add(&engine);
   core.add(new Renderer());
 
-  core.getCamera()->add(new CamMove());
-  core.add(core.getCamera());
+  Entity* camera = core.getCamera();
+  camera->add(new Camera());
+  camera->add(new CamMove());
+  core.add(camera);
 
-  core.getCamera()->getTransform()->setPosition(Vector(0, 20, -15));
-  core.getCamera()->getTransform()->setRotation(Vector(1.0, 0.0, 0));
+  camera->getTransform()->setPosition(Vector(0, 40, -30));
+  camera->getTransform()->setRotation(Vector(45, 0.0, 0));
 
-  Mesh mesh = Mesh::Cube;
-  
+  Entity dirLight;
+  dirLight.getTransform()->setRotation(Vector(-90, 0, 0));
+  DirectionalLight* temp = new DirectionalLight();
+  temp->setDiffuse(Color(1,1,1,1));
+  dirLight.add(temp);
+  core.add(&dirLight);
+
   Material blueMat(Color(0, 0, 1, 1));
 
-  for (int i = 0; i < 200; i++) {
+  Entity pointLight;
+  pointLight.getTransform()->setPosition(Vector(0, 2, 0));
+  pointLight.add(new PointLight());
+  pointLight.add(&Mesh::Cube);
+  pointLight.add(&blueMat);
+  core.add(&pointLight);
+
+  Entity spotlight;
+  spotlight.getTransform()->setPosition(Vector(0, 2, -3));
+  spotlight.getTransform()->setRotation(Vector(-90, 0, 0));  
+  Spotlight spot;
+  spot.setCutOff(40);
+  spot.setOuterCutOff(50);
+  spotlight.add(&spot);
+  // spotlight.add(new CamMove());
+  spotlight.add(&Mesh::Cube);
+  spotlight.add(&blueMat);
+  core.add(&spotlight);
+
+  for (int i = 0; i < 5; i++) {
       Entity* entity = new Entity();
       entity->getTransform()->setPosition(Vector(3, 3 * i, 0));   
-      RigidBody* body = new RigidBody();
-      body->mass = 0.001;
       entity->getTransform()->setScale(Vector(1, 1, 1));
-      // entity->getTransform()->setRotation(Vector(0.2, 0.2, 0.2));
-      entity->add(body);
+      entity->getTransform()->setRotation(Vector(-45, 0, 0));
+      printf("Hmm-1: %f\n", entity->getTransform()->getRotation()->x);
+      entity->add(new RigidBody(0.001));
       entity->add(new DorkComp2());
       entity->add(&Mesh::Cube);
       entity->add(&blueMat);
-      entity->add(new BoxCollider());
+      entity->add(&Collider::Box);
       core.add(entity);
   }
 
@@ -152,25 +187,22 @@ int main(int argc, char* argv[]) {
   mover->getTransform()->setPosition(Vector(0, 2, 0));
   mover->getTransform()->setScale(Vector(1, 1, 1));
   mover->getTransform()->setRotation(Vector(0, 0, 0));
-  RigidBody* body = new RigidBody();
-  body->mass = 0.001;
-  mover->add(body);
+  mover->add(new RigidBody(0.001));
   mover->add(new MoveIt());
   mover->add(&Mesh::Cube);
   Material redMat(Color(1, 0, 0, 1));
   mover->add(&redMat);
-  mover->add(new BoxCollider());
+  mover->add(&Collider::Box);
   core.add(mover);
 
   Entity* ground = new Entity();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
   ground->getTransform()->setScale(Vector(100, 0.1, 100));
   // ground->getTransform()->setRotation(Vector(90, 0, 0));
-  RigidBody* groundBody = new RigidBody();
-  ground->add(groundBody);
+  ground->add(new RigidBody());
   ground->add(&Mesh::Cube);
-  ground->add(new BoxCollider());
-  Material whiteMat(Color(1, 1, 1, 1));
+  ground->add(&Collider::Box);
+  Material whiteMat(Color(0.5, 0.5, 0.5, 1));
   ground->add(&whiteMat);
   core.add(ground);
 

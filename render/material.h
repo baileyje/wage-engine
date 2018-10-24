@@ -7,12 +7,11 @@
 #include <unordered_map>
 
 #include "render/shader/shader.h"
+#include "render/util.h"
 
 struct Uniform {
   
   unsigned int type;
-
-  unsigned int count;
 
   void* value;
   
@@ -36,20 +35,28 @@ public:
     return shader;
   }
 
-  inline void setFloat(std::string name, float* value, unsigned int count) {
-    uniforms[name] = { GL_FLOAT, count, (void*)value };
+  inline void setFloat(std::string name, float value) {
+    FAIL_CHECK(glUniform1f(glGetUniformLocation(shader->getId(), name.c_str()), value));
   }
 
-  inline void setMat4(std::string name, glm::mat4* value, unsigned int count) {
-    uniforms[name] = { 999, count, (void*)value };
+  inline void setBool(std::string name, bool value) {
+    FAIL_CHECK(glUniform1i(glGetUniformLocation(shader->getId(), name.c_str()), (int)value));
   }
 
-  inline void  setVec3(std::string name, glm::vec3* value, unsigned int count) {
-    uniforms[name] = { 1000, count, (void*)value };
+  inline void setInt(std::string name, int value) {
+    FAIL_CHECK(glUniform1i(glGetUniformLocation(shader->getId(), name.c_str()), value));
+  }  
+
+  inline void setMat4(std::string name,const glm::mat4 &value) {
+    FAIL_CHECK(glUniformMatrix4fv(glGetUniformLocation(shader->getId(), name.c_str()), 1, GL_FALSE, &value[0][0]));
   }
 
-  inline void setVec4(std::string name, glm::vec4* value, unsigned int count) {
-    uniforms[name] = { 1001, count, (void*)value };
+  inline void  setVec3(std::string name, const glm::vec3 &value) {
+    FAIL_CHECK(glUniform3fv(glGetUniformLocation(shader->getId(), name.c_str()), 1, &value[0]));
+  }
+
+  inline void setVec4(std::string name, const glm::vec4 &value) {
+    FAIL_CHECK(glUniform4fv(glGetUniformLocation(shader->getId(), name.c_str()), 1, &value[0]));
   }
 
   void bind() const;

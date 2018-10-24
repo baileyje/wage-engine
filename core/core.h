@@ -41,7 +41,17 @@ public:
     return &entities;
   }
 
-  Camera* getCamera() {
+  std::vector<Entity*> getEntitiesWith(std::string componentName) {
+    std::vector<Entity*> found;
+    for (auto entity : entities) {
+      if (entity->getComponent(componentName)) {
+        found.push_back(entity);
+      }
+    }
+    return found;
+  }
+
+  Entity* getCamera() {
     return &camera;
   }
 
@@ -63,7 +73,8 @@ private:
 
   // TODO: Doe these belong here??
   std::vector<Entity*> entities;
-  Camera camera;
+  
+  Entity camera;
 
   FileSystem* fileSystem;
 };

@@ -9,7 +9,7 @@ class Transform {
 
 public:
 
-  Transform() {}
+  Transform() : scale(Vector(1, 1, 1)) {}
 
   ~Transform() {}
 

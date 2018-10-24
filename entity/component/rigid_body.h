@@ -8,7 +8,10 @@ class RigidBody : public Component {
 
 public:
 
-  RigidBody() : Component("RigidBody"), mass(0), affectedByGravity(true) {}
+  RigidBody() : RigidBody(0) {    
+  }
+
+  RigidBody(float mass) : Component("RigidBody"), mass(mass), affectedByGravity(true) {}
 
   ~RigidBody() {}
 

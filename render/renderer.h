@@ -29,7 +29,7 @@ public:
 
   void draw(Mesh* mesh, GlMaterial* material);
 
-  void draw(Camera* camera, Entity* entity);
+  void draw(Entity* camera, Entity* entity);
 
 private:
 
@@ -37,12 +37,18 @@ private:
   
   glm::mat4 screenProjection;
 
-  glm::mat4 viewProjectionFrom(Camera* camera);
+  glm::mat4 viewProjectionFrom(Entity* camera);
 
   glm::mat4 modelProjectionFrom(Entity* entity);
 
   void draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity);
   
+  std::vector<Entity*> dirLights;
+
+  std::vector<Entity*> pointLights;
+
+  std::vector<Entity*> spotlights;
+
 };
 
 #endif //RENDERER_H

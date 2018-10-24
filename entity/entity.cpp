@@ -22,3 +22,13 @@ Component* Entity::getComponent(std::string name) {
   }
   return nullptr;
 }
+
+std::vector<Component*> Entity::getComponents(std::string name) { 
+  std::vector<Component*> results;
+  for (auto comp : components) {
+    if (comp->getName() ==  name) {
+      results.push_back(comp);
+    }
+  }
+  return results;
+}

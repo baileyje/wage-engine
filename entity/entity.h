@@ -33,6 +33,8 @@ public:
   inline std::vector<Component*>* getComponents() { return &components; }
 
   Component* getComponent(std::string name);
+
+  std::vector<Component*> getComponents(std::string name);
   
 private:
   

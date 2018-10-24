@@ -7,7 +7,7 @@
 #include "fs/file_system.h"
 
 #include "entity/entity.h"
-#include "entity/camera.h"
+#include "entity/component.h"
 
 
 class System;
@@ -40,7 +40,9 @@ public:
 
   virtual std::vector<Entity*>* getEntities() = 0;
 
-  virtual Camera* getCamera() = 0;
+  virtual Entity* getCamera() = 0;
+
+  virtual std::vector<Entity*> getEntitiesWith(std::string component) = 0;
 
   virtual FileSystem* getFileSystem() = 0;
 };

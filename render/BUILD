@@ -9,7 +9,8 @@ cc_library(
 		"//platform",
 		"@glfw",
 		"@glm",
-		"//third_party/glad"
+		"//third_party/glad",
+		"//third_party/stb_image"
 	],
 	visibility = ["//visibility:public"]	
 )

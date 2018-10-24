@@ -70,6 +70,40 @@ Mesh Mesh::Cube(
     Vector(0.0f,  -1.0f, 0.0f),
     Vector(0.0f,  -1.0f, 0.0f),
   },
+  VertexVector {
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(1.0f,  0.0f),  // top right
+    Vector(0.0f,  0.0f),   // top left 
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(1.0f,  0.0f),  // top right
+    Vector(0.0f,  0.0f),   // top left 
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(1.0f,  0.0f),  // top right
+    Vector(0.0f,  0.0f),   // top left 
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(1.0f,  0.0f),  // top right
+    Vector(0.0f,  0.0f),   // top left 
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(1.0f,  0.0f),  // top right
+    Vector(0.0f,  0.0f),   // top left 
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(1.0f,  0.0f),  // top right
+    Vector(0.0f,  0.0f),   // top left 
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(1.0f,  0.0f),  // top right
+    Vector(0.0f,  0.0f),   // top left 
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(1.0f,  0.0f),  // top right
+    Vector(0.0f,  0.0f),   // top left             
+  },
   IndexVector {
     0, 1, 2, 0, 2, 3, //front
     4, 5, 6, 4, 6, 7, //right
@@ -93,6 +127,12 @@ Mesh Mesh::Quad(
     Vector(0.0f,  0.0f, -1.0f),  // bottom right
     Vector(0.0f,  0.0f, -1.0f),  // bottom left
     Vector(0.0f,  0.0f, -1.0f)   // top left 
+  },
+  VertexVector {
+    Vector(1.0f,  0.0f),  // top right
+    Vector(1.0f,  1.0f),  // bottom right
+    Vector(0.0f,  1.0f),  // bottom left
+    Vector(0.0f,  0.0f)   // top left 
   },
   IndexVector {
     0, 1, 3,  // first Triangle

@@ -3,6 +3,7 @@
 
 #include "entity/component.h"
 #include "entity/color.h"
+#include "entity/component/texture.h"
 
 // TODO:  De-jank this
 class Material : public Component {
@@ -15,6 +16,9 @@ public:
   Material(Color color) : Component("Material"), color(color) {    
   }
 
+  Material(Texture* texture) : Component("Material"), texture(texture), color(Color(1, 0, 1, 1)) {    
+  }
+
   ~Material() {}
 
   inline void setColor(Color color) {
@@ -25,9 +29,15 @@ public:
     return color;
   }
 
+  inline Texture*  getTexture()  {
+    return texture;
+  }
+
 private:
  
   Color color;
+
+  Texture* texture;
 
 };
 

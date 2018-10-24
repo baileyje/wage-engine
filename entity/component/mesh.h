@@ -13,8 +13,8 @@ class Mesh : public Component {
 
 public:
 
-  Mesh(std::string id, VertexVector vertices, VertexVector normals, IndexVector indices) 
-    : Component("Mesh"), id(id), vertices(vertices), normals(normals), indices(indices) {}
+  Mesh(std::string id, VertexVector vertices, VertexVector normals, VertexVector uvs, IndexVector indices) 
+    : Component("Mesh"), id(id), vertices(vertices), normals(normals), uvs(uvs), indices(indices) {}
   
   virtual ~Mesh();
 
@@ -22,15 +22,19 @@ public:
     return indices.size();
   }
 
-  VertexVector* getVertices() {
+  inline VertexVector* getVertices() {
     return &vertices;
   }
 
-  VertexVector* getNormals() {
+  inline VertexVector* getNormals() {
     return &normals;
   }
 
-  IndexVector* getIndices() {
+  inline VertexVector* getUvs() {
+    return &uvs;
+  }
+
+  inline IndexVector* getIndices() {
     return &indices;
   }
 
@@ -49,6 +53,8 @@ protected:
   VertexVector vertices;
   
   VertexVector normals;
+
+  VertexVector uvs;
 
   IndexVector indices;
 

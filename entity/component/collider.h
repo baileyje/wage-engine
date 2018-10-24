@@ -21,6 +21,8 @@ public:
     return type;
   }
 
+  static Collider Box;
+
 private:
 
   ColliderType type;

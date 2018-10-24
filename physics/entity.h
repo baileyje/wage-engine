@@ -58,7 +58,11 @@ public:
 		btQuaternion rotation = transform.getRotation();
 		btScalar yawZ, pitchY, rollX;
 		rotation.getEulerZYX(yawZ, pitchY, rollX);
-		entity->getTransform()->setRotation(Vector(rollX, pitchY, yawZ));
+		entity->getTransform()->setRotation(Vector(
+      btDegrees(rollX), 
+      btDegrees(pitchY), 
+      btDegrees(yawZ)
+    ));
   }
 
   btRigidBody* getRigidBody() {
