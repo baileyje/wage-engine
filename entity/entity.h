@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "entity/transform.h"
-#include "entity/type_index.h"
+#include "entity/component_map.h"
 
 class Component;
 
@@ -25,12 +25,17 @@ public:
 
   inline void setTransform(Transform transform) { this->transform = transform; }
 
-  template <typename C>
-  inline void add(C* component) { 
-    components.push_back(component); 
+  template <typename T>
+  inline void add(T* component) { 
+    components.add<T>(component);
   }
 
-  inline std::vector<Component*>* getComponents() { return &components; }
+  template <typename T>
+  inline T* get() { 
+    return components.get<T>();
+  }
+
+  inline ComponentMap* getComponents() { return &components; }
 
   Component* getComponent(std::string name);
 
@@ -42,7 +47,7 @@ private:
 
   Transform transform;
 
-  std::vector<Component*> components;
+  ComponentMap components;
   
   static long CurrentId;
 

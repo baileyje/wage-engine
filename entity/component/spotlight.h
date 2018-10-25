@@ -59,16 +59,15 @@ public:
 
 private:
 
-    float cutOff;
-
-    float outerCutOff;
-
     float constant;
     
     float linear;
     
     float quadratic;
 
+    float cutOff;
+
+    float outerCutOff;
 };
 
 #endif //COMPONENT_SPOTLIGHT_H

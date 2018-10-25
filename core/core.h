@@ -37,7 +37,7 @@ public:
     entities.push_back(entity);
   }
 
-  std::vector<Entity*>* getEntities() {
+  inline std::vector<Entity*>* getEntities() {
     return &entities;
   }
 
@@ -51,11 +51,11 @@ public:
     return found;
   }
 
-  Entity* getCamera() {
+  inline Entity* getCamera() {
     return &camera;
   }
 
-  FileSystem* getFileSystem() { 
+  inline FileSystem* getFileSystem() { 
     return fileSystem;
   }
   

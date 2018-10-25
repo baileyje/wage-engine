@@ -16,7 +16,7 @@ public:
   Material(Color color) : Component("Material"), color(color) {    
   }
 
-  Material(Texture* texture) : Component("Material"), texture(texture), color(Color(1, 0, 1, 1)) {    
+  Material(Texture* texture) : Component("Material"), color(Color(1, 0, 1, 1)), texture(texture) {    
   }
 
   ~Material() {}

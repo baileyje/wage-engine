@@ -12,6 +12,7 @@
 #include "engine/engine.h"
 #include "entity/entity.h"
 #include "entity/component.h"
+#include "entity/entity_context.h"
 #include "entity/component/rigid_body.h"
 #include "entity/component/collider.h"
 #include "entity/component/mesh.h"
@@ -30,38 +31,26 @@ public:
 
   void update(EntityContext* context) {
     Entity* entity = context->getEntity();
-    RigidBody* body = (RigidBody*)entity->getComponent("RigidBody");
-    // body->addForce(Vector(0, 0.0000000001, 0));
+    RigidBody* body = entity->get<RigidBody>();
     if (Input::isPressed(GLFW_KEY_W)) {
-      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
-      body->addForce(Vector(0, 0, 0.0004));
+      body->addImpulse(Vector(0, 0, 0.0004));
     }
     if (Input::isPressed(GLFW_KEY_S)) {
-      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, -0.3);
-      body->addForce(Vector(0, 0, -0.0004));
+      body->addImpulse(Vector(0, 0, -0.0004));
     } 
     if (Input::isPressed(GLFW_KEY_A)) {
-      // *context->getEntity()->getTransform()->getPosition() += Vector(0.3, 0, 0);
-      body->addForce(Vector(0.0004, 0, 0));
+      body->addImpulse(Vector(0.0004, 0, 0));
     }
     if (Input::isPressed(GLFW_KEY_D)) {
-      // *context->getEntity()->getTransform()->getPosition() += Vector(-0.3, 0, 0);
-      body->addForce(Vector(-0.0004, 0, 0));
+      body->addImpulse(Vector(-0.0004, 0, 0));
     }
     if (Input::isPressed(GLFW_KEY_SPACE)) {
-      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0.5, 0);
-      body->addForce(Vector(0, 0.0005, 0));
+      body->addImpulse(Vector(0, 0.0005, 0));
     }
     if (Input::isPressed(GLFW_KEY_LEFT_SHIFT)) {
-      // *context->getEntity()->getTransform()->getPosition() += Vector(0, -0.5, 0);
-      body->addForce(Vector(0, -0.0001, 0));
+      body->addImpulse(Vector(0, -0.0001, 0));
     }
   }
-
-  // void fixedUpdate(EntityContext* context) {
-  //   // printf("Comp Fixed Called!\n");
-  // }
-
 };
 
 class CamMove : public Component {
@@ -84,11 +73,22 @@ public:
     if (Input::isPressed(GLFW_KEY_RIGHT)) {
       *context->getEntity()->getTransform()->getPosition() += Vector(-0.3, 0, 0);
     }
+  }
+};
+
+class Tilt : public Component {
+
+public:
+
+  Tilt() : Component("Tilt") {    
+  }
+
+  void update(EntityContext* context) {
     if (Input::isPressed(GLFW_KEY_COMMA)) {
-      *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, -0.1);
+      *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, -1);
     }
     if (Input::isPressed(GLFW_KEY_PERIOD)) {
-      *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, 0.1);
+      *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, 1);
     }    
   }
 };
@@ -103,8 +103,8 @@ public:
   void update(EntityContext* context) {    
     if (Input::isPressed(GLFW_KEY_M)) {
       Entity* entity = context->getEntity();
-      RigidBody* body = (RigidBody*)entity->getComponent("RigidBody");
-      body->addForce(Vector(0, 0.0004, 0));
+      RigidBody* body = entity->get<RigidBody>();
+      body->addImpulse(Vector(0, 0.0004, 0));
       // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
     }
   }
@@ -138,13 +138,13 @@ int main(int argc, char* argv[]) {
   camera->add(new CamMove());
   core.add(camera);
 
-  camera->getTransform()->setPosition(Vector(0, 40, -30));
-  camera->getTransform()->setRotation(Vector(45, 0.0, 0));
+  camera->getTransform()->setPosition(Vector(0, 20, -50));
+  camera->getTransform()->setRotation(Vector(25, 0.0, 0));
 
   Entity dirLight;
   dirLight.getTransform()->setRotation(Vector(-90, 0, 0));
   DirectionalLight* temp = new DirectionalLight();
-  temp->setDiffuse(Color(1,1,1,1));
+  temp->setDiffuse(Color(0.7,0.7,0.7,1));
   dirLight.add(temp);
   core.add(&dirLight);
 
@@ -153,8 +153,6 @@ int main(int argc, char* argv[]) {
   Entity pointLight;
   pointLight.getTransform()->setPosition(Vector(0, 2, 0));
   pointLight.add(new PointLight());
-  pointLight.add(&Mesh::Cube);
-  pointLight.add(&blueMat);
   core.add(&pointLight);
 
   Entity spotlight;
@@ -164,18 +162,13 @@ int main(int argc, char* argv[]) {
   spot.setCutOff(40);
   spot.setOuterCutOff(50);
   spotlight.add(&spot);
-  // spotlight.add(new CamMove());
-  spotlight.add(&Mesh::Cube);
-  spotlight.add(&blueMat);
   core.add(&spotlight);
 
   for (int i = 0; i < 5; i++) {
       Entity* entity = new Entity();
-      entity->getTransform()->setPosition(Vector(3, 3 * i, 0));   
-      entity->getTransform()->setScale(Vector(1, 1, 1));
-      entity->getTransform()->setRotation(Vector(-45, 0, 0));
-      printf("Hmm-1: %f\n", entity->getTransform()->getRotation()->x);
-      entity->add(new RigidBody(0.001));
+      RigidBody* body = new RigidBody(0.001);
+      entity->getTransform()->setPosition(Vector(3, 3 * i, 0));       
+      entity->add(body);
       entity->add(new DorkComp2());
       entity->add(&Mesh::Cube);
       entity->add(&blueMat);
@@ -198,12 +191,13 @@ int main(int argc, char* argv[]) {
   Entity* ground = new Entity();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
   ground->getTransform()->setScale(Vector(100, 0.1, 100));
-  // ground->getTransform()->setRotation(Vector(90, 0, 0));
-  ground->add(new RigidBody());
+  ground->getTransform()->setRotation(Vector(0, 0, 0));
+  ground->add(new RigidBody(0.0, kinematic));
   ground->add(&Mesh::Cube);
   ground->add(&Collider::Box);
-  Material whiteMat(Color(0.5, 0.5, 0.5, 1));
-  ground->add(&whiteMat);
+  ground->add(new Tilt());
+  // Material whiteMat(Color(0.5, 0.5, 0.5, 1));
+  // ground->add(&whiteMat);
   core.add(ground);
 
   core.init();

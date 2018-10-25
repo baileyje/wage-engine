@@ -22,9 +22,9 @@ void Physics::start(Context* context) {
 }
 
 void Physics::fixedUpdate(Context* context) {
-  // printf("Bullet Phys!\n");
-	for (auto physicsEntity : entities) {
-		physicsEntity->applyForces();
+  for (auto physicsEntity : entities) {
+		physicsEntity->updateShapeTransform();
+		physicsEntity->applyForces();	
 	}
 
   dynamicsWorld.stepSimulation(context->timeStep, 3);	
@@ -42,34 +42,6 @@ void Physics::deinit(Context* context) {
 }
 
 void Physics::add(Entity* entity) {	
-	btCollisionShape* shape = shapeFor(entity);
-	btRigidBody* body = nullptr;
-	RigidBody* entityBody = (RigidBody*)entity->getComponent("RigidBody");
-	if (entityBody) {
-		body = createRigidBody(entityBody->mass, fromTransform(entity->getTransform()), shape);
-		dynamicsWorld.addRigidBody(body);
-	}	else {
-		btCollisionObject* object = new btCollisionObject();
-		object->setCollisionShape(shape);
-		dynamicsWorld.addCollisionObject(object);
-	}
-	entities.push_back(new PhysicsEntity(entity, shape, body));
-	
+	entities.push_back(PhysicsEntity::from(entity, &dynamicsWorld));
 }
 
-btCollisionShape* Physics::shapeFor(Entity* entity) {
-	Collider* collider = (Collider*)entity->getComponent("Collider");
-	if (!collider) {
-		printf("No Collider!!\n");
-		return new btEmptyShape();
-	}
-	switch(collider->getType()) {
-		// TODO: Support more shapes
-		case box: {
-			btVector3 halfExtents = btVector3(entity->getTransform()->getScale()->x/2.0, entity->getTransform()->getScale()->y/2.0, entity->getTransform()->getScale()->z/2.0);
-			
-			return new btBoxShape(halfExtents);
-		}
-		default: return nullptr;
-	}	
-}

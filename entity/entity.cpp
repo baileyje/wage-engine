@@ -15,12 +15,7 @@ Entity::~Entity() {}
 
 // TODO:  Need some kind of efficient store for this.
 Component* Entity::getComponent(std::string name) { 
-  for (auto comp : components) {
-    if (comp->getName() ==  name) {
-      return comp;
-    }
-  }
-  return nullptr;
+  return components.get(name);
 }
 
 std::vector<Component*> Entity::getComponents(std::string name) { 

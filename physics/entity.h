@@ -4,6 +4,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "entity/component/rigid_body.h"
+#include "entity/component/collider.h"
 #include "entity/entity.h"
 #include "physics/util.h"
 
@@ -23,49 +24,19 @@ public:
     delete shape;
   }
 
-  btTransform getTransform() {
-		btTransform transform;
-		if (rigidBody && rigidBody->getMotionState()) {
-			rigidBody->getMotionState()->getWorldTransform(transform);
-		} else {
-			transform = rigidBody->getWorldTransform();
-		}
-    return transform;
-  }
+  static btCollisionShape* shapeFor(Entity* entity);
 
-  void applyForces() {
-    if (!rigidBody) {
-      return;
-    }
-    RigidBody* entityBody = (RigidBody*)entity->getComponent("RigidBody");
-		if (!entityBody) {
-			return;
-		}
-		btVector3 impulse = fromVector(&entityBody->currentForce);
-		if (impulse.length() > 0) {
-			rigidBody->applyCentralImpulse(impulse);	
-			entityBody->currentForce = Vector();
-		}		
-		rigidBody->activate(true);
-  }
+  static PhysicsEntity* from(Entity* entity, btDiscreteDynamicsWorld* dynamicsWorld);
 
-  void updateTransform() {
-    if (!rigidBody) {
-      return;
-    }
-    btTransform transform = getTransform();		
-		entity->getTransform()->setPosition(fromBTVector(&transform.getOrigin()));
-		btQuaternion rotation = transform.getRotation();
-		btScalar yawZ, pitchY, rollX;
-		rotation.getEulerZYX(yawZ, pitchY, rollX);
-		entity->getTransform()->setRotation(Vector(
-      btDegrees(rollX), 
-      btDegrees(pitchY), 
-      btDegrees(yawZ)
-    ));
-  }
+  btTransform getTransform();
 
-  btRigidBody* getRigidBody() {
+  void applyForces();
+
+  void updateTransform();
+
+  void updateShapeTransform();
+
+  inline btRigidBody* getRigidBody() {
     return rigidBody;
   }
 
@@ -76,7 +47,7 @@ private:
   btCollisionShape* shape;
 
   btRigidBody* rigidBody;
-
+  
 };
 
 

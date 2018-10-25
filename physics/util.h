@@ -3,17 +3,18 @@
 
 #include <btBulletDynamicsCommon.h>
 
+#include "entity/component/rigid_body.h"
 #include "entity/transform.h"
 
-inline btVector3 fromVector(Vector* vector) {
-  return btVector3(vector->x, vector->y, vector->z);
+inline btVector3 fromVector(Vector vector) {
+  return btVector3(vector.x, vector.y, vector.z);
 }
 
-inline Vector fromBTVector(btVector3* vector) {
-  return Vector(vector->x(), vector->y(), vector->z());
+inline Vector fromBTVector(btVector3 vector) {
+  return Vector(vector.x(), vector.y(), vector.z());
 }
 
-btRigidBody* createRigidBody(float mass, const btTransform& startTransform, btCollisionShape* shape);
+btRigidBody* createRigidBody(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape);
 
 btTransform fromTransform(Transform* transform);
 

@@ -13,10 +13,10 @@ Core::Core(std::string path) : Context(), running(false), fileSystem(new LocalFi
 }
 
 Core::~Core() {
-  for (auto system : systems) {
-    // delete system;
-    // TODO: Evaluate whether this makes any sense.
-  }
+  // TODO: Evaluate whether this makes any sense.
+  // for (auto system : systems) {
+    // delete system;    
+  // }
 }
 
 void Core::add(System* system) {  

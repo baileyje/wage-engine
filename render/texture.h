@@ -4,14 +4,15 @@
 #include "entity/component/texture.h"
 #include "render/util.h"
 
+#include "fs/file_system.h"
+
 class GlTexture {
 
 public:
 
-  GlTexture(Texture* texture) : texture(texture) {
-  }
+  GlTexture(Texture* texture);
 
-  ~GlTexture() {}
+  ~GlTexture();
 
   inline void setTexture(Texture* texture) {
     this->texture = texture;
@@ -20,6 +21,8 @@ public:
   inline Texture* getTexture() {
     return texture;
   }
+
+  void load(FileSystem* fileSystem);
 
   void bind();
 
@@ -31,7 +34,19 @@ public:
 
 private:
 
+  unsigned int id;
+
+  bool loaded;
+
   Texture* texture;
+
+  int width;
+
+  int height;
+
+  int channels;
+
+  unsigned char *data;
 
 };
 

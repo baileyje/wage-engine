@@ -1,9 +1,11 @@
 #ifndef ENTITY_COMPONENT_H
 #define ENTITY_COMPONENT_H
 
-#include <typeinfo>
+#include <string>
 
-#include "entity/entity_context.h"
+// #include "entity/entity_context.h"
+
+class EntityContext;
 
 class Component {
 
@@ -14,10 +16,10 @@ public:
   virtual ~Component() {};
 
   // TODO: Need some kind of enity context
-  virtual void update(EntityContext* context) {};
+  virtual void update(EntityContext* context);
 
   // TODO: Need some kind of enity context
-  virtual void fixedUpdate(EntityContext* context) {};
+  virtual void fixedUpdate(EntityContext* context);
 
   inline std::string getName() {
     return name;

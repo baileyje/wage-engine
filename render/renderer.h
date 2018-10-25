@@ -21,7 +21,7 @@ public:
 
   void start(Context* context);
 
-  void fixedUpdate(Context* context);
+  void update(Context* context);
 
   void stop(Context* context);
 
