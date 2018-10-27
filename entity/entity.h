@@ -19,15 +19,16 @@ public:
 
   virtual ~Entity();
 
-  long getId() { return id; }
+  inline long getId() { return id; }
   
-  Transform* getTransform() { return &transform; }
+  inline Transform* getTransform() { return &transform; }
 
   inline void setTransform(Transform transform) { this->transform = transform; }
 
   template <typename T>
-  inline void add(T* component) { 
+  inline Entity* add(T* component) { 
     components.add<T>(component);
+    return this;
   }
 
   template <typename T>
@@ -36,10 +37,6 @@ public:
   }
 
   inline ComponentMap* getComponents() { return &components; }
-
-  Component* getComponent(std::string name);
-
-  std::vector<Component*> getComponents(std::string name);
   
 private:
   

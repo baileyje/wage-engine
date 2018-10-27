@@ -7,7 +7,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-#include "entity/vector.h"
+#include "math/vector.h"
 #include "entity/color.h"
 
 void checkGLError(const char* command);

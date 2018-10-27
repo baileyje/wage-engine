@@ -81,11 +81,9 @@ void Core::stop() {
   }
   printf("Stopping WAGE Core.\n");
   running = false;
-  // TODO: Reverse order
-  for (auto system : systems) {
-    system->stop(this);
+  for (auto system = systems.rbegin(); system != systems.rend(); ++system) {
+    (*system)->stop(this);
   }
-  // printf("Stopped Systems.\n");
   deinit();
 }
 
@@ -98,8 +96,7 @@ void Core::init() {
 
 void Core::deinit() {
   printf("Deinitializing WAGE Core.\n");
-  // TODO: Reverse order
-  for (auto system : systems) {
-    system->deinit(this);
+  for (auto system = systems.rbegin(); system != systems.rend(); ++system) {
+    (*system)->deinit(this);
   }
 }

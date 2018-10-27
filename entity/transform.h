@@ -1,8 +1,8 @@
 #ifndef ENTITY_TRANSFORM_H
 #define ENTITY_TRANSFORM_H
 
-#include "entity/vector.h"
-#include "entity/quaternion.h"
+#include "math/vector.h"
+#include "math/quaternion.h"
 
 
 class Transform {

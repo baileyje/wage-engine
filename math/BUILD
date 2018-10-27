@@ -1,10 +1,9 @@
 
 cc_library(
-	name = "entity",
+	name = "math",
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
-		"//math"
 	],
 	visibility = ["//visibility:public"]
 )

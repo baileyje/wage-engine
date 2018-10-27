@@ -13,26 +13,22 @@ class PhysicsEntity {
 public:
 
   PhysicsEntity(Entity* entity, btCollisionShape* shape, btRigidBody* rigidBody) 
-    : entity(entity), shape(shape), rigidBody(rigidBody) {
+    : PhysicsEntity(entity, shape, rigidBody, rigidBody) {
   }
 
   ~PhysicsEntity() {    
     if (rigidBody && rigidBody->getMotionState()) {
       delete rigidBody->getMotionState();
     }
-    delete rigidBody;
+    delete object; // NOT rigidBody
     delete shape;
-  }
-
-  static btCollisionShape* shapeFor(Entity* entity);
+  }  
 
   static PhysicsEntity* from(Entity* entity, btDiscreteDynamicsWorld* dynamicsWorld);
 
-  btTransform getTransform();
-
   void applyForces();
 
-  void updateTransform();
+  void updateEntityTransform();
 
   void updateShapeTransform();
 
@@ -40,13 +36,28 @@ public:
     return rigidBody;
   }
 
+  inline btCollisionObject* getObject() {
+    return object;
+  }
+
 private: 
 
+  PhysicsEntity(Entity* entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
+    : entity(entity), shape(shape), rigidBody(rigidBody), object(object) {
+  }
+
+  static btCollisionShape* shapeFor(Entity* entity);
+
+  static btRigidBody* rigidBodyFor(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape);
   Entity* entity;
+
+  btTransform getTransform(); 
 
   btCollisionShape* shape;
 
   btRigidBody* rigidBody;
+
+  btCollisionObject* object;
   
 };
 

@@ -57,6 +57,17 @@ public:
     return nullptr;
   }
 
+  // inline ComponentIterator getAll(std::string name) {
+  //   auto itr = map.find(name);
+  //   if (itr != map.end()) {
+  //     auto byName = itr->second;
+  //     if (!byName.empty()) {
+  //       return byName[0];
+  //     }
+  //   }
+  //   return nullptr;
+  // }
+
 private: 
   
   std::vector<Component*> values;

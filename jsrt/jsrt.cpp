@@ -149,6 +149,7 @@ JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsValueRef
   // printf("Added JS system...\n");
   Jsrt * runtime = (Jsrt *)callbackState;
   JsSystem* system = new JsSystem(stringFromValue(arguments[1]),  arguments[2]);
+  // TODO: Figure out how this should
   runtime->getContext()->add(system);
   // TODO: Break this out
   JsValueRef undefinedValue;

@@ -17,7 +17,8 @@
 
 #include "entity/component/mesh.h"
 #include "entity/component/material.h"
-#include "entity/component/camera.h"
+#include "entity/component/perspective_camera.h"
+#include "entity/component/orthographic_camera.h"
 #include "entity/component/directional_light.h"
 #include "entity/component/point_light.h"
 #include "entity/component/spotlight.h"
@@ -31,7 +32,7 @@ void Renderer::init(Context* context)  {
 
   // TODO: Move to camera
   // screenProjection = glm::ortho(0.0f, (float)102.4, 0.0f, (float)76.8, -10.0f, 10.0f);  
-  screenProjection = glm::perspective(glm::radians(45.0), 1024.0 / 768.0, 0.1, 1000.0);
+  // screenProjection = glm::perspective(glm::radians(45.0), 1024.0 / 768.0, 0.1, 1000.0);
 }
 
 void Renderer::start(Context* context) {
@@ -49,54 +50,30 @@ void Renderer::start(Context* context) {
   Shader::initDefault(context->getFileSystem());  
   
   // TODO: Listen for changes to entities and figure out how to get these!!!
-  dirLights = context->getEntitiesWith("DirectionalLight");
-  pointLights = context->getEntitiesWith("PointLight");
-  spotlights = context->getEntitiesWith("Spotlight");
+  dirLights = context->getEntities()->with("DirectionalLight");
+  pointLights = context->getEntities()->with("PointLight");
+  spotlights = context->getEntities()->with("Spotlight");
+
+  glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 }
 
-void Renderer::update(Context* context) {
-  int width, height;
-  glfwGetFramebufferSize(window, &width, &height);
-  FAIL_CHECK(glViewport(0, 0, width, height));
+void Renderer::update(Context* context) {  
+  FAIL_CHECK(glViewport(0, 0, screenWidth, screenHeight));
   FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   Entity* camera = context->getCamera();
   Transform* cameraTransform = camera->getTransform();
   glm::vec3 cameraPosition = vec3From(cameraTransform->getPosition());
-  glm::mat4 cameraProjection = viewProjectionFrom(camera);
+  glm::mat4 cameraProjection = viewProjectionFrom(cameraTransform);
+  glm::mat4 screenProjection = screenProjectionFrom((Camera*)camera->getComponents()->get("Camera"));
   for (auto entity : *context->getEntities()) {
-    draw(cameraPosition, cameraProjection, entity);    
+    draw(screenProjection, cameraPosition, cameraProjection, entity);    
   }
   FAIL_CHECK(glfwSwapBuffers(window));
   FAIL_CHECK(glfwPollEvents());
 }
 
-glm::mat4 Renderer::viewProjectionFrom(Entity* camera) {
-  Transform* cameraTrans = camera->getTransform();
-  glm::vec3 camPos = vec3From(cameraTrans->getPosition());
-  glm::quat camRotation(quatFromEulers(cameraTrans->getRotation()));
-  glm::vec3 camFront(
-    2 * (camRotation.x * camRotation.z + camRotation.w * camRotation.y), 
-    2 * (camRotation.y * camRotation.z - camRotation.w * camRotation.x),
-    1 - 2 * (camRotation.x * camRotation.x + camRotation.y * camRotation.y)
-  );
-  glm::vec3 camUp(
-    2 * (camRotation.x * camRotation.y - camRotation.w * camRotation.z), 
-    1 - 2 * (camRotation.x * camRotation.x - camRotation.z * camRotation.z),
-    2 * (camRotation.y * camRotation.z + camRotation.w * camRotation.x)
-  );
-  return  glm::lookAt(camPos, camPos + camFront, camUp);
-}
 
-glm::mat4 Renderer::modelProjectionFrom(Entity* entity) {
-  Transform* transform = entity->getTransform();
-  glm::mat4 translation = glm::translate(glm::mat4(1), vec3From(transform->getPosition()));
-  glm::mat4 scale = glm::scale(glm::mat4(1), vec3From(transform->getScale()));
-  glm::quat rotation = quatFromEulers(transform->getRotation());
-  glm::mat4 rotate = glm::toMat4(rotation);
-  return translation * rotate * scale;
-}
-
-void Renderer::draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity) {
+void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity) {
   Mesh* mesh = entity->get<Mesh>();
   if (!mesh) {
     return;
@@ -163,11 +140,12 @@ void Renderer::draw(glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity
   draw(mesh, &material);
 }
 
-void Renderer::draw(Entity* camera, Entity* entity) {  
-  Transform* cameraTransform = camera->getTransform();
-  glm::vec3 cameraPosition = vec3From(cameraTransform->getPosition());  
-  draw(cameraPosition, viewProjectionFrom(camera), entity);
-}
+
+// void Renderer::draw(Entity* camera, Entity* entity) {  
+//   Transform* cameraTransform = camera->getTransform();
+//   glm::vec3 cameraPosition = vec3From(cameraTransform->getPosition());  
+//   draw(cameraPosition, viewProjectionFrom(camera), entity);
+// }
 
 void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   VertexArray vao;
@@ -199,6 +177,52 @@ void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   vao.unbind();
 }
 
+//------
+
+glm::mat4 Renderer::modelProjectionFrom(Entity* entity) {
+  Transform* transform = entity->getTransform();
+  glm::mat4 translation = glm::translate(glm::mat4(1), vec3From(transform->getPosition()));
+  glm::mat4 scale = glm::scale(glm::mat4(1), vec3From(transform->getScale()));
+  glm::quat rotation = quatFromEulers(transform->getRotation());
+  glm::mat4 rotate = glm::toMat4(rotation);
+  return translation * rotate * scale;
+}
+
+
+glm::mat4 Renderer::screenProjectionFrom(Camera* camera) {
+  if (camera->getType() == perspective) {
+    PerspectiveCamera* perspectiveCam = static_cast<PerspectiveCamera*>(camera);
+    return glm::perspective(glm::radians(perspectiveCam->getFov()), (float)screenWidth / (float)screenHeight, perspectiveCam->getNearClip(), perspectiveCam->getFarClip());
+  } else if (camera->getType() == orthographic) {
+    OrthographicCamera* orthographicCamera = static_cast<OrthographicCamera*>(camera);
+    printf("Right: %f\n", orthographicCamera->getLeft());
+    return glm::ortho(
+      orthographicCamera->getLeft(), orthographicCamera->getRight(),
+      orthographicCamera->getTop(), orthographicCamera->getBottom(),
+      orthographicCamera->getNearClip(), orthographicCamera->getFarClip()
+    );
+  }
+  return glm::mat4(1.0);
+}
+
+glm::mat4 Renderer::viewProjectionFrom(Transform* cameraTransform) {
+  glm::vec3 camPos = vec3From(cameraTransform->getPosition());
+  glm::quat camRotation(quatFromEulers(cameraTransform->getRotation()));
+  glm::vec3 camFront(
+    2 * (camRotation.x * camRotation.z + camRotation.w * camRotation.y), 
+    2 * (camRotation.y * camRotation.z - camRotation.w * camRotation.x),
+    1 - 2 * (camRotation.x * camRotation.x + camRotation.y * camRotation.y)
+  );
+  glm::vec3 camUp(
+    2 * (camRotation.x * camRotation.y - camRotation.w * camRotation.z), 
+    1 - 2 * (camRotation.x * camRotation.x - camRotation.z * camRotation.z),
+    2 * (camRotation.y * camRotation.z + camRotation.w * camRotation.x)
+  );
+  return  glm::lookAt(camPos, camPos + camFront, camUp);
+}
+
+//------
+
 void Renderer::stop(Context* context) {
   printf("Stopping Renderer.\n");
 }
@@ -206,3 +230,4 @@ void Renderer::stop(Context* context) {
 void Renderer::deinit(Context* context) {
   printf("Deinitializing Renderer.\n");
 }
+

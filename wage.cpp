@@ -17,7 +17,8 @@
 #include "entity/component/collider.h"
 #include "entity/component/mesh.h"
 #include "entity/component/material.h"
-#include "entity/component/camera.h"
+#include "entity/component/perspective_camera.h"
+#include "entity/component/orthographic_camera.h"
 #include "entity/component/directional_light.h"
 #include "entity/component/point_light.h"
 #include "entity/component/spotlight.h"
@@ -134,12 +135,13 @@ int main(int argc, char* argv[]) {
   core.add(new Renderer());
 
   Entity* camera = core.getCamera();
-  camera->add(new Camera());
-  camera->add(new CamMove());
+  camera
+    ->add(new PerspectiveCamera())
+    ->add(new CamMove());
   core.add(camera);
 
-  camera->getTransform()->setPosition(Vector(0, 20, -50));
-  camera->getTransform()->setRotation(Vector(25, 0.0, 0));
+  camera->getTransform()->setPosition(Vector(0, 10, -30));
+  camera->getTransform()->setRotation(Vector(10, 0.0, 0));
 
   Entity dirLight;
   dirLight.getTransform()->setRotation(Vector(-90, 0, 0));
@@ -168,11 +170,11 @@ int main(int argc, char* argv[]) {
       Entity* entity = new Entity();
       RigidBody* body = new RigidBody(0.001);
       entity->getTransform()->setPosition(Vector(3, 3 * i, 0));       
-      entity->add(body);
-      entity->add(new DorkComp2());
-      entity->add(&Mesh::Cube);
-      entity->add(&blueMat);
-      entity->add(&Collider::Box);
+      entity
+        ->add(body)
+        ->add(new DorkComp2())
+        ->add(&Mesh::Cube)
+        ->add(&Collider::Box);
       core.add(entity);
   }
 
@@ -180,12 +182,10 @@ int main(int argc, char* argv[]) {
   mover->getTransform()->setPosition(Vector(0, 2, 0));
   mover->getTransform()->setScale(Vector(1, 1, 1));
   mover->getTransform()->setRotation(Vector(0, 0, 0));
-  mover->add(new RigidBody(0.001));
-  mover->add(new MoveIt());
-  mover->add(&Mesh::Cube);
-  Material redMat(Color(1, 0, 0, 1));
-  mover->add(&redMat);
-  mover->add(&Collider::Box);
+  mover->add(new RigidBody(0.001))
+    ->add(new MoveIt())
+    ->add(&Mesh::Cube)  
+    ->add(&Collider::Box);
   core.add(mover);
 
   Entity* ground = new Entity();

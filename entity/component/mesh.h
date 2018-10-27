@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "entity/component.h"
-#include "entity/vector.h"
+#include "math/vector.h"
 
 typedef std::vector<Vector> VertexVector;
 typedef std::vector<unsigned int> IndexVector;

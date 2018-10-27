@@ -15,10 +15,8 @@ public:
 
   virtual ~Component() {};
 
-  // TODO: Need some kind of enity context
   virtual void update(EntityContext* context);
 
-  // TODO: Need some kind of enity context
   virtual void fixedUpdate(EntityContext* context);
 
   inline std::string getName() {

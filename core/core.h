@@ -29,26 +29,16 @@ public:
   System* get(std::string name);
 
   void shouldStop() { 
-    // TODO: Clean this
+    // TODO: Make this more clean
     stop();
   }
 
+  virtual EntityStore* getEntities() {
+    return &store;
+  }
+
   void add(Entity* entity) {
-    entities.push_back(entity);
-  }
-
-  inline std::vector<Entity*>* getEntities() {
-    return &entities;
-  }
-
-  std::vector<Entity*> getEntitiesWith(std::string componentName) {
-    std::vector<Entity*> found;
-    for (auto entity : entities) {
-      if (entity->getComponent(componentName)) {
-        found.push_back(entity);
-      }
-    }
-    return found;
+    store.add(entity);
   }
 
   inline Entity* getCamera() {
@@ -71,12 +61,12 @@ private:
   
   bool running;
 
-  // TODO: Doe these belong here??
-  std::vector<Entity*> entities;
-  
   Entity camera;
 
   FileSystem* fileSystem;
+
+  EntityStore store;
+
 };
 
 #endif // CORE_H

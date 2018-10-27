@@ -13,17 +13,17 @@ Entity::Entity(Transform transform) : id(Entity::CurrentId++), transform(transfo
 
 Entity::~Entity() {}
 
-// TODO:  Need some kind of efficient store for this.
-Component* Entity::getComponent(std::string name) { 
-  return components.get(name);
-}
+// // TODO:  Need some kind of efficient store for this.
+// Component* Entity::getComponent(std::string name) { 
+//   return components.get(name);
+// }
 
-std::vector<Component*> Entity::getComponents(std::string name) { 
-  std::vector<Component*> results;
-  for (auto comp : components) {
-    if (comp->getName() ==  name) {
-      results.push_back(comp);
-    }
-  }
-  return results;
-}
+// std::vector<Component*> Entity::getComponents(std::string name) { 
+//   std::vector<Component*> results;
+//   for (auto comp : components) {
+//     if (comp->getName() ==  name) {
+//       results.push_back(comp);
+//     }
+//   }
+//   return results;
+// }

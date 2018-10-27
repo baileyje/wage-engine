@@ -7,6 +7,7 @@
 #include "fs/file_system.h"
 
 #include "entity/entity.h"
+#include "entity/store.h"
 #include "entity/component.h"
 
 
@@ -14,7 +15,7 @@ class System;
 
 class Context {
 
-public: 
+public:
 
   Context();
 
@@ -38,13 +39,12 @@ public:
 
   virtual void add(Entity* entity) = 0;
 
-  virtual std::vector<Entity*>* getEntities() = 0;
-
   virtual Entity* getCamera() = 0;
 
-  virtual std::vector<Entity*> getEntitiesWith(std::string component) = 0;
+  virtual EntityStore* getEntities() = 0;
 
   virtual FileSystem* getFileSystem() = 0;
+
 };
 
 #endif // CORE_CONTEXT_H

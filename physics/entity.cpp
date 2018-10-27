@@ -15,23 +15,44 @@ btCollisionShape* PhysicsEntity::shapeFor(Entity* entity) {
   }	
 }
 
+btRigidBody* PhysicsEntity::rigidBodyFor(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape) {
+	btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
+	btVector3 localInertia(0, 0, 0);
+	if (rigidBody->getMass() != 0.f) {
+		shape->calculateLocalInertia(rigidBody->getMass(), localInertia);
+  }    
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+	btRigidBody::btRigidBodyConstructionInfo cInfo(rigidBody->getMass(), myMotionState, shape, localInertia);
+	btRigidBody* body = new btRigidBody(cInfo);  
+  if (rigidBody->getType() == kinematic) {
+    body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+  } else if (rigidBody->getType() == immovable) {
+    body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
+  }
+	//body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
+	body->setUserIndex(-1);
+	return body;
+}
+
 PhysicsEntity* PhysicsEntity::from(Entity* entity, btDiscreteDynamicsWorld* dynamicsWorld) {
   btCollisionShape* shape = shapeFor(entity);
   btRigidBody* body = nullptr;
+  btCollisionObject* object = nullptr;
   RigidBody* entityBody = entity->get<RigidBody>();
   if (entityBody) {
-    body = createRigidBody(entityBody, fromTransform(entity->getTransform()), shape);
+    body = rigidBodyFor(entityBody, fromTransform(entity->getTransform()), shape);
     dynamicsWorld->addRigidBody(body);
-    // Must come after added to world.
+    // Must come after added to world.    
     if (!entityBody->isAffectedByGravity()) {
       body->setGravity(btVector3(0, 0, 0));
     }
+    object = body;
   }	else {
-    btCollisionObject* object = new btCollisionObject();
+    object = new btCollisionObject();
     object->setCollisionShape(shape);
     dynamicsWorld->addCollisionObject(object);
   }
-  return new PhysicsEntity(entity, shape, body);
+  return new PhysicsEntity(entity, shape, body, object);
 }
 
  btTransform PhysicsEntity::getTransform() {
@@ -60,12 +81,11 @@ void PhysicsEntity::applyForces() {
   btVector3 force = fromVector(entityBody->getForce());
   if (force.length() > 0) {
     rigidBody->applyCentralForce(force);	
-    // entityBody->clearForce();
   }			
   rigidBody->activate(true);
 }
 
-void PhysicsEntity::updateTransform() {
+void PhysicsEntity::updateEntityTransform() {
   if (!rigidBody) {
     return;
   }
@@ -88,16 +108,7 @@ void PhysicsEntity::updateShapeTransform() {
   RigidBody* entityBody = entity->get<RigidBody>();
   if (entityBody->getType() == dynamic) {
     return;
-  }
-  
+  }  
   btTransform transform = fromTransform(entity->getTransform());
   rigidBody->getMotionState()->setWorldTransform(transform);
-  // rigidBody->setWorldTransform(transform);
-  // transform.setOrigin(fromVector(entity->getTransform()->getPosition()));
-  // btQuaternion rotation(
-  //   btRadians(entity->getTransform()->getRotation()->y), 
-  //   btRadians(entity->getTransform()->getRotation()->x), 
-  //   btRadians(entity->getTransform()->getRotation()->z)
-  // );
-  // transform.setRotation(rotation);
 }

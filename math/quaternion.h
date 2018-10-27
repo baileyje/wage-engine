@@ -1,5 +1,5 @@
-#ifndef ENTITY_QUATERNION_H
-#define ENTITY_QUATERNION_H
+#ifndef MATH_QUATERNION_H
+#define MATH_QUATERNION_H
 
 
 // TODO:  Support Euler
@@ -41,4 +41,4 @@ private:
   
 };
 
-#endif //ENTITY_QUATERNION_H
+#endif //MATH_QUATERNION_H

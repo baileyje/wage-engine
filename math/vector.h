@@ -1,5 +1,5 @@
-#ifndef ENTITY_VECTOR_H
-#define ENTITY_VECTOR_H
+#ifndef MATH_VECTOR_H
+#define MATH_VECTOR_H
 
 // TODO:  Support V2 and V4
 class Vector {
@@ -36,5 +36,4 @@ private:
 
 };
 
-
-#endif //ENTITY_VECTOR_H
+#endif //MATH_VECTOR_H
