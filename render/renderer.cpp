@@ -50,9 +50,9 @@ void Renderer::start(Context* context) {
   Shader::initDefault(context->getFileSystem());  
   
   // TODO: Listen for changes to entities and figure out how to get these!!!
-  dirLights = context->getEntities()->with("DirectionalLight");
-  pointLights = context->getEntities()->with("PointLight");
-  spotlights = context->getEntities()->with("Spotlight");
+  dirLights = context->getScene()->getEntities()->with("DirectionalLight");
+  pointLights = context->getScene()->getEntities()->with("PointLight");
+  spotlights = context->getScene()->getEntities()->with("Spotlight");
 
   glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 }
@@ -60,12 +60,12 @@ void Renderer::start(Context* context) {
 void Renderer::update(Context* context) {  
   FAIL_CHECK(glViewport(0, 0, screenWidth, screenHeight));
   FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-  Entity* camera = context->getCamera();
+  Entity* camera = context->getScene()->getCamera();
   Transform* cameraTransform = camera->getTransform();
   glm::vec3 cameraPosition = vec3From(cameraTransform->getPosition());
   glm::mat4 cameraProjection = viewProjectionFrom(cameraTransform);
   glm::mat4 screenProjection = screenProjectionFrom((Camera*)camera->getComponents()->get("Camera"));
-  for (auto entity : *context->getEntities()) {
+  for (auto entity : *context->getScene()->getEntities()) {
     draw(screenProjection, cameraPosition, cameraProjection, entity);    
   }
   FAIL_CHECK(glfwSwapBuffers(window));

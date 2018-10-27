@@ -1,4 +1,5 @@
 ☐ Work on parent/world based coordinates 
+☐ Scene
 ☐ Logging
 ☐ Add/Remove Entity messages
 ☐ Memory allocator
@@ -8,5 +9,6 @@
 ☐ better project structure
 ☐ Texture cache
 ☐ Mesh cache
+☐ Some strategy for restaring scene
 
 

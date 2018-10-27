@@ -6,9 +6,7 @@
 
 #include "fs/file_system.h"
 
-#include "entity/entity.h"
-#include "entity/store.h"
-#include "entity/component.h"
+#include "entity/scene.h"
 
 
 class System;
@@ -21,6 +19,7 @@ public:
 
   virtual ~Context();
 
+  // TODO:  I don't like systems being in the context.  How will we expose this so JSRT if needed? 
   virtual void add(System* system) = 0;
 
   virtual System* get(std::string name) = 0;
@@ -37,11 +36,7 @@ public:
 
   virtual void shouldStop() = 0;
 
-  virtual void add(Entity* entity) = 0;
-
-  virtual Entity* getCamera() = 0;
-
-  virtual EntityStore* getEntities() = 0;
+  virtual Scene* getScene() = 0;
 
   virtual FileSystem* getFileSystem() = 0;
 

@@ -112,6 +112,30 @@ public:
 
 };
 
+class GameController : public Component {
+
+public:
+
+  GameController(Core* core) : Component("GameController"), core(core) {    
+  }
+
+  void update(EntityContext* context) {    
+    if (Input::isPressed(GLFW_KEY_R)) {
+      // Entity* entity = context->getEntity();
+      // RigidBody* body = entity->get<RigidBody>();
+      // body->addImpulse(Vector(0, 0.0004, 0));
+      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
+      core->stop();
+      core->start();
+    }
+  }
+
+private:
+
+  Core* core;
+
+};
+
 Core* coreRef;
 
 void intHandler(int);
@@ -134,11 +158,13 @@ int main(int argc, char* argv[]) {
   core.add(&engine);
   core.add(new Renderer());
 
-  Entity* camera = core.getCamera();
+  Scene* scene = core.getScene();
+
+  Entity* camera = new Entity();
   camera
     ->add(new PerspectiveCamera())
     ->add(new CamMove());
-  core.add(camera);
+  scene->add(camera);
 
   camera->getTransform()->setPosition(Vector(0, 10, -30));
   camera->getTransform()->setRotation(Vector(10, 0.0, 0));
@@ -148,14 +174,14 @@ int main(int argc, char* argv[]) {
   DirectionalLight* temp = new DirectionalLight();
   temp->setDiffuse(Color(0.7,0.7,0.7,1));
   dirLight.add(temp);
-  core.add(&dirLight);
+  scene->add(&dirLight);
 
   Material blueMat(Color(0, 0, 1, 1));
 
   Entity pointLight;
   pointLight.getTransform()->setPosition(Vector(0, 2, 0));
   pointLight.add(new PointLight());
-  core.add(&pointLight);
+  scene->add(&pointLight);
 
   Entity spotlight;
   spotlight.getTransform()->setPosition(Vector(0, 2, -3));
@@ -164,7 +190,7 @@ int main(int argc, char* argv[]) {
   spot.setCutOff(40);
   spot.setOuterCutOff(50);
   spotlight.add(&spot);
-  core.add(&spotlight);
+  scene->add(&spotlight);
 
   for (int i = 0; i < 5; i++) {
       Entity* entity = new Entity();
@@ -175,7 +201,7 @@ int main(int argc, char* argv[]) {
         ->add(new DorkComp2())
         ->add(&Mesh::Cube)
         ->add(&Collider::Box);
-      core.add(entity);
+      scene->add(entity);
   }
 
   Entity* mover = new Entity();
@@ -186,7 +212,7 @@ int main(int argc, char* argv[]) {
     ->add(new MoveIt())
     ->add(&Mesh::Cube)  
     ->add(&Collider::Box);
-  core.add(mover);
+  scene->add(mover);
 
   Entity* ground = new Entity();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
@@ -198,7 +224,11 @@ int main(int argc, char* argv[]) {
   ground->add(new Tilt());
   // Material whiteMat(Color(0.5, 0.5, 0.5, 1));
   // ground->add(&whiteMat);
-  core.add(ground);
+  scene->add(ground);
+
+  Entity* controller = new Entity();
+  controller->add(new GameController(&core));
+  scene->add(controller);
 
   core.init();
   core.start();

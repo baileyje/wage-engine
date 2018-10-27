@@ -9,7 +9,7 @@ void Engine::start(Context* context) {
 }
 
 void Engine::update(Context* context) {
-  for (auto entity : *context->getEntities()) {
+  for (auto entity : *context->getScene()->getEntities()) {
     EntityContext entityContext(entity, context->time, context->deltaTime);
     for (auto component : *entity->getComponents()) {
       component->update(&entityContext);
@@ -18,7 +18,7 @@ void Engine::update(Context* context) {
 }
 
 void Engine::fixedUpdate(Context* context) {
-  for (auto entity : *context->getEntities()) {
+  for (auto entity : *context->getScene()->getEntities()) {
     EntityContext entityContext(entity, context->time, context->deltaTime);
     for (auto component : *entity->getComponents()) {
       component->fixedUpdate(&entityContext);

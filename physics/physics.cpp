@@ -18,7 +18,7 @@ void Physics::init(Context* context) {
 
 void Physics::start(Context* context) {
 	printf("Starting Physics.\n");
-	for (auto entity : *context->getEntities()) {
+	for (auto entity : *context->getScene()->getEntities()) {
 		add(entity);
 	}	
 }

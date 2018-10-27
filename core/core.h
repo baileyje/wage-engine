@@ -33,16 +33,8 @@ public:
     stop();
   }
 
-  virtual EntityStore* getEntities() {
-    return &store;
-  }
-
-  void add(Entity* entity) {
-    store.add(entity);
-  }
-
-  inline Entity* getCamera() {
-    return &camera;
+  inline Scene* getScene() {
+    return &scene;
   }
 
   inline FileSystem* getFileSystem() { 
@@ -61,11 +53,9 @@ private:
   
   bool running;
 
-  Entity camera;
-
   FileSystem* fileSystem;
 
-  EntityStore store;
+  Scene scene;
 
 };
 
