@@ -20,6 +20,9 @@ void Physics::start(Context* context) {
 	printf("Starting Physics.\n");
 	for (auto entity : *context->getScene()->getEntities()) {
 		add(entity);
+		for (auto child : *entity->getChildren()) {
+			add(child);
+		}
 	}	
 }
 

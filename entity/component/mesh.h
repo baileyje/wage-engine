@@ -7,13 +7,14 @@
 #include "math/vector.h"
 
 typedef std::vector<Vector> VertexVector;
+typedef std::vector<Vector2> Vertex2Vector;
 typedef std::vector<unsigned int> IndexVector;
 
 class Mesh : public Component {
 
 public:
 
-  Mesh(std::string id, VertexVector vertices, VertexVector normals, VertexVector uvs, IndexVector indices) 
+  Mesh(std::string id, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices) 
     : Component("Mesh"), id(id), vertices(vertices), normals(normals), uvs(uvs), indices(indices) {}
   
   virtual ~Mesh();
@@ -30,7 +31,7 @@ public:
     return &normals;
   }
 
-  inline VertexVector* getUvs() {
+  inline Vertex2Vector* getUvs() {
     return &uvs;
   }
 
@@ -54,7 +55,7 @@ protected:
   
   VertexVector normals;
 
-  VertexVector uvs;
+  Vertex2Vector uvs;
 
   IndexVector indices;
 

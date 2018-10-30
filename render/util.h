@@ -29,9 +29,9 @@ inline glm::vec3 vec3From(Color* color) {
     return glm::vec3(color->r, color->g, color->b);
 }
 
-inline glm::vec3 directionFromEulers(Vector* vector) {
-  float yaw = glm::radians(vector->x);
-  float pitch = glm::radians(vector->y);
+inline glm::vec3 directionFromEulers(Vector vector) {
+  float yaw = vector.x;
+  float pitch = vector.y;
     return glm::vec3(
         glm::cos(yaw) * glm::cos(pitch),
         glm::sin(yaw) * glm::cos(pitch),
@@ -39,12 +39,12 @@ inline glm::vec3 directionFromEulers(Vector* vector) {
     );
 }
 
-inline glm::quat quatFromEulers(Vector* vector) {
-  return glm::quat(glm::vec3(
-    glm::radians(vector->x),
-    glm::radians(vector->y),
-    glm::radians(vector->z)
-  ));
-}
+// inline glm::quat quatFromEulers(Vector* vector) {
+//   return glm::quat(glm::vec3(
+//     glm::radians(vector->x),
+//     glm::radians(vector->y),
+//     glm::radians(vector->z)
+//   ));
+// }
 
 #endif //RENDER_UTIL_H

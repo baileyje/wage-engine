@@ -62,17 +62,19 @@ public:
   }
 
   void update(EntityContext* context) {
+    Transform* transform = context->getEntity()->getTransform();
+    Vector position = transform->getPosition();
     if (Input::isPressed(GLFW_KEY_UP)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
+       transform->setPosition(transform->getPosition() + Vector(0, 0, 0.3));
     }
     if (Input::isPressed(GLFW_KEY_DOWN)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, -0.3);
+      transform->setPosition(transform->getPosition() +Vector(0, 0, -0.3));
     } 
     if (Input::isPressed(GLFW_KEY_LEFT)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(0.3, 0, 0);
+      transform->setPosition(transform->getPosition() + Vector(0.3, 0, 0));
     }
     if (Input::isPressed(GLFW_KEY_RIGHT)) {
-      *context->getEntity()->getTransform()->getPosition() += Vector(-0.3, 0, 0);
+      transform->setPosition(transform->getPosition() + Vector(-0.3, 0, 0));
     }
   }
 };
@@ -85,12 +87,14 @@ public:
   }
 
   void update(EntityContext* context) {
-    if (Input::isPressed(GLFW_KEY_COMMA)) {
-      *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, -1);
-    }
-    if (Input::isPressed(GLFW_KEY_PERIOD)) {
-      *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, 1);
-    }    
+    Transform* transform = context->getEntity()->getTransform();
+    Vector position = transform->getPosition();
+    // if (Input::isPressed(GLFW_KEY_COMMA)) {
+    //   *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, -1);
+    // }
+    // if (Input::isPressed(GLFW_KEY_PERIOD)) {
+    //   *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, 1);
+    // }
   }
 };
 
@@ -149,11 +153,12 @@ int main(int argc, char* argv[]) {
   Core core(path);  
   coreRef = &core;
   core.add(new Platform());
-  core.add(new Input());
+  core.add(new Input());  
+  core.add(new Physics());
+
   // Jsrt jsrt;
   // core.add(&jsrt);
-  core.add(new Physics());
-  
+
   Engine engine;
   core.add(&engine);
   core.add(new Renderer());
@@ -166,8 +171,8 @@ int main(int argc, char* argv[]) {
     ->add(new CamMove());
   scene->add(camera);
 
-  camera->getTransform()->setPosition(Vector(0, 10, -30));
-  camera->getTransform()->setRotation(Vector(10, 0.0, 0));
+  camera->getTransform()->setPosition(Vector(-20, 10, -30));
+  camera->getTransform()->setRotation(Vector(10, 20.0, 0));
 
   Entity dirLight;
   dirLight.getTransform()->setRotation(Vector(-90, 0, 0));
@@ -192,27 +197,36 @@ int main(int argc, char* argv[]) {
   spotlight.add(&spot);
   scene->add(&spotlight);
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 0; i++) {
       Entity* entity = new Entity();
-      RigidBody* body = new RigidBody(0.001);
       entity->getTransform()->setPosition(Vector(3, 3 * i, 0));       
       entity
-        ->add(body)
+        ->add(new RigidBody(0.001))
         ->add(new DorkComp2())
         ->add(&Mesh::Cube)
         ->add(&Collider::Box);
       scene->add(entity);
   }
 
-  Entity* mover = new Entity();
-  mover->getTransform()->setPosition(Vector(0, 2, 0));
-  mover->getTransform()->setScale(Vector(1, 1, 1));
-  mover->getTransform()->setRotation(Vector(0, 0, 0));
-  mover->add(new RigidBody(0.001))
+  Entity mover;
+  mover.getTransform()->setPosition(Vector(0, 10, 0));
+  // mover.getTransform()->setScale(Vector(1, 1, 1));
+  // mover.getTransform()->setRotation(Vector(0, 45, 0));
+  mover
+    .add(new RigidBody(0.001))    
+    ->add(&Mesh::Cube)
     ->add(new MoveIt())
-    ->add(&Mesh::Cube)  
     ->add(&Collider::Box);
-  scene->add(mover);
+  scene->add(&mover);
+
+  Entity child;
+  child.getTransform()->setPosition(Vector(0, 0, 1));
+  child.getTransform()->setRotation(Vector(45, 0, 0));
+  child.getTransform()->setScale(Vector(0.5, 0.5, 1));
+  child
+    .add(&Mesh::Cube)  
+    ->add(&Collider::Box);
+  mover.add(&child);
 
   Entity* ground = new Entity();
   ground->getTransform()->setPosition(Vector(0, -2, 0));

@@ -62,11 +62,14 @@ void Renderer::update(Context* context) {
   FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   Entity* camera = context->getScene()->getCamera();
   Transform* cameraTransform = camera->getTransform();
-  glm::vec3 cameraPosition = vec3From(cameraTransform->getPosition());
+  glm::vec3 cameraPosition = cameraTransform->getWorldPosition();
   glm::mat4 cameraProjection = viewProjectionFrom(cameraTransform);
   glm::mat4 screenProjection = screenProjectionFrom((Camera*)camera->getComponents()->get("Camera"));
   for (auto entity : *context->getScene()->getEntities()) {
-    draw(screenProjection, cameraPosition, cameraProjection, entity);    
+    draw(screenProjection, cameraPosition, cameraProjection, entity);
+    for (auto child : *entity->getChildren()) {
+      draw(screenProjection, cameraPosition, cameraProjection, child);
+    }
   }
   FAIL_CHECK(glfwSwapBuffers(window));
   FAIL_CHECK(glfwPollEvents());
@@ -80,9 +83,7 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
   }
   GlMaterial material(Shader::Default);
   material.bind();
-  
-  glm::mat4 model = modelProjectionFrom(entity);
-  
+  glm::mat4 model = entity->getTransform()->worldPorjection();
   material.setMat4("model", model);
   material.setMat4("view", cameraProjection);
   material.setMat4("projection", screenProjection);  
@@ -95,7 +96,8 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
     std::stringstream base;
     base << "dirLights[" << idx++ << "]";
     DirectionalLight* light = dirLightEnt->get<DirectionalLight>();
-    material.setVec3(base.str() + ".direction", directionFromEulers(dirLightEnt->getTransform()->getRotation()));
+    Vector cameraEulers = glm::eulerAngles(dirLightEnt->getTransform()->getWorldRotation());
+    material.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
     material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
     material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
     material.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
@@ -107,7 +109,7 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
     std::stringstream base;
     base << "pointLights[" << idx++ << "]";
     PointLight* light = lightEnt->get<PointLight>();
-    material.setVec3(base.str() + ".position", vec3From(lightEnt->getTransform()->getPosition()));
+    material.setVec3(base.str() + ".position", lightEnt->getTransform()->getWorldPosition());
     material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
     material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
     material.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
@@ -122,8 +124,9 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
     std::stringstream base;
     base << "spotLights[" << idx++ << "]";
     Spotlight* light = lightEnt->get<Spotlight>();
-    material.setVec3(base.str() + ".position", vec3From(lightEnt->getTransform()->getPosition()));
-    material.setVec3(base.str() + ".direction", directionFromEulers(lightEnt->getTransform()->getRotation()));
+    material.setVec3(base.str() + ".position", lightEnt->getTransform()->getWorldPosition());
+    Vector cameraEulers = glm::eulerAngles(lightEnt->getTransform()->getWorldRotation());
+    material.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
     material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
     material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
     material.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
@@ -136,7 +139,7 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
 
   GlTexture::Default.bind();
   material.setInt("material.diffuse", 0);
-  material.setFloat("material.shininess ", 32.0f);
+  material.setFloat("material.shininess", 32.0f);
   draw(mesh, &material);
 }
 
@@ -150,7 +153,7 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
 void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   VertexArray vao;
   vao.bind();  
-  // material->bind();
+  material->bind();
 
   // TODO: I think this could be cached for sure.  
   // Create Verts Buff
@@ -163,7 +166,7 @@ void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   vao.addBuffer(&norms);
 
   VertexBuffer uvs(mesh->getUvs()->data(), mesh->getUvs()->size() * 3 * sizeof(float));
-  uvs.getLayout()->pushFloat(3);
+  uvs.getLayout()->pushFloat(2);
   vao.addBuffer(&uvs);  
   // Create Index Buff
   IndexBuffer indices((const unsigned int*)mesh->getIndices()->data(), mesh->getIndices()->size());
@@ -178,16 +181,6 @@ void Renderer::draw(Mesh* mesh, GlMaterial* material) {
 }
 
 //------
-
-glm::mat4 Renderer::modelProjectionFrom(Entity* entity) {
-  Transform* transform = entity->getTransform();
-  glm::mat4 translation = glm::translate(glm::mat4(1), vec3From(transform->getPosition()));
-  glm::mat4 scale = glm::scale(glm::mat4(1), vec3From(transform->getScale()));
-  glm::quat rotation = quatFromEulers(transform->getRotation());
-  glm::mat4 rotate = glm::toMat4(rotation);
-  return translation * rotate * scale;
-}
-
 
 glm::mat4 Renderer::screenProjectionFrom(Camera* camera) {
   if (camera->getType() == perspective) {
@@ -206,8 +199,8 @@ glm::mat4 Renderer::screenProjectionFrom(Camera* camera) {
 }
 
 glm::mat4 Renderer::viewProjectionFrom(Transform* cameraTransform) {
-  glm::vec3 camPos = vec3From(cameraTransform->getPosition());
-  glm::quat camRotation(quatFromEulers(cameraTransform->getRotation()));
+  glm::vec3 camPos = cameraTransform->getWorldPosition();
+  glm::quat camRotation = cameraTransform->getWorldRotation();
   glm::vec3 camFront(
     2 * (camRotation.x * camRotation.z + camRotation.w * camRotation.y), 
     2 * (camRotation.y * camRotation.z - camRotation.w * camRotation.x),

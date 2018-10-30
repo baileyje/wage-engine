@@ -43,7 +43,7 @@ public:
 private: 
 
   PhysicsEntity(Entity* entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
-    : entity(entity), shape(shape), rigidBody(rigidBody), object(object) {
+    : entity(entity), shape(shape), rigidBody(rigidBody), object(object) {    
   }
 
   static btCollisionShape* shapeFor(Entity* entity);
@@ -58,7 +58,7 @@ private:
   btRigidBody* rigidBody;
 
   btCollisionObject* object;
-  
+
 };
 
 

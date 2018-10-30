@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "entity/transform.h"
+#include "math/transform.h"
 #include "entity/component_map.h"
 
 class Component;
@@ -36,6 +36,15 @@ public:
     return components.get<T>();
   }
 
+  inline void add(Entity* child) {
+    child->transform.setParent(&transform);
+    children.push_back(child);
+  }
+
+  inline std::vector<Entity*>* getChildren() {
+    return &children;
+  }
+
   inline ComponentMap* getComponents() { return &components; }
   
 private:
@@ -45,6 +54,8 @@ private:
   Transform transform;
 
   ComponentMap components;
+
+  std::vector<Entity*> children;
   
   static long CurrentId;
 

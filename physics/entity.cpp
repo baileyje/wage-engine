@@ -5,10 +5,11 @@ btCollisionShape* PhysicsEntity::shapeFor(Entity* entity) {
   if (!collider) {
     return new btEmptyShape();
   }
+  Vector scale = entity->getTransform()->getWorldScale();  
   switch(collider->getType()) {
     // TODO: Support more shapes
     case box: {
-      btVector3 halfExtents = btVector3(entity->getTransform()->getScale()->x/2.0, entity->getTransform()->getScale()->y/2.0, entity->getTransform()->getScale()->z/2.0);			
+      btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);			
       return new btBoxShape(halfExtents);
     }
     default: return nullptr;
@@ -59,7 +60,8 @@ PhysicsEntity* PhysicsEntity::from(Entity* entity, btDiscreteDynamicsWorld* dyna
   btTransform transform;
   if (rigidBody && rigidBody->getMotionState()) {
     rigidBody->getMotionState()->getWorldTransform(transform);
-  } else {
+    
+  } else {  
     transform = rigidBody->getWorldTransform();
   }
   return transform;
@@ -70,7 +72,7 @@ void PhysicsEntity::applyForces() {
     return;
   }
   RigidBody* entityBody = entity->get<RigidBody>();
-  if (!entityBody) {
+  if (!entityBody || entityBody->getType() != dynamic) {
     return;
   }
   btVector3 impulse = fromVector(entityBody->getImpulse());
@@ -89,16 +91,14 @@ void PhysicsEntity::updateEntityTransform() {
   if (!rigidBody) {
     return;
   }
-  btTransform transform = getTransform();
-  entity->getTransform()->setPosition(fromBTVector(transform.getOrigin()));
+  btTransform transform = getTransform();  
+  entity->getTransform()->setWorldPosition(fromBTVector(transform.getOrigin()));
   btQuaternion rotation = transform.getRotation();
-  btScalar yawZ, pitchY, rollX;
-  rotation.getEulerZYX(yawZ, pitchY, rollX);
-  entity->getTransform()->setRotation(Vector(
-    btDegrees(rollX), 
-    btDegrees(pitchY), 
-    btDegrees(yawZ)
-  ));
+  // btScalar yawZ, pitchY, rollX;
+  // rotation.getEulerZYX(yawZ, pitchY, rollX);
+  entity->getTransform()->setWorldRotation(
+    Quaternion(rotation.w(), rotation.x(), rotation.y(), rotation.z())
+  );
 }
 
 void PhysicsEntity::updateShapeTransform() {

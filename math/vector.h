@@ -1,39 +1,11 @@
 #ifndef MATH_VECTOR_H
 #define MATH_VECTOR_H
 
-// TODO:  Support V2 and V4
-class Vector {
+#include <glm/glm.hpp>
 
-public:
-
-  Vector() : x(0), y(0), z(0) {}
-
-  Vector(float x, float y) : x(x), y(y), z(0) {}
-  
-  Vector(float x, float y, float z) : x(x), y(y), z(z) {}
-
-  ~Vector() {}
-
-  float x;
-
-  float y;
-
-  float z;
-  
-  friend Vector operator+(Vector left, const Vector& right) {
-    left += right;
-    return left;
-  }
-
-  inline Vector& operator+=(Vector other) {
-    x += other.x;
-    y += other.y;
-    z += other.z;    
-    return *this;
-  }
-
-private:
-
-};
+typedef glm::vec3 Vector;
+typedef glm::vec2 Vector2;
+typedef glm::vec3 Vector3;
+typedef glm::vec4 Vector4;
 
 #endif //MATH_VECTOR_H

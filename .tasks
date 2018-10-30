@@ -1,14 +1,27 @@
+Core:
 ☐ Work on parent/world based coordinates 
-☐ Scene
+  ☐ Initial add of world
+  ☐ Move from getPosition/getWorldPosition -> getLocalPosition/getPosition
+✔ Scene @done (10/27/2018, 8:18:52 AM)
 ☐ Logging
 ☐ Add/Remove Entity messages
 ☐ Memory allocator
 ☐ Better virtual filesystem support
-☐ .obj loading
 ☐ integrate script component
 ☐ better project structure
+
+Entity:
+
+☐ More primitive shapes
+  ☐ Sphere
+  ☐ Cone
+✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)s
+Renderer:
+☐ .obj loading
 ☐ Texture cache
 ☐ Mesh cache
+
+Game:
 ☐ Some strategy for restaring scene
 
 

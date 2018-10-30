@@ -43,8 +43,6 @@ private:
 
   glm::mat4 viewProjectionFrom(Transform* cameraTransform);
 
-  glm::mat4 modelProjectionFrom(Entity* entity);
-
   glm::mat4 screenProjectionFrom(Camera* camera);
 
   void draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity);

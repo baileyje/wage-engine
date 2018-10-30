@@ -70,39 +70,39 @@ Mesh Mesh::Cube(
     Vector(0.0f,  -1.0f, 0.0f),
     Vector(0.0f,  -1.0f, 0.0f),
   },
-  VertexVector {
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(1.0f,  0.0f),  // top right
-    Vector(0.0f,  0.0f),   // top left 
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(1.0f,  0.0f),  // top right
-    Vector(0.0f,  0.0f),   // top left 
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(1.0f,  0.0f),  // top right
-    Vector(0.0f,  0.0f),   // top left 
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(1.0f,  0.0f),  // top right
-    Vector(0.0f,  0.0f),   // top left 
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(1.0f,  0.0f),  // top right
-    Vector(0.0f,  0.0f),   // top left 
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(1.0f,  0.0f),  // top right
-    Vector(0.0f,  0.0f),   // top left 
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(1.0f,  0.0f),  // top right
-    Vector(0.0f,  0.0f),   // top left 
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(1.0f,  0.0f),  // top right
-    Vector(0.0f,  0.0f),   // top left             
+  Vertex2Vector {
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(0.0f,  0.0f),   // top left 
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(0.0f,  0.0f),   // top left 
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(0.0f,  0.0f),   // top left 
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(0.0f,  0.0f),   // top left 
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(0.0f,  0.0f),   // top left 
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(0.0f,  0.0f),   // top left 
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(0.0f,  0.0f),   // top left 
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(0.0f,  0.0f),   // top left             
   },
   IndexVector {
     0, 1, 2, 0, 2, 3, //front
@@ -128,11 +128,11 @@ Mesh Mesh::Quad(
     Vector(0.0f,  0.0f, -1.0f),  // bottom left
     Vector(0.0f,  0.0f, -1.0f)   // top left 
   },
-  VertexVector {
-    Vector(1.0f,  0.0f),  // top right
-    Vector(1.0f,  1.0f),  // bottom right
-    Vector(0.0f,  1.0f),  // bottom left
-    Vector(0.0f,  0.0f)   // top left 
+  Vertex2Vector {
+    Vector2(1.0f,  0.0f),  // top right
+    Vector2(1.0f,  1.0f),  // bottom right
+    Vector2(0.0f,  1.0f),  // bottom left
+    Vector2(0.0f,  0.0f)   // top left 
   },
   IndexVector {
     0, 1, 3,  // first Triangle

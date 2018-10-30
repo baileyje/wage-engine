@@ -4,7 +4,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "entity/component/rigid_body.h"
-#include "entity/transform.h"
+#include "math/transform.h"
 
 inline btVector3 fromVector(Vector vector) {
   return btVector3(vector.x, vector.y, vector.z);

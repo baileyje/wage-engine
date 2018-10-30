@@ -4,12 +4,14 @@
 btTransform fromTransform(Transform* transform) {
   btTransform btTransform;
   btTransform.setIdentity();
-  btTransform.setOrigin(fromVector(*transform->getPosition()));
+  btTransform.setOrigin(fromVector(transform->getWorldPosition()));  
+  Quaternion transformRotation = transform->getWorldRotation();
   btQuaternion rotation(
-    btRadians(transform->rotation.y), 
-    btRadians(transform->rotation.x), 
-    btRadians(transform->rotation.z)
+    transformRotation.x,
+    transformRotation.y,
+    transformRotation.z,
+    transformRotation.w
   );
-  btTransform.setRotation(rotation);
+  btTransform.setRotation(rotation);  
   return btTransform;
 }
