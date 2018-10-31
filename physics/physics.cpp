@@ -2,7 +2,7 @@
 
 #include "entity/component/rigid_body.h"
 #include "entity/component/collider.h"
-
+#include "core/logger.h"
 
 Physics::Physics() : System("bullet_physics"), 
 	dispatcher(&collisionConfiguration), 
@@ -12,12 +12,12 @@ Physics::Physics() : System("bullet_physics"),
 Physics::~Physics() {}
 
 void Physics::init(Context* context) {
-	printf("Initializing Physics.\n");
+	Logger::info("Initializing Physics.");
   dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
 }
 
 void Physics::start(Context* context) {
-	printf("Starting Physics.\n");
+	Logger::info("Starting Physics.");
 	for (auto entity : *context->getScene()->getEntities()) {
 		add(entity);
 		for (auto child : *entity->getChildren()) {
@@ -43,7 +43,7 @@ void Physics::fixedUpdate(Context* context) {
 }
 
 void Physics::deinit(Context* context) {
-	printf("Deinitializing Physics.\n");
+	Logger::info("Deinitializing Physics.");
   for (auto entity : entities) {
 		if (entity->getObject()) {
 			dynamicsWorld.removeCollisionObject(entity->getObject());

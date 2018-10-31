@@ -1,6 +1,8 @@
 #include "jsrt/module_manager.h"
 #include "jsrt/util.h"
 
+#include "core/logger.h"
+
 ModuleManager* ModuleManager::shared;
 
 // TODO: Move to singleton
@@ -28,7 +30,7 @@ void ModuleManager::update() {
 }
 
 JsModuleRecord ModuleManager::loadModule(JsModuleRecord importer, std::string path) {
-  // printf("Requested: %s\n", path);
+  Logger::debug("Requested: %s\n", path.c_str());
   bool is_new_module;
 
   LoadedModule* loaded = loadedModules[path];
@@ -40,10 +42,9 @@ JsModuleRecord ModuleManager::loadModule(JsModuleRecord importer, std::string pa
   loaded->module = moduleRecord;
   loaded->path = path;  
   loadedModules[path] = loaded;
-  // printf("ModuleRoot: %s\n", moduleRoot.c_str());
-  // printf("ModulePath: %s\n", (moduleRoot +  path).c_str());
+  Logger::debug("ModulePath: %s\n", (moduleRoot +  path).c_str());
   char* source = readFile( (moduleRoot +  path).c_str() );
-  // printf("SRC: %s\n", source);
+  Logger::debug("SRC: %s\n", source);
   LoadTask* task = (LoadTask*)malloc(sizeof(LoadTask));  
   task->sourceContext = currentSourceContext++;
   task->module = moduleRecord;
@@ -54,7 +55,7 @@ JsModuleRecord ModuleManager::loadModule(JsModuleRecord importer, std::string pa
 }
 
 JsModuleRecord ModuleManager::createModule(std::string specifier, JsModuleRecord parentRecord, std::string url, bool *out_is_new) {
-  // printf("Module: %s\n", specifier);
+  Logger::debug("Creating Module: %s\n", specifier.c_str());
   JsModuleRecord moduleRecord;  	
   *out_is_new = true;  
   JsValueRef sepcifierRef = valueFromString(specifier);  
@@ -70,7 +71,7 @@ JsModuleRecord ModuleManager::createModule(std::string specifier, JsModuleRecord
 }
 
 void ModuleManager::parseModule(LoadTask* task) {
-  // printf("SRC %s\n", task->source);
+  Logger::debug("Paring source:\n %s\n", task->source);
   JsValueRef exception;  
   JsErrorCode  errorCode = JsParseModuleSource(task->module, task->sourceContext, (BYTE*)task->source, (unsigned int)task->sourceLength, JsParseModuleSourceFlags_DataIsUTF8, &exception);  
   if (errorCode == JsErrorScriptCompile) {
@@ -86,9 +87,8 @@ void ModuleManager::evaluateModule(LoadTask* task) {
 }
 
 JsErrorCode CHAKRA_CALLBACK ModuleManager::fetchImportedModule(JsModuleRecord importer, JsValueRef fetchName, JsModuleRecord *outModule) {
-  // printf("Imported\n");
   char* moduleName = stringFromValue(fetchName);
-  // printf("Importing - %s\n", moduleName);
+  Logger::debug("Importing - %s", moduleName);
   JsModuleRecord moduleRecord = ModuleManager::shared->loadModule(importer, moduleName);  
   *outModule = moduleRecord;
   free(moduleName);
@@ -96,12 +96,12 @@ JsErrorCode CHAKRA_CALLBACK ModuleManager::fetchImportedModule(JsModuleRecord im
 }
 
 JsErrorCode CHAKRA_CALLBACK ModuleManager::fetchDynamicImport(JsSourceContext importer, JsValueRef specifier, JsModuleRecord *outModule) {
-  // printf("Dynamic Import - %s\n", specifier);
+  Logger::debug("Dynamic Import - %s", stringFromValue(specifier));
 	return fetchImportedModule(NULL, specifier, outModule);
 }
   
 JsErrorCode CHAKRA_CALLBACK ModuleManager::notifyModuleReady(JsModuleRecord module, JsValueRef exception) {
-  // printf("Module Ready\n");
+  Logger::debug("Module Ready");
   LoadTask* task = (LoadTask*)malloc(sizeof(LoadTask));  
   task->module = module;
   task->source = NULL;

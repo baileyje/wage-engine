@@ -7,6 +7,8 @@
 
 #include "platform/platform.h"
 
+#include "core/logger.h"
+
 #include "render/vertex_buffer.h"
 #include "render/index_buffer.h"
 #include "render/vertex_array.h"
@@ -28,11 +30,11 @@ Renderer::~Renderer() {
 }
 
 void Renderer::init(Context* context)  {
-  printf("Initializing Renderer.\n");
+  Logger::info("Initializing Renderer.");
 }
 
 void Renderer::start(Context* context) {
-  printf("Starting Renderer.\n");
+  Logger::info("Starting Renderer.");
   Platform* platform = static_cast<Platform*>(context->get("platform"));
   window = platform->getWindow();
   glfwMakeContextCurrent(window);
@@ -178,10 +180,10 @@ void Renderer::draw(Mesh* mesh, GlMaterial* material) {
 }
 
 void Renderer::stop(Context* context) {
-  printf("Stopping Renderer.\n");
+  Logger::info("Stopping Renderer.");
 }
 
 void Renderer::deinit(Context* context) {
-  printf("Deinitializing Renderer.\n");
+  Logger::info("Deinitializing Renderer.");
 }
 

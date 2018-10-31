@@ -4,10 +4,12 @@
 #include <GLFW/glfw3.h>
 #include "platform/platform.h"
 
+#include "core/logger.h"
+
 static std::unordered_set<int> frameKeys;
 
 void Input::start(Context* context) {
-  printf("Starting Input System\n");
+  Logger::info("Starting Input System");
   Platform* platform = static_cast<Platform*>(context->get("platform"));
   window = platform->getWindow();
   glfwSetWindowUserPointer(window, this);
@@ -25,7 +27,6 @@ void Input::start(Context* context) {
 
 void Input::update(Context* context) {
   if (glfwWindowShouldClose(window)) {
-    printf("Close!\n");
     context->shouldStop();    
     return;
   }

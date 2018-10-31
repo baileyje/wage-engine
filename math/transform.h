@@ -117,8 +117,8 @@ private:
   
   Vector scale;
 
-  // TODO: Quaternion?
   Quaternion rotation;
+
 };
 
 #endif //MATH_TRANSFORM_H

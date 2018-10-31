@@ -1,8 +1,8 @@
 #include "render/shader/shader.h"
 
+#include "core/logger.h"
 #include <glad/glad.h>
 #include <vector>
-
 
 #include "render/util.h"
 
@@ -17,7 +17,7 @@ void compileGLShader(unsigned int shaderId, const char* source) {
 	if ( infoLogLength > 0 ){
 		std::vector<char> errrorMessage(infoLogLength+1);
 		GL_FAIL_CHECK(glGetShaderInfoLog(shaderId, infoLogLength, NULL, &errrorMessage[0]));
-		printf("%s\n", &errrorMessage[0]);
+		Logger::error("%s\n", &errrorMessage[0]);
 	}
 }
 
@@ -73,7 +73,7 @@ void Shader::link() {
 	if ( infoLogLength > 0 ){
 		std::vector<char> errorMessage(infoLogLength+1);
 		GL_FAIL_CHECK(glGetProgramInfoLog(id, infoLogLength, NULL, &errorMessage[0]));
-		printf("%s\n", &errorMessage[0]);
+		Logger::error("%s\n", &errorMessage[0]);
 	}
 }
 

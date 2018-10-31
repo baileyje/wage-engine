@@ -82,29 +82,29 @@ ComponentCallback Raise = [](ComponentContext* context) {
   }
 };
 
-class GameController : public Component {
+// class GameController : public Component {
 
-public:
+// public:
 
-  GameController(Core* core) : Component("GameController"), core(core) {    
-  }
+//   GameController(Core* core) : Component("GameController"), core(core) {    
+//   }
 
-  void update(ComponentContext* context) {    
-    if (Input::isPressed(GLFW_KEY_R)) {
-      // Entity* entity = context->getEntity();
-      // RigidBody* body = entity->get<RigidBody>();
-      // body->addImpulse(Vector(0, 0.0004, 0));
-      // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
-      core->stop();
-      core->start();
-    }
-  }
+//   void update(ComponentContext* context) {    
+//     if (Input::isPressed(GLFW_KEY_R)) {
+//       // Entity* entity = context->getEntity();
+//       // RigidBody* body = entity->get<RigidBody>();
+//       // body->addImpulse(Vector(0, 0.0004, 0));
+//       // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
+//       core->stop();
+//       core->start();
+//     }
+//   }
 
-private:
+// private:
 
-  Core* core;
+//   Core* core;
 
-};
+// };
 
 Core* coreRef;
 
@@ -113,8 +113,7 @@ void intHandler(int);
 // So far so dumb
 int main(int argc, char* argv[]) {
   char buffer[255];
-  std::string path = std::string(getcwd(buffer, sizeof(buffer)));
-  printf("Path: %s\n", path.c_str());
+  std::string path = std::string(getcwd(buffer, sizeof(buffer)));  
   signal(SIGINT, intHandler);  
   Core core(path);  
   coreRef = &core;
@@ -206,9 +205,9 @@ int main(int argc, char* argv[]) {
   
   scene->add(ground);
 
-  Entity* controller = Entity::create();
-  controller->add(new GameController(&core));
-  scene->add(controller);
+  // Entity* controller = Entity::create();
+  // controller->add(new GameController(&core));
+  // scene->add(controller);
 
   core.init();
   core.start();

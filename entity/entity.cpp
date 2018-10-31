@@ -15,7 +15,7 @@ void Entity::Name(EntityContext* context) {  \
   for (auto entity : children) { \
     entity->Name(context); \
   } \
-} \       
+} \
 
 
 class EntityComponentContext : public ComponentContext {
@@ -78,4 +78,5 @@ LIFECYCLE_FUNC(stop)
 
 Entity* Entity::add(ComponentCallback func) {
   components.add(new FunctionComponent(func));
+  return this;
 }

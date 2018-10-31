@@ -1,17 +1,20 @@
 #include "platform/platform.h"
 
+#include "core/logger.h"
+
+
 void errorCallback(int error, const char* description) {
-  printf("GLFW Error: %s\n", description);
+  Logger::error("GLFW Error: %s", description);
 }
 
 Platform::~Platform() {
 }
 
 void Platform::init(Context* context)  {
-  printf("Initializing Platform.\n");
+  Logger::info("Initializing Platform.");
   glfwSetErrorCallback(errorCallback);
   if (!glfwInit()) {
-    printf("GLFW Init Failed\n");
+    Logger::error("GLFW Init Failed.");
   }  
   glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -22,7 +25,7 @@ void Platform::init(Context* context)  {
 }
 
 void Platform::deinit(Context* context) {
-  printf("Deinitializing Platform.\n");
+  Logger::info("Deinitializing Platform.");
   glfwDestroyWindow(window);
   glfwTerminate();
 }

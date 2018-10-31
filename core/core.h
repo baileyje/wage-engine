@@ -7,7 +7,6 @@
 #include "core/context.h"
 #include "fs/local_file_system.h"
 
-
 class System;
 
 class Core : public Context {

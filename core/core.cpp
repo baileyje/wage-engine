@@ -4,12 +4,13 @@
 #include <chrono>
 
 #include "core/system.h"
+#include "core/logger.h"
 
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
 Core::Core(std::string path) : Context(), running(false), fileSystem(new LocalFileSystem(path)) {  
-  rootPath = path;
   timeStep = 1.0/60.0;
+  rootPath = path;
 }
 
 Core::~Core() {
@@ -41,7 +42,7 @@ void Core::start() {
     return;
   }
   running = true;    
-  printf("Starting WAGE Core.\n");
+  Logger::info("Starting WAGE Core.");
   for (auto system : systems) {
     system->start(this);
   } 
@@ -79,7 +80,7 @@ void Core::stop() {
   if(!running) {
     return;
   }
-  printf("Stopping WAGE Core.\n");
+  Logger::info("Stopping WAGE Core.");
   running = false;
   for (auto system = systems.rbegin(); system != systems.rend(); ++system) {
     (*system)->stop(this);
@@ -88,14 +89,16 @@ void Core::stop() {
 }
 
 void Core::init() {
-  printf("Initializing WAGE Core.\n");
+  Logger::info("Initializing WAGE Core.");
+  Logger::info(" - Path: ", rootPath);
+  Logger::info(" - Time Step: ", timeStep);
   for (auto system : systems) {    
     system->init(this);
   }
 }
 
 void Core::deinit() {
-  printf("Deinitializing WAGE Core.\n");
+  Logger::info("Deinitializing WAGE Core.");
   for (auto system = systems.rbegin(); system != systems.rend(); ++system) {
     (*system)->deinit(this);
   }

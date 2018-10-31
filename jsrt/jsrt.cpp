@@ -1,6 +1,9 @@
 #include "jsrt.h"
 #include <iostream>
 #include <string>
+#include <sstream>
+
+#include "core/logger.h"
 
 #include "jsrt/util.h"
 #include "jsrt/module_manager.h"
@@ -22,7 +25,7 @@ Jsrt::~Jsrt() {
 }
   
 void Jsrt::init(Context* context) {
-  printf("Initializing JSRT.\n");
+  Logger::info("Initializing JSRT.");
   this->context = context;
   
   moduleManager = new ModuleManager(context->rootPath + "/engine/");
@@ -57,7 +60,7 @@ void Jsrt::init(Context* context) {
 }
 
 void Jsrt::deinit(Context* context) {
-    printf("Deinitializing JSRT.\n");
+    Logger::info("Deinitializing JSRT.");
     // FAIL_CHECK(JsSetCurrentContext(JS_INVALID_REFERENCE));
     // FAIL_CHECK(JsDisposeRuntime(jsRuntime));
 }
@@ -128,14 +131,14 @@ void promiseContinuationCallback(JsValueRef task, void *callbackState) {
  * */
 
 JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
-  printf("-: ");
+  std::stringstream message;
+  message << "console: ";
   for (unsigned int i = 1; i < argumentCount; i++) {
-    printf(" ");      
     char* value = stringFromValue(arguments[i]);
-    printf("%s", value);
+    message << " " << value;
     free(value);
   }
-  printf("\n");
+  Logger::debug(message.str());
   JsValueRef undefinedValue;
   if (JsGetUndefinedValue(&undefinedValue) == JsNoError) {
       return undefinedValue;
@@ -146,7 +149,7 @@ JsValueRef consoleLogCallback(JsValueRef callee, bool isConstructCall, JsValueRe
 }
 
 JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
-  // printf("Added JS system...\n");
+  Logger::debug("Added JS system...");
   Jsrt * runtime = (Jsrt *)callbackState;
   JsSystem* system = new JsSystem(stringFromValue(arguments[1]),  arguments[2]);
   // TODO: Figure out how this should

@@ -1,5 +1,7 @@
 #include "jsrt/util.h"
 
+#include "core/logger.h"
+
 std::string errorCodeToString(int code) {
    switch (code) {
     case JsNoError:                            return "JsNoError";
@@ -61,7 +63,7 @@ std::string errorCodeToString(int code) {
 
 void handleJsError(JsErrorCode errCode, const char* cmd) {
   if (errCode != JsErrorScriptCompile && errCode != JsErrorScriptException) {
-    printf("Error %s at '%s'\n", errorCodeToString(errCode).c_str(), cmd);  
+    Logger::error("Error %s at '%s'\n", errorCodeToString(errCode).c_str(), cmd);  
   }
   bool hasException = false;
   JsHasException(&hasException);
@@ -98,16 +100,16 @@ JsValueRef valueFromString(std::string string) {
 
 void printException(JsErrorCode errCode, JsValueRef exception) {
   char *exceptionStr = stringFromValue(exception);
-  printf("Exception -> %s \n", exceptionStr);
+  Logger::error("Exception -> %s", exceptionStr);
   free(exceptionStr);
-  printf("%s\n", errorCodeToString(errCode).c_str());
+  Logger::error("%s", errorCodeToString(errCode).c_str());
   if (errCode == JsErrorScriptCompile) {
     int line;
     FAIL_CHECK(JsNumberToInt(JsProperty("line").get(exception), &line));
 
     int column;
     FAIL_CHECK(JsNumberToInt(JsProperty("column").get(exception), &column));   
-    printf("At: %d:%d\n", line, column);
+    Logger::error("At: %d:%d\n", line, column);
   }
 }
 
@@ -156,7 +158,6 @@ JsProperty::JsProperty(std::string name) {
 }
 
 JsProperty::~JsProperty() {  
-  // printf("DEINIT\n");
 }
 
 JsValueRef JsProperty::get(JsValueRef object) {

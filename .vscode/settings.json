@@ -47,6 +47,7 @@
         "map": "cpp",
         "unordered_set": "cpp",
         "set": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "ostream": "cpp"
     }
 }
