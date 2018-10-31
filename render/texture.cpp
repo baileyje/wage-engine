@@ -15,7 +15,7 @@ GlTexture::~GlTexture() {
 }
 
 void GlTexture::load(FileSystem* fileSystem) {
-  FAIL_CHECK(glGenTextures(1, &id));
+  GL_FAIL_CHECK(glGenTextures(1, &id));
   data = stbi_load(texture->getPath().c_str(), &width, &height, &channels, 0); 
   loaded = true;
 }
@@ -24,7 +24,7 @@ void GlTexture::bind() {
   if (!loaded) {    
     load(NULL);
   }
-  FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, id));
-  FAIL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
-  FAIL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));    
+  GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, id));
+  GL_FAIL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+  GL_FAIL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));    
 }

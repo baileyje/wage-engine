@@ -18,16 +18,16 @@ public:
 
   virtual ~Renderer();
 
-  void init(Context* context);
-
-  void start(Context* context);
-
-  void update(Context* context);
-
-  void stop(Context* context);
-
-  void deinit(Context* context);
-
+  LIFECYCLE_FUNC(init)
+  
+  LIFECYCLE_FUNC(start)
+  
+  LIFECYCLE_FUNC(update)
+  
+  LIFECYCLE_FUNC(stop)
+  
+  LIFECYCLE_FUNC(deinit)
+  
   void draw(Mesh* mesh, GlMaterial* material);
 
   // void draw(Entity* camera, Entity* entity);
@@ -40,10 +40,6 @@ private:
   int screenWidth;
 
   int screenHeight;
-
-  glm::mat4 viewProjectionFrom(Transform* cameraTransform);
-
-  glm::mat4 screenProjectionFrom(Camera* camera);
 
   void draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity);
   

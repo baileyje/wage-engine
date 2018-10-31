@@ -12,6 +12,6 @@ btTransform fromTransform(Transform* transform) {
     transformRotation.z,
     transformRotation.w
   );
-  btTransform.setRotation(rotation);  
+  btTransform.setRotation(rotation);    
   return btTransform;
 }

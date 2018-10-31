@@ -22,12 +22,13 @@ public:
 
   ~Jsrt();
 
-  void init(Context* context);
 
-  void update(Context* context);
-
-  void deinit(Context* context);
+  LIFECYCLE_FUNC(init)
   
+  LIFECYCLE_FUNC(update)
+  
+  LIFECYCLE_FUNC(deinit)
+
   void loadModule(std::string name);
 
   void pushCallback(Callback* callback);

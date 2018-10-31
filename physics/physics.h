@@ -17,13 +17,13 @@ public:
 
   ~Physics();
 
-  void init(Context* context);
+  LIFECYCLE_FUNC(init)
 
-  void start(Context* context);
+  LIFECYCLE_FUNC(start)
 
-  void fixedUpdate(Context* context);
+  LIFECYCLE_FUNC(fixedUpdate)
 
-  void deinit(Context* context);
+  LIFECYCLE_FUNC(deinit)
 
   void add(Entity* entity);
 

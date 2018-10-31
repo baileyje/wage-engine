@@ -13,7 +13,7 @@
 void checkGLError(const char* command);
 
 
-#define FAIL_CHECK(cmd)    \
+#define GL_FAIL_CHECK(cmd)    \
     do                     \
     {                      \
         cmd;               \

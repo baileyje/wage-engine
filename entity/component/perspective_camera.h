@@ -34,9 +34,14 @@ public:
     return farClip;
   }
 
-  void setFarClip(float farClip) {
+  inline void setFarClip(float farClip) {
     this->farClip = farClip;
   }
+
+  inline Matrix screenProjection(Vector2 screenSize) {
+    return glm::perspective(glm::radians(getFov()), screenSize.x / screenSize.y, getNearClip(), getFarClip());
+  }
+
 
 private:
 

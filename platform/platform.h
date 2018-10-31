@@ -13,10 +13,10 @@ public:
 
   virtual ~Platform();
 
-  void init(Context* context);
+  LIFECYCLE_FUNC(init)
 
-  void deinit(Context* context);
-
+  LIFECYCLE_FUNC(deinit)
+  
   GLFWwindow* getWindow() {
     return window;
   }

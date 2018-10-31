@@ -30,7 +30,7 @@ public:
     this->right = right;
   }
 
-    inline float getTop() {
+  inline float getTop() {
     return top;
   }
 
@@ -61,6 +61,16 @@ public:
   void setFarClip(float farClip) {
     this->farClip = farClip;
   }
+
+  inline Matrix screenProjection(Vector2 screenSize) {
+    return glm::ortho(
+      getLeft(), getRight(),
+      getTop(), getBottom(),
+      getNearClip(), getFarClip()
+    );
+  }
+
+  
 
   
   

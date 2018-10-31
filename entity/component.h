@@ -3,9 +3,7 @@
 
 #include <string>
 
-// #include "entity/entity_context.h"
-
-class EntityContext;
+#include "entity/component/context.h"
 
 class Component {
 
@@ -15,9 +13,13 @@ public:
 
   virtual ~Component() {};
 
-  virtual void update(EntityContext* context);
+  virtual void start(ComponentContext* context);
 
-  virtual void fixedUpdate(EntityContext* context);
+  virtual void update(ComponentContext* context);
+
+  virtual void fixedUpdate(ComponentContext* context);
+
+  virtual void stop(ComponentContext* context);
 
   inline std::string getName() {
     return name;

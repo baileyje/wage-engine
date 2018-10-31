@@ -6,18 +6,17 @@
 
 #include "math/transform.h"
 #include "entity/component_map.h"
-
-class Component;
+#include "entity/component.h"
+#include "entity/context.h"
+#include "entity/component/func_component.h"
 
 class Entity {
 
 public:
-  
-  Entity();
 
-  Entity(Transform transform);
+  static Entity* create();
 
-  virtual ~Entity();
+  static Entity* create(Transform transform);
 
   inline long getId() { return id; }
   
@@ -31,6 +30,8 @@ public:
     return this;
   }
 
+  Entity* add(ComponentCallback func);
+  
   template <typename T>
   inline T* get() { 
     return components.get<T>();
@@ -47,8 +48,20 @@ public:
 
   inline ComponentMap* getComponents() { return &components; }
   
+  void start(EntityContext* context);
+
+  void update(EntityContext* context);
+
+  void fixedUpdate(EntityContext* context);
+
+  void stop(EntityContext* context);
+
 private:
   
+  Entity(long id, Transform transform);
+
+  virtual ~Entity();
+
   long id;
 
   Transform transform;

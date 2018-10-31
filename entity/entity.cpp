@@ -1,29 +1,81 @@
 #include "entity/entity.h"
 
 #include "entity/component.h"
+#include "entity/context.h"
+#include "entity/component/context.h"
+#include "entity/component/func_component.h"
+
+
+#define LIFECYCLE_FUNC(Name) \
+void Entity::Name(EntityContext* context) {  \
+  EntityComponentContext componentContext(this, context); \
+  for (auto component : components) { \
+    component->Name(&componentContext); \
+  } \
+  for (auto entity : children) { \
+    entity->Name(context); \
+  } \
+} \       
+
+
+class EntityComponentContext : public ComponentContext {
+
+public:
+
+  EntityComponentContext(Entity* entity, EntityContext* context) : entity(entity), context(context) {    
+  }
+
+  inline Transform* getTransform() {
+    return entity->getTransform();
+  }
+
+  inline double getTime() const {
+    return context->getTime();
+  }
+
+  inline double getDeltaTime() const {
+    return context->getDeltaTime();
+  }
+
+  inline ComponentMap* getComponents() {
+    return entity->getComponents();
+  }
+
+  inline Entity* getEntity() {
+    return entity;
+  }
+    
+
+private:
+
+  Entity* entity;
+
+  EntityContext* context;
+
+};
 
 long Entity::CurrentId = 0;
 
-// TODO: DITCH JANKY ID GEN
-Entity::Entity() : id(Entity::CurrentId++) {
+Entity* Entity::create() {
+  return create(Transform());
 }
 
-Entity::Entity(Transform transform) : id(Entity::CurrentId++), transform(transform) {    
+// TODO: DITCH JANKY ID GEN
+// TODO: Use a pool for these
+Entity* Entity::create(Transform transform) {
+  return new Entity(Entity::CurrentId++, transform);
+}
+
+Entity::Entity(long id, Transform transform) : id(id), transform(transform) {    
 }
 
 Entity::~Entity() {}
 
-// // TODO:  Need some kind of efficient store for this.
-// Component* Entity::getComponent(std::string name) { 
-//   return components.get(name);
-// }
+LIFECYCLE_FUNC(start)
+LIFECYCLE_FUNC(update)
+LIFECYCLE_FUNC(fixedUpdate)
+LIFECYCLE_FUNC(stop)
 
-// std::vector<Component*> Entity::getComponents(std::string name) { 
-//   std::vector<Component*> results;
-//   for (auto comp : components) {
-//     if (comp->getName() ==  name) {
-//       results.push_back(comp);
-//     }
-//   }
-//   return results;
-// }
+Entity* Entity::add(ComponentCallback func) {
+  components.add(new FunctionComponent(func));
+}

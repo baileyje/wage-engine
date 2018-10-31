@@ -16,9 +16,9 @@ public:
 
   ~Input() {}
 
-  void start(Context* context);
-
-  void update(Context* context);
+  LIFECYCLE_FUNC(start)
+  
+  LIFECYCLE_FUNC(update)
 
   static bool isPressed(int key);
 

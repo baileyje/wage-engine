@@ -29,10 +29,6 @@ Renderer::~Renderer() {
 
 void Renderer::init(Context* context)  {
   printf("Initializing Renderer.\n");
-
-  // TODO: Move to camera
-  // screenProjection = glm::ortho(0.0f, (float)102.4, 0.0f, (float)76.8, -10.0f, 10.0f);  
-  // screenProjection = glm::perspective(glm::radians(45.0), 1024.0 / 768.0, 0.1, 1000.0);
 }
 
 void Renderer::start(Context* context) {
@@ -46,7 +42,7 @@ void Renderer::start(Context* context) {
   // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-  FAIL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
+  GL_FAIL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
   Shader::initDefault(context->getFileSystem());  
   
   // TODO: Listen for changes to entities and figure out how to get these!!!
@@ -58,21 +54,22 @@ void Renderer::start(Context* context) {
 }
 
 void Renderer::update(Context* context) {  
-  FAIL_CHECK(glViewport(0, 0, screenWidth, screenHeight));
-  FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-  Entity* camera = context->getScene()->getCamera();
-  Transform* cameraTransform = camera->getTransform();
+  GL_FAIL_CHECK(glViewport(0, 0, screenWidth, screenHeight));
+  GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+  Entity* cameraEntity = context->getScene()->getCamera();
+  Transform* cameraTransform = cameraEntity->getTransform();
   glm::vec3 cameraPosition = cameraTransform->getWorldPosition();
-  glm::mat4 cameraProjection = viewProjectionFrom(cameraTransform);
-  glm::mat4 screenProjection = screenProjectionFrom((Camera*)camera->getComponents()->get("Camera"));
+  glm::mat4 cameraProjection = Camera::viewProjectionFor(cameraTransform);
+  Camera* camera = (Camera*)cameraEntity->getComponents()->get("Camera");
+  glm::mat4 screenProjection = camera->screenProjection(Vector2(screenWidth, screenHeight));
   for (auto entity : *context->getScene()->getEntities()) {
     draw(screenProjection, cameraPosition, cameraProjection, entity);
     for (auto child : *entity->getChildren()) {
       draw(screenProjection, cameraPosition, cameraProjection, child);
     }
   }
-  FAIL_CHECK(glfwSwapBuffers(window));
-  FAIL_CHECK(glfwPollEvents());
+  GL_FAIL_CHECK(glfwSwapBuffers(window));
+  GL_FAIL_CHECK(glfwPollEvents());
 }
 
 
@@ -171,50 +168,14 @@ void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   // Create Index Buff
   IndexBuffer indices((const unsigned int*)mesh->getIndices()->data(), mesh->getIndices()->size());
   indices.bind();
-  FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
-  // FAIL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 36));
+  GL_FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
+  // GL_FAIL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 36));
   indices.unbind();
   norms.unbind();
   verts.unbind();
   material->unbind();
   vao.unbind();
 }
-
-//------
-
-glm::mat4 Renderer::screenProjectionFrom(Camera* camera) {
-  if (camera->getType() == perspective) {
-    PerspectiveCamera* perspectiveCam = static_cast<PerspectiveCamera*>(camera);
-    return glm::perspective(glm::radians(perspectiveCam->getFov()), (float)screenWidth / (float)screenHeight, perspectiveCam->getNearClip(), perspectiveCam->getFarClip());
-  } else if (camera->getType() == orthographic) {
-    OrthographicCamera* orthographicCamera = static_cast<OrthographicCamera*>(camera);
-    printf("Right: %f\n", orthographicCamera->getLeft());
-    return glm::ortho(
-      orthographicCamera->getLeft(), orthographicCamera->getRight(),
-      orthographicCamera->getTop(), orthographicCamera->getBottom(),
-      orthographicCamera->getNearClip(), orthographicCamera->getFarClip()
-    );
-  }
-  return glm::mat4(1.0);
-}
-
-glm::mat4 Renderer::viewProjectionFrom(Transform* cameraTransform) {
-  glm::vec3 camPos = cameraTransform->getWorldPosition();
-  glm::quat camRotation = cameraTransform->getWorldRotation();
-  glm::vec3 camFront(
-    2 * (camRotation.x * camRotation.z + camRotation.w * camRotation.y), 
-    2 * (camRotation.y * camRotation.z - camRotation.w * camRotation.x),
-    1 - 2 * (camRotation.x * camRotation.x + camRotation.y * camRotation.y)
-  );
-  glm::vec3 camUp(
-    2 * (camRotation.x * camRotation.y - camRotation.w * camRotation.z), 
-    1 - 2 * (camRotation.x * camRotation.x - camRotation.z * camRotation.z),
-    2 * (camRotation.y * camRotation.z + camRotation.w * camRotation.x)
-  );
-  return  glm::lookAt(camPos, camPos + camFront, camUp);
-}
-
-//------
 
 void Renderer::stop(Context* context) {
   printf("Stopping Renderer.\n");

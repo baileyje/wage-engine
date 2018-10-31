@@ -1,6 +1,6 @@
 Core:
 ☐ Work on parent/world based coordinates 
-  ☐ Initial add of world
+  ✔ Initial add of world @done (10/30/2018, 7:48:08 PM)
   ☐ Move from getPosition/getWorldPosition -> getLocalPosition/getPosition
 ✔ Scene @done (10/27/2018, 8:18:52 AM)
 ☐ Logging
@@ -16,10 +16,17 @@ Entity:
   ☐ Sphere
   ☐ Cone
 ✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)s
+
 Renderer:
 ☐ .obj loading
 ☐ Texture cache
 ☐ Mesh cache
+☐ Not the worst material ever...
+
+Physics:
+☐ More collider types
+☐ Compound shapes
+☐ Joints?
 
 Game:
 ☐ Some strategy for restaring scene

@@ -1,9 +1,9 @@
 #include "entity/component.h"
 
-#include "entity/entity_context.h"
+void Component::start(ComponentContext* context) {};
 
-// TODO: Need some kind of enity context
-void Component::update(EntityContext* context) {};
+void Component::update(ComponentContext* context) {};
 
-// TODO: Need some kind of enity context
-void Component::fixedUpdate(EntityContext* context) {};
+void Component::fixedUpdate(ComponentContext* context) {};
+
+void Component::stop(ComponentContext* context) {};

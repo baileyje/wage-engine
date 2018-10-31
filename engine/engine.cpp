@@ -1,27 +1,18 @@
 #include "engine/engine.h"
 
-#include "entity/entity_context.h"
+#include "entity/context.h"
 #include "entity/component.h"
 
+#define LIFECYCLE_FUNC_IMPL(Name) \
+void Engine::Name(Context* context) { \
+  EntityContext entityContext(context->time, context->deltaTime); \
+  for (auto entity : *context->getScene()->getEntities()) { \
+    entity->Name(&entityContext); \
+  } \
+} \
 
-void Engine::start(Context* context) {
-  // TODO: Expose engine to JSRT
-}
+LIFECYCLE_FUNC_IMPL(start)
+LIFECYCLE_FUNC_IMPL(update)
+LIFECYCLE_FUNC_IMPL(fixedUpdate)
+LIFECYCLE_FUNC_IMPL(stop)
 
-void Engine::update(Context* context) {
-  for (auto entity : *context->getScene()->getEntities()) {
-    EntityContext entityContext(entity, context->time, context->deltaTime);
-    for (auto component : *entity->getComponents()) {
-      component->update(&entityContext);
-    }
-  }
-}
-
-void Engine::fixedUpdate(Context* context) {
-  for (auto entity : *context->getScene()->getEntities()) {
-    EntityContext entityContext(entity, context->time, context->deltaTime);
-    for (auto component : *entity->getComponents()) {
-      component->fixedUpdate(&entityContext);
-    }
-  }
-}

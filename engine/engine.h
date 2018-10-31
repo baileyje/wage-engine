@@ -15,11 +15,10 @@ public:
 
   ~Engine() {}
 
-  void start(Context* context);
-
-  void update(Context* context);
-
-  void fixedUpdate(Context* context);  
+  LIFECYCLE_FUNC(start)
+  LIFECYCLE_FUNC(update)
+  LIFECYCLE_FUNC(fixedUpdate)
+  LIFECYCLE_FUNC(stop)
 
 };
 
