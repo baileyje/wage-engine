@@ -4,8 +4,8 @@
 btTransform fromTransform(Transform* transform) {
   btTransform btTransform;
   btTransform.setIdentity();
-  btTransform.setOrigin(fromVector(transform->getWorldPosition()));  
-  Quaternion transformRotation = transform->getWorldRotation();
+  btTransform.setOrigin(fromVector(transform->getPosition()));  
+  Quaternion transformRotation = transform->getRotation();
   btQuaternion rotation(
     transformRotation.x,
     transformRotation.y,

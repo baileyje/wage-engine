@@ -22,8 +22,8 @@ public:
   virtual Matrix screenProjection(Vector2 screenSize) = 0;
 
   static glm::mat4 viewProjectionFor(Transform* transform) {
-    Vector camPos = transform->getWorldPosition();
-    Quaternion rotation = transform->getWorldRotation();
+    Vector camPos = transform->getPosition();
+    Quaternion rotation = transform->getRotation();
     Vector camFront(
       2 * (rotation.x * rotation.z + rotation.w * rotation.y), 
       2 * (rotation.y * rotation.z - rotation.w * rotation.x),

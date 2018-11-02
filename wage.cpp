@@ -185,9 +185,9 @@ int main(int argc, char* argv[]) {
   scene->add(mover);
 
   Entity* child = Entity::create();
-  child->getTransform()->setPosition(Vector(0, 0, 1));
-  child->getTransform()->setRotation(Vector(45, 0, 0));
-  child->getTransform()->setScale(Vector(0.5, 0.5, 1));
+  child->getTransform()->setLocalPosition(Vector(0, 0, 1));
+  child->getTransform()->setLocalRotation(Vector(45, 0, 0));
+  child->getTransform()->setLocalScale(Vector(0.5, 0.5, 1));
   child
     ->add(&Mesh::Cube)  
     ->add(&Collider::Box);
@@ -195,7 +195,7 @@ int main(int argc, char* argv[]) {
 
   Entity* ground = Entity::create();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
-  ground->getTransform()->setScale(Vector(100, 0.1, 100));
+  ground->getTransform()->setLocalScale(Vector(100, 0.1, 100));
   ground->getTransform()->setRotation(Vector(0, 0, 0));
   ground
     ->add(new RigidBody(0.0, kinematic))

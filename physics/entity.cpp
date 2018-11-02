@@ -5,7 +5,7 @@ btCollisionShape* PhysicsEntity::shapeFor(Entity* entity) {
   if (!collider) {
     return new btEmptyShape();
   }
-  Vector scale = entity->getTransform()->getWorldScale();  
+  Vector scale = entity->getTransform()->getScale();  
   switch(collider->getType()) {
     // TODO: Support more shapes
     case box: {
@@ -92,11 +92,11 @@ void PhysicsEntity::updateEntityTransform() {
     return;
   }
   btTransform transform = getTransform();  
-  entity->getTransform()->setWorldPosition(fromBTVector(transform.getOrigin()));
+  entity->getTransform()->setPosition(fromBTVector(transform.getOrigin()));
   btQuaternion rotation = transform.getRotation();
   // btScalar yawZ, pitchY, rollX;
   // rotation.getEulerZYX(yawZ, pitchY, rollX);
-  entity->getTransform()->setWorldRotation(
+  entity->getTransform()->setRotation(
     Quaternion(rotation.w(), rotation.x(), rotation.y(), rotation.z())
   );
 }

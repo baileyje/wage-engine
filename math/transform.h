@@ -14,32 +14,32 @@ public:
 
   ~Transform() {}
 
-  inline Vector getPosition() { return position; }
+  inline Vector getLocalPosition() { return position; }
 
-  inline void setPosition(Vector position) { this->position = position; };
+  inline void setLocalPosition(Vector position) { this->position = position; };
 
-  inline Vector getWorldPosition() { 
+  inline Vector getPosition() { 
     if (parent) {
-      return parent->getWorldPosition() + position;
+      return parent->getPosition() + position;
     }
     return position; 
   }
 
-  inline void setWorldPosition(Vector position) { 
+  inline void setPosition(Vector position) { 
     if (parent) {
-      this->position = position - parent->getWorldPosition();
+      this->position = position - parent->getPosition();
       return;
     }   
     this->position = position;
   }
 
-  inline Vector getScale() { 
+  inline Vector getLocalScale() { 
     return scale; 
   }
 
-  inline Vector getWorldScale() { 
+  inline Vector getScale() { 
     if (parent) {
-      Vector parentScale = parent->getWorldScale();
+      Vector parentScale = parent->getScale();
       return Vector(
         parentScale.x * scale.x, 
         parentScale.y * scale.y, 
@@ -49,31 +49,35 @@ public:
     return scale; 
   }
 
-  inline void setScale(Vector scale) { this->scale = scale; };
+  inline void setLocalScale(Vector scale) { this->scale = scale; };
 
-  inline Quaternion getRotation() { 
+  inline Quaternion getLocalRotation() { 
     return rotation; 
   }
 
-  inline Quaternion getWorldRotation() { 
+  inline Quaternion getRotation() { 
     if (parent) {
-      Quaternion parentQuat = parent->getWorldRotation();
+      Quaternion parentQuat = parent->getRotation();
       return parentQuat * this->rotation;      
     }
     return rotation; 
   }
 
-  inline void setRotation(Quaternion rotation) {    
+  inline void setLocalRotation(Quaternion rotation) {    
     this->rotation = rotation; 
   }
 
-  inline void setRotation(Vector eulers) { 
+  inline void setLocalRotation(Vector eulers) { 
     this->rotation = quatFromEulers(eulers);
   }
 
-  inline void setWorldRotation(Quaternion rotation) { 
+  inline void setRotation(Vector eulers) { 
+    setRotation(quatFromEulers(eulers));
+  }
+
+  inline void setRotation(Quaternion rotation) { 
     if (parent) {
-      Quaternion parentQuat = parent->getWorldRotation();
+      Quaternion parentQuat = parent->getRotation();
       this->rotation = rotation * Quaternion(
         parentQuat.w,
         -parentQuat.x,

@@ -60,7 +60,7 @@ void Renderer::update(Context* context) {
   GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   Entity* cameraEntity = context->getScene()->getCamera();
   Transform* cameraTransform = cameraEntity->getTransform();
-  glm::vec3 cameraPosition = cameraTransform->getWorldPosition();
+  glm::vec3 cameraPosition = cameraTransform->getPosition();
   glm::mat4 cameraProjection = Camera::viewProjectionFor(cameraTransform);
   Camera* camera = (Camera*)cameraEntity->getComponents()->get("Camera");
   glm::mat4 screenProjection = camera->screenProjection(Vector2(screenWidth, screenHeight));
@@ -95,7 +95,7 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
     std::stringstream base;
     base << "dirLights[" << idx++ << "]";
     DirectionalLight* light = dirLightEnt->get<DirectionalLight>();
-    Vector cameraEulers = glm::eulerAngles(dirLightEnt->getTransform()->getWorldRotation());
+    Vector cameraEulers = glm::eulerAngles(dirLightEnt->getTransform()->getRotation());
     material.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
     material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
     material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
@@ -108,7 +108,7 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
     std::stringstream base;
     base << "pointLights[" << idx++ << "]";
     PointLight* light = lightEnt->get<PointLight>();
-    material.setVec3(base.str() + ".position", lightEnt->getTransform()->getWorldPosition());
+    material.setVec3(base.str() + ".position", lightEnt->getTransform()->getPosition());
     material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
     material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
     material.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
@@ -123,8 +123,8 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
     std::stringstream base;
     base << "spotLights[" << idx++ << "]";
     Spotlight* light = lightEnt->get<Spotlight>();
-    material.setVec3(base.str() + ".position", lightEnt->getTransform()->getWorldPosition());
-    Vector cameraEulers = glm::eulerAngles(lightEnt->getTransform()->getWorldRotation());
+    material.setVec3(base.str() + ".position", lightEnt->getTransform()->getPosition());
+    Vector cameraEulers = glm::eulerAngles(lightEnt->getTransform()->getRotation());
     material.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
     material.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
     material.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));

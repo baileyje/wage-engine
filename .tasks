@@ -1,9 +1,9 @@
 Core:
-☐ Work on parent/world based coordinates 
+✔ Work on parent/world based coordinates @done (11/1/2018, 8:32:11 PM)
   ✔ Initial add of world @done (10/30/2018, 7:48:08 PM)
-  ☐ Move from getPosition/getWorldPosition -> getLocalPosition/getPosition
+  ✔ Move from getPosition/getWorldPosition -> getLocalPosition/getPosition @done (11/1/2018, 8:32:06 PM)
 ✔ Scene @done (10/27/2018, 8:18:52 AM)
-☐ Logging
+✔ Logging @done (10/31/2018, 9:13:31 PM)
 ☐ Add/Remove Entity messages
 ☐ Memory allocator
 ☐ Better virtual filesystem support
@@ -22,6 +22,7 @@ Renderer:
 ☐ Texture cache
 ☐ Mesh cache
 ☐ Not the worst material ever...
+☐ Font support
 
 Physics:
 ☐ More collider types
