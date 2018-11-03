@@ -8,6 +8,8 @@
 
 #include "entity/entity.h"
 
+class EntityReference;
+
 typedef std::vector<Entity*> EntityList;
 typedef std::vector<Entity*>::iterator EntityIterator;
 
@@ -24,8 +26,8 @@ public:
     byId[entity->getId()] = entity;
   }
 
-  inline Entity* get(long id) {
-    return entities[id];
+  inline Entity* get(EntityId id) {
+    return byId[id];
   }
 
   EntityList with(std::string componentName) {
@@ -50,8 +52,38 @@ private:
 
   std::vector<Entity*> entities;
 
-  std::unordered_map<long, Entity*> byId;
+  std::unordered_map<EntityId, Entity*> byId;
 
+};
+
+class EntityReference {
+
+public:
+
+  bool empty() const { 
+    return store == NULL || store->get(id) == NULL; 
+  }
+
+  void clear() {
+    store = NULL; 
+    id = InvalidEntityId; 
+  }
+
+  Entity* get() {
+    assert(!empty());
+    return store->get(id);
+  }
+
+  Entity* operator->() { return get(); }
+
+  Entity& operator*() { return *get(); }
+
+private:
+
+  EntityId id;
+
+  EntityStore* store;
+  
 };
 
 #endif // ENTITY_STORE_H

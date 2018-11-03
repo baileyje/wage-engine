@@ -10,6 +10,10 @@
 #include "entity/context.h"
 #include "entity/component/func_component.h"
 
+typedef unit32 EntityId;
+
+#define InvalidEntityId 0
+
 class Entity {
 
 public:
@@ -18,7 +22,7 @@ public:
 
   static Entity* create(Transform transform);
 
-  inline long getId() { return id; }
+  inline EntityId getId() { return id; }
   
   inline Transform* getTransform() { return &transform; }
 
@@ -58,11 +62,11 @@ public:
 
 private:
   
-  Entity(long id, Transform transform);
+  Entity(EntityId id, Transform transform);
 
   virtual ~Entity();
 
-  long id;
+  EntityId id;
 
   Transform transform;
 
@@ -70,7 +74,7 @@ private:
 
   std::vector<Entity*> children;
   
-  static long CurrentId;
+  static uint32 CurrentId;
 
 };
 

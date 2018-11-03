@@ -4,7 +4,11 @@ Core:
   ✔ Move from getPosition/getWorldPosition -> getLocalPosition/getPosition @done (11/1/2018, 8:32:06 PM)
 ✔ Scene @done (10/27/2018, 8:18:52 AM)
 ✔ Logging @done (10/31/2018, 9:13:31 PM)
+☐ Entity Referencing
+☐ System Referencing
+☐ Message systems
 ☐ Add/Remove Entity messages
+☐ Add Start/Stop to components
 ☐ Memory allocator
 ☐ Better virtual filesystem support
 ☐ integrate script component
@@ -18,6 +22,7 @@ Entity:
 ✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)s
 
 Renderer:
+☐ Render  
 ☐ .obj loading
 ☐ Texture cache
 ☐ Mesh cache

@@ -54,7 +54,7 @@ private:
 
 };
 
-long Entity::CurrentId = 0;
+long Entity::CurrentId = 1; // 0 = invalid Id
 
 Entity* Entity::create() {
   return create(Transform());
