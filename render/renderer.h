@@ -41,13 +41,13 @@ private:
 
   int screenHeight;
 
-  void draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity);
+  void draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, EntityReference entity);
   
-  std::vector<Entity*> dirLights;
+  std::vector<EntityReference> dirLights;
 
-  std::vector<Entity*> pointLights;
+  std::vector<EntityReference> pointLights;
 
-  std::vector<Entity*> spotlights;
+  std::vector<EntityReference> spotlights;
 
 };
 

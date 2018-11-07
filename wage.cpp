@@ -82,33 +82,42 @@ ComponentCallback Raise = [](ComponentContext* context) {
   }
 };
 
-// class GameController : public Component {
-
-// public:
-
-//   GameController(Core* core) : Component("GameController"), core(core) {    
-//   }
-
-//   void update(ComponentContext* context) {    
-//     if (Input::isPressed(GLFW_KEY_R)) {
-//       // Entity* entity = context->getEntity();
-//       // RigidBody* body = entity->get<RigidBody>();
-//       // body->addImpulse(Vector(0, 0.0004, 0));
-//       // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
-//       core->stop();
-//       core->start();
-//     }
-//   }
-
-// private:
-
-//   Core* core;
-
-// };
-
 Core* coreRef;
 
 void intHandler(int);
+
+void addEntity(Scene* scene) {
+  EntityReference entity = scene->getEntities()->create();
+  entity->getTransform()->setPosition(Vector(3, 3, 0));       
+  entity
+    ->add(new RigidBody(0.001))
+    ->add(Raise)
+    ->add(&Mesh::Cube)
+    ->add(&Collider::Box);
+}
+
+EntityReference addMover(Scene* scene) {
+  EntityReference mover = scene->getEntities()->create();
+  mover->getTransform()->setPosition(Vector(0, 10, 0));
+  // mover.getTransform()->setScale(Vector(1, 1, 1));
+  // mover.getTransform()->setRotation(Vector(0, 45, 0));
+  mover
+    ->add(new RigidBody(0.001))    
+    ->add(&Mesh::Cube)
+    ->add(MoveIt)
+    ->add(&Collider::Box);
+  // scene->add(mover);
+
+  // EntityReference child = scene->getEntities()->create();
+  // child->getTransform()->setLocalPosition(Vector(0, 0, 1));
+  // child->getTransform()->setLocalRotation(Vector(45, 0, 0));
+  // child->getTransform()->setLocalScale(Vector(0.5, 0.5, 1));
+  // child
+  //   ->add(&Mesh::Cube)  
+  //   ->add(&Collider::Box);
+  // child->getTransform()-> setParent(mover->getTransform());
+  return mover;
+}
 
 // So far so dumb
 int main(int argc, char* argv[]) {
@@ -126,74 +135,43 @@ int main(int argc, char* argv[]) {
 
   Engine engine;
   core.add(&engine);
+
   core.add(new Renderer());
 
   Scene* scene = core.getScene();
 
-  Entity* camera = Entity::create();
+  EntityReference camera = scene->getEntities()->create();  
   camera
     ->add(new PerspectiveCamera())
     ->add(CamMove);
-  scene->add(camera);
-
+  
   camera->getTransform()->setPosition(Vector(-20, 10, -30));
   camera->getTransform()->setRotation(Vector(10, 20.0, 0));
 
-  Entity* dirLight = Entity::create();
+  EntityReference dirLight = scene->getEntities()->create();
   dirLight->getTransform()->setRotation(Vector(-90, 0, 0));
   DirectionalLight* temp = new DirectionalLight();
   temp->setDiffuse(Color(0.7,0.7,0.7,1));
   dirLight->add(temp);
-  scene->add(dirLight);
 
-  Material blueMat(Color(0, 0, 1, 1));
-
-  Entity* pointLight = Entity::create();
+  EntityReference pointLight = scene->getEntities()->create();
   pointLight->getTransform()->setPosition(Vector(0, 2, 0));
   pointLight->add(new PointLight());
-  scene->add(pointLight);
 
-  Entity* spotlight = Entity::create();
+  EntityReference spotlight = scene->getEntities()->create();
   spotlight->getTransform()->setPosition(Vector(0, 2, -3));
   spotlight->getTransform()->setRotation(Vector(-90, 0, 0));  
   Spotlight spot;
   spot.setCutOff(40);
   spot.setOuterCutOff(50);
   spotlight->add(&spot);
-  scene->add(spotlight);
 
-  for (int i = 0; i < 5; i++) {
-      Entity* entity = Entity::create();
-      entity->getTransform()->setPosition(Vector(3, 3 * i, 0));       
-      entity
-        ->add(new RigidBody(0.001))
-        ->add(Raise)
-        ->add(&Mesh::Cube)
-        ->add(&Collider::Box);
-      scene->add(entity);
+  for (int i = 0; i < 0; i++) {
+     addEntity(scene);
   }
 
-  Entity* mover = Entity::create();
-  mover->getTransform()->setPosition(Vector(0, 10, 0));
-  // mover.getTransform()->setScale(Vector(1, 1, 1));
-  // mover.getTransform()->setRotation(Vector(0, 45, 0));
-  mover
-    ->add(new RigidBody(0.001))    
-    ->add(&Mesh::Cube)
-    ->add(MoveIt)
-    ->add(&Collider::Box);
-  scene->add(mover);
 
-  Entity* child = Entity::create();
-  child->getTransform()->setLocalPosition(Vector(0, 0, 1));
-  child->getTransform()->setLocalRotation(Vector(45, 0, 0));
-  child->getTransform()->setLocalScale(Vector(0.5, 0.5, 1));
-  child
-    ->add(&Mesh::Cube)  
-    ->add(&Collider::Box);
-  mover->add(child);
-
-  Entity* ground = Entity::create();
+  EntityReference ground = scene->getEntities()->create();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
   ground->getTransform()->setLocalScale(Vector(100, 0.1, 100));
   ground->getTransform()->setRotation(Vector(0, 0, 0));
@@ -202,11 +180,33 @@ int main(int argc, char* argv[]) {
     ->add(&Mesh::Cube)
     ->add(&Collider::Box)
     ->add(Tilt);
-  
-  scene->add(ground);
 
-  // Entity* controller = Entity::create();
-  // controller->add(new GameController(&core));
+  EntityReference mover;
+  bool hasMover = false;
+  float last = 0;
+  EntityReference controller = scene->getEntities()->create();
+  auto addIt = [&hasMover,scene,&mover,&last](ComponentContext* context) {
+    // printf("Time: %f\n", context->getTime());
+    // printf("Diff: %f\n", context->getTime() - last);
+    if (context->getTime() - last < 0.5) {
+      return;
+    }
+    // printf("Diff: %f\n", context->getTime() - last);    
+    if (Input::isPressed(GLFW_KEY_N)) {
+      // addEntity(scene);
+      if (hasMover) {
+        mover.free();
+        hasMover = false;
+      } else {
+        mover = addMover(scene);
+        printf("hmmm: %d\n", mover->getComponents()->size());
+        hasMover = true;
+      }
+      last = context->getTime();
+      scene->getEntities()->debug();
+    }
+  };
+  controller->add(addIt);
   // scene->add(controller);
 
   core.init();

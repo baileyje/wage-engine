@@ -25,11 +25,11 @@ public:
 
   LIFECYCLE_FUNC(deinit)
 
-  void add(Entity* entity);
+  void add(EntityReference entity);
 
 private:
 
-  btCollisionShape* shapeFor(Entity* entity);
+  // btCollisionShape* shapeFor(Entity* entity);
 
 	btDefaultCollisionConfiguration collisionConfiguration;
   

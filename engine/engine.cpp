@@ -6,7 +6,7 @@
 #define LIFECYCLE_FUNC_IMPL(Name) \
 void Engine::Name(Context* context) { \
   EntityContext entityContext(context->time, context->deltaTime); \
-  for (auto entity : *context->getScene()->getEntities()) { \
+  for (auto& entity : *context->getScene()->getEntities()) { \
     entity->Name(&entityContext); \
   } \
 } \

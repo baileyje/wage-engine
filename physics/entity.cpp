@@ -1,6 +1,6 @@
 #include "physics/entity.h"
 
-btCollisionShape* PhysicsEntity::shapeFor(Entity* entity) {
+btCollisionShape* PhysicsEntity::shapeFor(EntityReference entity) {
   Collider* collider = entity->get<Collider>();
   if (!collider) {
     return new btEmptyShape();
@@ -35,7 +35,7 @@ btRigidBody* PhysicsEntity::rigidBodyFor(RigidBody* rigidBody, const btTransform
 	return body;
 }
 
-PhysicsEntity* PhysicsEntity::from(Entity* entity, btDiscreteDynamicsWorld* dynamicsWorld) {
+PhysicsEntity* PhysicsEntity::from(EntityReference entity, btDiscreteDynamicsWorld* dynamicsWorld) {
   btCollisionShape* shape = shapeFor(entity);
   btRigidBody* body = nullptr;
   btCollisionObject* object = nullptr;

@@ -58,7 +58,8 @@ void Renderer::start(Context* context) {
 void Renderer::update(Context* context) {  
   GL_FAIL_CHECK(glViewport(0, 0, screenWidth, screenHeight));
   GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-  Entity* cameraEntity = context->getScene()->getCamera();
+  EntityReference cameraEntity = context->getScene()->getCamera();
+  assert(cameraEntity);
   Transform* cameraTransform = cameraEntity->getTransform();
   glm::vec3 cameraPosition = cameraTransform->getPosition();
   glm::mat4 cameraProjection = Camera::viewProjectionFor(cameraTransform);
@@ -66,18 +67,18 @@ void Renderer::update(Context* context) {
   glm::mat4 screenProjection = camera->screenProjection(Vector2(screenWidth, screenHeight));
   for (auto entity : *context->getScene()->getEntities()) {
     draw(screenProjection, cameraPosition, cameraProjection, entity);
-    for (auto child : *entity->getChildren()) {
-      draw(screenProjection, cameraPosition, cameraProjection, child);
-    }
+    // for (auto child : *entity->getChildren()) {
+    //   draw(screenProjection, cameraPosition, cameraProjection, child);
+    // }
   }
   GL_FAIL_CHECK(glfwSwapBuffers(window));
   GL_FAIL_CHECK(glfwPollEvents());
 }
 
 
-void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, Entity* entity) {
+void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, EntityReference entity) {
   Mesh* mesh = entity->get<Mesh>();
-  if (!mesh) {
+  if (!mesh) {    
     return;
   }
   GlMaterial material(Shader::Default);

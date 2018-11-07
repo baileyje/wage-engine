@@ -8,8 +8,7 @@
 #include "entity/component.h"
 
 
-typedef void (*ComponentCallback)(ComponentContext*);
-
+typedef std::function<void(ComponentContext* contesxt)> ComponentCallback;
 
 class FunctionComponent : public Component {
 

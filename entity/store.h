@@ -8,10 +8,14 @@
 
 #include "entity/entity.h"
 
-class EntityReference;
+#include "memory/object_pool.h"
 
-typedef std::vector<Entity*> EntityList;
-typedef std::vector<Entity*>::iterator EntityIterator;
+typedef ObjectPool<Entity>::Reference EntityReference;
+
+typedef std::vector<EntityReference> EntityList;
+
+typedef ObjectPool<Entity>::Iterator EntityIterator;
+
 
 class EntityStore {
 
@@ -21,69 +25,46 @@ public:
 
   ~EntityStore() {}
 
-  inline void add(Entity* entity) {
-    entities.push_back(entity);
-    byId[entity->getId()] = entity;
+  inline EntityReference create() {
+    ObjectPool<Entity>::Reference ref = pool.create();
+    // TODO: Generate ID
+    ref->setId(1);
+    // entities.push_back(ref);
+    byId[ref->getId()] = ref;
+    return ref;
   }
 
-  inline Entity* get(EntityId id) {
+  // inline void add(Entity* entity) {
+  //   entities.push_back(entity);
+  //   byId[entity->getId()] = entity;
+  // }
+
+  inline EntityReference get(EntityId id) {
     return byId[id];
   }
 
-  EntityList with(std::string componentName) {
-    std::vector<Entity*> found;
-    for (auto entity : entities) {
-      if (entity->getComponents()->get(componentName)) {
-        found.push_back(entity);
-      }
-    }
-    return found;
-  }
+  EntityList with(std::string componentName);
 
   inline EntityIterator begin() {
-    return entities.begin();
+    return pool.begin();
   }
 
   inline EntityIterator end() {
-    return entities.end();
-  }  
+    return pool.end();
+  }
+
+  inline void debug() {
+    pool.debug();    
+  }
 
 private:
 
-  std::vector<Entity*> entities;
+  // std::vector<EntityReference> entities;
 
-  std::unordered_map<EntityId, Entity*> byId;
+  std::unordered_map<EntityId, EntityReference> byId;
 
-};
+  ObjectPool<Entity> pool;
 
-class EntityReference {
-
-public:
-
-  bool empty() const { 
-    return store == NULL || store->get(id) == NULL; 
-  }
-
-  void clear() {
-    store = NULL; 
-    id = InvalidEntityId; 
-  }
-
-  Entity* get() {
-    assert(!empty());
-    return store->get(id);
-  }
-
-  Entity* operator->() { return get(); }
-
-  Entity& operator*() { return *get(); }
-
-private:
-
-  EntityId id;
-
-  EntityStore* store;
-  
 };
 
 #endif // ENTITY_STORE_H

@@ -16,6 +16,20 @@ public:
 
   ComponentMap() {}
 
+  ComponentMap(ComponentMap&& src) {
+    values = std::move(src.values);
+    map = std::move(src.map);
+    nameMap = std::move(src.nameMap);
+  }
+
+  // Move
+  ComponentMap& operator=(ComponentMap&& src) {
+    values = std::move(src.values);
+    map = std::move(src.map);
+    nameMap = std::move(src.nameMap);
+    return *this;
+  }
+
   ~ComponentMap() {}
 
   template <typename T>
@@ -44,6 +58,10 @@ public:
       }
     }
     return nullptr;
+  }
+
+  size_t size() {
+    return values.size();
   }
 
   inline Component* get(std::string name) {

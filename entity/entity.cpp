@@ -12,9 +12,6 @@ void Entity::Name(EntityContext* context) {  \
   for (auto component : components) { \
     component->Name(&componentContext); \
   } \
-  for (auto entity : children) { \
-    entity->Name(context); \
-  } \
 } \
 
 
@@ -54,20 +51,16 @@ private:
 
 };
 
-long Entity::CurrentId = 1; // 0 = invalid Id
+EntityId Entity::CurrentId = 1; // 0 = invalid Id
 
-Entity* Entity::create() {
-  return create(Transform());
-}
+// // TODO: DITCH JANKY ID GEN
+// // TODO: Use a pool for these
+// Entity* Entity::create(Transform transform) {
+//   return new Entity(Entity::CurrentId++, transform);
+// }
 
-// TODO: DITCH JANKY ID GEN
-// TODO: Use a pool for these
-Entity* Entity::create(Transform transform) {
-  return new Entity(Entity::CurrentId++, transform);
-}
-
-Entity::Entity(long id, Transform transform) : id(id), transform(transform) {    
-}
+// Entity::Entity(EntityId id, Transform transform) : id(id), transform(transform) {    
+// }
 
 Entity::~Entity() {}
 
@@ -80,3 +73,8 @@ Entity* Entity::add(ComponentCallback func) {
   components.add(new FunctionComponent(func));
   return this;
 }
+
+// Entity* Entity::add(ComponentCallback& func) {
+//   components.add(new FunctionComponent(func));
+//   return this;
+// }

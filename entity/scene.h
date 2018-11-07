@@ -8,22 +8,22 @@ class Scene {
 
 public:
 
-  inline Scene* add(Entity* entity) {
-    entities.add(entity);
-    return this;
-  }
+  // inline Scene* add(Entity* entity) {
+  //   entities.add(entity);
+  //   return this;
+  // }
 
-  inline Entity* getCamera() {
-    auto found = entities.with("Camera");
-    if (!found.empty()) {
-      return found[0];
-    }
-    return nullptr;
+  inline EntityReference getCamera() {
+    // auto found = entities.with("Camera");
+    // if (!found.empty()) {
+    //   return found[0];
+    // }
+    return entities.with("Camera")[0];
   }
 
   inline EntityStore* getEntities() {
     return &entities;
-  }
+  }  
 
 private:
 

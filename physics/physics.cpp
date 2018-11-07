@@ -18,11 +18,12 @@ void Physics::init(Context* context) {
 
 void Physics::start(Context* context) {
 	Logger::info("Starting Physics.");
-	for (auto entity : *context->getScene()->getEntities()) {
+	int idx = 0;
+	for (EntityReference  entity : *context->getScene()->getEntities()) {		
 		add(entity);
-		for (auto child : *entity->getChildren()) {
-			add(child);
-		}
+		// for (auto child : *entity->getChildren()) {
+		// 	add(child);
+		// }
 	}	
 }
 
@@ -52,7 +53,7 @@ void Physics::deinit(Context* context) {
 	}
 }
 
-void Physics::add(Entity* entity) {	
+void Physics::add(EntityReference entity) {	
 	entities.push_back(PhysicsEntity::from(entity, &dynamicsWorld));
 }
 

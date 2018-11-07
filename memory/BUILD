@@ -1,11 +1,9 @@
 
 cc_library(
-	name = "entity",
+	name = "memory",
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
-		"//math",
-		"//memory"
 	],
 	visibility = ["//visibility:public"]
 )

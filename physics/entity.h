@@ -5,14 +5,14 @@
 
 #include "entity/component/rigid_body.h"
 #include "entity/component/collider.h"
-#include "entity/entity.h"
+#include "entity/store.h" // EntityReference :(
 #include "physics/util.h"
 
 class PhysicsEntity {
 
 public:
 
-  PhysicsEntity(Entity* entity, btCollisionShape* shape, btRigidBody* rigidBody) 
+  PhysicsEntity(EntityReference entity, btCollisionShape* shape, btRigidBody* rigidBody) 
     : PhysicsEntity(entity, shape, rigidBody, rigidBody) {
   }
 
@@ -24,7 +24,7 @@ public:
     delete shape;
   }  
 
-  static PhysicsEntity* from(Entity* entity, btDiscreteDynamicsWorld* dynamicsWorld);
+  static PhysicsEntity* from(EntityReference entity, btDiscreteDynamicsWorld* dynamicsWorld);
 
   void applyForces();
 
@@ -42,14 +42,15 @@ public:
 
 private: 
 
-  PhysicsEntity(Entity* entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
+  PhysicsEntity(EntityReference entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
     : entity(entity), shape(shape), rigidBody(rigidBody), object(object) {    
   }
 
-  static btCollisionShape* shapeFor(Entity* entity);
+  static btCollisionShape* shapeFor(EntityReference entity);
 
   static btRigidBody* rigidBodyFor(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape);
-  Entity* entity;
+  
+  EntityReference entity;
 
   btTransform getTransform(); 
 

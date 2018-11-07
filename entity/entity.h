@@ -10,7 +10,7 @@
 #include "entity/context.h"
 #include "entity/component/func_component.h"
 
-typedef unit32 EntityId;
+typedef unsigned long EntityId;
 
 #define InvalidEntityId 0
 
@@ -18,11 +18,32 @@ class Entity {
 
 public:
 
-  static Entity* create();
+  Entity() {} 
 
-  static Entity* create(Transform transform);
+  virtual ~Entity();
+
+  // static Entity* create();
+
+  // static Entity* create(Transform transform);
+
+  // Copy
+  Entity(Entity&& src) {
+    id = std::move(src.id);
+    transform = std::move(src.transform);
+    components = std::move(src.components);
+  }
+
+  // Move
+  Entity& operator=(Entity&& src) {
+    id = std::move(src.id);
+    transform = std::move(src.transform);
+    components = std::move(src.components);
+    return *this;
+  }
 
   inline EntityId getId() { return id; }
+
+  inline void setId(EntityId id) { this->id = id; }
   
   inline Transform* getTransform() { return &transform; }
 
@@ -35,20 +56,22 @@ public:
   }
 
   Entity* add(ComponentCallback func);
+
+  // Entity* add(ComponentCallback& func);
   
   template <typename T>
   inline T* get() { 
     return components.get<T>();
   }
 
-  inline void add(Entity* child) {
-    child->transform.setParent(&transform);
-    children.push_back(child);
-  }
+  // inline void add(EntityReference child) {
+  //   child->transform.setParent(&transform);
+  //   children.push_back(child);
+  // }
 
-  inline std::vector<Entity*>* getChildren() {
-    return &children;
-  }
+  // inline std::vector<EntityReference>* getChildren() {
+  //   return &children;
+  // }
 
   inline ComponentMap* getComponents() { return &components; }
   
@@ -62,9 +85,9 @@ public:
 
 private:
   
-  Entity(EntityId id, Transform transform);
+  // Entity(EntityId id, Transform transform);
 
-  virtual ~Entity();
+  // virtual ~Entity();
 
   EntityId id;
 
@@ -72,9 +95,9 @@ private:
 
   ComponentMap components;
 
-  std::vector<Entity*> children;
+  // std::vector<EntityReference> children;
   
-  static uint32 CurrentId;
+  static EntityId CurrentId;
 
 };
 
