@@ -18,13 +18,13 @@ class Entity {
 
 public:
 
+  static EntityId nextId() {
+    return CurrentId++;
+  }
+
   Entity() {} 
 
   virtual ~Entity();
-
-  // static Entity* create();
-
-  // static Entity* create(Transform transform);
 
   // Copy
   Entity(Entity&& src) {

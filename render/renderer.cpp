@@ -8,6 +8,7 @@
 #include "platform/platform.h"
 
 #include "core/logger.h"
+#include "core/context.h"
 
 #include "render/vertex_buffer.h"
 #include "render/index_buffer.h"
@@ -35,7 +36,7 @@ void Renderer::init(Context* context)  {
 
 void Renderer::start(Context* context) {
   Logger::info("Starting Renderer.");
-  Platform* platform = static_cast<Platform*>(context->get("platform"));
+  Platform* platform = context->get<Platform>();
   window = platform->getWindow();
   glfwMakeContextCurrent(window);
   gladLoadGL();
@@ -65,7 +66,7 @@ void Renderer::update(Context* context) {
   glm::mat4 cameraProjection = Camera::viewProjectionFor(cameraTransform);
   Camera* camera = (Camera*)cameraEntity->getComponents()->get("Camera");
   glm::mat4 screenProjection = camera->screenProjection(Vector2(screenWidth, screenHeight));
-  for (auto entity : *context->getScene()->getEntities()) {
+  for (EntityReference entity : context->getScene()->getEntities()->with("Mesh")) {
     draw(screenProjection, cameraPosition, cameraProjection, entity);
     // for (auto child : *entity->getChildren()) {
     //   draw(screenProjection, cameraPosition, cameraProjection, child);

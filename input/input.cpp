@@ -3,6 +3,7 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 #include "platform/platform.h"
+#include "core/context.h"
 
 #include "core/logger.h"
 
@@ -10,7 +11,7 @@ static std::unordered_set<int> frameKeys;
 
 void Input::start(Context* context) {
   Logger::info("Starting Input System");
-  Platform* platform = static_cast<Platform*>(context->get("platform"));
+  Platform* platform = context->get<Platform>();
   window = platform->getWindow();
   glfwSetWindowUserPointer(window, this);
   glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {

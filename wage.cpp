@@ -166,10 +166,9 @@ int main(int argc, char* argv[]) {
   spot.setOuterCutOff(50);
   spotlight->add(&spot);
 
-  for (int i = 0; i < 0; i++) {
+  for (int i = 0; i < 10; i++) {
      addEntity(scene);
   }
-
 
   EntityReference ground = scene->getEntities()->create();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
@@ -195,19 +194,18 @@ int main(int argc, char* argv[]) {
     if (Input::isPressed(GLFW_KEY_N)) {
       // addEntity(scene);
       if (hasMover) {
-        mover.free();
+        scene->getEntities()->destroy(mover);
         hasMover = false;
       } else {
-        mover = addMover(scene);
-        printf("hmmm: %d\n", mover->getComponents()->size());
+        mover = addMover(scene);        
         hasMover = true;
+        printf("hmmm: %d\n", mover->getId());
       }
-      last = context->getTime();
-      scene->getEntities()->debug();
+      last = context->getTime();      
+      // scene->getEntities()->debug();
     }
   };
   controller->add(addIt);
-  // scene->add(controller);
 
   core.init();
   core.start();

@@ -26,18 +26,16 @@ public:
   ~EntityStore() {}
 
   inline EntityReference create() {
-    ObjectPool<Entity>::Reference ref = pool.create();
-    // TODO: Generate ID
-    ref->setId(1);
-    // entities.push_back(ref);
+    EntityReference ref = pool.create();
+    ref->setId(Entity::nextId());
     byId[ref->getId()] = ref;
     return ref;
   }
 
-  // inline void add(Entity* entity) {
-  //   entities.push_back(entity);
-  //   byId[entity->getId()] = entity;
-  // }
+  inline void destroy(EntityReference reference) {
+    byId.erase(reference->getId());
+    reference.free();
+  }
 
   inline EntityReference get(EntityId id) {
     return byId[id];
@@ -58,8 +56,6 @@ public:
   }
 
 private:
-
-  // std::vector<EntityReference> entities;
 
   std::unordered_map<EntityId, EntityReference> byId;
 

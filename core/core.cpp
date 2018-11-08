@@ -3,12 +3,13 @@
 #include <iostream>
 #include <chrono>
 
+#include "core/context.h"
 #include "core/system.h"
 #include "core/logger.h"
 
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
-Core::Core(std::string path) : Context(), running(false), fileSystem(new LocalFileSystem(path)) {  
+Core::Core(std::string path) : running(false), fileSystem(new LocalFileSystem(path)) {  
   timeStep = 1.0/60.0;
   rootPath = path;
 }
@@ -20,31 +21,15 @@ Core::~Core() {
   // }
 }
 
-void Core::add(System* system) {  
-  systems.push_back(system);  
-  if (running) {
-    // system->init(this);
-    system->start(this);  
-  }
-}
-
-System* Core::get(std::string name) {
-  for (auto system : systems) {
-    if (system->getName() == name) {
-      return system;
-    }
-  }
-  return NULL;
-}
-
 void Core::start() {  
   if (running) {
     return;
   }
   running = true;    
   Logger::info("Starting WAGE Core.");
+  Context context (this);
   for (auto system : systems) {
-    system->start(this);
+    system->start(&context);
   } 
   TimePoint lastTime = std::chrono::high_resolution_clock::now();
   double accumulator = 0;
@@ -65,14 +50,16 @@ void Core::start() {
 }
 
 void Core::update() {
+  Context context(this);
   for (auto system : systems) {
-    system->update(this);
+    system->update(&context);
   }
 }
 
 void Core::fixedUpdate() {
+  Context context(this);
   for (auto system : systems) {
-    system->fixedUpdate(this);
+    system->fixedUpdate(&context);
   }
 }
 
@@ -82,8 +69,9 @@ void Core::stop() {
   }
   Logger::info("Stopping WAGE Core.");
   running = false;
-  for (auto system = systems.rbegin(); system != systems.rend(); ++system) {
-    (*system)->stop(this);
+  Context context(this);
+  for (auto system = systems.begin(); system != systems.end(); ++system) {
+    (*system)->stop(&context);
   }
   deinit();
 }
@@ -92,14 +80,21 @@ void Core::init() {
   Logger::info("Initializing WAGE Core.");
   Logger::info(" - Path: ", rootPath);
   Logger::info(" - Time Step: ", timeStep);
+  Context context(this);
   for (auto system : systems) {    
-    system->init(this);
+    system->init(&context);
   }
 }
 
 void Core::deinit() {
   Logger::info("Deinitializing WAGE Core.");
-  for (auto system = systems.rbegin(); system != systems.rend(); ++system) {
-    (*system)->deinit(this);
+  Context context(this);
+  for (auto system = systems.begin(); system != systems.end(); ++system) {
+    (*system)->deinit(&context);
   }
+}
+
+void Core::start(System* system) {
+  Context context(this);
+  system->start(&context);
 }

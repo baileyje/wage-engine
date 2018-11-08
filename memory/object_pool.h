@@ -188,7 +188,7 @@ public:
 
   void clear() {
     storage.resize(reserved);
-    storage.reserve(100); // TODO: Make configurable
+    storage.reserve(1000); // TODO: Make configurable
     storage[head].next = tail;
     storage[tail].prev = head;
     storage[freeHead].next = freeTail;

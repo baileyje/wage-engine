@@ -8,6 +8,7 @@
 
 #include "entity/scene.h"
 
+#include "core/core.h"
 
 class System;
 
@@ -15,31 +16,40 @@ class Context {
 
 public:
 
-  Context();
-
-  virtual ~Context();
+  virtual ~Context() {}
 
   // TODO:  I don't like systems being in the context.  How will we expose this so JSRT if needed? 
-  virtual void add(System* system) = 0;
+  template <typename T>
+  void add(T* system) {
+    core->add<T>(system);
+  }
 
-  virtual System* get(std::string name) = 0;
+  template <typename T>
+  T* get() {
+    return core->get<T>();
+  }
 
-  // TODO: Should this be getters like lame sauce C++
+  virtual std::string getRootPath();
 
-  std::string rootPath;
+  virtual double getTimeStep();
 
-  double timeStep;
+  virtual double getTime();
 
-  double time;
+  virtual double getDeltaTime();
 
-  double deltaTime;
+  virtual void shouldStop();
 
-  virtual void shouldStop() = 0;
+  virtual Scene* getScene();
 
-  virtual Scene* getScene() = 0;
+  virtual FileSystem* getFileSystem();
 
-  virtual FileSystem* getFileSystem() = 0;
+private:
 
+  Context(Core* core) : core(core) {}
+
+  Core* core;
+
+  friend class Core;
 };
 
 #endif // CORE_CONTEXT_H

@@ -4,9 +4,10 @@
 
 #include <string>
 
-#include "core/context.h"
 
 #define LIFECYCLE_FUNC(Name) void Name(Context* context);
+
+class Context;
 
 class System {
 

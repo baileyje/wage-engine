@@ -4,12 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "core/context.h"
+#include "core/system_map.h"
 #include "fs/local_file_system.h"
+#include "entity/scene.h" 
 
 class System;
 
-class Core : public Context {
+class Core {
 
 public:
   
@@ -23,9 +24,19 @@ public:
   
   void stop();  
 
-  void add(System* system);
+  template <typename T>
+  void add(T* system) {  
+    systems.add<T>(system);  
+    if (running) {
+      // system->init(this);      
+      start(system);
+    }
+  }
 
-  System* get(std::string name);
+  template <typename T>
+  inline T* get() {
+    return systems.get<T>();
+  }
 
   void shouldStop() { 
     // TODO: Make this more clean
@@ -39,6 +50,22 @@ public:
   inline FileSystem* getFileSystem() { 
     return fileSystem;
   }
+
+  inline std::string getRootPath() {
+    return rootPath;
+  }
+
+  inline double getTimeStep() {
+    return timeStep;
+  }
+
+  inline double getTime() {
+    return time;
+  }
+
+  inline double getDeltaTime() {
+    return deltaTime;
+  }
   
 private:
 
@@ -48,13 +75,23 @@ private:
 
   void deinit();
 
-  std::vector<System *> systems;
+  void start(System* system);
+
+  SystemMap systems;
   
   bool running;
 
   FileSystem* fileSystem;
 
   Scene scene;
+
+  std::string rootPath;
+
+  double timeStep;
+
+  double time;
+
+  double deltaTime;
 
 };
 

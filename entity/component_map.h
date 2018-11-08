@@ -6,13 +6,41 @@
 #include <unordered_map>
 #include <vector>
 
+#include "memory/object_pool.h"
+
 #include "entity/component.h"
 
 typedef std::vector<Component*>::iterator ComponentIterator;
 
+//  
+//  Map<Name, ObjectPool*> 
+//  Entry
+//    \-> Object Pool
+// 
+// 
+
 class ComponentMap {
 
+private:
+
+  class Entry {
+
+    template <typename T>
+    ObjectPool<T>* getPool() {
+      return static_cast<T*>(pool);
+    }
+
+
+    private:
+
+      void* pool;
+      
+  };
+
+
 public:
+
+  
 
   ComponentMap() {}
 
@@ -94,6 +122,8 @@ private:
 
   std::unordered_map<std::type_index, std::string> nameMap;
 
+
+  std::unordered_map<std::string, Entry*> pools;
 };
 
 #endif //ENTITY_COMPONENT_MAP_H

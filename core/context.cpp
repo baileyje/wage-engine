@@ -1,5 +1,29 @@
 #include "core/context.h"
 
-Context::Context() {}
+void Context::shouldStop() {
+  core->shouldStop();
+}
 
-Context::~Context() {}
+Scene* Context::getScene() {
+  return core->getScene();
+}
+
+FileSystem* Context::getFileSystem() {
+  return core->getFileSystem();
+}
+
+std::string Context::getRootPath() {
+  return core->getRootPath();
+}
+
+double Context::getTimeStep() {
+  return core->getTimeStep();
+}
+
+double Context::getTime() {
+  return core->getTime();
+}
+
+double Context::getDeltaTime() {
+  return core->getDeltaTime();
+}

@@ -9,6 +9,7 @@
 #include "render/material.h"
 #include "entity/component/mesh.h"
 #include "entity/component/camera.h"
+#include "entity/scene.h"
 
 class Renderer : public System {
 

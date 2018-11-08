@@ -19,9 +19,9 @@ void JsSystem::start(Context* context) {
 void JsSystem::fixedUpdate(Context* context) {
   // TODO: Ensure system has `fixedUpdate`
   JsObjectWrapper jsContext;
-  jsContext.set("time", context->time);
-  jsContext.set("deltaTime", context->deltaTime);
-  jsContext.set("timeStep", context->timeStep);
+  jsContext.set("time", context->getTime());
+  jsContext.set("deltaTime", context->getDeltaTime());
+  jsContext.set("timeStep", context->getTimeStep());
   JsValueRef args[] = { jsContext.get() };
   object.invoke("fixedUpdate", args, 1); 
 }
@@ -29,9 +29,9 @@ void JsSystem::fixedUpdate(Context* context) {
 void JsSystem::update(Context* context) {
   // TODO: Ensure system has `update`
   JsObjectWrapper jsContext;
-  jsContext.set("time", context->time);
-  jsContext.set("deltaTime", context->deltaTime);
-  jsContext.set("timeStep", context->timeStep);
+  jsContext.set("time", context->getTime());
+  jsContext.set("deltaTime", context->getDeltaTime());
+  jsContext.set("timeStep", context->getTimeStep());
   JsValueRef args[] = { jsContext.get() };
   object.invoke("update", args, 1); 
 }

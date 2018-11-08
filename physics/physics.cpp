@@ -3,6 +3,7 @@
 #include "entity/component/rigid_body.h"
 #include "entity/component/collider.h"
 #include "core/logger.h"
+#include "core/context.h"
 
 Physics::Physics() : System("bullet_physics"), 
 	dispatcher(&collisionConfiguration), 
@@ -35,7 +36,7 @@ void Physics::fixedUpdate(Context* context) {
 	}
 
 	// Run the Simulation
-  dynamicsWorld.stepSimulation(context->timeStep, 3);	
+  dynamicsWorld.stepSimulation(context->getTimeStep(), 3);	
 
 	// Get entities up to speed
 	for (auto entity : entities) {

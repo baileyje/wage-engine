@@ -3,6 +3,8 @@
 
 #include "core/system.h"
 
+#include "core/context.h"
+
 #include "ChakraCore.h"
 
 #include "jsrt/js_object_wrapper.h"
