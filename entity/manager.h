@@ -1,10 +1,12 @@
-#ifndef ENTITY_STORE_H
-#define ENTITY_STORE_H
+#ifndef ENTITY_MANAGER_H
+#define ENTITY_MANAGER_H
 
 #include <vector>
 #include <unordered_map>
 #include <string>
-#include <algorithm>
+// #include <algorithm>
+
+#include "core/system.h"
 
 #include "entity/entity.h"
 
@@ -17,13 +19,13 @@ typedef std::vector<EntityReference> EntityList;
 typedef ObjectPool<Entity>::Iterator EntityIterator;
 
 
-class EntityStore {
+class EntityManager: public System {
 
 public:
 
-  EntityStore() {}
+  EntityManager() : System("EntityManager") {}
 
-  ~EntityStore() {}
+  virtual ~EntityManager() {}
 
   inline EntityReference create() {
     EntityReference ref = pool.create();
@@ -63,4 +65,4 @@ private:
 
 };
 
-#endif // ENTITY_STORE_H
+#endif // ENTITY_MANAGER_H

@@ -4,10 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "fs/file_system.h"
-
-#include "entity/scene.h"
-
 #include "core/core.h"
 
 class System;
@@ -29,8 +25,6 @@ public:
     return core->get<T>();
   }
 
-  virtual std::string getRootPath();
-
   virtual double getTimeStep();
 
   virtual double getTime();
@@ -38,10 +32,6 @@ public:
   virtual double getDeltaTime();
 
   virtual void shouldStop();
-
-  virtual Scene* getScene();
-
-  virtual FileSystem* getFileSystem();
 
 private:
 

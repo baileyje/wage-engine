@@ -6,6 +6,7 @@
 #include "core/core.h"
 #include "platform/platform.h"
 #include "input/input.h"
+#include "fs/local.h"
 #include "jsrt/jsrt.h"
 #include "physics/physics.h"
 #include "render/renderer.h"
@@ -86,8 +87,8 @@ Core* coreRef;
 
 void intHandler(int);
 
-void addEntity(Scene* scene) {
-  EntityReference entity = scene->getEntities()->create();
+void addEntity(EntityManager& manager) {
+  EntityReference entity = manager.create();
   entity->getTransform()->setPosition(Vector(3, 3, 0));       
   entity
     ->add(new RigidBody(0.001))
@@ -96,8 +97,8 @@ void addEntity(Scene* scene) {
     ->add(&Collider::Box);
 }
 
-EntityReference addMover(Scene* scene) {
-  EntityReference mover = scene->getEntities()->create();
+EntityReference addMover(EntityManager& manager) {
+  EntityReference mover = manager.create();
   mover->getTransform()->setPosition(Vector(0, 10, 0));
   // mover.getTransform()->setScale(Vector(1, 1, 1));
   // mover.getTransform()->setRotation(Vector(0, 45, 0));
@@ -108,7 +109,7 @@ EntityReference addMover(Scene* scene) {
     ->add(&Collider::Box);
   // scene->add(mover);
 
-  // EntityReference child = scene->getEntities()->create();
+  // EntityReference child = manager.create();
   // child->getTransform()->setLocalPosition(Vector(0, 0, 1));
   // child->getTransform()->setLocalRotation(Vector(45, 0, 0));
   // child->getTransform()->setLocalScale(Vector(0.5, 0.5, 1));
@@ -124,11 +125,15 @@ int main(int argc, char* argv[]) {
   char buffer[255];
   std::string path = std::string(getcwd(buffer, sizeof(buffer)));  
   signal(SIGINT, intHandler);  
-  Core core(path);  
+  Core core;
   coreRef = &core;
+  core.add<FileSystem>(new LocalFileSystem(path));
+  core.add(new Input());
   core.add(new Platform());
-  core.add(new Input());  
   core.add(new Physics());
+
+  EntityManager manager;
+  core.add(&manager);
 
   // Jsrt jsrt;
   // core.add(&jsrt);
@@ -138,9 +143,7 @@ int main(int argc, char* argv[]) {
 
   core.add(new Renderer());
 
-  Scene* scene = core.getScene();
-
-  EntityReference camera = scene->getEntities()->create();  
+  EntityReference camera = manager.create();  
   camera
     ->add(new PerspectiveCamera())
     ->add(CamMove);
@@ -148,17 +151,17 @@ int main(int argc, char* argv[]) {
   camera->getTransform()->setPosition(Vector(-20, 10, -30));
   camera->getTransform()->setRotation(Vector(10, 20.0, 0));
 
-  EntityReference dirLight = scene->getEntities()->create();
+  EntityReference dirLight = manager.create();
   dirLight->getTransform()->setRotation(Vector(-90, 0, 0));
   DirectionalLight* temp = new DirectionalLight();
   temp->setDiffuse(Color(0.7,0.7,0.7,1));
   dirLight->add(temp);
 
-  EntityReference pointLight = scene->getEntities()->create();
+  EntityReference pointLight = manager.create();
   pointLight->getTransform()->setPosition(Vector(0, 2, 0));
   pointLight->add(new PointLight());
 
-  EntityReference spotlight = scene->getEntities()->create();
+  EntityReference spotlight = manager.create();
   spotlight->getTransform()->setPosition(Vector(0, 2, -3));
   spotlight->getTransform()->setRotation(Vector(-90, 0, 0));  
   Spotlight spot;
@@ -167,10 +170,10 @@ int main(int argc, char* argv[]) {
   spotlight->add(&spot);
 
   for (int i = 0; i < 10; i++) {
-     addEntity(scene);
+     addEntity(manager);
   }
 
-  EntityReference ground = scene->getEntities()->create();
+  EntityReference ground = manager.create();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
   ground->getTransform()->setLocalScale(Vector(100, 0.1, 100));
   ground->getTransform()->setRotation(Vector(0, 0, 0));
@@ -183,8 +186,8 @@ int main(int argc, char* argv[]) {
   EntityReference mover;
   bool hasMover = false;
   float last = 0;
-  EntityReference controller = scene->getEntities()->create();
-  auto addIt = [&hasMover,scene,&mover,&last](ComponentContext* context) {
+  EntityReference controller = manager.create();
+  auto addIt = [&hasMover,&manager,&mover,&last](ComponentContext* context) {
     // printf("Time: %f\n", context->getTime());
     // printf("Diff: %f\n", context->getTime() - last);
     if (context->getTime() - last < 0.5) {
@@ -192,17 +195,16 @@ int main(int argc, char* argv[]) {
     }
     // printf("Diff: %f\n", context->getTime() - last);    
     if (Input::isPressed(GLFW_KEY_N)) {
-      // addEntity(scene);
       if (hasMover) {
-        scene->getEntities()->destroy(mover);
+        manager. destroy(mover);
         hasMover = false;
       } else {
-        mover = addMover(scene);        
+        mover = addMover(manager);        
         hasMover = true;
         printf("hmmm: %d\n", mover->getId());
       }
       last = context->getTime();      
-      // scene->getEntities()->debug();
+      // manager.debug();
     }
   };
   controller->add(addIt);

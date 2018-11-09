@@ -20,7 +20,7 @@ void Physics::init(Context* context) {
 void Physics::start(Context* context) {
 	Logger::info("Starting Physics.");
 	int idx = 0;
-	for (EntityReference  entity : *context->getScene()->getEntities()) {		
+	for (EntityReference  entity : *context->get<EntityManager>()) {		
 		add(entity);
 		// for (auto child : *entity->getChildren()) {
 		// 	add(child);

@@ -24,9 +24,10 @@ void compileGLShader(unsigned int shaderId, const char* source) {
 Shader* Shader::Default;
 
 void Shader::initDefault(FileSystem* fileSystem) {
-  std::string* vs = fileSystem->read("resources/shaders/default.vs");
-  std::string* fs = fileSystem->read("resources/shaders/default.fs");
-  Default = new Shader(*vs, *fs);    
+  const char* vs = fileSystem->read("resources/shaders/default.vs");
+  printf("VS: %s\n", vs);
+  const char* fs = fileSystem->read("resources/shaders/default.fs");
+  Default = new Shader(vs, fs); 
   Default->compile();
   Default->link();
   delete vs;
@@ -34,7 +35,7 @@ void Shader::initDefault(FileSystem* fileSystem) {
 }
 
 
-Shader::Shader(std::string vertexSource, std::string fragmentSource) 
+Shader::Shader(const char* vertexSource, const char* fragmentSource) 
   : vertexSource(vertexSource), fragmentSource(fragmentSource) {  
   GL_FAIL_CHECK(vertexId = glCreateShader(GL_VERTEX_SHADER));
 	GL_FAIL_CHECK(fragmentId = glCreateShader(GL_FRAGMENT_SHADER));
@@ -56,8 +57,8 @@ void Shader::unbind() const {
 }
 
 void Shader::compile() {
-  GL_FAIL_CHECK(compileGLShader(vertexId, vertexSource.c_str()));
-  GL_FAIL_CHECK(compileGLShader(fragmentId, fragmentSource.c_str()));
+  GL_FAIL_CHECK(compileGLShader(vertexId, vertexSource));
+  GL_FAIL_CHECK(compileGLShader(fragmentId, fragmentSource));
 }
 
 void Shader::link() {

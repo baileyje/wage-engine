@@ -5,7 +5,6 @@ cc_library(
 	srcs = glob(["*.cpp"]),
 	hdrs = glob(["*.h"]),
 	deps = [
-		"//fs",
-		"//entity"
+		"//memory"
 	]
 )

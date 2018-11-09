@@ -5,6 +5,7 @@ cc_library(
 	hdrs = glob(["*.h"]),
 	deps = [
 		"//core",
+		"//fs",
 		"//third_party/chakracore"
 	],
 	visibility = ["//visibility:public"]

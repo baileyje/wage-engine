@@ -2,32 +2,23 @@
 #define SCENE_H
 
 #include "entity/entity.h"
-#include "entity/store.h"
+#include "entity/manager.h"
 
 class Scene {
 
 public:
-
-  // inline Scene* add(Entity* entity) {
-  //   entities.add(entity);
-  //   return this;
-  // }
 
   inline EntityReference getCamera() {
     // auto found = entities.with("Camera");
     // if (!found.empty()) {
     //   return found[0];
     // }
-    return entities.with("Camera")[0];
+    return entityManager->with("Camera")[0];
   }
-
-  inline EntityStore* getEntities() {
-    return &entities;
-  }  
 
 private:
 
-  EntityStore entities;
+  EntityManager* entityManager;
 
 };
 

@@ -12,7 +12,7 @@ public:
 
   ~LocalFileSystem();
 
-  std::string* read(std::string path);
+  const char* read(std::string path);
 
 private:
 

@@ -6,7 +6,7 @@
 ModuleManager* ModuleManager::shared;
 
 // TODO: Move to singleton
-ModuleManager::ModuleManager(std::string moduleRoot) : currentSourceContext(0), moduleRoot(moduleRoot) {
+ModuleManager::ModuleManager(FileSystem* fileSystem) : currentSourceContext(0), moduleRoot("engine/"), fileSystem(fileSystem) {
 }
 
 ModuleManager::~ModuleManager() {
@@ -21,7 +21,7 @@ void ModuleManager::update() {
     loadQueue.pop();
     if (task->source != NULL) {
       parseModule(task);
-      free(task->source);          
+      free((char*)task->source);          
     } else {
       evaluateModule(task);
     }
@@ -43,7 +43,7 @@ JsModuleRecord ModuleManager::loadModule(JsModuleRecord importer, std::string pa
   loaded->path = path;  
   loadedModules[path] = loaded;
   Logger::debug("ModulePath: %s\n", (moduleRoot +  path).c_str());
-  char* source = readFile( (moduleRoot +  path).c_str() );
+  const char* source = fileSystem->read(moduleRoot +  path);
   Logger::debug("SRC: %s\n", source);
   LoadTask* task = (LoadTask*)malloc(sizeof(LoadTask));  
   task->sourceContext = currentSourceContext++;
@@ -109,14 +109,3 @@ JsErrorCode CHAKRA_CALLBACK ModuleManager::notifyModuleReady(JsModuleRecord modu
 	return JsNoError;
 }
 
-// TODO: JUNK HACK FEST 99
-char* ModuleManager::readFile(std::string path) {
-  FILE* f = fopen(path.c_str(), "r");
-  fseek(f, 0, SEEK_END);
-  size_t size = ftell(f);
-  char* data = new char[size];
-  rewind(f);
-  fread(data, sizeof(char), size, f);
-  fclose(f);
-  return data; 
-}

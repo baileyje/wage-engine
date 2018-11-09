@@ -46,12 +46,13 @@ void Renderer::start(Context* context) {
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
   GL_FAIL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
-  Shader::initDefault(context->getFileSystem());  
+  Shader::initDefault(context->get<FileSystem>());  
   
   // TODO: Listen for changes to entities and figure out how to get these!!!
-  dirLights = context->getScene()->getEntities()->with("DirectionalLight");
-  pointLights = context->getScene()->getEntities()->with("PointLight");
-  spotlights = context->getScene()->getEntities()->with("Spotlight");
+  EntityManager* manager = context->get<EntityManager>();
+  dirLights = manager->with("DirectionalLight");
+  pointLights = manager->with("PointLight");
+  spotlights = manager->with("Spotlight");
 
   glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 }
@@ -59,14 +60,15 @@ void Renderer::start(Context* context) {
 void Renderer::update(Context* context) {  
   GL_FAIL_CHECK(glViewport(0, 0, screenWidth, screenHeight));
   GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-  EntityReference cameraEntity = context->getScene()->getCamera();
+  EntityManager* manager = context->get<EntityManager>();
+  auto cameraEntity = manager->with("Camera")[0];
   assert(cameraEntity);
   Transform* cameraTransform = cameraEntity->getTransform();
   glm::vec3 cameraPosition = cameraTransform->getPosition();
   glm::mat4 cameraProjection = Camera::viewProjectionFor(cameraTransform);
   Camera* camera = (Camera*)cameraEntity->getComponents()->get("Camera");
   glm::mat4 screenProjection = camera->screenProjection(Vector2(screenWidth, screenHeight));
-  for (EntityReference entity : context->getScene()->getEntities()->with("Mesh")) {
+  for (EntityReference entity : manager->with("Mesh")) {
     draw(screenProjection, cameraPosition, cameraProjection, entity);
     // for (auto child : *entity->getChildren()) {
     //   draw(screenProjection, cameraPosition, cameraProjection, child);

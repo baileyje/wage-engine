@@ -9,9 +9,8 @@
 
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
-Core::Core(std::string path) : running(false), fileSystem(new LocalFileSystem(path)) {  
+Core::Core() : running(false) {  
   timeStep = 1.0/60.0;
-  rootPath = path;
 }
 
 Core::~Core() {
@@ -78,8 +77,6 @@ void Core::stop() {
 
 void Core::init() {
   Logger::info("Initializing WAGE Core.");
-  Logger::info(" - Path: ", rootPath);
-  Logger::info(" - Time Step: ", timeStep);
   Context context(this);
   for (auto system : systems) {    
     system->init(&context);

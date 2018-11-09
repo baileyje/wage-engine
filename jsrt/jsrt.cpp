@@ -28,7 +28,7 @@ void Jsrt::init(Context* context) {
   Logger::info("Initializing JSRT.");
   this->context = context;
   
-  moduleManager = new ModuleManager(context->getRootPath() + "/engine/");
+  moduleManager = new ModuleManager(context->get<FileSystem>());
   ModuleManager::shared = moduleManager;
   
   JsRuntimeAttributes attrs = static_cast<JsRuntimeAttributes>(JsRuntimeAttributeAllowScriptInterrupt

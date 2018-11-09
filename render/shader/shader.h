@@ -12,7 +12,7 @@ public:
 
   static void initDefault(FileSystem* fileSystem);
 
-  Shader(std::string vertexSource, std::string fragmentSource);
+  Shader(const char* vertexSource, const char* fragmentSource);
 
   ~Shader();
 
@@ -38,9 +38,9 @@ private:
 
   unsigned int id;
 
-  std::string vertexSource;
+  const char* vertexSource;
 
-  std::string fragmentSource;
+  const char* fragmentSource;
 };
 
 #endif //RENDERER_SHADER_H

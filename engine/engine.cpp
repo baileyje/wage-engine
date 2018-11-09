@@ -2,12 +2,14 @@
 
 #include "core/context.h"
 #include "entity/context.h"
+#include "entity/manager.h"
 #include "entity/component.h"
 
 #define LIFECYCLE_FUNC_IMPL(Name) \
 void Engine::Name(Context* context) { \
   EntityContext entityContext(context->getTime(), context->getDeltaTime()); \
-  for (auto& entity : *context->getScene()->getEntities()) { \
+  EntityManager* manager = context->get<EntityManager>(); \
+  for (auto& entity : *manager) { \
     entity->Name(&entityContext); \
   } \
 } \

@@ -5,8 +5,6 @@
 #include <vector>
 
 #include "core/system_map.h"
-#include "fs/local_file_system.h"
-#include "entity/scene.h" 
 
 class System;
 
@@ -14,7 +12,7 @@ class Core {
 
 public:
   
-  Core(std::string rootPath);
+  Core();
 
   ~Core();
   
@@ -43,18 +41,6 @@ public:
     stop();
   }
 
-  inline Scene* getScene() {
-    return &scene;
-  }
-
-  inline FileSystem* getFileSystem() { 
-    return fileSystem;
-  }
-
-  inline std::string getRootPath() {
-    return rootPath;
-  }
-
   inline double getTimeStep() {
     return timeStep;
   }
@@ -80,12 +66,6 @@ private:
   SystemMap systems;
   
   bool running;
-
-  FileSystem* fileSystem;
-
-  Scene scene;
-
-  std::string rootPath;
 
   double timeStep;
 

@@ -6,9 +6,11 @@
 #include <unordered_map>
 #include <queue>
 
+#include "fs/file_system.h"
+
 struct LoadTask {
   JsModuleRecord module;
-  char* source;
+  const char* source;
   size_t sourceLength;
   JsSourceContext sourceContext;	
 };
@@ -25,7 +27,7 @@ class ModuleManager {
 
 public:
   
-  ModuleManager(std::string moduleRoot);
+  ModuleManager(FileSystem* fileSystem);
 
   ~ModuleManager();
 
@@ -42,9 +44,6 @@ public:
   static JsErrorCode CHAKRA_CALLBACK fetchDynamicImport(JsSourceContext importer, JsValueRef specifier, JsModuleRecord *outModule);
   
   static JsErrorCode CHAKRA_CALLBACK notifyModuleReady(JsModuleRecord module, JsValueRef exception);
-  
-  // TODO: JUNK HACK FEST 99
-  char* readFile(std::string path);
 
   unsigned currentSourceContext;
 
@@ -59,6 +58,8 @@ private:
   std::queue<LoadTask*> loadQueue;
 
   std::string moduleRoot;
+  
+  FileSystem* fileSystem;
 };
 
 #endif //JSRT_MODULE_MANAGER_H

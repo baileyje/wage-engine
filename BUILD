@@ -9,6 +9,7 @@ cc_binary(
     "//jsrt",
     "//physics",
     "//engine",
+    "//fs",
     "//render"
   ],
   linkopts = ["-framework Cocoa -framework OpenGL"],

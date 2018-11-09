@@ -5,7 +5,7 @@
 
 #include "entity/component/rigid_body.h"
 #include "entity/component/collider.h"
-#include "entity/store.h" // EntityReference :(
+#include "entity/manager.h" // EntityReference :(
 #include "physics/util.h"
 
 class PhysicsEntity {
