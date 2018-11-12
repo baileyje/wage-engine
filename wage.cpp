@@ -6,6 +6,7 @@
 #include "core/core.h"
 #include "platform/platform.h"
 #include "input/input.h"
+#include "messaging/messaging.h"
 #include "fs/local.h"
 #include "jsrt/jsrt.h"
 #include "physics/physics.h"
@@ -74,7 +75,7 @@ ComponentCallback Tilt = [](ComponentContext* context) {
   // }
 };
 
-ComponentCallback Raise = [](ComponentContext* context) {    
+ComponentCallback Raise = [](ComponentContext* context) {
   if (Input::isPressed(GLFW_KEY_M)) {
     Entity* entity = context->getEntity();
     RigidBody* body = entity->get<RigidBody>();
@@ -83,13 +84,36 @@ ComponentCallback Raise = [](ComponentContext* context) {
   }
 };
 
+class Follow : public Component {
+
+public: 
+
+  Follow(EntityReference target) : Component("Follow"), target(target) {    
+  }
+
+  void start(ComponentContext* context) {
+    offset = target->getTransform()->getPosition() - context->getTransform()->getPosition();
+  }
+
+  void update(ComponentContext* context) {
+    context->getTransform()->setPosition(target->getTransform()->getPosition() + offset);
+  }
+
+private:
+
+  EntityReference target;
+  
+  Vector offset;
+
+};
+
 Core* coreRef;
 
 void intHandler(int);
 
-void addEntity(EntityManager& manager) {
+void addEntity(EntityManager& manager, float offset) {
   EntityReference entity = manager.create();
-  entity->getTransform()->setPosition(Vector(3, 3, 0));       
+  entity->getTransform()->setPosition(Vector(3 + offset * 3, 3, 0));       
   entity
     ->add(new RigidBody(0.001))
     ->add(Raise)
@@ -103,12 +127,20 @@ EntityReference addMover(EntityManager& manager) {
   // mover.getTransform()->setScale(Vector(1, 1, 1));
   // mover.getTransform()->setRotation(Vector(0, 45, 0));
   mover
-    ->add(new RigidBody(0.001))    
+    ->add(new RigidBody(0.001))
     ->add(&Mesh::Cube)
     ->add(MoveIt)
     ->add(&Collider::Box);
   // scene->add(mover);
 
+  EntityReference follower = manager.create();
+  follower->getTransform()->setPosition(Vector(3, 10, 0));
+  follower
+    ->add(new RigidBody(0.005))
+    ->add(&Mesh::Cube)
+    ->add(&Collider::Box);
+    // ->add(new Follow(mover));
+    
   // EntityReference child = manager.create();
   // child->getTransform()->setLocalPosition(Vector(0, 0, 1));
   // child->getTransform()->setLocalRotation(Vector(45, 0, 0));
@@ -120,36 +152,8 @@ EntityReference addMover(EntityManager& manager) {
   return mover;
 }
 
-// So far so dumb
-int main(int argc, char* argv[]) {
-  char buffer[255];
-  std::string path = std::string(getcwd(buffer, sizeof(buffer)));  
-  signal(SIGINT, intHandler);  
-  Core core;
-  coreRef = &core;
-  core.add<FileSystem>(new LocalFileSystem(path));
-  core.add(new Input());
-  core.add(new Platform());
-  core.add(new Physics());
+void setupScene(EntityManager& manager) {
 
-  EntityManager manager;
-  core.add(&manager);
-
-  // Jsrt jsrt;
-  // core.add(&jsrt);
-
-  Engine engine;
-  core.add(&engine);
-
-  core.add(new Renderer());
-
-  EntityReference camera = manager.create();  
-  camera
-    ->add(new PerspectiveCamera())
-    ->add(CamMove);
-  
-  camera->getTransform()->setPosition(Vector(-20, 10, -30));
-  camera->getTransform()->setRotation(Vector(10, 20.0, 0));
 
   EntityReference dirLight = manager.create();
   dirLight->getTransform()->setRotation(Vector(-90, 0, 0));
@@ -164,13 +168,13 @@ int main(int argc, char* argv[]) {
   EntityReference spotlight = manager.create();
   spotlight->getTransform()->setPosition(Vector(0, 2, -3));
   spotlight->getTransform()->setRotation(Vector(-90, 0, 0));  
-  Spotlight spot;
-  spot.setCutOff(40);
-  spot.setOuterCutOff(50);
-  spotlight->add(&spot);
+  Spotlight* spot = new Spotlight();
+  spot->setCutOff(40);
+  spot->setOuterCutOff(50);
+  spotlight->add(spot);
 
   for (int i = 0; i < 10; i++) {
-     addEntity(manager);
+     addEntity(manager, i);
   }
 
   EntityReference ground = manager.create();
@@ -183,32 +187,64 @@ int main(int argc, char* argv[]) {
     ->add(&Collider::Box)
     ->add(Tilt);
 
-  EntityReference mover;
-  bool hasMover = false;
-  float last = 0;
-  EntityReference controller = manager.create();
-  auto addIt = [&hasMover,&manager,&mover,&last](ComponentContext* context) {
-    // printf("Time: %f\n", context->getTime());
-    // printf("Diff: %f\n", context->getTime() - last);
-    if (context->getTime() - last < 0.5) {
-      return;
-    }
-    // printf("Diff: %f\n", context->getTime() - last);    
-    if (Input::isPressed(GLFW_KEY_N)) {
-      if (hasMover) {
-        manager. destroy(mover);
-        hasMover = false;
-      } else {
-        mover = addMover(manager);        
-        hasMover = true;
-        printf("hmmm: %d\n", mover->getId());
-      }
-      last = context->getTime();      
-      // manager.debug();
-    }
-  };
-  controller->add(addIt);
+  EntityReference mover = addMover(manager);
 
+  EntityReference camera = manager.create();  
+  camera->getTransform()->setPosition(Vector(-20, 10, -30));
+  camera->getTransform()->setRotation(Vector(10, 20.0, 0));
+  camera
+    ->add(new PerspectiveCamera())
+    // ->add(CamMove)
+    ->add(new Follow(mover));
+  
+  
+
+
+  // EntityReference mover;
+  // bool hasMover = false;
+  // float last = 0;
+  // EntityReference controller = manager.create();
+  // auto addIt = [&hasMover,&manager,&mover,&last](ComponentContext* context) {
+  //   // printf("Time: %f\n", context->getTime());
+  //   // printf("Diff: %f\n", context->getTime() - last);
+  //   if (context->getTime() - last < 0.5) {
+  //     return;
+  //   }
+  //   // printf("Diff: %f\n", context->getTime() - last);    
+  //   if (Input::isPressed(GLFW_KEY_N)) {
+  //     if (hasMover) {
+  //       manager.destroy(mover);
+  //       hasMover = false;
+  //     } else {
+  //       mover = addMover(manager);        
+  //       hasMover = true;
+  //     }
+  //     last = context->getTime();      
+  //     // manager.debug();
+  //   }
+  // };
+  // controller->add(addIt);  
+}
+
+// So far so dumb
+int main(int argc, char* argv[]) {
+  char buffer[255];
+  std::string path = std::string(getcwd(buffer, sizeof(buffer)));  
+  signal(SIGINT, intHandler);  
+  Core core;
+  coreRef = &core;
+  core.add<FileSystem>(new LocalFileSystem(path));
+  core.add(new Messaging());
+  core.add(new Input());
+  core.add(new Platform());
+  core.add(new Physics());
+  EntityManager manager;
+  core.add(&manager);
+  core.add(new Jsrt());
+  core.add(new Engine());
+  core.add(new Renderer());
+  
+  setupScene(manager);
   core.init();
   core.start();
   return 0;

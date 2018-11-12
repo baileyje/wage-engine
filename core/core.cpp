@@ -28,6 +28,7 @@ void Core::start() {
   Logger::info("Starting WAGE Core.");
   Context context (this);
   for (auto system : systems) {
+    Logger::info("Starting ", system->getName().c_str());
     system->start(&context);
   } 
   TimePoint lastTime = std::chrono::high_resolution_clock::now();
@@ -79,6 +80,7 @@ void Core::init() {
   Logger::info("Initializing WAGE Core.");
   Context context(this);
   for (auto system : systems) {    
+    Logger::info("Initializing ", system->getName().c_str());
     system->init(&context);
   }
 }

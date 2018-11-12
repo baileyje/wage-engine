@@ -53,15 +53,6 @@ private:
 
 EntityId Entity::CurrentId = 1; // 0 = invalid Id
 
-// // TODO: DITCH JANKY ID GEN
-// // TODO: Use a pool for these
-// Entity* Entity::create(Transform transform) {
-//   return new Entity(Entity::CurrentId++, transform);
-// }
-
-// Entity::Entity(EntityId id, Transform transform) : id(id), transform(transform) {    
-// }
-
 Entity::~Entity() {}
 
 LIFECYCLE_FUNC(start)
@@ -73,8 +64,3 @@ Entity* Entity::add(ComponentCallback func) {
   components.add(new FunctionComponent(func));
   return this;
 }
-
-// Entity* Entity::add(ComponentCallback& func) {
-//   components.add(new FunctionComponent(func));
-//   return this;
-// }

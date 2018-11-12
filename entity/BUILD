@@ -6,7 +6,8 @@ cc_library(
 	deps = [
 		"//core",
 		"//math",
-		"//memory"
+		"//memory",
+		"//messaging"
 	],
 	visibility = ["//visibility:public"]
 )

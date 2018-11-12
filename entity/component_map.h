@@ -103,17 +103,6 @@ public:
     return nullptr;
   }
 
-  // inline ComponentIterator getAll(std::string name) {
-  //   auto itr = map.find(name);
-  //   if (itr != map.end()) {
-  //     auto byName = itr->second;
-  //     if (!byName.empty()) {
-  //       return byName[0];
-  //     }
-  //   }
-  //   return nullptr;
-  // }
-
 private: 
   
   std::vector<Component*> values;
@@ -121,7 +110,6 @@ private:
   std::unordered_map<std::string, std::vector<Component*>> map;
 
   std::unordered_map<std::type_index, std::string> nameMap;
-
 
   std::unordered_map<std::string, Entry*> pools;
 };

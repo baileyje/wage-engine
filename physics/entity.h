@@ -40,6 +40,10 @@ public:
     return object;
   }
 
+  inline EntityReference getEntity() {
+    return entity;
+  }
+
 private: 
 
   PhysicsEntity(EntityReference entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)

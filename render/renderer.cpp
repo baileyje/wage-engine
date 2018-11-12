@@ -61,7 +61,12 @@ void Renderer::update(Context* context) {
   GL_FAIL_CHECK(glViewport(0, 0, screenWidth, screenHeight));
   GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   EntityManager* manager = context->get<EntityManager>();
-  auto cameraEntity = manager->with("Camera")[0];
+  auto cameraEntities = manager->with("Camera");
+  if (!cameraEntities.size()) {
+    Logger::error("No Camera");
+    return;
+  }
+  auto cameraEntity = cameraEntities[0];
   assert(cameraEntity);
   Transform* cameraTransform = cameraEntity->getTransform();
   glm::vec3 cameraPosition = cameraTransform->getPosition();

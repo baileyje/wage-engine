@@ -49,6 +49,7 @@
         "set": "cpp",
         "sstream": "cpp",
         "ostream": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "__debug": "cpp"
     }
 }

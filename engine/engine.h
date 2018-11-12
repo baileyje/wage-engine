@@ -11,7 +11,7 @@ class Engine : public System {
 
 public:
   
-  Engine() : System("engine") { }
+  Engine() : System("Engine") { }
 
   ~Engine() {}
 

@@ -25,7 +25,6 @@ Shader* Shader::Default;
 
 void Shader::initDefault(FileSystem* fileSystem) {
   const char* vs = fileSystem->read("resources/shaders/default.vs");
-  printf("VS: %s\n", vs);
   const char* fs = fileSystem->read("resources/shaders/default.fs");
   Default = new Shader(vs, fs); 
   Default->compile();

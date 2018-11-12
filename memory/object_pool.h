@@ -13,10 +13,10 @@ public:
 
   public:
 
-    Reference() : Reference(nullptr, OutOfBounds) {
+    Reference() : Reference(nullptr, OutOfBounds, 0) {
     }
 
-    Reference(ObjectPool<T>* pool, size_t index) : pool(pool), index(index) {
+    Reference(ObjectPool<T>* pool, size_t index, size_t version) : pool(pool), index(index), version(version) {
     }
 
     bool operator==(const Reference& other) const {
@@ -28,7 +28,7 @@ public:
     }
 
     bool isValid() const {
-      return pool != nullptr && pool->storage[index].valid;
+      return pool != nullptr && pool->storage[index].valid && pool->storage[index].version == version;
     }
 
     operator bool() const { 
@@ -69,6 +69,8 @@ public:
     
     size_t index;
 
+    size_t version;
+
   };
 
   static const size_t OutOfBounds = static_cast<size_t>(-1);
@@ -77,7 +79,7 @@ public:
     
     Node() : Node(OutOfBounds) {}
 
-    Node(size_t index) : index(index), prev(OutOfBounds), next(OutOfBounds), valid(false) {}
+    Node(size_t index) : index(index), prev(OutOfBounds), next(OutOfBounds), valid(false), version(0) {}
 
     // Move
     Node& operator=(Node&& src) {
@@ -105,6 +107,8 @@ public:
     T item;
 
     bool valid;
+
+    size_t version;
   };
 
   class Iterator {
@@ -119,7 +123,7 @@ public:
 
    public:
     
-    Iterator(ObjectPool<T>* pool, size_t index) : pool(pool), index(index), currentRef(pool, index) {}
+    Iterator(ObjectPool<T>* pool, size_t index) : pool(pool), index(index), currentRef(pool, index, pool->storage[index].version) {}
 
     ~Iterator() {}
 
@@ -133,7 +137,7 @@ public:
 
     Iterator& operator++() {
       index = pool->storage[index].next;
-      currentRef = Reference(pool, index);
+      currentRef = Reference(pool, index, pool->storage[index].version);
       return (*this);
     }
 
@@ -145,7 +149,7 @@ public:
 
     Iterator& operator--() {
       index = pool->storage[index].prev;
-      currentRef = Reference(pool, index);
+      currentRef = Reference(pool, index, pool->storage[index].version);
       return (*this);
     }
 
@@ -209,6 +213,7 @@ public:
     size_t index = OutOfBounds;
     if (storage[freeTail].prev != freeHead) {
       index = storage[freeTail].prev;
+      storage[index].version++;
       removeFromList(index);      
     } else {
       index = storage.size();
@@ -216,7 +221,7 @@ public:
     }    
     addToList(index, tail);
     storage[index].valid = true;
-    return Reference(this, index);
+    return Reference(this, index, storage[index].version);
   }
 
   void removeFromList(size_t index) {

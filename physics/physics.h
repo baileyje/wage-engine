@@ -9,7 +9,9 @@
 
 #include "physics/entity.h"
 
-class Physics : public System {
+#include "messaging/messaging.h"
+
+class Physics : public System, MessageListener<AddEntityMessage>, MessageListener<DestroyEntityMessage> {
 
 public:
   
@@ -27,6 +29,12 @@ public:
 
   void add(EntityReference entity);
 
+  void remove(EntityReference entity);
+
+  void on(AddEntityMessage& message);
+  
+  void on(DestroyEntityMessage& message);
+
 private:
 
   // btCollisionShape* shapeFor(Entity* entity);
@@ -42,6 +50,7 @@ private:
   btDiscreteDynamicsWorld dynamicsWorld;  
 
   std::vector<PhysicsEntity*> entities;
+
 };
 
 #endif // PHYSICS_H
