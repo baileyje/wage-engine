@@ -60,7 +60,7 @@ public:
   void init(Context* context) {
     messaging = context->get<Messaging>();
   }
-
+  
   /*
     1.  Send Add Messages
     2.  Destroy entities

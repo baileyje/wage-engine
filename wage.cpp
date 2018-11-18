@@ -64,15 +64,16 @@ ComponentCallback CamMove  = [](ComponentContext* context) {
   }
 };
 
-ComponentCallback Tilt = [](ComponentContext* context) {
+ComponentCallback CamTilt = [](ComponentContext* context) {
   Transform* transform = context->getEntity()->getTransform();
-  Vector position = transform->getPosition();
-  // if (Input::isPressed(GLFW_KEY_COMMA)) {
-  //   *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, -1);
-  // }
-  // if (Input::isPressed(GLFW_KEY_PERIOD)) {
-  //   *context->getEntity()->getTransform()->getRotation() += Vector(0, 0, 1);
-  // }
+  Vector rotation = eulerAngles(transform->getRotation());
+  if (Input::isPressed(GLFW_KEY_COMMA)) {
+    rotation -= Vector(0.005, 0, 0);
+  }
+  if (Input::isPressed(GLFW_KEY_PERIOD)) {
+    rotation += Vector(0.005, 0, 0);
+  }
+  context->getEntity()->getTransform()->setRotation(Vector(btDegrees(rotation.x), btDegrees(rotation.y), btDegrees(rotation.z)));
 };
 
 ComponentCallback Raise = [](ComponentContext* context) {
@@ -80,7 +81,6 @@ ComponentCallback Raise = [](ComponentContext* context) {
     Entity* entity = context->getEntity();
     RigidBody* body = entity->get<RigidBody>();
     body->addImpulse(Vector(0, 0.0004, 0));
-    // *context->getEntity()->getTransform()->getPosition() += Vector(0, 0, 0.3);
   }
 };
 
@@ -92,7 +92,7 @@ public:
   }
 
   void start(ComponentContext* context) {
-    offset = target->getTransform()->getPosition() - context->getTransform()->getPosition();
+    offset = context->getTransform()->getPosition() - target->getTransform()->getPosition();
   }
 
   void update(ComponentContext* context) {
@@ -104,6 +104,28 @@ private:
   EntityReference target;
   
   Vector offset;
+
+};
+
+class Chase : public Component {
+
+public: 
+
+  Chase(EntityReference target) : Component("Chase"), target(target) {    
+  }
+
+  void fixedUpdate(ComponentContext* context) {
+    if (glm::distance(target->getTransform()->getPosition(), context->getTransform()->getPosition()) < 2) {
+      return;
+    } 
+    Vector dir = target->getTransform()->getPosition() - context->getTransform()->getPosition();
+    Vector movement = (glm::normalize(dir) * 0.001);
+    context->getEntity()->get<RigidBody>()->addImpulse(movement);
+  }
+
+private:
+
+  EntityReference target;
 
 };
 
@@ -123,7 +145,7 @@ void addEntity(EntityManager& manager, float offset) {
 
 EntityReference addMover(EntityManager& manager) {
   EntityReference mover = manager.create();
-  mover->getTransform()->setPosition(Vector(0, 10, 0));
+  mover->getTransform()->setPosition(Vector(0, 0, 0));
   // mover.getTransform()->setScale(Vector(1, 1, 1));
   // mover.getTransform()->setRotation(Vector(0, 45, 0));
   mover
@@ -134,12 +156,12 @@ EntityReference addMover(EntityManager& manager) {
   // scene->add(mover);
 
   EntityReference follower = manager.create();
-  follower->getTransform()->setPosition(Vector(3, 10, 0));
+  follower->getTransform()->setPosition(Vector(4, 10, 0));
   follower
     ->add(new RigidBody(0.005))
     ->add(&Mesh::Cube)
-    ->add(&Collider::Box);
-    // ->add(new Follow(mover));
+    ->add(&Collider::Box)
+    ->add(new Chase(mover));
     
   // EntityReference child = manager.create();
   // child->getTransform()->setLocalPosition(Vector(0, 0, 1));
@@ -184,17 +206,16 @@ void setupScene(EntityManager& manager) {
   ground
     ->add(new RigidBody(0.0, kinematic))
     ->add(&Mesh::Cube)
-    ->add(&Collider::Box)
-    ->add(Tilt);
+    ->add(&Collider::Box);
 
   EntityReference mover = addMover(manager);
 
   EntityReference camera = manager.create();  
-  camera->getTransform()->setPosition(Vector(-20, 10, -30));
-  camera->getTransform()->setRotation(Vector(10, 20.0, 0));
+  camera->getTransform()->setPosition(Vector(0, 15, -30));
+  camera->getTransform()->setRotation(Vector(10, 0.0, 0));
   camera
     ->add(new PerspectiveCamera())
-    // ->add(CamMove)
+    ->add(CamTilt)
     ->add(new Follow(mover));
   
   
