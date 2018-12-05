@@ -30,6 +30,11 @@ Renderer:
 ☐ Not the worst material ever...
 ☐ Font support
 
+
+Asset Manager:
+☐ Async loading
+☐ Caching
+
 Physics:
 ☐ More collider types
 ☐ Compound shapes

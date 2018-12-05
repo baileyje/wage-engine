@@ -9,7 +9,6 @@
 
 #include "core/system.h"
 
-
 template <typename M>
 class MessageListener {
 public:

@@ -20,9 +20,9 @@
 #include "entity/component/material.h"
 #include "entity/component/perspective_camera.h"
 #include "entity/component/orthographic_camera.h"
-#include "entity/component/directional_light.h"
-#include "entity/component/point_light.h"
-#include "entity/component/spotlight.h"
+#include "entity/component/lighting/directional_light.h"
+#include "entity/component/lighting/point_light.h"
+#include "entity/component/lighting/spotlight.h"
 
 ComponentCallback MoveIt = [](ComponentContext* context) {
   Entity* entity = context->getEntity();
