@@ -1,8 +1,13 @@
 #ifndef MESSAGING_H
 #define MESSAGING_H
 
-#include "core/system.h"
+#include <unordered_map>
+#include <vector>
 #include <functional>
+#include <typeinfo>
+#include <typeindex>
+
+#include "core/system.h"
 
 
 template <typename M>

@@ -4,25 +4,26 @@ Core:
   ✔ Move from getPosition/getWorldPosition -> getLocalPosition/getPosition @done (11/1/2018, 8:32:06 PM)
 ✔ Scene @done (10/27/2018, 8:18:52 AM)
 ✔ Logging @done (10/31/2018, 9:13:31 PM)
-☐ Entity Referencing
+✔ Entity Referencing @done (11/18/2018, 8:15:15 AM)
 ☐ System Referencing
-☐ Message systems
-☐ Add/Remove Entity messages
+✔ Message systems @done (11/18/2018, 8:15:19 AM)
+✔ Add/Remove Entity messages @done (11/18/2018, 8:15:23 AM)
 ☐ Add Start/Stop to components
 ☐ Memory allocator
 ☐ Better virtual filesystem support
 ☐ integrate script component
 ☐ better project structure
+☐ Change to smart pointers
 
 Entity:
 
 ☐ More primitive shapes
-  ☐ Sphere
+  ✔ Sphere @done (12/4/2018, 9:29:07 PM)
   ☐ Cone
 ✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)s
 
 Renderer:
-☐ Render  
+☐ Render queue - maybe??
 ☐ .obj loading
 ☐ Texture cache
 ☐ Mesh cache
@@ -35,6 +36,6 @@ Physics:
 ☐ Joints?
 
 Game:
-☐ Some strategy for restaring scene
+☐ Some strategy for restarting scene
 
 

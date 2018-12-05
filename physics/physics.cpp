@@ -3,24 +3,22 @@
 #include "entity/component/rigid_body.h"
 #include "entity/component/collider.h"
 #include "core/logger.h"
-#include "core/context.h"
+#include "core/system/context.h"
 
-Physics::Physics() : System("bullet_physics"), 
+Physics::Physics() : System("Bullet Physics"), 
 	dispatcher(&collisionConfiguration), 
 	dynamicsWorld(&dispatcher, &overlappingPairCache, &solver, &collisionConfiguration)
 {}
 
 Physics::~Physics() {}
 
-void Physics::init(Context* context) {
-	Logger::info("Initializing Physics.");
-  dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
+void Physics::init(SystemContext* context) {
+	dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
 	context->get<Messaging>()->listen<AddEntityMessage>(this);
 	context->get<Messaging>()->listen<DestroyEntityMessage>(this);
 }
 
-void Physics::start(Context* context) {
-	Logger::info("Starting Physics.");
+void Physics::start(SystemContext* context) {
 }
 
 void Physics::on(AddEntityMessage& message) {
@@ -31,7 +29,7 @@ void Physics::on(DestroyEntityMessage& message) {
 	remove(message.getEntity());
 }
 
-void Physics::fixedUpdate(Context* context) {
+void Physics::fixedUpdate(SystemContext* context) {
 	// Get Physics up to speed
   for (auto physicsEntity : entities) {
 		if (!physicsEntity->getEntity().isValid()) {
@@ -53,9 +51,8 @@ void Physics::fixedUpdate(Context* context) {
 	}
 }
 
-void Physics::deinit(Context* context) {
-	Logger::info("Deinitializing Physics.");
-  for (auto entity : entities) {
+void Physics::deinit(SystemContext* context) {
+	for (auto entity : entities) {
 		if (entity->getObject()) {
 			dynamicsWorld.removeCollisionObject(entity->getObject());
 		}

@@ -5,6 +5,7 @@
 #include <string>
 
 #include "core/system.h"
+#include "core/system/context.h"
 #include "jsrt/module_manager.h"
 #include "jsrt/js_object_wrapper.h"
 
@@ -33,7 +34,7 @@ public:
 
   void pushCallback(Callback* callback);
 
-  Context* getContext() { return context; };
+  inline SystemContext* getContext() { return context; };
 
   void attachGlobal(std::string name, JsValueRef valueRef);
 
@@ -49,7 +50,7 @@ private:
 
   std::queue<Callback*> callbackQueue;
 
-  Context* context;
+  SystemContext* context;
   
 };
 

@@ -9,7 +9,7 @@ class Platform : public System {
 
 public:
 
-  Platform() : System("platform") { }
+  Platform() : System("Platform") { }
 
   virtual ~Platform();
 

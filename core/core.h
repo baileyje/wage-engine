@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "core/system_map.h"
+#include "core/system/map.h"
 
 class System;
 

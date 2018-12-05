@@ -3,7 +3,7 @@
 
 #include "entity/component.h"
 
-enum ColliderType { box, mesh };
+enum ColliderType { box, sphere, mesh };
 
 class Collider : public Component {
   
@@ -22,6 +22,8 @@ public:
   }
 
   static Collider Box;
+
+  static Collider Sphere;
 
 private:
 

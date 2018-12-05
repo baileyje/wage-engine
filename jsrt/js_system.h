@@ -3,8 +3,6 @@
 
 #include "core/system.h"
 
-#include "core/context.h"
-
 #include "ChakraCore.h"
 
 #include "jsrt/js_object_wrapper.h"
@@ -17,17 +15,17 @@ public:
 
   ~JsSystem();
 
-  void init(Context* context);
+  LIFECYCLE_FUNC(init)
 
-  void start(Context* context);
+  LIFECYCLE_FUNC(start)
 
-  void fixedUpdate(Context* context);
+  LIFECYCLE_FUNC(fixedUpdate)
 
-  void update(Context* context);
+  LIFECYCLE_FUNC(update)
 
-  void stop(Context* context);
+  LIFECYCLE_FUNC(stop)
 
-  void deinit(Context* context);
+  LIFECYCLE_FUNC(deinit)
 
 private:
   

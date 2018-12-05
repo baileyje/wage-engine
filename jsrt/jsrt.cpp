@@ -18,14 +18,13 @@ static JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsV
 static void CHAKRA_CALLBACK promiseContinuationCallback(JsValueRef task, void *callbackState);
 
 
-Jsrt::Jsrt() : System("jsrt") {
+Jsrt::Jsrt() : System("JSRT") {
 }
 
 Jsrt::~Jsrt() {
 }
   
-void Jsrt::init(Context* context) {
-  Logger::info("Initializing JSRT.");
+void Jsrt::init(SystemContext* context) {
   this->context = context;
   
   moduleManager = new ModuleManager(context->get<FileSystem>());
@@ -59,8 +58,7 @@ void Jsrt::init(Context* context) {
   JsAddRef(jsRuntime, nullptr);  
 }
 
-void Jsrt::deinit(Context* context) {
-    Logger::info("Deinitializing JSRT.");
+void Jsrt::deinit(SystemContext* context) {
     // FAIL_CHECK(JsSetCurrentContext(JS_INVALID_REFERENCE));
     // FAIL_CHECK(JsDisposeRuntime(jsRuntime));
 }
@@ -83,7 +81,7 @@ void Jsrt::attachGlobals() {
   global.set("core", core);  
 }
 
-void Jsrt::update(Context* context) {
+void Jsrt::update(SystemContext* context) {
   // Callback work
   JsValueRef globalRef;
   FAIL_CHECK(JsGetGlobalObject(&globalRef));

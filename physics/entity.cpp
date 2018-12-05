@@ -12,6 +12,9 @@ btCollisionShape* PhysicsEntity::shapeFor(EntityReference entity) {
       btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);			
       return new btBoxShape(halfExtents);
     }
+    case sphere: {
+      return new btSphereShape(scale.x / 2.0);
+    }
     default: return nullptr;
   }	
 }

@@ -8,7 +8,7 @@
 #include "platform/platform.h"
 
 #include "core/logger.h"
-#include "core/context.h"
+#include "core/system/context.h"
 
 #include "render/vertex_buffer.h"
 #include "render/index_buffer.h"
@@ -30,12 +30,10 @@
 Renderer::~Renderer() {
 }
 
-void Renderer::init(Context* context)  {
-  Logger::info("Initializing Renderer.");
+void Renderer::init(SystemContext* context)  {
 }
 
-void Renderer::start(Context* context) {
-  Logger::info("Starting Renderer.");
+void Renderer::start(SystemContext* context) {
   Platform* platform = context->get<Platform>();
   window = platform->getWindow();
   glfwMakeContextCurrent(window);
@@ -57,7 +55,7 @@ void Renderer::start(Context* context) {
   glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 }
 
-void Renderer::update(Context* context) {  
+void Renderer::update(SystemContext* context) {  
   GL_FAIL_CHECK(glViewport(0, 0, screenWidth, screenHeight));
   GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   EntityManager* manager = context->get<EntityManager>();
@@ -82,7 +80,6 @@ void Renderer::update(Context* context) {
   GL_FAIL_CHECK(glfwSwapBuffers(window));
   GL_FAIL_CHECK(glfwPollEvents());
 }
-
 
 void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, EntityReference entity) {
   Mesh* mesh = entity->get<Mesh>();
@@ -151,7 +148,6 @@ void Renderer::draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::m
   draw(mesh, &material);
 }
 
-
 // void Renderer::draw(Entity* camera, Entity* entity) {  
 //   Transform* cameraTransform = camera->getTransform();
 //   glm::vec3 cameraPosition = vec3From(cameraTransform->getPosition());  
@@ -165,22 +161,20 @@ void Renderer::draw(Mesh* mesh, GlMaterial* material) {
 
   // TODO: I think this could be cached for sure.  
   // Create Verts Buff
-  VertexBuffer verts(mesh->getVertices()->data(), mesh->getVertices()->size() * 3 * sizeof(float));
+  VertexBuffer verts(mesh->getVertices().data(), mesh->getVertices().size() * 3 * sizeof(float));
   verts.getLayout()->pushFloat(3);
   vao.addBuffer(&verts);
   // Create Norms Buff
-  VertexBuffer norms(mesh->getNormals()->data(), mesh->getNormals()->size() * 3 * sizeof(float));
+  VertexBuffer norms(mesh->getNormals().data(), mesh->getNormals().size() * 3 * sizeof(float));
   norms.getLayout()->pushFloat(3);
   vao.addBuffer(&norms);
 
-  VertexBuffer uvs(mesh->getUvs()->data(), mesh->getUvs()->size() * 3 * sizeof(float));
+  VertexBuffer uvs(mesh->getUvs().data(), mesh->getUvs().size() * 3 * sizeof(float));
   uvs.getLayout()->pushFloat(2);
   vao.addBuffer(&uvs);  
-  // Create Index Buff
-  IndexBuffer indices((const unsigned int*)mesh->getIndices()->data(), mesh->getIndices()->size());
+  IndexBuffer indices((const unsigned int*)mesh->getIndices().data(), mesh->getIndices().size());
   indices.bind();
   GL_FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
-  // GL_FAIL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 36));
   indices.unbind();
   norms.unbind();
   verts.unbind();
@@ -188,11 +182,9 @@ void Renderer::draw(Mesh* mesh, GlMaterial* material) {
   vao.unbind();
 }
 
-void Renderer::stop(Context* context) {
-  Logger::info("Stopping Renderer.");
+void Renderer::stop(SystemContext* context) {
 }
 
-void Renderer::deinit(Context* context) {
-  Logger::info("Deinitializing Renderer.");
+void Renderer::deinit(SystemContext* context) {
 }
 

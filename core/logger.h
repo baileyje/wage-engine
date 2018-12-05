@@ -9,8 +9,6 @@
   template<typename... Args> \
   static void Level(std::string message, Args... args) { log(LogLevel::Level, message, args...); }
 
-// enum class LogLevel { debug = 0, info, warn, error };
-
 class LogLevel {
 
 public:

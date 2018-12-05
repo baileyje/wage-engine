@@ -47,7 +47,7 @@ ComponentCallback MoveIt = [](ComponentContext* context) {
   }
 };
 
-ComponentCallback CamMove  = [](ComponentContext* context) {
+ComponentCallback CamMove = [](ComponentContext* context) {
   Transform* transform = context->getEntity()->getTransform();
   Vector position = transform->getPosition();
   if (Input::isPressed(GLFW_KEY_UP)) {
@@ -133,8 +133,8 @@ Core* coreRef;
 
 void intHandler(int);
 
-void addEntity(EntityManager& manager, float offset) {
-  EntityReference entity = manager.create();
+void addEntity(EntityManager* manager, float offset) {
+  EntityReference entity = manager->create();
   entity->getTransform()->setPosition(Vector(3 + offset * 3, 3, 0));       
   entity
     ->add(new RigidBody(0.001))
@@ -143,51 +143,53 @@ void addEntity(EntityManager& manager, float offset) {
     ->add(&Collider::Box);
 }
 
-EntityReference addMover(EntityManager& manager) {
-  EntityReference mover = manager.create();
+EntityReference addMover(EntityManager* manager) {
+  EntityReference mover = manager->create();
   mover->getTransform()->setPosition(Vector(0, 0, 0));
-  // mover.getTransform()->setScale(Vector(1, 1, 1));
+  mover->getTransform()->setLocalScale(Vector(10, 10, 10));
   // mover.getTransform()->setRotation(Vector(0, 45, 0));
   mover
     ->add(new RigidBody(0.001))
-    ->add(&Mesh::Cube)
-    ->add(MoveIt)
-    ->add(&Collider::Box);
-  // scene->add(mover);
+    ->add(&Mesh::Sphere)
+    ->add(&Collider::Sphere)
+    ->add(MoveIt);
 
-  EntityReference follower = manager.create();
+  EntityReference follower = manager->create();
   follower->getTransform()->setPosition(Vector(4, 10, 0));
+  // follower->getTransform()->setLocalScale(Vector(0.10, 0.10, 0.10));
   follower
     ->add(new RigidBody(0.005))
-    ->add(&Mesh::Cube)
-    ->add(&Collider::Box)
+    ->add(&Mesh::Sphere)
+    ->add(&Collider::Sphere)
     ->add(new Chase(mover));
-    
-  // EntityReference child = manager.create();
-  // child->getTransform()->setLocalPosition(Vector(0, 0, 1));
-  // child->getTransform()->setLocalRotation(Vector(45, 0, 0));
-  // child->getTransform()->setLocalScale(Vector(0.5, 0.5, 1));
-  // child
-  //   ->add(&Mesh::Cube)  
-  //   ->add(&Collider::Box);
-  // child->getTransform()-> setParent(mover->getTransform());
+
   return mover;
 }
 
-void setupScene(EntityManager& manager) {
+void setupSystems(Core& core, std::string path) {
+  core.add<FileSystem>(new LocalFileSystem(path));
+  core.add(new Messaging());
+  core.add(new Input());
+  core.add(new Platform());
+  core.add(new Physics());
+  core.add(new EntityManager());
+  core.add(new Jsrt());
+  core.add(new Engine());
+  core.add(new Renderer());
+}
 
-
-  EntityReference dirLight = manager.create();
+void setupScene(EntityManager* manager) {
+  EntityReference dirLight = manager->create();
   dirLight->getTransform()->setRotation(Vector(-90, 0, 0));
   DirectionalLight* temp = new DirectionalLight();
   temp->setDiffuse(Color(0.7,0.7,0.7,1));
   dirLight->add(temp);
 
-  EntityReference pointLight = manager.create();
+  EntityReference pointLight = manager->create();
   pointLight->getTransform()->setPosition(Vector(0, 2, 0));
   pointLight->add(new PointLight());
 
-  EntityReference spotlight = manager.create();
+  EntityReference spotlight = manager->create();
   spotlight->getTransform()->setPosition(Vector(0, 2, -3));
   spotlight->getTransform()->setRotation(Vector(-90, 0, 0));  
   Spotlight* spot = new Spotlight();
@@ -199,7 +201,7 @@ void setupScene(EntityManager& manager) {
      addEntity(manager, i);
   }
 
-  EntityReference ground = manager.create();
+  EntityReference ground = manager->create();
   ground->getTransform()->setPosition(Vector(0, -2, 0));
   ground->getTransform()->setLocalScale(Vector(100, 0.1, 100));
   ground->getTransform()->setRotation(Vector(0, 0, 0));
@@ -208,43 +210,16 @@ void setupScene(EntityManager& manager) {
     ->add(&Mesh::Cube)
     ->add(&Collider::Box);
 
-  EntityReference mover = addMover(manager);
+  addMover(manager);
 
-  EntityReference camera = manager.create();  
+  EntityReference camera = manager->create();  
   camera->getTransform()->setPosition(Vector(0, 15, -30));
   camera->getTransform()->setRotation(Vector(10, 0.0, 0));
   camera
     ->add(new PerspectiveCamera())
     ->add(CamTilt)
-    ->add(new Follow(mover));
-  
-  
-
-
-  // EntityReference mover;
-  // bool hasMover = false;
-  // float last = 0;
-  // EntityReference controller = manager.create();
-  // auto addIt = [&hasMover,&manager,&mover,&last](ComponentContext* context) {
-  //   // printf("Time: %f\n", context->getTime());
-  //   // printf("Diff: %f\n", context->getTime() - last);
-  //   if (context->getTime() - last < 0.5) {
-  //     return;
-  //   }
-  //   // printf("Diff: %f\n", context->getTime() - last);    
-  //   if (Input::isPressed(GLFW_KEY_N)) {
-  //     if (hasMover) {
-  //       manager.destroy(mover);
-  //       hasMover = false;
-  //     } else {
-  //       mover = addMover(manager);        
-  //       hasMover = true;
-  //     }
-  //     last = context->getTime();      
-  //     // manager.debug();
-  //   }
-  // };
-  // controller->add(addIt);  
+    ->add(CamMove);
+    // ->add(new Follow(mover));
 }
 
 // So far so dumb
@@ -254,17 +229,10 @@ int main(int argc, char* argv[]) {
   signal(SIGINT, intHandler);  
   Core core;
   coreRef = &core;
-  core.add<FileSystem>(new LocalFileSystem(path));
-  core.add(new Messaging());
-  core.add(new Input());
-  core.add(new Platform());
-  core.add(new Physics());
-  EntityManager manager;
-  core.add(&manager);
-  core.add(new Jsrt());
-  core.add(new Engine());
-  core.add(new Renderer());
   
+  setupSystems(core, path);
+  EntityManager* manager = core.get<EntityManager>();
+  Mesh::generatePrimitives();
   setupScene(manager);
   core.init();
   core.start();

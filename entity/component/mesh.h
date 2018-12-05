@@ -23,20 +23,20 @@ public:
     return indices.size();
   }
 
-  inline VertexVector* getVertices() {
-    return &vertices;
+  inline VertexVector& getVertices() {
+    return vertices;
   }
 
-  inline VertexVector* getNormals() {
-    return &normals;
+  inline VertexVector& getNormals() {
+    return normals;
   }
 
-  inline Vertex2Vector* getUvs() {
-    return &uvs;
+  inline Vertex2Vector& getUvs() {
+    return uvs;
   }
 
-  inline IndexVector* getIndices() {
-    return &indices;
+  inline IndexVector& getIndices() {
+    return indices;
   }
 
   inline std::string getId() const {
@@ -46,6 +46,12 @@ public:
   static Mesh Cube;
 
   static Mesh Quad;
+
+  static Mesh Sphere;
+
+  static void generatePrimitives();
+
+  static Mesh* load(std::string path);
  
 protected:
 

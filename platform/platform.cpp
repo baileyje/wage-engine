@@ -10,8 +10,7 @@ void errorCallback(int error, const char* description) {
 Platform::~Platform() {
 }
 
-void Platform::init(Context* context)  {
-  Logger::info("Initializing Platform.");
+void Platform::init(SystemContext* context)  {
   glfwSetErrorCallback(errorCallback);
   if (!glfwInit()) {
     Logger::error("GLFW Init Failed.");
@@ -21,11 +20,10 @@ void Platform::init(Context* context)  {
   glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, 1);
   glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window = glfwCreateWindow(1024, 768, "Wage Bro!", NULL, NULL);
+  window = glfwCreateWindow(1024, 768, "Wage is the Rage!", NULL, NULL);
 }
 
-void Platform::deinit(Context* context) {
-  Logger::info("Deinitializing Platform.");
+void Platform::deinit(SystemContext* context) {
   glfwDestroyWindow(window);
   glfwTerminate();
 }

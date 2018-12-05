@@ -4,10 +4,9 @@
 
 #include <string>
 
+#define LIFECYCLE_FUNC(Name) void Name(SystemContext* context);
 
-#define LIFECYCLE_FUNC(Name) void Name(Context* context);
-
-class Context;
+class SystemContext;
 
 class System {
 
@@ -17,17 +16,17 @@ public:
   
   virtual ~System() {};
 
-  virtual void init(Context* context) {};
+  virtual void init(SystemContext* context) {};
   
-  virtual void start(Context* context) {};
+  virtual void start(SystemContext* context) {};
 
-  virtual void update(Context* context) {};
+  virtual void update(SystemContext* context) {};
 
-  virtual void fixedUpdate(Context* context) {};
+  virtual void fixedUpdate(SystemContext* context) {};
   
-  virtual void stop(Context* context) {};
+  virtual void stop(SystemContext* context) {};
 
-  virtual void deinit(Context* context) {};
+  virtual void deinit(SystemContext* context) {};
 
   virtual std::string getName() { return name; };
 

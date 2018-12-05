@@ -1,5 +1,5 @@
-#ifndef CORE_CONTEXT_H
-#define CORE_CONTEXT_H
+#ifndef CORE_SYSTEM_CONTEXT_H
+#define CORE_SYSTEM_CONTEXT_H
 
 #include <string>
 #include <vector>
@@ -8,11 +8,11 @@
 
 class System;
 
-class Context {
+class SystemContext {
 
 public:
 
-  virtual ~Context() {}
+  virtual ~SystemContext() {}
 
   // TODO:  I don't like systems being in the context.  How will we expose this so JSRT if needed? 
   template <typename T>
@@ -35,11 +35,11 @@ public:
 
 private:
 
-  Context(Core* core) : core(core) {}
+  SystemContext(Core* core) : core(core) {}
 
   Core* core;
 
   friend class Core;
 };
 
-#endif // CORE_CONTEXT_H
+#endif // CORE_SYSTEM_CONTEXT_H

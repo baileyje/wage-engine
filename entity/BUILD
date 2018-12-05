@@ -7,7 +7,8 @@ cc_library(
 		"//core",
 		"//math",
 		"//memory",
-		"//messaging"
+		"//messaging",
+		"//third_party/tinyloader"
 	],
 	visibility = ["//visibility:public"]
 )

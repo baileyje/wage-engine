@@ -7,7 +7,7 @@
 
 
 #include "core/system.h"
-#include "core/context.h"
+#include "core/system/context.h"
 #include "entity/entity.h"
 #include "memory/object_pool.h"
 #include "messaging/messaging.h"
@@ -57,7 +57,7 @@ public:
 
   virtual ~EntityManager() {}
 
-  void init(Context* context) {
+  void init(SystemContext* context) {
     messaging = context->get<Messaging>();
   }
   
@@ -67,7 +67,7 @@ public:
     4.  Send requested destroy messages    
     4.  Queue destroys
   */
-  void update(Context* context) {
+  void update(SystemContext* context) {
     if (!messaging) {
       return;
     }
