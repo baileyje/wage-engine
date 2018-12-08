@@ -9,49 +9,53 @@
 #include "jsrt/module_manager.h"
 #include "jsrt/js_object_wrapper.h"
 
-struct Callback {
-	
-  JsValueRef function;
+namespace wage {
 
-};
+  struct Callback {
+    
+    JsValueRef function;
 
-class Jsrt : public System {
+  };
 
-public:
-  
-  Jsrt();
+  class Jsrt : public System {
 
-  ~Jsrt();
+  public:
+    
+    Jsrt();
+
+    ~Jsrt();
 
 
-  LIFECYCLE_FUNC(init)
-  
-  LIFECYCLE_FUNC(update)
-  
-  LIFECYCLE_FUNC(deinit)
+    LIFECYCLE_FUNC(init)
+    
+    LIFECYCLE_FUNC(update)
+    
+    LIFECYCLE_FUNC(deinit)
 
-  void loadModule(std::string name);
+    void loadModule(std::string name);
 
-  void pushCallback(Callback* callback);
+    void pushCallback(Callback* callback);
 
-  inline SystemContext* getContext() { return context; };
+    inline SystemContext* getContext() { return context; };
 
-  void attachGlobal(std::string name, JsValueRef valueRef);
+    void attachGlobal(std::string name, JsValueRef valueRef);
 
-private:
+  private:
 
-  void attachGlobals();
-  
-  ModuleManager* moduleManager;
+    void attachGlobals();
+    
+    ModuleManager* moduleManager;
 
-  JsRuntimeHandle jsRuntime;
-  
-  JsValueRef invoke(std::string source);
+    JsRuntimeHandle jsRuntime;
+    
+    JsValueRef invoke(std::string source);
 
-  std::queue<Callback*> callbackQueue;
+    std::queue<Callback*> callbackQueue;
 
-  SystemContext* context;
-  
-};
+    SystemContext* context;
+    
+  };
+
+}
 
 #endif // JSRT_H

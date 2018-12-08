@@ -1,25 +1,28 @@
 #ifndef ENTITY_CONTEXT_H
 #define ENTITY_CONTEXT_H
 
-class EntityContext {
+namespace wage {
 
-public:
+  class EntityContext {
 
-  EntityContext(const double time, const double deltaTime) : time(time), deltaTime(deltaTime)  { }
+  public:
 
-  virtual ~EntityContext() { }
+    EntityContext(const double time, const double deltaTime) : time(time), deltaTime(deltaTime)  { }
 
-  double getTime() const { return time; }
+    virtual ~EntityContext() { }
 
-  double getDeltaTime() const { return deltaTime; }
-  
-private:
+    double getTime() const { return time; }
 
-  double time;
+    double getDeltaTime() const { return deltaTime; }
+    
+  private:
 
-  double deltaTime;
+    double time;
 
-};
+    double deltaTime;
 
+  };
+
+}
 
 #endif //ENTITY_CONTEXT_H

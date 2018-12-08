@@ -4,43 +4,53 @@
 #include <string>
 #include "fs/file_system.h"
 
-class Shader {
+namespace wage {
 
-public:
+  class Shader {
 
-  static Shader* Default;
+  public:
 
-  static void initDefault(FileSystem* fileSystem);
+    static Shader* Default;
 
-  Shader(const char* vertexSource, const char* fragmentSource);
+    static void initDefault(FileSystem* fileSystem);
 
-  ~Shader();
+    Shader(File* vertexSource, File* fragmentSource);
 
-  void bind() const;
+    ~Shader();
 
-  void unbind() const;
+    void bind();
 
-  void compile();
+    void unbind();
 
-  void link();
+    void compile();
 
-  void unlink();
+    void link();
 
-  inline unsigned int getId() {
-    return id;
-  }
+    void unlink();
 
-private:
+    inline unsigned int getId() {
+      return id;
+    }
 
-  unsigned int vertexId;
+    inline bool isBound() {
+      return bound;
+    }
 
-  unsigned int fragmentId;
+  private:
 
-  unsigned int id;
+    unsigned int vertexId;
 
-  const char* vertexSource;
+    unsigned int fragmentId;
 
-  const char* fragmentSource;
-};
+    unsigned int id;
+
+    File* vertexSource;
+
+    File* fragmentSource;
+
+    bool bound;
+  };
+
+}
 
 #endif //RENDERER_SHADER_H

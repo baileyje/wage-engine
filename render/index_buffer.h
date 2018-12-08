@@ -1,31 +1,34 @@
 #ifndef RENDERER_INDEX_BUFFER_H
 #define RENDERER_INDEX_BUFFER_H
 
-class IndexBuffer {
+namespace wage {
 
-public:
-  
-  IndexBuffer(const unsigned int* data, unsigned int count);
+  class IndexBuffer {
 
-  ~IndexBuffer();
+  public:
+    
+    IndexBuffer(const unsigned int* data, unsigned int count);
 
-  void bind() const;
+    ~IndexBuffer();
 
-  void unbind() const;
+    void bind() const;
 
-  inline unsigned int getCount() const {
-    return count;
-  }
+    void unbind() const;
 
-private:
+    inline unsigned int getCount() const {
+      return count;
+    }
 
-  // const unsigned int* data;
-  
-  unsigned int count;
+  private:
 
-  unsigned int id;
+    // const unsigned int* data;
+    
+    unsigned int count;
 
-};
+    unsigned int id;
 
+  };
+
+}
 
 #endif //RENDERER_INDEX_BUFFER_H

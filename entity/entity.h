@@ -5,100 +5,112 @@
 #include <vector>
 
 #include "math/transform.h"
-#include "entity/component_map.h"
 #include "entity/component.h"
+#include "entity/component/map.h"
+#include "entity/component/dynamic.h"
 #include "entity/context.h"
 #include "entity/component/func_component.h"
 
-typedef unsigned long EntityId;
+namespace wage {
 
-#define InvalidEntityId 0
+  typedef unsigned long EntityId;
 
-class Entity {
+  #define InvalidEntityId 0
 
-public:
+  class Entity {
 
-  static EntityId nextId() {
-    return CurrentId++;
-  }
+  public:
 
-  Entity() {} 
+    static EntityId nextId() {
+      return CurrentId++;
+    }
 
-  virtual ~Entity();
+    Entity() {} 
 
-  // Copy
-  Entity(Entity&& src) {
-    id = std::move(src.id);
-    transform = std::move(src.transform);
-    components = std::move(src.components);
-  }
+    virtual ~Entity();
 
-  // Move
-  Entity& operator=(Entity&& src) {
-    id = std::move(src.id);
-    transform = std::move(src.transform);
-    components = std::move(src.components);
-    return *this;
-  }
+    // Copy
+    Entity(Entity&& src) {
+      id = std::move(src.id);
+      transform = std::move(src.transform);
+      components = std::move(src.components);
+    }
 
-  inline EntityId getId() { return id; }
+    // Move
+    Entity& operator=(Entity&& src) {
+      id = std::move(src.id);
+      transform = std::move(src.transform);
+      components = std::move(src.components);
+      return *this;
+    }
 
-  inline void setId(EntityId id) { this->id = id; }
-  
-  inline Transform* getTransform() { return &transform; }
+    inline EntityId getId() { return id; }
 
-  inline void setTransform(Transform transform) { this->transform = transform; }
+    inline void setId(EntityId id) { this->id = id; }
+    
+    inline Transform& getTransform() { return transform; }
 
-  template <typename T>
-  inline Entity* add(T* component) { 
-    components.add<T>(component);
-    return this;
-  }
+    inline void setTransform(Transform transform) { this->transform = transform; }
 
-  Entity* add(ComponentCallback func);
+    template <class T>
+    inline Entity* add(T* component) { 
+      components.add<T>(component);
+      Component* asComponent = dynamic_cast<Component*>(component);
+      if (asComponent->isDynamic()) {
+        DynamicComponent* asDynamic = dynamic_cast<DynamicComponent*>(component);
+        dynamicComponents.push_back(asDynamic);
+      }
+      return this;
+    }
 
-  // Entity* add(ComponentCallback& func);
-  
-  template <typename T>
-  inline T* get() { 
-    return components.get<T>();
-  }
+    Entity* add(ComponentCallback func);
 
-  // inline void add(EntityReference child) {
-  //   child->transform.setParent(&transform);
-  //   children.push_back(child);
-  // }
+    // Entity* add(ComponentCallback& func);
+    
+    template <typename T>
+    inline T* get() { 
+      return components.get<T>();
+    }
 
-  // inline std::vector<EntityReference>* getChildren() {
-  //   return &children;
-  // }
+    // inline void add(EntityReference child) {
+    //   child->transform.setParent(&transform);
+    //   children.push_back(child);
+    // }
 
-  inline ComponentMap* getComponents() { return &components; }
-  
-  void start(EntityContext* context);
+    // inline std::vector<EntityReference>* getChildren() {
+    //   return &children;
+    // }
 
-  void update(EntityContext* context);
+    inline ComponentMap<Component>* getComponents() { return &components; }
+    
+    void start(EntityContext* context);
 
-  void fixedUpdate(EntityContext* context);
+    void update(EntityContext* context);
 
-  void stop(EntityContext* context);
+    void fixedUpdate(EntityContext* context);
 
-private:
-  
-  // Entity(EntityId id, Transform transform);
+    void stop(EntityContext* context);
 
-  // virtual ~Entity();
+  private:
+    
+    // Entity(EntityId id, Transform transform);
 
-  EntityId id;
+    // virtual ~Entity();
 
-  Transform transform;
+    EntityId id;
 
-  ComponentMap components;
+    Transform transform;
 
-  // std::vector<EntityReference> children;
-  
-  static EntityId CurrentId;
+    ComponentMap<Component> components;
 
-};
+    std::vector<DynamicComponent*> dynamicComponents;
+
+    // std::vector<EntityReference> children;
+    
+    static EntityId CurrentId;
+
+  };
+
+}
 
 #endif //ENTITY_H

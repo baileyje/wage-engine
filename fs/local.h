@@ -4,22 +4,24 @@
 
 #include "fs/file_system.h"
 
-class LocalFileSystem : public FileSystem {
+namespace wage {
+  class LocalFileSystem : public FileSystem {
 
-public:
-  
-  LocalFileSystem(std::string base);
+  public:
+    
+    LocalFileSystem(std::string base);
 
-  ~LocalFileSystem();
+    ~LocalFileSystem();
 
-  const char* read(std::string path);
+    File* read(std::string path);
 
-private:
+  private:
 
-  std::string base;
+    std::string base;
 
-};
+  };
 
+}
 
 #endif //LOCAL_FILE_SYSTEM_H
 

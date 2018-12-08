@@ -4,17 +4,20 @@
 
 #include "render/util.h"
 
+namespace wage {
 
-GlMaterial::GlMaterial(Shader* shader) : shader(shader) {
-}
+  GlMaterial::GlMaterial(Shader* shader) : shader(shader) {
+  }
 
-GlMaterial::~GlMaterial() {
-}
+  GlMaterial::~GlMaterial() {
+  }
 
-void GlMaterial::bind() const {
-  shader->bind();  
-}
+  void GlMaterial::bind() const {
+    shader->bind();  
+  }
 
-void GlMaterial::unbind() const {
-  shader->unbind();
+  void GlMaterial::unbind() const {
+    shader->unbind();
+  }
+
 }

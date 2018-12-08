@@ -6,73 +6,76 @@
 
 #include "core/system/map.h"
 
-class System;
+namespace wage {
 
-class Core {
+  class System;
 
-public:
-  
-  Core();
+  class Core {
 
-  ~Core();
-  
-  void init();
+  public:
+    
+    Core();
 
-  void start();
-  
-  void stop();  
+    ~Core();
+    
+    void init();
 
-  template <typename T>
-  void add(T* system) {  
-    systems.add<T>(system);  
-    if (running) {
-      // system->init(this);      
-      start(system);
+    void start();
+    
+    void stop();  
+
+    template <typename T>
+    void add(T* system) {  
+      systems.add<T>(system);  
+      if (running) {
+        // system->init(this);      
+        start(system);
+      }
     }
-  }
 
-  template <typename T>
-  inline T* get() {
-    return systems.get<T>();
-  }
+    template <typename T>
+    inline T* get() {
+      return systems.get<T>();
+    }
 
-  void shouldStop() { 
-    // TODO: Make this more clean
-    stop();
-  }
+    void shouldStop() { 
+      // TODO: Make this more clean
+      stop();
+    }
 
-  inline double getTimeStep() {
-    return timeStep;
-  }
+    inline double getTimeStep() {
+      return timeStep;
+    }
 
-  inline double getTime() {
-    return time;
-  }
+    inline double getTime() {
+      return time;
+    }
 
-  inline double getDeltaTime() {
-    return deltaTime;
-  }
-  
-private:
+    inline double getDeltaTime() {
+      return deltaTime;
+    }
+    
+  private:
 
-  void update();
+    void update();
 
-  void fixedUpdate();
+    void fixedUpdate();
 
-  void deinit();
+    void deinit();
 
-  void start(System* system);
+    void start(System* system);
 
-  SystemMap systems;
-  
-  bool running;
+    SystemMap systems;
+    
+    bool running;
 
-  double timeStep;
+    double timeStep;
 
-  double time;
+    double time;
 
-  double deltaTime;
+    double deltaTime;
 
-};
+  };
 
+}
 #endif // CORE_H

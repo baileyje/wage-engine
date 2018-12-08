@@ -6,27 +6,29 @@
 #include "render/vertex_buffer.h"
 #include "render/vertex_buffer_layout.h"
 
+namespace wage {
 
-class VertexArray {
+  class VertexArray {
 
-public:
-  
-  VertexArray();
+  public:
+    
+    VertexArray();
 
-  ~VertexArray();
+    ~VertexArray();
 
-  void addBuffer(VertexBuffer* buffer);
+    void addBuffer(VertexBuffer* buffer);
 
-  void bind() const;
+    void bind() const;
 
-  void unbind() const;
+    void unbind() const;
 
-private:
-  
-  unsigned int id;
+  private:
+    
+    unsigned int id;
 
-  unsigned int index;
-};
+    unsigned int index;
+  };
 
+}
 
 #endif //RENDERER_VERTEX_ARRAY_H

@@ -6,40 +6,44 @@
 
 #include "core/core.h"
 
-class System;
+namespace wage {
 
-class SystemContext {
+  class System;
 
-public:
+  class SystemContext {
 
-  virtual ~SystemContext() {}
+  public:
 
-  // TODO:  I don't like systems being in the context.  How will we expose this so JSRT if needed? 
-  template <typename T>
-  void add(T* system) {
-    core->add<T>(system);
-  }
+    virtual ~SystemContext() {}
 
-  template <typename T>
-  T* get() {
-    return core->get<T>();
-  }
+    // TODO:  I don't like systems being in the context.  How will we expose this so JSRT if needed? 
+    template <typename T>
+    void add(T* system) {
+      core->add<T>(system);
+    }
 
-  virtual double getTimeStep();
+    template <typename T>
+    T* get() {
+      return core->get<T>();
+    }
 
-  virtual double getTime();
+    virtual double getTimeStep();
 
-  virtual double getDeltaTime();
+    virtual double getTime();
 
-  virtual void shouldStop();
+    virtual double getDeltaTime();
 
-private:
+    virtual void shouldStop();
 
-  SystemContext(Core* core) : core(core) {}
+  private:
 
-  Core* core;
+    SystemContext(Core* core) : core(core) {}
 
-  friend class Core;
-};
+    Core* core;
+
+    friend class Core;
+  };
+
+}
 
 #endif // CORE_SYSTEM_CONTEXT_H

@@ -5,26 +5,30 @@
 #include <GLFW/glfw3.h>
 #include "core/system.h"
 
-class Platform : public System {
+namespace wage {
 
-public:
+  class Platform : public System {
 
-  Platform() : System("Platform") { }
+  public:
 
-  virtual ~Platform();
+    Platform() : System("Platform") { }
 
-  LIFECYCLE_FUNC(init)
+    virtual ~Platform();
 
-  LIFECYCLE_FUNC(deinit)
-  
-  GLFWwindow* getWindow() {
-    return window;
-  }
+    LIFECYCLE_FUNC(init)
 
-private:
+    LIFECYCLE_FUNC(deinit)
+    
+    GLFWwindow* getWindow() {
+      return window;
+    }
 
-  GLFWwindow* window;
-  
-};
+  private:
+
+    GLFWwindow* window;
+    
+  };
+
+}
 
 #endif //PLATFORM_H

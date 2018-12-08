@@ -7,19 +7,23 @@
 
 #include "entity/entity.h"
 
-class Engine : public System {
+namespace wage {
 
-public:
-  
-  Engine() : System("Engine") { }
+  class Engine : public System {
 
-  ~Engine() {}
+  public:
+    
+    Engine() : System("Engine") { }
 
-  LIFECYCLE_FUNC(start)
-  LIFECYCLE_FUNC(update)
-  LIFECYCLE_FUNC(fixedUpdate)
-  LIFECYCLE_FUNC(stop)
+    ~Engine() {}
 
-};
+    LIFECYCLE_FUNC(start)
+    LIFECYCLE_FUNC(update)
+    LIFECYCLE_FUNC(fixedUpdate)
+    LIFECYCLE_FUNC(stop)
+
+  };
+
+}
 
 #endif //ENGINE_H

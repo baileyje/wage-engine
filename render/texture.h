@@ -1,53 +1,57 @@
 #ifndef RENDERER_TEXTURE_H
 #define RENDERER_TEXTURE_H
 
-#include "entity/component/texture.h"
+#include "entity/component/render/texture.h"
 #include "render/util.h"
 
 #include "fs/file_system.h"
 
-class GlTexture {
+namespace wage {
 
-public:
+  class GlTexture {
 
-  GlTexture(Texture* texture);
+  public:
 
-  ~GlTexture();
+    GlTexture(Texture* texture);
 
-  inline void setTexture(Texture* texture) {
-    this->texture = texture;
-  }
+    ~GlTexture();
 
-  inline Texture* getTexture() {
-    return texture;
-  }
+    inline void setTexture(Texture* texture) {
+      this->texture = texture;
+    }
 
-  void load(FileSystem* fileSystem);
+    inline Texture* getTexture() {
+      return texture;
+    }
 
-  void bind();
+    void load(FileSystem* fileSystem);
 
-  inline void unbind() const {
+    void bind();
 
-  }
+    void unbind();
 
-  static GlTexture Default;
+    static GlTexture* Default;
 
-private:
+  private:
 
-  unsigned int id;
+    unsigned int id;
 
-  bool loaded;
+    bool loaded;
 
-  Texture* texture;
+    bool pushed;
 
-  int width;
+    Texture* texture;
 
-  int height;
+    int width;
 
-  int channels;
+    int height;
 
-  unsigned char *data;
+    int channels;
 
-};
+    unsigned char *data;
+
+  };
+
+}
 
 #endif //RENDERER_TEXTURE_H

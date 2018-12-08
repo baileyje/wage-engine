@@ -1,9 +1,5 @@
 #include "entity/component.h"
 
-void Component::start(ComponentContext* context) {};
+namespace wage {
 
-void Component::update(ComponentContext* context) {};
-
-void Component::fixedUpdate(ComponentContext* context) {};
-
-void Component::stop(ComponentContext* context) {};
+}

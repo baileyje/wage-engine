@@ -11,46 +11,48 @@
 
 #include "messaging/messaging.h"
 
-class Physics : public System, MessageListener<AddEntityMessage>, MessageListener<DestroyEntityMessage> {
+namespace wage {
 
-public:
-  
-  Physics();
+  class Physics : public System, MessageListener<AddEntityMessage>, MessageListener<DestroyEntityMessage> {
 
-  ~Physics();
+  public:
+    
+    Physics();
 
-  LIFECYCLE_FUNC(init)
+    ~Physics();
 
-  LIFECYCLE_FUNC(start)
+    LIFECYCLE_FUNC(init)
 
-  LIFECYCLE_FUNC(fixedUpdate)
+    LIFECYCLE_FUNC(start)
 
-  LIFECYCLE_FUNC(deinit)
+    LIFECYCLE_FUNC(fixedUpdate)
 
-  void add(EntityReference entity);
+    LIFECYCLE_FUNC(deinit)
 
-  void remove(EntityReference entity);
+    void add(EntityReference entity);
 
-  void on(AddEntityMessage& message);
-  
-  void on(DestroyEntityMessage& message);
+    void remove(EntityReference entity);
 
-private:
+    void on(AddEntityMessage& message);
+    
+    void on(DestroyEntityMessage& message);
 
-  // btCollisionShape* shapeFor(Entity* entity);
+  private:
 
-	btDefaultCollisionConfiguration collisionConfiguration;
-  
-  btCollisionDispatcher dispatcher;
+    btDefaultCollisionConfiguration collisionConfiguration;
+    
+    btCollisionDispatcher dispatcher;
 
-  btDbvtBroadphase overlappingPairCache;
+    btDbvtBroadphase overlappingPairCache;
 
-  btSequentialImpulseConstraintSolver solver;  
+    btSequentialImpulseConstraintSolver solver;  
 
-  btDiscreteDynamicsWorld dynamicsWorld;  
+    btDiscreteDynamicsWorld dynamicsWorld;  
 
-  std::vector<PhysicsEntity*> entities;
+    std::vector<PhysicsEntity*> entities;
 
-};
+  };
+
+}
 
 #endif // PHYSICS_H

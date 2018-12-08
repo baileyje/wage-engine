@@ -5,19 +5,24 @@
 #include <string>
 
 #include "core/system.h"
+#include "fs/file.h"
 
-class FileSystem : public System {
+namespace wage {
 
-public:
+  class FileSystem : public System {
 
-  FileSystem() : System("FileSystem") {    
-  }
+  public:
 
-  ~FileSystem() {}
+    FileSystem() : System("FileSystem") {    
+    }
 
-  virtual const char* read(std::string path) = 0;
+    ~FileSystem() {}
 
-};
+    virtual File* read(std::string path) = 0;
+
+  };
+
+}
 
 #endif //FILE_SYSTEM_H
 

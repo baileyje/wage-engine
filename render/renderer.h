@@ -5,51 +5,61 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include <unordered_map>
+
 #include "core/system.h"
 #include "render/material.h"
-#include "entity/component/mesh.h"
-#include "entity/component/camera.h"
+#include "render/texture.h"
+#include "render/vertex_array.h"
+#include "entity/component/render/mesh.h"
 #include "entity/scene.h"
 
-class Renderer : public System {
+namespace wage {
 
-public:
+  class Renderer : public System {
 
-  Renderer() : System("renderer") { }
+  public:
 
-  virtual ~Renderer();
+    Renderer() : System("renderer") { }
 
-  LIFECYCLE_FUNC(init)
-  
-  LIFECYCLE_FUNC(start)
-  
-  LIFECYCLE_FUNC(update)
-  
-  LIFECYCLE_FUNC(stop)
-  
-  LIFECYCLE_FUNC(deinit)
-  
-  void draw(Mesh* mesh, GlMaterial* material);
+    virtual ~Renderer();
 
-  // void draw(Entity* camera, Entity* entity);
+    LIFECYCLE_FUNC(init)
+    
+    LIFECYCLE_FUNC(start)
+    
+    LIFECYCLE_FUNC(update)
+    
+    LIFECYCLE_FUNC(stop)
+    
+    LIFECYCLE_FUNC(deinit)
+    
+    void draw(Mesh* mesh, GlMaterial* material);
 
+  private:
 
-private:
+    GLFWwindow* window;
 
-  GLFWwindow* window;
-  
-  int screenWidth;
+    FileSystem* fileSystem;
+    
+    int screenWidth;
 
-  int screenHeight;
+    int screenHeight;
 
-  void draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, EntityReference entity);
-  
-  std::vector<EntityReference> dirLights;
+    void draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, EntityReference entity);
+    
+    std::vector<EntityReference> dirLights;
 
-  std::vector<EntityReference> pointLights;
+    std::vector<EntityReference> pointLights;
 
-  std::vector<EntityReference> spotlights;
+    std::vector<EntityReference> spotlights;
 
-};
+    std::unordered_map<std::string, VertexArray*> vaoCache;
+
+    std::unordered_map<std::string, GlTexture*> textureCache;
+    
+  };
+
+}
 
 #endif //RENDERER_H

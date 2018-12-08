@@ -5,61 +5,65 @@
 #include "ChakraCore.h"
 #include "jsrt/util.h"
 
-class JsObjectProperty;
+namespace wage {
 
-class JsObjectWrapper {
+  class JsObjectProperty;
 
-public:
+  class JsObjectWrapper {
 
-  JsObjectWrapper();
-  
-  JsObjectWrapper(JsValueRef objectRef);
+  public:
 
-  ~JsObjectWrapper();
+    JsObjectWrapper();
+    
+    JsObjectWrapper(JsValueRef objectRef);
 
-  void set(std::string propertyName, JsValueRef value);
+    ~JsObjectWrapper();
 
-  void set(std::string propertyName, double value);
+    void set(std::string propertyName, JsValueRef value);
 
-  void set(std::string propertyName, JsObjectWrapper object);
+    void set(std::string propertyName, double value);
 
-  void set(std::string propertyName, JsNativeFunction nativeFunction);
+    void set(std::string propertyName, JsObjectWrapper object);
 
-  void set(std::string propertyName, JsNativeFunction nativeFunction, void* callbackState);
+    void set(std::string propertyName, JsNativeFunction nativeFunction);
 
-  JsValueRef invoke(std::string propertyName, JsValueRef* args, size_t argCount);
+    void set(std::string propertyName, JsNativeFunction nativeFunction, void* callbackState);
 
-  JsValueRef invoke(std::string propertyName);
+    JsValueRef invoke(std::string propertyName, JsValueRef* args, size_t argCount);
 
-  JsValueRef get();
+    JsValueRef invoke(std::string propertyName);
 
-  JsObjectProperty get(std::string propertyName);
+    JsValueRef get();
 
-private:
-  
-  JsValueRef objectRef;
+    JsObjectProperty get(std::string propertyName);
 
-};
+  private:
+    
+    JsValueRef objectRef;
+
+  };
 
 
-class JsObjectProperty {
+  class JsObjectProperty {
 
-public:
+  public:
 
-  JsObjectProperty(JsObjectWrapper object, std::string name);
+    JsObjectProperty(JsObjectWrapper object, std::string name);
 
-  ~JsObjectProperty();
+    ~JsObjectProperty();
 
-  JsValueRef get();
+    JsValueRef get();
 
-  void set(JsValueRef value);
+    void set(JsValueRef value);
 
-private:
+  private:
 
-  JsObjectWrapper object;
+    JsObjectWrapper object;
 
-  JsProperty property;
+    JsProperty property;
 
-};
+  };
+
+}
 
 #endif //JSRT_JSOBJECT_H

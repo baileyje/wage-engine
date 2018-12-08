@@ -5,29 +5,30 @@
 
 #include "entity/component/context.h"
 
-class Component {
+namespace wage {
 
-public:
+  class Component {
 
-  Component(std::string name) : name(name) {};
+  public:
 
-  virtual ~Component() {};
+    Component(std::string name) : name(name) {};
 
-  virtual void start(ComponentContext* context);
+    virtual ~Component() {};
 
-  virtual void update(ComponentContext* context);
+    inline std::string getName() {
+      return name;
+    }
 
-  virtual void fixedUpdate(ComponentContext* context);
+    virtual bool isDynamic() {
+      return false;
+    }
 
-  virtual void stop(ComponentContext* context);
+  private:
 
-  inline std::string getName() {
-    return name;
-  }
+    std::string name;
 
-private:
+  };
 
-  std::string name;
-};
+}
 
 #endif //ENTITY_COMPONENT_H

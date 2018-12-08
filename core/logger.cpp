@@ -1,11 +1,15 @@
 #include "core/logger.h"
 
-LogLevel LogLevel::debug = LogLevel(0, "DEBUG", 32);
+namespace wage {
 
-LogLevel LogLevel::info = LogLevel(1, "INFO", 37);
+  LogLevel LogLevel::debug = LogLevel(0, "DEBUG", 32);
 
-LogLevel LogLevel::warn = LogLevel(2, "WARN", 33);
+  LogLevel LogLevel::info = LogLevel(1, "INFO", 37);
 
-LogLevel LogLevel::error = LogLevel(3, "ERROR", 31);
+  LogLevel LogLevel::warn = LogLevel(2, "WARN", 33);
 
-LogLevel Logger::CurrentLevel = LogLevel::info;
+  LogLevel LogLevel::error = LogLevel(3, "ERROR", 31);
+
+  LogLevel Logger::CurrentLevel = LogLevel::info;
+
+}

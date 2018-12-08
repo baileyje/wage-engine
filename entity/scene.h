@@ -4,23 +4,26 @@
 #include "entity/entity.h"
 #include "entity/manager.h"
 
-class Scene {
+namespace wage {
 
-public:
+  class Scene {
 
-  inline EntityReference getCamera() {
-    // auto found = entities.with("Camera");
-    // if (!found.empty()) {
-    //   return found[0];
-    // }
-    return entityManager->with("Camera")[0];
-  }
+  public:
 
-private:
+    inline EntityReference getCamera() {
+      // auto found = entities.with("Camera");
+      // if (!found.empty()) {
+      //   return found[0];
+      // }
+      return entityManager->with("Camera")[0];
+    }
 
-  EntityManager* entityManager;
+  private:
 
-};
+    EntityManager* entityManager;
 
+  };
+
+}
 
 #endif //SCENE_H

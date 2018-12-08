@@ -3,26 +3,29 @@
 
 #include "render/vertex_buffer_layout.h"
 
-class VertexBuffer {
-
-public:
+namespace wage {
   
-  VertexBuffer(const void* data,  const unsigned int size);
+  class VertexBuffer {
 
-  ~VertexBuffer();
+  public:
+    
+    VertexBuffer(const void* data,  const unsigned int size);
 
-  void bind() const;
+    ~VertexBuffer();
 
-  void unbind() const;
+    void bind() const;
 
-  VertexBufferLayout* getLayout();
+    void unbind() const;
 
-private:
+    VertexBufferLayout* getLayout();
 
-  unsigned int id;
+  private:
 
-  VertexBufferLayout layout;
-};
+    unsigned int id;
 
+    VertexBufferLayout layout;
+  };
+
+}
 
 #endif //RENDERER_VERTEX_BUFFER_H

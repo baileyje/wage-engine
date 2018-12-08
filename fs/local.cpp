@@ -2,15 +2,18 @@
 
 #include <fstream>
 
-LocalFileSystem::LocalFileSystem(std::string base) : base(base) {
-}
+namespace wage {
 
-LocalFileSystem::~LocalFileSystem() {  
-}
+  LocalFileSystem::LocalFileSystem(std::string base) : base(base) {
+  }
 
-const char* LocalFileSystem::read(std::string path) {
-  std::string fullPath = base + "/" + path;
-  std::ifstream ifs(fullPath);
-  std::string* data = new std::string((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-  return data->c_str();
+  LocalFileSystem::~LocalFileSystem() {  
+  }
+
+  File* LocalFileSystem::read(std::string path) {
+    std::string fullPath = base + "/" + path;
+    std::ifstream stream(fullPath, std::fstream::binary);    
+    return new File(stream);
+  }
+
 }

@@ -7,31 +7,34 @@
 
 #include "jsrt/js_object_wrapper.h"
 
-class JsSystem : public System {
-  
-public:
-  
-  JsSystem(std::string name, JsValueRef objectRef);
+namespace wage {
 
-  ~JsSystem();
+  class JsSystem : public System {
+    
+  public:
+    
+    JsSystem(std::string name, JsValueRef objectRef);
 
-  LIFECYCLE_FUNC(init)
+    ~JsSystem();
 
-  LIFECYCLE_FUNC(start)
+    LIFECYCLE_FUNC(init)
 
-  LIFECYCLE_FUNC(fixedUpdate)
+    LIFECYCLE_FUNC(start)
 
-  LIFECYCLE_FUNC(update)
+    LIFECYCLE_FUNC(fixedUpdate)
 
-  LIFECYCLE_FUNC(stop)
+    LIFECYCLE_FUNC(update)
 
-  LIFECYCLE_FUNC(deinit)
+    LIFECYCLE_FUNC(stop)
 
-private:
-  
-  JsObjectWrapper object;
-  
-};
+    LIFECYCLE_FUNC(deinit)
 
+  private:
+    
+    JsObjectWrapper object;
+    
+  };
+
+}
 
 #endif //JSRT_SYSTEM_H

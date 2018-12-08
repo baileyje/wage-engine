@@ -6,34 +6,37 @@
 
 #define LIFECYCLE_FUNC(Name) void Name(SystemContext* context);
 
-class SystemContext;
+namespace wage {
+  class SystemContext;
 
-class System {
+  class System {
 
-public:
+  public:
 
-  System(std::string name) : name(name) {};
-  
-  virtual ~System() {};
+    System(std::string name) : name(name) {};
+    
+    virtual ~System() {};
 
-  virtual void init(SystemContext* context) {};
-  
-  virtual void start(SystemContext* context) {};
+    virtual void init(SystemContext* context) {};
+    
+    virtual void start(SystemContext* context) {};
 
-  virtual void update(SystemContext* context) {};
+    virtual void update(SystemContext* context) {};
 
-  virtual void fixedUpdate(SystemContext* context) {};
-  
-  virtual void stop(SystemContext* context) {};
+    virtual void fixedUpdate(SystemContext* context) {};
+    
+    virtual void stop(SystemContext* context) {};
 
-  virtual void deinit(SystemContext* context) {};
+    virtual void deinit(SystemContext* context) {};
 
-  virtual std::string getName() { return name; };
+    virtual std::string getName() { return name; };
 
-private:
+  private:
 
-  std::string name;
+    std::string name;
 
-};
+  };
+
+}
 
 #endif // CORE_SYSTEM_H

@@ -3,22 +3,26 @@
 
 #include "math/transform.h"
 
-class Entity;
+namespace wage {
 
-class ComponentContext {
+  class Entity;
 
-public:
+  class ComponentContext {
 
-  virtual ~ComponentContext() { }
+  public:
 
-  virtual Transform* getTransform() = 0;
-  
-  virtual double getTime() const = 0;
+    virtual ~ComponentContext() { }
 
-  virtual double getDeltaTime() const = 0;
+    virtual Transform& getTransform() = 0;
+    
+    virtual double getTime() const = 0;
 
-  virtual Entity* getEntity() = 0;
-};
+    virtual double getDeltaTime() const = 0;
+
+    virtual Entity* getEntity() = 0;
+  };
+
+}
 
 
 #endif //COMPONENT_CONTEXT_H

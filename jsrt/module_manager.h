@@ -8,58 +8,61 @@
 
 #include "fs/file_system.h"
 
-struct LoadTask {
-  JsModuleRecord module;
-  const char* source;
-  size_t sourceLength;
-  JsSourceContext sourceContext;	
-};
+namespace wage {
 
-struct LoadedModule {
-	
-  JsModuleRecord module;
+  struct LoadTask {
+    JsModuleRecord module;
+    File* source;    
+    JsSourceContext sourceContext;	
+  };
 
-	std::string path;
+  struct LoadedModule {
+    
+    JsModuleRecord module;
 
-};
+    std::string path;
 
-class ModuleManager {
+  };
 
-public:
-  
-  ModuleManager(FileSystem* fileSystem);
+  class ModuleManager {
 
-  ~ModuleManager();
+  public:
+    
+    ModuleManager(FileSystem* fileSystem);
 
-  void update();
+    ~ModuleManager();
 
-  JsModuleRecord loadModule(JsModuleRecord importer, std::string path);
-  
-  JsModuleRecord createModule(std::string specifier, JsModuleRecord parentRecord, const std::string, bool *out_is_new);
+    void update();
 
-  static ModuleManager* shared;
+    JsModuleRecord loadModule(JsModuleRecord importer, std::string path);
+    
+    JsModuleRecord createModule(std::string specifier, JsModuleRecord parentRecord, const std::string, bool *out_is_new);
 
-  static JsErrorCode CHAKRA_CALLBACK fetchImportedModule(JsModuleRecord importer, JsValueRef specifier, JsModuleRecord *outModule);
+    static ModuleManager* shared;
 
-  static JsErrorCode CHAKRA_CALLBACK fetchDynamicImport(JsSourceContext importer, JsValueRef specifier, JsModuleRecord *outModule);
-  
-  static JsErrorCode CHAKRA_CALLBACK notifyModuleReady(JsModuleRecord module, JsValueRef exception);
+    static JsErrorCode CHAKRA_CALLBACK fetchImportedModule(JsModuleRecord importer, JsValueRef specifier, JsModuleRecord *outModule);
 
-  unsigned currentSourceContext;
+    static JsErrorCode CHAKRA_CALLBACK fetchDynamicImport(JsSourceContext importer, JsValueRef specifier, JsModuleRecord *outModule);
+    
+    static JsErrorCode CHAKRA_CALLBACK notifyModuleReady(JsModuleRecord module, JsValueRef exception);
 
-private: 
-  
-  void parseModule(LoadTask* task);
+    unsigned currentSourceContext;
 
-  void evaluateModule(LoadTask* task);
+  private: 
+    
+    void parseModule(LoadTask* task);
 
-  std::unordered_map<std::string, LoadedModule*> loadedModules;
+    void evaluateModule(LoadTask* task);
 
-  std::queue<LoadTask*> loadQueue;
+    std::unordered_map<std::string, LoadedModule*> loadedModules;
 
-  std::string moduleRoot;
-  
-  FileSystem* fileSystem;
-};
+    std::queue<LoadTask*> loadQueue;
+
+    std::string moduleRoot;
+    
+    FileSystem* fileSystem;
+  };
+
+}
 
 #endif //JSRT_MODULE_MANAGER_H

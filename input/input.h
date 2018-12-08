@@ -8,24 +8,28 @@
 
 #include "core/system.h"
 
-class Input : public System {
+namespace wage {
 
-public:
-  
-  Input() : System("input") { }
+  class Input : public System {
 
-  ~Input() {}
+  public:
+    
+    Input() : System("input") { }
 
-  LIFECYCLE_FUNC(start)
-  
-  LIFECYCLE_FUNC(update)
+    ~Input() {}
 
-  static bool isPressed(int key);
+    LIFECYCLE_FUNC(start)
+    
+    LIFECYCLE_FUNC(update)
 
-private: 
-  
-  GLFWwindow* window;
-  
-};
+    static bool isPressed(int key);
+
+  private: 
+    
+    GLFWwindow* window;
+    
+  };
+
+}
 
 #endif //INPUT_H

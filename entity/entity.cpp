@@ -5,62 +5,65 @@
 #include "entity/component/context.h"
 #include "entity/component/func_component.h"
 
+namespace wage {
 
-#define LIFECYCLE_FUNC(Name) \
-void Entity::Name(EntityContext* context) {  \
-  EntityComponentContext componentContext(this, context); \
-  for (auto component : components) { \
-    component->Name(&componentContext); \
+  #define LIFECYCLE_FUNC(Name) \
+  void Entity::Name(EntityContext* context) {  \
+    EntityComponentContext componentContext(this, context); \
+    for (auto component : dynamicComponents) { \
+      component->Name(&componentContext); \
+    } \
   } \
-} \
 
 
-class EntityComponentContext : public ComponentContext {
+  class EntityComponentContext : public ComponentContext {
 
-public:
+  public:
 
-  EntityComponentContext(Entity* entity, EntityContext* context) : entity(entity), context(context) {    
+    EntityComponentContext(Entity* entity, EntityContext* context) : entity(entity), context(context) {    
+    }
+
+    inline Transform& getTransform() {
+      return entity->getTransform();
+    }
+
+    inline double getTime() const {
+      return context->getTime();
+    }
+
+    inline double getDeltaTime() const {
+      return context->getDeltaTime();
+    }
+
+    inline ComponentMap<Component>* getComponents() {
+      return entity->getComponents();
+    }
+
+    inline Entity* getEntity() {
+      return entity;
+    }
+      
+
+  private:
+
+    Entity* entity;
+
+    EntityContext* context;
+
+  };
+
+  EntityId Entity::CurrentId = 1; // 0 = invalid Id
+
+  Entity::~Entity() {}
+
+  LIFECYCLE_FUNC(start)
+  LIFECYCLE_FUNC(update)
+  LIFECYCLE_FUNC(fixedUpdate)
+  LIFECYCLE_FUNC(stop)
+
+  Entity* Entity::add(ComponentCallback func) {
+    add<FunctionComponent>(new FunctionComponent(func));    
+    return this;
   }
 
-  inline Transform* getTransform() {
-    return entity->getTransform();
-  }
-
-  inline double getTime() const {
-    return context->getTime();
-  }
-
-  inline double getDeltaTime() const {
-    return context->getDeltaTime();
-  }
-
-  inline ComponentMap* getComponents() {
-    return entity->getComponents();
-  }
-
-  inline Entity* getEntity() {
-    return entity;
-  }
-    
-
-private:
-
-  Entity* entity;
-
-  EntityContext* context;
-
-};
-
-EntityId Entity::CurrentId = 1; // 0 = invalid Id
-
-Entity::~Entity() {}
-
-LIFECYCLE_FUNC(start)
-LIFECYCLE_FUNC(update)
-LIFECYCLE_FUNC(fixedUpdate)
-LIFECYCLE_FUNC(stop)
-
-Entity* Entity::add(ComponentCallback func) {
-  components.add(new FunctionComponent(func));
-  return this;
 }
