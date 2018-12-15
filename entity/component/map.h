@@ -8,8 +8,6 @@
 
 #include "memory/object_pool.h"
 
-#include "entity/component.h"
-
 namespace wage {
 
   template <typename C>
@@ -73,7 +71,7 @@ namespace wage {
     inline T* get() {
       auto itr = nameMap.find(typeid(T*));
       if (itr != nameMap.end()) {
-        Component* comp = get(itr->second);
+        auto comp = get(itr->second);
         if (comp) {
           return dynamic_cast<T*>(comp);
         }

@@ -41,14 +41,6 @@ namespace wage {
         );
     }
 
-    // inline glm::quat quatFromEulers(Vector* vector) {
-    //   return glm::quat(glm::vec3(
-    //     glm::radians(vector->x),
-    //     glm::radians(vector->y),
-    //     glm::radians(vector->z)
-    //   ));
-    // }
-
 }
 
 #endif //RENDER_UTIL_H

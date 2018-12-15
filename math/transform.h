@@ -16,7 +16,7 @@ namespace wage {
 
     ~Transform() {}
 
-    inline Vector getLocalPosition() { return position; }
+    inline Vector& getLocalPosition() { return position; }
 
     inline void setLocalPosition(Vector position) { this->position = position; };
 
@@ -35,7 +35,7 @@ namespace wage {
       this->position = position;
     }
 
-    inline Vector getLocalScale() { 
+    inline Vector& getLocalScale() { 
       return scale; 
     }
 
@@ -53,7 +53,7 @@ namespace wage {
 
     inline void setLocalScale(Vector scale) { this->scale = scale; };
 
-    inline Quaternion getLocalRotation() { 
+    inline Quaternion& getLocalRotation() { 
       return rotation; 
     }
 

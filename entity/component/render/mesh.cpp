@@ -238,13 +238,11 @@ namespace wage {
           // tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
           // tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
           // tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
-          printf("Loading1\n");
           vertices.push_back(Vector(
             attrib.vertices[3*idx.vertex_index+0],
             attrib.vertices[3*idx.vertex_index+1],
             attrib.vertices[3*idx.vertex_index+2]
           ));
-          printf("Loading2\n");
           if (!attrib.texcoords.empty()) {
             normals.push_back(Vector(
               attrib.normals[3*idx.normal_index+0],
@@ -254,7 +252,6 @@ namespace wage {
           } else {
             normals.push_back(Vector());
           }
-          printf("Loading3\n");
           if (!attrib.texcoords.empty()) {
             texts.push_back(Vector2(
               attrib.texcoords[2*idx.texcoord_index+0],
@@ -263,7 +260,6 @@ namespace wage {
           } else {
             texts.push_back(Vector2(0.5, 0.5));
           }    
-          printf("Loading4\n");
           indices.push_back(index++);
         }
         index_offset += fv;

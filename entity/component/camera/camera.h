@@ -2,6 +2,7 @@
 #define ENTITY_CAMERA_H
 
 #include "entity/component.h"
+#include "math/frustum.h"
 
 namespace wage {
 
@@ -10,6 +11,8 @@ namespace wage {
   class Camera : public Component  {
 
   public:
+
+    static Camera* main;
 
     Camera(CameraType type) : Component("Camera"), type(type) {    
     }
@@ -23,21 +26,16 @@ namespace wage {
 
     virtual Matrix screenProjection(Vector2 screenSize) = 0;
 
-    static Matrix viewProjectionFor(Transform& transform) {
-      Vector camPos = transform.getPosition();
-      Quaternion rotation = transform.getRotation();
-      Vector camFront(
-        2 * (rotation.x * rotation.z + rotation.w * rotation.y), 
-        2 * (rotation.y * rotation.z - rotation.w * rotation.x),
-        1 - 2 * (rotation.x * rotation.x + rotation.y * rotation.y)
-      );
-      Vector camUp(
-        2 * (rotation.x * rotation.y - rotation.w * rotation.z), 
-        1 - 2 * (rotation.x * rotation.x - rotation.z * rotation.z),
-        2 * (rotation.y * rotation.z + rotation.w * rotation.x)
-      );
-      return  glm::lookAt(camPos, camPos + camFront, camUp);
+    Matrix viewProjection() {
+      Transform* transform = getTransform();
+      Vector camPos = transform->getPosition();
+      Quaternion rotation = transform->getRotation();
+      Vector camFront = rotation * Vector(0, 0, 1);
+      Vector camUp = rotation * Vector(0, 1, 0);
+      return glm::lookAt(camPos, camPos + camFront, camUp);
     }
+
+    virtual Frustum frustum(Vector2 screenSize) = 0;
 
   private:
 

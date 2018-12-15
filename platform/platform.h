@@ -13,7 +13,7 @@ namespace wage {
 
     Platform() : System("Platform") { }
 
-    virtual ~Platform();
+    virtual ~Platform() { }
 
     LIFECYCLE_FUNC(init)
 

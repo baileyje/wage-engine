@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <string>
+#include <stdlib.h>
 
 #include "core/core.h"
 #include "platform/platform.h"
@@ -50,31 +51,29 @@ ComponentCallback MoveIt = [](ComponentContext* context) {
 };
 
 ComponentCallback CamMove = [](ComponentContext* context) {
-  Transform transform = context->getEntity()->getTransform();
-  Vector position = transform.getPosition();
+  Transform& transform = context->getEntity()->getTransform();
   if (Input::isPressed(GLFW_KEY_UP)) {
-      printf("DOing it.....\n");
-      transform.setPosition(position + Vector(0, 0, 0.3));
+      transform.getLocalPosition() += Vector(0, 0, 1);
   }
   if (Input::isPressed(GLFW_KEY_DOWN)) {
-    transform.setPosition(position +Vector(0, 0, -0.3));
+    transform.getLocalPosition() +=  Vector(0, 0, -1);
   } 
   if (Input::isPressed(GLFW_KEY_LEFT)) {
-    transform.setPosition(position + Vector(0.3, 0, 0));
+    transform.getLocalPosition() += Vector(-1, 0, 0);
   }
   if (Input::isPressed(GLFW_KEY_RIGHT)) {
-    transform.setPosition(position + Vector(-0.3, 0, 0));
+    transform.getLocalPosition() += Vector(1, 0, 0);
   }
 };
 
-ComponentCallback CamTilt = [](ComponentContext* context) {
+ComponentCallback CamRotate = [](ComponentContext* context) {
   Transform transform = context->getEntity()->getTransform();
   Vector rotation = eulerAngles(transform.getRotation());
   if (Input::isPressed(GLFW_KEY_COMMA)) {
-    rotation -= Vector(0.005, 0, 0);
+    rotation += Vector(0, 0.005, 0);
   }
   if (Input::isPressed(GLFW_KEY_PERIOD)) {
-    rotation += Vector(0.005, 0, 0);
+    rotation -= Vector(0, 0.005, 0);
   }
   context->getEntity()->getTransform().setRotation(Vector(btDegrees(rotation.x), btDegrees(rotation.y), btDegrees(rotation.z)));
 };
@@ -136,38 +135,61 @@ Core* coreRef;
 
 void intHandler(int);
 
-void addEntity(EntityManager* manager, float offset) {
-  EntityReference entity = manager->create();
-  entity->getTransform().setPosition(Vector(3, 3 * offset + 3, 0));       
-  entity
-    ->add(new RigidBody(0.001))
-    ->add(Raise)
-    ->add(&Mesh::Cube)
-    ->add(&Collider::Box);
+void addEntity(EntityManager* manager, Vector position) {
+  EntityReference entity = manager->create();    
+    entity->getTransform().setPosition(position);
+    entity->getTransform().setLocalScale(Vector(1, 1, 1));
+    entity
+      ->add(new RigidBody(0.001))
+      ->add(Raise)
+      ->add(&Mesh::Cube)
+      ->add(&Collider::Box);
+}
+
+void addRandomEntity(EntityManager* manager) {
+  float x = rand() % 200 - 100;
+  float z = rand() % 200 - 100;
+  addEntity(manager, Vector(x, 2, z));
 }
 
 EntityReference addMover(EntityManager* manager) {
   EntityReference mover = manager->create();
   mover->getTransform().setPosition(Vector(0, 0, 0));
   mover->getTransform().setLocalScale(Vector(5, 5, 5));
-  // mover.getTransform().setRotation(Vector(0, 45, 0));
   mover
-    ->add(new RigidBody(0.0025))
+    ->add(new RigidBody(0.0005))
     ->add(&Mesh::Sphere)
     ->add(&Collider::Sphere)
     ->add(MoveIt)
+    // ->add(CamMove)
     ->add(new Material(new Texture("./resources/textures/mover.png")));
 
-  EntityReference follower = manager->create();
-  follower->getTransform().setPosition(Vector(4, 10, 0));
-  // follower->getTransform().setLocalScale(Vector(0.10, 0.10, 0.10));
-  follower
-    ->add(new RigidBody(0.001))
-    ->add(&Mesh::Sphere)
-    ->add(&Collider::Sphere);
-    // ->add(new Chase(mover));
+  // EntityReference follower = manager->create();
+  // follower->getTransform().setPosition(Vector(4, 10, 0));
+  // // follower->getTransform().setLocalScale(Vector(0.10, 0.10, 0.10));
+  // follower
+  //   ->add(new RigidBody(0.001))
+  //   ->add(&Mesh::Sphere)
+  //   ->add(&Collider::Sphere)
+  //   ->add(new Chase(mover));
 
   return mover;
+}
+
+void drawGrid(EntityManager* manager) {
+  addEntity(manager, Vector()); // 0,0
+  addEntity(manager, Vector(0, 0, 2)); // Z Forward
+  for (int i = 1; i <= 10; ++i) {
+    int offset = i * 10;
+    addEntity(manager, Vector(-offset, 0, -offset));
+    addEntity(manager, Vector(-offset, 0, 0));
+    addEntity(manager, Vector(-offset, 0, offset));
+    addEntity(manager, Vector(0, 0, offset));
+    addEntity(manager, Vector(offset, 0, offset));
+    addEntity(manager, Vector(offset, 0, 0));
+    addEntity(manager, Vector(offset, 0, -offset));
+    addEntity(manager, Vector(0, 0, -offset));
+  }
 }
 
 void setupSystems(Core& core, std::string path) {
@@ -202,28 +224,32 @@ void setupScene(EntityManager* manager) {
   spotlight->add(spot);
 
   for (int i = 0; i < 100; i++) {
-     addEntity(manager, i * 2);
+     addRandomEntity(manager);
   }
 
   EntityReference ground = manager->create();
   ground->getTransform().setPosition(Vector(0, -2, 0));
-  ground->getTransform().setLocalScale(Vector(100, 0.1, 100));
+  ground->getTransform().setLocalScale(Vector(200, 1, 200));
   ground->getTransform().setRotation(Vector(0, 0, 0));
   ground
     ->add(new RigidBody(0.0, kinematic))
     ->add(&Mesh::Cube)
     ->add(&Collider::Box);
 
-  addMover(manager);
+  auto mover = addMover(manager);
 
-  EntityReference camera = manager->create();  
-  camera->getTransform().setPosition(Vector(0, 15, -30));
-  camera->getTransform().setRotation(Vector(10, 0.0, 0));
-  camera
-    ->add(new PerspectiveCamera())
-    ->add(CamTilt)
+  Camera* camera = new PerspectiveCamera();
+  EntityReference cameraEntity = manager->create();  
+  cameraEntity->getTransform().setPosition(Vector(0, 15, -30));
+  cameraEntity->getTransform().setRotation(Vector(10, 0.0, 0));
+  cameraEntity
+    ->add(camera)
+    ->add(CamRotate)
     ->add(CamMove);
     // ->add(new Follow(mover));
+  Camera::main = camera;
+
+  // drawGrid(manager);
 }
 
 // So far so dumb

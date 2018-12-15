@@ -11,8 +11,17 @@
 #include "render/material.h"
 #include "render/texture.h"
 #include "render/vertex_array.h"
+#include "render/queue.h"
 #include "entity/component/render/mesh.h"
 #include "entity/scene.h"
+#include "math/matrix.h"
+#include "math/vector.h"
+#include "render/texture_manager.h"
+#include "render/vao_manager.h"
+
+#include "entity/component/lighting/directional_light.h"
+#include "entity/component/lighting/point_light.h"
+#include "entity/component/lighting/spotlight.h"
 
 namespace wage {
 
@@ -45,18 +54,16 @@ namespace wage {
     int screenWidth;
 
     int screenHeight;
-
-    void draw(glm::mat4 screenProjection, glm::vec3 cameraPosition, glm::mat4 cameraProjection, EntityReference entity);
     
-    std::vector<EntityReference> dirLights;
+    std::vector<DirectionalLight*> dirLights;
 
-    std::vector<EntityReference> pointLights;
+    std::vector<PointLight*> pointLights;
 
-    std::vector<EntityReference> spotlights;
+    std::vector<Spotlight*> spotlights;
 
-    std::unordered_map<std::string, VertexArray*> vaoCache;
+    VaoManager vaoManager;
 
-    std::unordered_map<std::string, GlTexture*> textureCache;
+    TextureManager textureManager;
     
   };
 

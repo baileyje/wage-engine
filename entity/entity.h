@@ -5,9 +5,7 @@
 #include <vector>
 
 #include "math/transform.h"
-#include "entity/component.h"
 #include "entity/component/map.h"
-#include "entity/component/dynamic.h"
 #include "entity/context.h"
 #include "entity/component/func_component.h"
 
@@ -56,6 +54,7 @@ namespace wage {
     inline Entity* add(T* component) { 
       components.add<T>(component);
       Component* asComponent = dynamic_cast<Component*>(component);
+      asComponent->setTransform(&transform);
       if (asComponent->isDynamic()) {
         DynamicComponent* asDynamic = dynamic_cast<DynamicComponent*>(component);
         dynamicComponents.push_back(asDynamic);
@@ -65,8 +64,6 @@ namespace wage {
 
     Entity* add(ComponentCallback func);
 
-    // Entity* add(ComponentCallback& func);
-    
     template <typename T>
     inline T* get() { 
       return components.get<T>();

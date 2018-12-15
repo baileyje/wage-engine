@@ -23,10 +23,11 @@ Entity:
 ✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)s
 
 Renderer:
+☐ Add some kind of reusable entity renderable
 ☐ Render queue - maybe??
 ☐ .obj loading
-☐ Texture cache
-☐ Mesh cache
+✔ Texture cache @done (12/9/2018, 9:15:33 PM)
+✔ Mesh cache @done (12/9/2018, 9:15:41 PM)
 ☐ Not the worst material ever...
 ☐ Font support
 

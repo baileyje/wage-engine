@@ -23,10 +23,20 @@ namespace wage {
       return false;
     }
 
+    virtual Transform* getTransform() {
+      return transform;
+    }
+
+    virtual void setTransform(Transform* transform) {
+      this->transform = transform;
+    }
+
   private:
 
     std::string name;
 
+    Transform* transform;
+    
   };
 
 }
