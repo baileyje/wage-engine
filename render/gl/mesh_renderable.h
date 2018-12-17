@@ -11,7 +11,7 @@
 #include "math/matrix.h"
 
 #include "render/renderable.h"
-#include "render/material.h"
+#include "render/gl/material.h"
 #include "render/context.h"
 
 #include "entity/component/render/mesh.h"
@@ -20,13 +20,23 @@
 #include "entity/component/lighting/point_light.h"
 #include "entity/component/lighting/spotlight.h"
 
+
 namespace wage {
 
-  class MeshRenderable : public Renderable {
+  class GlMeshRenderable : public Renderable {
     
   public:
 
-    MeshRenderable(Vector position, Vector scale, Mesh* mesh, Matrix model, Material* material) : position_(position), scale_(scale), mesh(mesh), model(model), material(material) {}
+    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Vector position, Vector scale, Mesh* mesh, Matrix model, Material* material) 
+      : vaoManager_(vaoManager), textureManager_(textureManager), position_(position), scale_(scale), mesh(mesh), model(model), material(material) {}
+
+    inline VaoManager* vaoManager() {
+      return vaoManager_;
+    }
+
+    inline GlTextureManager* textureManager() {
+      return textureManager_;
+    }
 
     virtual Vector position() {
       return position_;
@@ -51,7 +61,7 @@ namespace wage {
     }
 
     GlMaterial* buildMaterial(RenderContext* context) {      
-      GlMaterial* glMaterial = new GlMaterial(Shader::Default);
+      GlMaterial* glMaterial = new GlMaterial(GlShader::Default);
       glMaterial->bind();
       glMaterial->setMat4("model", model);
       glMaterial->setMat4("view", context->viewProjection());
@@ -105,7 +115,7 @@ namespace wage {
       if (material != nullptr) {
         Texture* texture = material->getTexture();
         if (texture != nullptr) {
-          glTexture = context->textureManager()->load(texture);
+          glTexture = textureManager()->load(texture);
         }
       }
       glTexture->bind();
@@ -116,7 +126,7 @@ namespace wage {
     }
 
     virtual void render(RenderContext* context) {      
-      VertexArray* vao = context->vaoManager()->load(mesh);
+      VertexArray* vao = vaoManager()->load(mesh);
       vao->bind();
       GlMaterial* material = buildMaterial(context);
       material->bind();
@@ -128,6 +138,10 @@ namespace wage {
     }
 
   private:
+
+    VaoManager* vaoManager_;
+
+    GlTextureManager* textureManager_;
 
     Vector position_;
 

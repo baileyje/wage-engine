@@ -5,13 +5,14 @@
 
 #include "fs/file_system.h"
 
-#include "render/texture.h"
+#include "render/gl/texture.h"
 
 namespace wage {
 
-  class TextureManager {
+  class GlTextureManager {
   
   public:
+
     GlTexture* load(Texture* texture) {
       GlTexture* glTexture = GlTexture::Default;      
       if (texture != nullptr) {

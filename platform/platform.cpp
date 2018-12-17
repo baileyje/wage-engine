@@ -19,14 +19,19 @@ namespace wage {
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // glfwWindowHint (GLFW_TRA, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(1024, 768, "Wage is the Rage!", NULL, NULL);
-
+    GLFWwindow* glfWindow = glfwCreateWindow(1024, 768, "Wage is the Rage!", NULL, NULL);
+    int screenWidth = 0;
+    int screenHeight = 0;
+    glfwGetFramebufferSize(glfWindow, &screenWidth, &screenHeight);
+    window = new Window(glfWindow, screenWidth, screenHeight);
+    
     glfwPollEvents();
   }
 
   void Platform::deinit(SystemContext* context) {
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(window->as<GLFWwindow>());
     glfwTerminate();
+    delete window;
   }
 
 }

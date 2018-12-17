@@ -1,12 +1,12 @@
-#include "render/material.h"
+#include "render/gl/material.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "render/util.h"
+#include "render/gl/util.h"
 
 namespace wage {
 
-  GlMaterial::GlMaterial(Shader* shader) : shader(shader) {
+  GlMaterial::GlMaterial(GlShader* shader) : shader(shader) {
   }
 
   GlMaterial::~GlMaterial() {

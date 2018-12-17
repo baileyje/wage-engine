@@ -1,7 +1,11 @@
 #ifndef MATH_VECTOR_H
 #define MATH_VECTOR_H
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
+
+
+#include "glm/ext.hpp"
 
 namespace wage {
 

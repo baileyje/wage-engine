@@ -1,10 +1,10 @@
-#include "render/shader/shader.h"
+#include "render/gl/shader.h"
 
 #include "core/logger.h"
 #include <glad/glad.h>
 #include <vector>
 
-#include "render/util.h"
+#include "render/gl/util.h"
 
 namespace wage {
 
@@ -25,12 +25,12 @@ namespace wage {
     }
   }
 
-  Shader* Shader::Default;
+  GlShader* GlShader::Default;
 
-  void Shader::initDefault(FileSystem* fileSystem) {
+  void GlShader::initDefault(FileSystem* fileSystem) {
     File* vs = fileSystem->read("resources/shaders/default.vs");
     File* fs = fileSystem->read("resources/shaders/default.fs");
-    Default = new Shader(vs, fs); 
+    Default = new GlShader(vs, fs); 
     Default->compile();
     Default->link();
     delete vs;
@@ -38,35 +38,35 @@ namespace wage {
   }
 
 
-  Shader::Shader(File* vertexSource, File* fragmentSource) 
+  GlShader::GlShader(File* vertexSource, File* fragmentSource) 
     : vertexSource(vertexSource), fragmentSource(fragmentSource) {  
     GL_FAIL_CHECK(vertexId = glCreateShader(GL_VERTEX_SHADER));
     GL_FAIL_CHECK(fragmentId = glCreateShader(GL_FRAGMENT_SHADER));
     id = glCreateProgram();
   }
 
-  Shader::~Shader() {
+  GlShader::~GlShader() {
     GL_FAIL_CHECK(glDeleteShader(vertexId));
     GL_FAIL_CHECK(glDeleteShader(fragmentId));
     GL_FAIL_CHECK(glDeleteProgram(id));
   }
 
-  void Shader::bind() {
+  void GlShader::bind() {
     GL_FAIL_CHECK(glUseProgram(id));
     bound = true;
   }
 
-  void Shader::unbind() {
+  void GlShader::unbind() {
     GL_FAIL_CHECK(glUseProgram(0));
     bound = false;
   }
 
-  void Shader::compile() {
+  void GlShader::compile() {
     GL_FAIL_CHECK(compileGLShader(vertexId, vertexSource));
     GL_FAIL_CHECK(compileGLShader(fragmentId, fragmentSource));
   }
 
-  void Shader::link() {
+  void GlShader::link() {
     GLint result = GL_FALSE;
     int infoLogLength;
 
@@ -83,7 +83,7 @@ namespace wage {
     }
   }
 
-  void Shader::unlink() {
+  void GlShader::unlink() {
     GL_FAIL_CHECK(glDetachShader(id, vertexId));
     GL_FAIL_CHECK(glDetachShader(id, fragmentId));
   }

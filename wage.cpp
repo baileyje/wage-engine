@@ -4,6 +4,9 @@
 #include <string>
 #include <stdlib.h>
 
+#include "math/vector.h"
+#include "math/matrix.h"
+
 #include "core/core.h"
 #include "platform/platform.h"
 #include "input/input.h"
@@ -11,7 +14,7 @@
 #include "fs/local.h"
 #include "jsrt/jsrt.h"
 #include "physics/physics.h"
-#include "render/renderer.h"
+#include "render/gl/renderer.h"
 #include "engine/engine.h"
 #include "entity/entity.h"
 #include "entity/component.h"
@@ -201,7 +204,7 @@ void setupSystems(Core& core, std::string path) {
   core.add(new EntityManager());
   core.add(new Jsrt());
   core.add(new Engine());
-  core.add(new Renderer());
+  core.add(new GlRenderer());
 }
 
 void setupScene(EntityManager* manager) {
@@ -250,6 +253,12 @@ void setupScene(EntityManager* manager) {
   Camera::main = camera;
 
   // drawGrid(manager);
+
+   EntityReference quad = manager->create();    
+    quad->getTransform().setPosition(Vector(0, 10, 10));
+    quad->getTransform().setLocalScale(Vector(10, 10, 10));
+    quad
+      ->add(&Mesh::Quad);
 }
 
 // So far so dumb

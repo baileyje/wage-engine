@@ -23,14 +23,24 @@ Entity:
 ✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)s
 
 Renderer:
+☐ Split out OpenGL
+☐ Sprite Rendering
 ☐ Add some kind of reusable entity renderable
-☐ Render queue - maybe??
+  ✔ Mesh renderable @done (12/15/2018, 10:38:44 AM)
+  ☐ Sprite Renderable
+  ☐ Renderable caching
+☐ Render queue
+  ✔ Mesh Queue @done (12/15/2018, 10:34:18 AM)
+  ☐ Sprite Queue
+  ☐ Z-Order Sort  
+  ☐ Culling
+    ✔ Frustum culling @done (12/15/2018, 10:28:41 AM)
 ☐ .obj loading
 ✔ Texture cache @done (12/9/2018, 9:15:33 PM)
 ✔ Mesh cache @done (12/9/2018, 9:15:41 PM)
 ☐ Not the worst material ever...
+  ☐ Maybe support cloning a common one
 ☐ Font support
-
 
 Asset Manager:
 ☐ Async loading

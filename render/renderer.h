@@ -1,23 +1,12 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-
 #include <unordered_map>
 
 #include "core/system.h"
-#include "render/material.h"
-#include "render/texture.h"
-#include "render/vertex_array.h"
-#include "render/queue.h"
-#include "entity/component/render/mesh.h"
-#include "entity/scene.h"
-#include "math/matrix.h"
-#include "math/vector.h"
-#include "render/texture_manager.h"
-#include "render/vao_manager.h"
+#include "platform/window.h"
+#include "entity/manager.h"
+#include "render/renderable.h"
 
 #include "entity/component/lighting/directional_light.h"
 #include "entity/component/lighting/point_light.h"
@@ -43,28 +32,27 @@ namespace wage {
     
     LIFECYCLE_FUNC(deinit)
     
-    void draw(Mesh* mesh, GlMaterial* material);
+  protected:
 
-  private:
-
-    GLFWwindow* window;
+    Window* window;
 
     FileSystem* fileSystem;
-    
-    int screenWidth;
 
-    int screenHeight;
-    
+    virtual void beginUpdate() = 0;
+
+    virtual void endUpdate() = 0;
+
+    virtual Renderable* meshRenderable(EntityReference entity) = 0;
+
     std::vector<DirectionalLight*> dirLights;
 
     std::vector<PointLight*> pointLights;
 
     std::vector<Spotlight*> spotlights;
 
-    VaoManager vaoManager;
-
-    TextureManager textureManager;
+    private:
     
+      void renderMeshes(EntityManager* manager, RenderContext* renderContext);
   };
 
 }

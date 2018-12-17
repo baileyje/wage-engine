@@ -6,17 +6,17 @@
 
 namespace wage {
 
-  class Shader {
+  class GlShader {
 
   public:
 
-    static Shader* Default;
+    static GlShader* Default;
 
     static void initDefault(FileSystem* fileSystem);
 
-    Shader(File* vertexSource, File* fragmentSource);
+    GlShader(File* vertexSource, File* fragmentSource);
 
-    ~Shader();
+    ~GlShader();
 
     void bind();
 

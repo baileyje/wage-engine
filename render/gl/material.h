@@ -6,8 +6,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "render/shader/shader.h"
-#include "render/util.h"
+#include "render/gl/shader.h"
+#include "render/gl/util.h"
 
 namespace wage {
 
@@ -25,15 +25,15 @@ namespace wage {
 
   public:
 
-    GlMaterial(Shader* shader);
+    GlMaterial(GlShader* shader);
 
     ~GlMaterial();
 
-    inline void setShader(Shader* shader) {
+    inline void setShader(GlShader* shader) {
       this->shader = shader;
     }
 
-    inline Shader* getShader() {
+    inline GlShader* getShader() {
       return shader;
     }
 
@@ -67,7 +67,7 @@ namespace wage {
 
   private:
 
-    Shader* shader;
+    GlShader* shader;
 
     UniformMap uniforms;
 

@@ -12,7 +12,7 @@ namespace wage {
   void Input::start(SystemContext* context) {
     Logger::info("Starting Input System");
     Platform* platform = context->get<Platform>();
-    window = platform->getWindow();
+    window = platform->getWindow()->as<GLFWwindow>();
     glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
       if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {

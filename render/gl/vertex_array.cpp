@@ -1,6 +1,6 @@
-#include "render/vertex_array.h"
+#include "render/gl/vertex_array.h"
 
-#include "render/util.h"
+#include "render/gl/util.h"
 
 namespace wage {
 

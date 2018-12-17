@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include "core/system.h"
 
+#include "platform/window.h"
+
 namespace wage {
 
   class Platform : public System {
@@ -19,13 +21,13 @@ namespace wage {
 
     LIFECYCLE_FUNC(deinit)
     
-    GLFWwindow* getWindow() {
+    Window* getWindow() {
       return window;
     }
 
   private:
 
-    GLFWwindow* window;
+    Window* window;
     
   };
 

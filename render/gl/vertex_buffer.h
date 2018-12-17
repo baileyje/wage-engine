@@ -1,7 +1,7 @@
 #ifndef RENDERER_VERTEX_BUFFER_H
 #define RENDERER_VERTEX_BUFFER_H
 
-#include "render/vertex_buffer_layout.h"
+#include "render/gl/vertex_buffer_layout.h"
 
 namespace wage {
   
