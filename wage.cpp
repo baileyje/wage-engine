@@ -14,7 +14,7 @@
 #include "fs/local.h"
 #include "jsrt/jsrt.h"
 #include "physics/physics.h"
-#include "render/gl/renderer.h"
+#include "render-gl/renderer.h"
 #include "engine/engine.h"
 #include "entity/entity.h"
 #include "entity/component.h"

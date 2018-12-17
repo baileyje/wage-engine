@@ -1,8 +1,8 @@
-#include "render/gl/material.h"
+#include "render-gl/material.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "render/gl/util.h"
+#include "render-gl/util.h"
 
 namespace wage {
 

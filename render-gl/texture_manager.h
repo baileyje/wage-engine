@@ -5,7 +5,7 @@
 
 #include "fs/file_system.h"
 
-#include "render/gl/texture.h"
+#include "render-gl/texture.h"
 
 namespace wage {
 

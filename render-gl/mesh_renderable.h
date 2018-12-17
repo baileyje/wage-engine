@@ -11,7 +11,7 @@
 #include "math/matrix.h"
 
 #include "render/renderable.h"
-#include "render/gl/material.h"
+#include "render-gl/material.h"
 #include "render/context.h"
 
 #include "entity/component/render/mesh.h"

@@ -1,6 +1,6 @@
 
 cc_library(
-	name = "render",
+	name = "render-gl",
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
@@ -8,7 +8,12 @@ cc_library(
 		"//entity",
 		"//fs",
 		"//platform",
-		"//math"		
+		"//math",
+		"//render",
+		"@glfw",
+		"@glm",
+		"//third_party/glad",
+		"//third_party/stb_image"
 	],
 	visibility = ["//visibility:public"]	
 )

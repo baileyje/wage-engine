@@ -5,6 +5,7 @@
 
 #include "core/system.h"
 #include "platform/window.h"
+#include "fs/file_system.h"
 #include "entity/manager.h"
 #include "render/renderable.h"
 

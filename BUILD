@@ -10,7 +10,8 @@ cc_binary(
     "//physics",
     "//engine",
     "//fs",
-    "//render"
+    "//render",
+    "//render-gl"
   ],
   linkopts = ["-framework Cocoa -framework OpenGL"],
   visibility = ["//visibility:public"]

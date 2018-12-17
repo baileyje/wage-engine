@@ -3,9 +3,6 @@
 
 #include <vector>
 
-#include "render/gl/texture_manager.h"
-#include "render/gl/vao_manager.h"
-
 #include "entity/component/lighting/directional_light.h"
 #include "entity/component/lighting/point_light.h"
 #include "entity/component/lighting/spotlight.h"

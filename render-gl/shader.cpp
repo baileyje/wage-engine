@@ -1,10 +1,10 @@
-#include "render/gl/shader.h"
+#include "render-gl/shader.h"
 
 #include "core/logger.h"
 #include <glad/glad.h>
 #include <vector>
 
-#include "render/gl/util.h"
+#include "render-gl/util.h"
 
 namespace wage {
 

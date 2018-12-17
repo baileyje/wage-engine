@@ -6,8 +6,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "render/gl/shader.h"
-#include "render/gl/util.h"
+#include "render-gl/shader.h"
+#include "render-gl/util.h"
 
 namespace wage {
 

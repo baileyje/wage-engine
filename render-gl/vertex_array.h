@@ -3,8 +3,8 @@
 
 #include <glad/glad.h>
 
-#include "render/gl/vertex_buffer.h"
-#include "render/gl/vertex_buffer_layout.h"
+#include "render-gl/vertex_buffer.h"
+#include "render-gl/vertex_buffer_layout.h"
 
 namespace wage {
 

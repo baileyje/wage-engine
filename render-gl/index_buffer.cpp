@@ -1,8 +1,8 @@
-#include "render/gl/index_buffer.h"
+#include "render-gl/index_buffer.h"
 
 #include <glad/glad.h>
 
-#include "render/gl/util.h"
+#include "render-gl/util.h"
 
 namespace wage {
   

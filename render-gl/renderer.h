@@ -4,8 +4,8 @@
 #include "entity/entity.h"
 
 #include "render/renderer.h"
-#include "render/gl/texture_manager.h"
-#include "render/gl/vao_manager.h"
+#include "render-gl/texture_manager.h"
+#include "render-gl/vao_manager.h"
 
 
 namespace wage {

@@ -2,7 +2,7 @@
 #define RENDERER_TEXTURE_H
 
 #include "entity/component/render/texture.h"
-#include "render/gl/util.h"
+#include "render-gl/util.h"
 
 #include "fs/file_system.h"
 

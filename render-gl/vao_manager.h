@@ -4,8 +4,8 @@
 #include <unordered_map>
 
 #include "entity/component/render/mesh.h"
-#include "render/gl/vertex_array.h"
-#include "render/gl/index_buffer.h"
+#include "render-gl/vertex_array.h"
+#include "render-gl/index_buffer.h"
 
 namespace wage {
 

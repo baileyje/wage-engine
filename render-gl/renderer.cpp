@@ -1,15 +1,15 @@
-#include "render/gl/renderer.h"
+#include "render-gl/renderer.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "core/logger.h"
 
-#include "render/gl/mesh_renderable.h"
+#include "render-gl/mesh_renderable.h"
 
-#include "render/gl/material.h"
-#include "render/gl/shader.h"
-#include "render/gl/util.h"
+#include "render-gl/material.h"
+#include "render-gl/shader.h"
+#include "render-gl/util.h"
 
 
 namespace wage {
