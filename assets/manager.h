@@ -4,6 +4,7 @@
 #include <string>
 
 #include "core/system.h"
+#include "async/dispatch_queue.h"
 #include "assets/asset.h"
 
 namespace wage {
@@ -12,10 +13,21 @@ namespace wage {
 
   public:
 
-    AssetManager() : System("AssetManager") {
+    AssetManager() : System("AssetManager"), queue("AssetLoad", 4) {
     }
     
-    virtual void load(Asset* asset) = 0;
+    virtual void load(Asset* asset) {
+      queue.dispatch([this,asset]{
+        printf("Loading!\n");
+        performLoad(asset);
+      });      
+    }
+
+    virtual void performLoad(Asset* asset) = 0;
+
+  private:
+
+    DispatchQueue queue;
 
   };
 

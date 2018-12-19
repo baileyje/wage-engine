@@ -5,22 +5,10 @@
 
 namespace wage {
 
-  // GlShader* GlShader::Default = new GlShader("shaders/default.vs", "shaders/default.fs");
-
-  // void GlShader::load(AssetManager* assetManager) {
-  //   assetManager->load(&vertexSource);
-  //   assetManager->load(&fragmentSource);
-  //   GL_FAIL_CHECK(vertexId = glCreateShader(GL_VERTEX_SHADER));
-  //   GL_FAIL_CHECK(fragmentId = glCreateShader(GL_FRAGMENT_SHADER));
-  //   id = glCreateProgram();
-  //   compile();
-  //   link();
-  //   loaded_ = true;
-  // }
-
-  void GlShader::compile(Buffer* buffer) {
-    const char* temp = reinterpret_cast<const char*>(buffer->data());
-    const GLint tempLength = static_cast<const GLint>(buffer->length());
+  void GlShader::compile() {
+    GL_FAIL_CHECK(id_ = glCreateShader(shaderType));
+    const char* temp = reinterpret_cast<const char*>(buffer()->data());
+    const GLint tempLength = static_cast<const GLint>(buffer()->length());
     GL_FAIL_CHECK(glShaderSource(id_, 1, &temp, &tempLength));
     GL_FAIL_CHECK(glCompileShader(id_));
 
@@ -36,8 +24,9 @@ namespace wage {
   }
 
   void GlShader::onLoad(Buffer* buffer) {
-    GL_FAIL_CHECK(id_ = glCreateShader(shaderType));
-    compile(buffer);
+    // Don't like this....
+    // GL_FAIL_CHECK(id_ = glCreateShader(shaderType));
+    // compile(buffer);
   }
 
 }

@@ -22,8 +22,6 @@ namespace wage {
     }
 
     ~GlProgram() {
-      // GL_FAIL_CHECK(glDeleteShader(vertexId));
-      // GL_FAIL_CHECK(glDeleteShader(fragmentId));
       GL_FAIL_CHECK(glDeleteProgram(id_));
     }
     
@@ -31,12 +29,13 @@ namespace wage {
       assetManager->load(&vertexShader);
       assetManager->load(&fragmentShader);    
       id_ = glCreateProgram();
-      // compile();
-      // Move to bind
-      // link();
     }
 
     void link() {
+
+      vertexShader.compile();
+      fragmentShader.compile();
+
       GLint result = GL_FALSE;
       int infoLogLength;
 
@@ -51,9 +50,7 @@ namespace wage {
         GL_FAIL_CHECK(glGetProgramInfoLog(id_, infoLogLength, NULL, &errorMessage[0]));
         Logger::error("%s\n", &errorMessage[0]);
       }
-      printf("Loading!\n");
       linked_ = true;
-      // exit(0);
     }
 
     void bind() {

@@ -16,10 +16,6 @@ namespace wage {
 
     ~GlTexture();
 
-    inline void setTexture(Texture* texture) {
-      this->texture = texture;
-    }
-
     inline Texture* getTexture() {
       return texture;
     }
@@ -34,6 +30,8 @@ namespace wage {
 
   private:
 
+    void push();
+    
     unsigned int id;
 
     bool pushed;

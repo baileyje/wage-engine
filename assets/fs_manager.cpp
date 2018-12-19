@@ -14,8 +14,9 @@ namespace wage {
     return "/resources/" + key;
   }
 
-  void FsAssetManager::load(Asset* asset) {
-    asset->set(new FileBuffer(fileSystem->read(filePath(asset->key()))));
+  void FsAssetManager::performLoad(Asset* asset) {
+    auto file = fileSystem->read(filePath(asset->key()));
+    asset->set(new FileBuffer(file));
   }
 
 }

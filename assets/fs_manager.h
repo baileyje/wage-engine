@@ -19,12 +19,12 @@ namespace wage {
 
     LIFECYCLE_FUNC(start)
     
-    virtual void load(Asset* asset);
-
+    virtual void performLoad(Asset* asset);
+    
   private:
     
     FileSystem* fileSystem;
-  
+
   };
 
 }

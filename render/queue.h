@@ -27,20 +27,13 @@ namespace wage {
     }
 
     virtual void cull(RenderContext* context) {
-      // TODO: Something smart that makes the world a better place.
-      // Use Camera Frustum to cull items
-      printf("Pre-Cull: %d\n", renderables.size());
       std::vector<Renderable*> valid;
       Frustum frustum = context->camera()->frustum(context->screenSize());
-      std::cout << "Camera: " << context->camera()->getTransform()->getPosition().x << ":" << context->camera()->getTransform()->getPosition().y << ":" << context->camera()->getTransform()->getPosition().z << std::endl;
-      // frustum.debug();
-      for (auto renderable : renderables) {
-        
+      for (auto renderable : renderables) {        
         if (frustum.contains(renderable->boundingSphere())) {
           valid.push_back(renderable);
         }        
       }
-      printf("Post-Cull: %d\n", valid.size());
       renderables = valid;
     }
 

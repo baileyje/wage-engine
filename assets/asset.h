@@ -13,7 +13,7 @@ namespace wage {
 
     typedef std::string Key;
 
-    Asset(Key key) : key_(key) {      
+    Asset(Key key) : key_(key), loaded_(false) {      
     }
 
     virtual Key key() {

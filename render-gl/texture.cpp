@@ -5,7 +5,7 @@
 
 namespace wage {
 
-  GlTexture::GlTexture(Texture* texture) : Asset(texture->getPath()), texture(texture) {  
+  GlTexture::GlTexture(Texture* texture) : Asset(texture->getPath()), texture(texture), pushed(false) {  
   }
 
   GlTexture::~GlTexture() {
@@ -15,20 +15,25 @@ namespace wage {
   }
 
   void GlTexture::onLoad(Buffer* buffer) {
-    GL_FAIL_CHECK(glGenTextures(1, &id));
     data = stbi_load_from_memory(buffer->data(), buffer->length(), &width, &height, &channels, 0);
+  }
+
+  void GlTexture::push() {
+    GL_FAIL_CHECK(glGenTextures(1, &id));
+    GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, id));         
+    GL_FAIL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+    GL_FAIL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));    
+    pushed = true;
   }
 
   void GlTexture::bind() {  
     if (!loaded()) {
       return;
     } 
-    GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, id));     
-    if (!pushed) {      
-      GL_FAIL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
-      GL_FAIL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));    
-      pushed = true;
-    }    
+    if (!pushed) {
+      push();
+    }
+    GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, id));
   }
 
   void GlTexture::unbind() {

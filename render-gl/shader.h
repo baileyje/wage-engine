@@ -27,9 +27,9 @@ namespace wage {
 
     void onLoad(Buffer* buffer);
 
-  private:
+    void compile();
 
-    void compile(Buffer* buffer);
+  private:
 
     unsigned int id_;
 

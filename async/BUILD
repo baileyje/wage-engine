@@ -1,12 +1,9 @@
 
 cc_library(
-	name = "assets",
+	name = "async",
 	srcs = glob(["*.cpp"]),
 	hdrs = glob(["*.h"]),
-	deps = [
-		"//core",
-		"//fs",
-		"//async"
+	deps = [		
 	],
 	visibility = ["//visibility:public"]
 )
