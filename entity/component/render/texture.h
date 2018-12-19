@@ -10,6 +10,8 @@ namespace wage {
 
   public:
 
+    static Texture* Default;
+
     Texture(std::string path) : path(path) {
     }
 

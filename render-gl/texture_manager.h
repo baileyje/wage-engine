@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include "fs/file_system.h"
+#include "assets/manager.h"
 
 #include "render-gl/texture.h"
 
@@ -14,25 +14,22 @@ namespace wage {
   public:
 
     GlTexture* load(Texture* texture) {
-      GlTexture* glTexture = GlTexture::Default;      
-      if (texture != nullptr) {
-        glTexture = cache[texture->getId()];
-        if (glTexture == nullptr) {
-          glTexture = new GlTexture(texture);
-          cache[texture->getId()] = glTexture;
-          glTexture->load(fileSystem);
-        }
+      GlTexture* glTexture = cache[texture->getId()];
+      if (glTexture == nullptr) {
+        glTexture = new GlTexture(texture);
+        cache[texture->getId()] = glTexture;
+        assetManager->load(glTexture);
       }
       return glTexture;
     }
 
-    inline void setFileSystem(FileSystem* fileSystem) {
-      this->fileSystem = fileSystem;
+    inline void setAssetManager(AssetManager* assetManager) {
+      this->assetManager = assetManager;
     }
 
   private:
 
-    FileSystem* fileSystem;
+    AssetManager* assetManager;
 
     std::unordered_map<std::string, GlTexture*> cache;
 

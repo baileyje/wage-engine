@@ -1,14 +1,17 @@
+#ifndef FILE_SYSTEM_FILE_H
+#define FILE_SYSTEM_FILE_H
+
 #include <fstream>
 #include <iterator>
 #include <vector>
 
 namespace wage {
 
-  typedef std::vector<unsigned char> Buffer;
-
   class File {
 
   public:
+
+    typedef std::vector<unsigned char> Buffer;
 
     File(Buffer buffer) : _data(buffer) {      
     }
@@ -16,11 +19,11 @@ namespace wage {
     File(std::ifstream& stream) : _data(std::istreambuf_iterator<char>(stream), {} ) {      
     }
 
-    unsigned char* data() {
+    inline unsigned char* data() {
       return _data.data();
     }
 
-    size_t length() {
+    inline size_t length() {
       return _data.size();
     }
 
@@ -31,3 +34,5 @@ namespace wage {
   };
 
 }
+
+#endif //FILE_SYSTEM_FILE_H

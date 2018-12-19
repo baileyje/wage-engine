@@ -6,7 +6,7 @@ cc_library(
 	deps = [
 		"//core",
 		"//entity",
-		"//fs",
+		"//assets",
 		"//platform",
 		"//math"		
 	],

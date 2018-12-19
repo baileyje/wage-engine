@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "render-gl/shader.h"
+#include "render-gl/program.h"
 #include "render-gl/util.h"
 
 namespace wage {
@@ -25,40 +25,40 @@ namespace wage {
 
   public:
 
-    GlMaterial(GlShader* shader);
+    GlMaterial(GlProgram* program);
 
     ~GlMaterial();
 
-    inline void setShader(GlShader* shader) {
-      this->shader = shader;
+    inline void setProgram(GlProgram* program) {
+      this->program = program;
     }
 
-    inline GlShader* getShader() {
-      return shader;
+    inline GlProgram* getProgram() {
+      return program;
     }
 
     inline void setFloat(std::string name, float value) {
-      GL_FAIL_CHECK(glUniform1f(glGetUniformLocation(shader->getId(), name.c_str()), value));
+      GL_FAIL_CHECK(glUniform1f(glGetUniformLocation(program->id(), name.c_str()), value));
     }
 
     inline void setBool(std::string name, bool value) {
-      GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(shader->getId(), name.c_str()), (int)value));
+      GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(program->id(), name.c_str()), (int)value));
     }
 
     inline void setInt(std::string name, int value) {
-      GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(shader->getId(), name.c_str()), value));
+      GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(program->id(), name.c_str()), value));
     }  
 
     inline void setMat4(std::string name,const glm::mat4 &value) {
-      GL_FAIL_CHECK(glUniformMatrix4fv(glGetUniformLocation(shader->getId(), name.c_str()), 1, GL_FALSE, &value[0][0]));
+      GL_FAIL_CHECK(glUniformMatrix4fv(glGetUniformLocation(program->id(), name.c_str()), 1, GL_FALSE, &value[0][0]));
     }
 
     inline void  setVec3(std::string name, const glm::vec3 &value) {
-      GL_FAIL_CHECK(glUniform3fv(glGetUniformLocation(shader->getId(), name.c_str()), 1, &value[0]));
+      GL_FAIL_CHECK(glUniform3fv(glGetUniformLocation(program->id(), name.c_str()), 1, &value[0]));
     }
 
     inline void setVec4(std::string name, const glm::vec4 &value) {
-      GL_FAIL_CHECK(glUniform4fv(glGetUniformLocation(shader->getId(), name.c_str()), 1, &value[0]));
+      GL_FAIL_CHECK(glUniform4fv(glGetUniformLocation(program->id(), name.c_str()), 1, &value[0]));
     }
 
     void bind() const;
@@ -67,7 +67,7 @@ namespace wage {
 
   private:
 
-    GlShader* shader;
+    GlProgram* program;
 
     UniformMap uniforms;
 

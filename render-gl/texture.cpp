@@ -5,9 +5,7 @@
 
 namespace wage {
 
-  GlTexture* GlTexture::Default = new GlTexture(new Texture("./resources/textures/default.png"));
-
-  GlTexture::GlTexture(Texture* texture) : loaded(false), texture(texture) {  
+  GlTexture::GlTexture(Texture* texture) : Asset(texture->getPath()), texture(texture) {  
   }
 
   GlTexture::~GlTexture() {
@@ -16,18 +14,13 @@ namespace wage {
     }    
   }
 
-  void GlTexture::load(FileSystem* fileSystem) {
-    if (loaded) {
-      return;
-    } 
+  void GlTexture::onLoad(Buffer* buffer) {
     GL_FAIL_CHECK(glGenTextures(1, &id));
-    File* file = fileSystem->read(texture->getPath());    
-    data = stbi_load_from_memory(file->data(), file->length(), &width, &height, &channels, 0); 
-    loaded = true;
+    data = stbi_load_from_memory(buffer->data(), buffer->length(), &width, &height, &channels, 0);
   }
 
   void GlTexture::bind() {  
-    if (!loaded) {
+    if (!loaded()) {
       return;
     } 
     GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, id));     

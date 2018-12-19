@@ -5,7 +5,7 @@
 
 #include "core/system.h"
 #include "platform/window.h"
-#include "fs/file_system.h"
+#include "assets/manager.h"
 #include "entity/manager.h"
 #include "render/renderable.h"
 
@@ -37,7 +37,7 @@ namespace wage {
 
     Window* window;
 
-    FileSystem* fileSystem;
+    AssetManager* assetManager;
 
     virtual void beginUpdate() = 0;
 

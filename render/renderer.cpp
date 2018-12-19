@@ -24,7 +24,7 @@ namespace wage {
   void Renderer::start(SystemContext* context) {
     Platform* platform = context->get<Platform>();
     window = platform->getWindow();
-
+    assetManager = context->get<AssetManager>();
     // // TODO: Listen for changes to entities and figure out how to get these!!!
     // // ALSO, GROSS
     EntityManager* manager = context->get<EntityManager>();

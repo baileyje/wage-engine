@@ -2,53 +2,38 @@
 #define RENDERER_SHADER_H
 
 #include <string>
-#include "fs/file_system.h"
+
+#include <glad/glad.h>
+
+#include "assets/manager.h"
+#include "render-gl/util.h"
 
 namespace wage {
 
-  class GlShader {
+  class GlShader : public Asset {
 
   public:
 
-    static GlShader* Default;
-
-    static void initDefault(FileSystem* fileSystem);
-
-    GlShader(File* vertexSource, File* fragmentSource);
-
-    ~GlShader();
-
-    void bind();
-
-    void unbind();
-
-    void compile();
-
-    void link();
-
-    void unlink();
-
-    inline unsigned int getId() {
-      return id;
+    GlShader(std::string path, GLenum shaderType) : Asset(path), shaderType(shaderType) {      
     }
 
-    inline bool isBound() {
-      return bound;
+    virtual ~GlShader() {
+      GL_FAIL_CHECK(glDeleteShader(id_));
     }
+
+    inline unsigned int id() {
+      return id_;
+    }
+
+    void onLoad(Buffer* buffer);
 
   private:
 
-    unsigned int vertexId;
+    void compile(Buffer* buffer);
 
-    unsigned int fragmentId;
+    unsigned int id_;
 
-    unsigned int id;
-
-    File* vertexSource;
-
-    File* fragmentSource;
-
-    bool bound;
+    GLenum shaderType;
   };
 
 }

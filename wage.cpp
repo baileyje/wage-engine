@@ -12,6 +12,7 @@
 #include "input/input.h"
 #include "messaging/messaging.h"
 #include "fs/local.h"
+#include "assets/fs_manager.h"
 #include "jsrt/jsrt.h"
 #include "physics/physics.h"
 #include "render-gl/renderer.h"
@@ -165,7 +166,7 @@ EntityReference addMover(EntityManager* manager) {
     ->add(&Collider::Sphere)
     ->add(MoveIt)
     // ->add(CamMove)
-    ->add(new Material(new Texture("./resources/textures/mover.png")));
+    ->add(new Material(new Texture("textures/mover.png")));
 
   // EntityReference follower = manager->create();
   // follower->getTransform().setPosition(Vector(4, 10, 0));
@@ -196,7 +197,9 @@ void drawGrid(EntityManager* manager) {
 }
 
 void setupSystems(Core& core, std::string path) {
-  core.add<FileSystem>(new LocalFileSystem(path));
+  FileSystem* localFs = new LocalFileSystem(path);
+  core.add<FileSystem>(localFs);
+  core.add<AssetManager>(new FsAssetManager(localFs));
   core.add(new Messaging());
   core.add(new Input());
   core.add(new Platform());
@@ -254,11 +257,6 @@ void setupScene(EntityManager* manager) {
 
   // drawGrid(manager);
 
-   EntityReference quad = manager->create();    
-    quad->getTransform().setPosition(Vector(0, 10, 10));
-    quad->getTransform().setLocalScale(Vector(10, 10, 10));
-    quad
-      ->add(&Mesh::Quad);
 }
 
 // So far so dumb

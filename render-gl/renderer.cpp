@@ -29,12 +29,13 @@ namespace wage {
     const GLubyte* renderer = glGetString(GL_RENDERER); // Returns a hint to the model
     Logger::info("Graphics Vendor: ", vendor);
     Logger::info("Graphics Renderer: ", renderer);
+    
     // Intialize default render assets
-    fileSystem = context->get<FileSystem>();
-    GlShader::initDefault(fileSystem);  
-    GlTexture::Default->load(fileSystem);
-
-    textureManager.setFileSystem(fileSystem);    
+    shaderManager.setAssetManager(assetManager);
+    // GlShader::Default->load(assetManager);
+    GlProgram::Default->load(assetManager);
+    textureManager.setAssetManager(assetManager);
+    // GlTexture::Default->load(assetManager);
   }
 
   void GlRenderer::beginUpdate() {

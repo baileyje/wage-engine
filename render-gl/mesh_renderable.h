@@ -60,8 +60,8 @@ namespace wage {
       return BoundingSphere(box.position, radius);
     }
 
-    GlMaterial* buildMaterial(RenderContext* context) {      
-      GlMaterial* glMaterial = new GlMaterial(GlShader::Default);
+    GlMaterial* buildMaterial(RenderContext* context, GlProgram* program) {
+      GlMaterial* glMaterial = new GlMaterial(program);
       glMaterial->bind();
       glMaterial->setMat4("model", model);
       glMaterial->setMat4("view", context->viewProjection());
@@ -111,13 +111,14 @@ namespace wage {
         glMaterial->setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->getCutOff())));
         glMaterial->setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->getOuterCutOff())));
       }
-      GlTexture* glTexture = GlTexture::Default;
+      Texture* texture = Texture::Default;
       if (material != nullptr) {
-        Texture* texture = material->getTexture();
-        if (texture != nullptr) {
-          glTexture = textureManager()->load(texture);
+        texture = material->getTexture();
+        if (material->getTexture() != nullptr) {
+          texture = material->getTexture();
         }
       }
+      GlTexture* glTexture = textureManager()->load(texture);
       glTexture->bind();
       glMaterial->setInt("material.diffuse", 0);
       glMaterial->setFloat("material.shininess", 32.0f);
@@ -128,7 +129,11 @@ namespace wage {
     virtual void render(RenderContext* context) {      
       VertexArray* vao = vaoManager()->load(mesh);
       vao->bind();
-      GlMaterial* material = buildMaterial(context);
+      auto program = GlProgram::Default;
+      if (!program->loaded()) {
+        return;
+      }
+      GlMaterial* material = buildMaterial(context, program);
       material->bind();
       GL_FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
       vao->unbind();

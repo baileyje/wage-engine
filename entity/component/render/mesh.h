@@ -20,7 +20,7 @@ namespace wage {
     Mesh(std::string id, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices) 
       : Component("Mesh"), id(id), vertices(vertices), normals(normals), uvs(uvs), indices(indices), maxDim(0) {
         for (auto vertex : vertices) {
-          printf("Vert:%s - %f:%f:%f\n", id.c_str(), vertex.x, vertex.y, vertex.z);
+          // printf("Vert:%s - %f:%f:%f\n", id.c_str(), vertex.x, vertex.y, vertex.z);
           maxDim.x = std::max(maxDim.x, std::abs(vertex.x));
           maxDim.y = std::max(maxDim.y, std::abs(vertex.y));
           maxDim.z = std::max(maxDim.z, std::abs(vertex.z));

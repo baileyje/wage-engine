@@ -5,9 +5,9 @@ cc_library(
 	hdrs = glob(["**/*.h"]),
 	deps = [
 		"//core",
-		"//entity",
-		"//fs",
 		"//platform",
+		"//assets",
+		"//entity",				
 		"//math",
 		"//render",
 		"@glfw",

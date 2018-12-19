@@ -10,6 +10,7 @@ cc_binary(
     "//physics",
     "//engine",
     "//fs",
+    "//assets",
     "//render",
     "//render-gl"
   ],

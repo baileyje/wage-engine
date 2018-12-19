@@ -4,11 +4,11 @@
 #include "entity/component/render/texture.h"
 #include "render-gl/util.h"
 
-#include "fs/file_system.h"
+#include "assets/manager.h"
 
 namespace wage {
 
-  class GlTexture {
+  class GlTexture : public Asset {
 
   public:
 
@@ -24,23 +24,23 @@ namespace wage {
       return texture;
     }
 
-    void load(FileSystem* fileSystem);
+    void load(AssetManager* assetManager);
+
+    void onLoad(Buffer* buffer);
 
     void bind();
 
     void unbind();
 
-    static GlTexture* Default;
-
   private:
 
     unsigned int id;
 
-    bool loaded;
-
     bool pushed;
 
     Texture* texture;
+
+    std::unique_ptr<Asset> vertexSource;
 
     int width;
 
