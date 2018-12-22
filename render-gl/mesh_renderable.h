@@ -7,7 +7,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext.hpp"
 
-
 #include "math/matrix.h"
 
 #include "render/renderable.h"
@@ -27,27 +26,24 @@ namespace wage {
     
   public:
 
-    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Vector position, Vector scale, Mesh* mesh, Matrix model, Material* material) 
-      : vaoManager_(vaoManager), textureManager_(textureManager), position_(position), scale_(scale), mesh(mesh), model(model), material(material) {}
+    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform transform, Mesh* mesh, Material* material) 
+      : vaoManager_(vaoManager), textureManager_(textureManager), transform(transform), mesh(mesh), material(material) {}
 
     inline VaoManager* vaoManager() {
       return vaoManager_;
     }
 
-    inline GlTextureManager* textureManager() {
-      return textureManager_;
-    }
-
     virtual Vector position() {
-      return position_;
+      return transform.getPosition();
     }
 
     virtual BoundingBox boundingBox() {
       Vector maxDims = mesh->getMaxDim();
+      Vector scale = transform.getScale();
       Vector scaledMaxHalfDim(
-        maxDims.x * scale_.x,
-        maxDims.y * scale_.y,
-        maxDims.z * scale_.z
+        maxDims.x * scale.x,
+        maxDims.y * scale.y,
+        maxDims.z * scale.z
       );
       return BoundingBox(position(), scaledMaxHalfDim);
     }
@@ -63,7 +59,7 @@ namespace wage {
     GlMaterial* buildMaterial(RenderContext* context, GlProgram* program) {
       GlMaterial* glMaterial = new GlMaterial(program);
       glMaterial->bind();
-      glMaterial->setMat4("model", model);
+      glMaterial->setMat4("model", transform.worldPorjection());
       glMaterial->setMat4("view", context->viewProjection());
       glMaterial->setMat4("projection", context->screenProjection());
       glMaterial->setVec3("viewPos", context->cameraPosition());
@@ -118,7 +114,7 @@ namespace wage {
           texture = material->getTexture();
         }
       }
-      GlTexture* glTexture = textureManager()->load(texture);
+      GlTexture* glTexture = textureManager_->load(texture);
       glTexture->bind();
       glMaterial->setInt("material.diffuse", 0);
       glMaterial->setFloat("material.shininess", 32.0f);
@@ -148,13 +144,9 @@ namespace wage {
 
     GlTextureManager* textureManager_;
 
-    Vector position_;
-
-    Vector scale_;
+    Transform transform;
 
     Mesh* mesh;
-
-    Matrix model;
 
     Material* material;
 

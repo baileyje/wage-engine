@@ -13,7 +13,8 @@ cc_library(
 		"@glfw",
 		"@glm",
 		"//third_party/glad",
-		"//third_party/stb_image"
+		"//third_party/stb_image",
+		"@freetype"
 	],
 	visibility = ["//visibility:public"]	
 )

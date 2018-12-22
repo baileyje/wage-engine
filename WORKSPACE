@@ -16,4 +16,10 @@ new_local_repository(
     build_file = "third_party/bullet/BUILD"
 )
 
+new_local_repository(
+    name = "freetype",
+    path = "/usr/local/Cellar/freetype/2.9",
+    build_file = "third_party/freetype/BUILD"
+)
+
 

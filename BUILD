@@ -12,7 +12,8 @@ cc_binary(
     "//fs",
     "//assets",
     "//render",
-    "//render-gl"
+    "//render-gl",
+    "//ui"
   ],
   linkopts = ["-framework Cocoa -framework OpenGL"],
   visibility = ["//visibility:public"]

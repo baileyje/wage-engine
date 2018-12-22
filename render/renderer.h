@@ -8,10 +8,14 @@
 #include "assets/manager.h"
 #include "entity/manager.h"
 #include "render/renderable.h"
+#include "render/queue.h"
 
 #include "entity/component/lighting/directional_light.h"
 #include "entity/component/lighting/point_light.h"
 #include "entity/component/lighting/spotlight.h"
+#include "entity/component/render/material.h"
+#include "entity/component/render/mesh.h"
+#include "render/font.h"
 
 namespace wage {
 
@@ -32,28 +36,35 @@ namespace wage {
     LIFECYCLE_FUNC(stop)
     
     LIFECYCLE_FUNC(deinit)
+
+    virtual void renderText(Vector position, std::string text, Font font, Color color) = 0;
+
+    virtual void renderMesh(Transform transform, Mesh* mesh, Material* material) = 0;
     
   protected:
-
-    Window* window;
-
-    AssetManager* assetManager;
 
     virtual void beginUpdate() = 0;
 
     virtual void endUpdate() = 0;
 
-    virtual Renderable* meshRenderable(EntityReference entity) = 0;
+    virtual void renderMeshes(EntityManager* manager, RenderContext* renderContext);
+    
+    virtual void renderUi(EntityManager* manager, RenderContext* renderContext);
 
+    Window* window;
+
+    AssetManager* assetManager;
+
+    // TODO: Hate these here!
     std::vector<DirectionalLight*> dirLights;
 
     std::vector<PointLight*> pointLights;
 
     std::vector<Spotlight*> spotlights;
 
-    private:
-    
-      void renderMeshes(EntityManager* manager, RenderContext* renderContext);
+    RenderQueue meshQueue;
+
+    RenderQueue uiQueue;
   };
 
 }

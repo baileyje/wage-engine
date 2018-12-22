@@ -5,7 +5,10 @@
 
 #include "core/logger.h"
 
+#include "math/vector.h"
+
 #include "render-gl/mesh_renderable.h"
+#include "render-gl/text_renderable.h"
 
 #include "render-gl/material.h"
 #include "render-gl/shader.h"
@@ -19,11 +22,13 @@ namespace wage {
     glfwMakeContextCurrent(window->as<GLFWwindow>());
     gladLoadGL();
     glfwSwapInterval(1);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    
+    GL_FAIL_CHECK(glEnable(GL_DEPTH_TEST));
+    GL_FAIL_CHECK(glDepthFunc(GL_LESS));
     GL_FAIL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
+    // GL_FAIL_CHECK(glEnable(  ));
+    GL_FAIL_CHECK(glEnable(GL_BLEND));
+    GL_FAIL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     
     const GLubyte* vendor = glGetString(GL_VENDOR); // Returns the vendor
     const GLubyte* renderer = glGetString(GL_RENDERER); // Returns a hint to the model
@@ -34,7 +39,10 @@ namespace wage {
     shaderManager.setAssetManager(assetManager);
     // GlShader::Default->load(assetManager);
     GlProgram::Default->load(assetManager);
+    GlProgram::Font->load(assetManager);
     textureManager.setAssetManager(assetManager);
+    assetManager->load(GlFont::JankyFont);
+    fontManager.setAssetManager(assetManager);
     // GlTexture::Default->load(assetManager);
   }
 
@@ -43,14 +51,18 @@ namespace wage {
     GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   }
 
-  Renderable* GlRenderer::meshRenderable(EntityReference entity) {
-    return new GlMeshRenderable(
-      &vaoManager, &textureManager,
-      entity->getTransform().getPosition(), entity->getTransform().getScale(), 
-      entity->get<Mesh>(), entity->getTransform().worldPorjection(), entity->get<Material>());
+  void GlRenderer::renderText(Vector position, std::string text, Font font, Color color) {
+    uiQueue.add(new GlTextRenderable(&fontManager, position, text, font, color));
+  }
+
+  void GlRenderer::renderMesh(Transform transform, Mesh* mesh, Material* material) {
+    meshQueue.add(new GlMeshRenderable(
+      &vaoManager, &textureManager, transform, mesh, material
+    ));
   }
 
   void GlRenderer::endUpdate() {
+    
     GL_FAIL_CHECK(glfwSwapBuffers(window->as<GLFWwindow>()));
     GL_FAIL_CHECK(glfwPollEvents());
   }

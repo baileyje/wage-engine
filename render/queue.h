@@ -5,6 +5,7 @@
 
 #include "render/renderable.h"
 #include "render/context.h"
+#include "render/queue.h"
 
 namespace wage {
 
@@ -45,6 +46,10 @@ namespace wage {
       for (auto renderable : renderables) {
         renderable->render(context);
       }
+    }
+
+    virtual void clear() {
+      renderables.clear();
     }
 
   private:

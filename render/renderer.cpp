@@ -9,7 +9,6 @@
 #include "core/system/context.h"
 
 #include "render/context.h"
-#include "render/queue.h"
 
 #include "entity/component/camera/camera.h"
 
@@ -42,15 +41,18 @@ namespace wage {
     }
   }
 
-  void Renderer::renderMeshes(EntityManager* manager, RenderContext* renderContext) {
-    RenderQueue queue;
-    for (auto entity : manager->with("Mesh")) {
-      Renderable* renderable = meshRenderable(entity);  
-      queue.add(renderable);
-    }    
-    queue.cull(renderContext);
-    queue.sort(renderContext);
-    queue.render(renderContext);
+  void Renderer::renderMeshes(EntityManager* manager, RenderContext* renderContext) {     
+    meshQueue.cull(renderContext);
+    meshQueue.sort(renderContext);
+    meshQueue.render(renderContext);
+    meshQueue.clear();
+  }
+
+  void Renderer::renderUi(EntityManager* manager, RenderContext* renderContext) { 
+    uiQueue.cull(renderContext);
+    uiQueue.sort(renderContext);
+    uiQueue.render(renderContext);
+    uiQueue.clear();
   }
 
   void Renderer::update(SystemContext* context) {  
@@ -66,7 +68,7 @@ namespace wage {
     
     renderMeshes(manager, &renderContext);
     // TODO: Sprites
-    // TODO: UI panes
+    renderUi(manager, &renderContext);
     endUpdate();
   }
 

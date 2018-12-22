@@ -13,6 +13,8 @@ namespace wage {
   class Core {
 
   public:
+
+    static Core* Instance;
     
     Core();
 

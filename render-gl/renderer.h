@@ -4,9 +4,11 @@
 #include "entity/entity.h"
 
 #include "render/renderer.h"
+#include "render/queue.h"
 #include "render-gl/texture_manager.h"
 #include "render-gl/shader_manager.h"
 #include "render-gl/vao_manager.h"
+#include "render-gl/font_manager.h"
 
 
 namespace wage {
@@ -17,7 +19,9 @@ namespace wage {
 
     LIFECYCLE_FUNC(start)
 
-    virtual Renderable* meshRenderable(EntityReference entity);
+    void renderText(Vector position, std::string text, Font font, Color color);
+
+    void renderMesh(Transform transform, Mesh* mesh, Material* material);
     
     virtual void beginUpdate();
 
@@ -31,12 +35,13 @@ namespace wage {
 
     GlShaderManager shaderManager;
 
+    GlFontManager fontManager;
+
     std::vector<DirectionalLight*> dirLights;
 
     std::vector<PointLight*> pointLights;
 
-    std::vector<Spotlight*> spotlights;
-    
+    std::vector<Spotlight*> spotlights;    
   };
 
 }

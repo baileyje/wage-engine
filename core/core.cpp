@@ -11,6 +11,8 @@ namespace wage {
 
   typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
+  Core* Core::Instance = new Core();
+
   Core::Core() : running(false) {  
     timeStep = 1.0/60.0;
   }

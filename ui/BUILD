@@ -1,6 +1,6 @@
 
 cc_library(
-	name = "render",
+	name = "ui",
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
@@ -8,7 +8,8 @@ cc_library(
 		"//entity",
 		"//assets",
 		"//platform",
-		"//math"
+		"//math",
+		"//render"
 	],
 	visibility = ["//visibility:public"]	
 )

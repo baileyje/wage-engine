@@ -17,6 +17,8 @@ namespace wage {
 
     static GlProgram* Default;
 
+    static GlProgram* Font;
+
     GlProgram(std::string vertexPath, std::string fragmentPath) :
       vertexShader(vertexPath, GL_VERTEX_SHADER), fragmentShader(fragmentPath, GL_FRAGMENT_SHADER), linked_(false) {
     }

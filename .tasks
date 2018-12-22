@@ -20,10 +20,12 @@ Entity:
 ☐ More primitive shapes
   ✔ Sphere @done (12/4/2018, 9:29:07 PM)
   ☐ Cone
-✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)s
+✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)
+☐ Component object pool
+
 
 Renderer:
-☐ Split out OpenGL
+✔ Split out OpenGL @done (12/19/2018, 8:58:02 PM)
 ☐ Sprite Rendering
 ☐ Add some kind of reusable entity renderable
   ✔ Mesh renderable @done (12/15/2018, 10:38:44 AM)
@@ -35,6 +37,7 @@ Renderer:
   ☐ Z-Order Sort  
   ☐ Culling
     ✔ Frustum culling @done (12/15/2018, 10:28:41 AM)
+    ☐ Occlusion culling
 ☐ .obj loading
 ✔ Texture cache @done (12/9/2018, 9:15:33 PM)
 ✔ Mesh cache @done (12/9/2018, 9:15:41 PM)
@@ -43,10 +46,11 @@ Renderer:
 ☐ Font support
 
 Asset Manager:
-☐ Async loading
+✔ Async loading @done (12/19/2018, 8:58:20 PM)
 ☐ Caching
 
 Physics:
+☐ Split out bullet
 ☐ More collider types
 ☐ Compound shapes
 ☐ Joints?

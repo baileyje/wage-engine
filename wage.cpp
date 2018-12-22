@@ -16,6 +16,7 @@
 #include "jsrt/jsrt.h"
 #include "physics/physics.h"
 #include "render-gl/renderer.h"
+#include "render/mesh_renderer.h"
 #include "engine/engine.h"
 #include "entity/entity.h"
 #include "entity/component.h"
@@ -28,6 +29,8 @@
 #include "entity/component/lighting/directional_light.h"
 #include "entity/component/lighting/point_light.h"
 #include "entity/component/lighting/spotlight.h"
+
+#include "ui/label.h"
 
 using namespace wage;
 
@@ -153,7 +156,7 @@ void addEntity(EntityManager* manager, Vector position) {
 void addRandomEntity(EntityManager* manager) {
   float x = rand() % 200 - 100;
   float z = rand() % 200 - 100;
-  addEntity(manager, Vector(x, 2, z));
+  addEntity(manager, Vector(x, 1, z));
 }
 
 EntityReference addMover(EntityManager* manager) {
@@ -164,6 +167,7 @@ EntityReference addMover(EntityManager* manager) {
     ->add(new RigidBody(0.0005))
     ->add(&Mesh::Sphere)
     ->add(&Collider::Sphere)
+    ->add(MeshRenderer::Instance)
     ->add(MoveIt)
     // ->add(CamMove)
     ->add(new Material(new Texture("textures/mover.png")));
@@ -196,38 +200,40 @@ void drawGrid(EntityManager* manager) {
   }
 }
 
-void setupSystems(Core& core, std::string path) {
+void setupSystems(Core* core, std::string path) {
   FileSystem* localFs = new LocalFileSystem(path);
-  core.add<FileSystem>(localFs);
-  core.add<AssetManager>(new FsAssetManager(localFs));
-  core.add(new Messaging());
-  core.add(new Input());
-  core.add(new Platform());
-  core.add(new Physics());
-  core.add(new EntityManager());
-  core.add(new Jsrt());
-  core.add(new Engine());
-  core.add(new GlRenderer());
+  core->add<FileSystem>(localFs);
+  core->add<AssetManager>(new FsAssetManager(localFs));
+  core->add(new Messaging());
+  core->add(new Input());
+  core->add(new Platform());
+  core->add(new Physics());
+  core->add(new EntityManager());
+  core->add(new Jsrt());
+  core->add(new Engine());
+  core->add<Renderer>(new GlRenderer());
 }
 
 void setupScene(EntityManager* manager) {
   EntityReference dirLight = manager->create();
-  dirLight->getTransform().setRotation(Vector(-90, 0, 0));
+  dirLight->getTransform().setRotation(Vector(-45, 0, 0));
   DirectionalLight* temp = new DirectionalLight();
   temp->setDiffuse(Color(0.7,0.7,0.7,1));
+  temp->setAmbient(Color(0.4,0.4,0.4,1));
   dirLight->add(temp);
 
-  EntityReference pointLight = manager->create();
-  pointLight->getTransform().setPosition(Vector(0, 2, 0));
-  pointLight->add(new PointLight());
+  // EntityReference pointLight = manager->create();
+  // pointLight->getTransform().setPosition(Vector(0, 2, 0));
+  // pointLight->add(new PointLight());
 
-  EntityReference spotlight = manager->create();
-  spotlight->getTransform().setPosition(Vector(0, 2, -3));
-  spotlight->getTransform().setRotation(Vector(-90, 0, 0));  
-  Spotlight* spot = new Spotlight();
-  spot->setCutOff(40);
-  spot->setOuterCutOff(50);
-  spotlight->add(spot);
+  // EntityReference spotlight = manager->create();
+  // spotlight->getTransform().setPosition(Vector(0, 2, -2));
+  // spotlight->getTransform().setRotation(Vector(-45, 0, 0));  
+  // Spotlight* spot = new Spotlight();
+  // spot->setCutOff(40);
+  // spot->setOuterCutOff(50);
+  // spot->setQuadratic(0.000001);
+  // spotlight->add(spot);
 
   for (int i = 0; i < 100; i++) {
      addRandomEntity(manager);
@@ -235,12 +241,13 @@ void setupScene(EntityManager* manager) {
 
   EntityReference ground = manager->create();
   ground->getTransform().setPosition(Vector(0, -2, 0));
-  ground->getTransform().setLocalScale(Vector(200, 1, 200));
+  ground->getTransform().setLocalScale(Vector(200, 2, 200));
   ground->getTransform().setRotation(Vector(0, 0, 0));
   ground
     ->add(new RigidBody(0.0, kinematic))
     ->add(&Mesh::Cube)
-    ->add(&Collider::Box);
+    ->add(&Collider::Box)
+    ->add(MeshRenderer::Instance);
 
   auto mover = addMover(manager);
 
@@ -251,12 +258,16 @@ void setupScene(EntityManager* manager) {
   cameraEntity
     ->add(camera)
     ->add(CamRotate)
-    ->add(CamMove);
-    // ->add(new Follow(mover));
+    // ->add(CamMove);
+    ->add(new Follow(mover));
   Camera::main = camera;
 
   // drawGrid(manager);
-
+  Font font("fonts/ARCADE.TTF", 60);
+  Label* label = new Label("Hello", font, Color(1, 1, 1, 0));
+  EntityReference labelEntity = manager->create();  
+  labelEntity->getTransform().setPosition(Vector(100, 100, 0));  
+  labelEntity->add(label);
 }
 
 // So far so dumb
@@ -264,20 +275,16 @@ int main(int argc, char* argv[]) {
   char buffer[255];
   std::string path = std::string(getcwd(buffer, sizeof(buffer)));  
   signal(SIGINT, intHandler);  
-  Core core;
-  coreRef = &core;
   
-  setupSystems(core, path);
-  EntityManager* manager = core.get<EntityManager>();
+  setupSystems(Core::Instance, path);
+  EntityManager* manager = Core::Instance->get<EntityManager>();
   Mesh::generatePrimitives();
   setupScene(manager);
-  core.init();
-  core.start();
+  Core::Instance->init();
+  Core::Instance->start();
   return 0;
 }
 
 void intHandler(int) { 
-  if (coreRef != NULL) {
-    coreRef->stop();
-  }  
+  Core::Instance->stop();
 }
