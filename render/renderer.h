@@ -13,8 +13,8 @@
 #include "entity/component/lighting/directional_light.h"
 #include "entity/component/lighting/point_light.h"
 #include "entity/component/lighting/spotlight.h"
-#include "entity/component/render/material.h"
-#include "entity/component/render/mesh.h"
+#include "render/material.h"
+#include "render/mesh.h"
 #include "render/font.h"
 
 namespace wage {

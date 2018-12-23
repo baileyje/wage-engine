@@ -1,4 +1,4 @@
-#include "entity/component/physics/collider.h"
+#include "physics/collider.h"
 
 namespace wage {
 

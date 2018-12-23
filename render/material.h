@@ -3,7 +3,7 @@
 
 #include "entity/component.h"
 #include "math/color.h"
-#include "entity/component/render/texture.h"
+#include "render/texture.h"
 
 namespace wage {
   // TODO:  De-jank this

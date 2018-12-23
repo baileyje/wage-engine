@@ -38,6 +38,7 @@ Renderer:
   ☐ Culling
     ✔ Frustum culling @done (12/15/2018, 10:28:41 AM)
     ☐ Occlusion culling
+  ☐ UI Queue
 ☐ .obj loading
 ✔ Texture cache @done (12/9/2018, 9:15:33 PM)
 ✔ Mesh cache @done (12/9/2018, 9:15:41 PM)
@@ -48,6 +49,9 @@ Renderer:
 Asset Manager:
 ✔ Async loading @done (12/19/2018, 8:58:20 PM)
 ☐ Caching
+
+Sound:
+☐ Literally anything
 
 Physics:
 ☐ Split out bullet

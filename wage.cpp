@@ -14,17 +14,17 @@
 #include "fs/local.h"
 #include "assets/fs_manager.h"
 #include "jsrt/jsrt.h"
-#include "physics/physics.h"
+#include "physics-bullet/physics.h"
 #include "render-gl/renderer.h"
 #include "render/mesh_renderer.h"
 #include "engine/engine.h"
 #include "entity/entity.h"
 #include "entity/component.h"
 #include "entity/component/dynamic.h"
-#include "entity/component/physics/rigid_body.h"
-#include "entity/component/physics/collider.h"
-#include "entity/component/render/mesh.h"
-#include "entity/component/render/material.h"
+#include "physics/rigid_body.h"
+#include "physics/collider.h"
+#include "render/mesh.h"
+#include "render/material.h"
 #include "entity/component/camera/perspective_camera.h"
 #include "entity/component/lighting/directional_light.h"
 #include "entity/component/lighting/point_light.h"
@@ -206,12 +206,12 @@ void setupSystems(Core* core, std::string path) {
   core->add<AssetManager>(new FsAssetManager(localFs));
   core->add(new Messaging());
   core->add(new Input());
-  core->add(new Platform());
-  core->add(new Physics());
+  core->add(new Platform());  
   core->add(new EntityManager());
   core->add(new Jsrt());
   core->add(new Engine());
   core->add<Renderer>(new GlRenderer());
+  core->add<Physics>(new BulletPhysics());
 }
 
 void setupScene(EntityManager* manager) {

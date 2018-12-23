@@ -1,7 +1,7 @@
 #ifndef RENDERER_TEXTURE_H
 #define RENDERER_TEXTURE_H
 
-#include "entity/component/render/texture.h"
+#include "render/texture.h"
 #include "render-gl/util.h"
 
 #include "assets/manager.h"

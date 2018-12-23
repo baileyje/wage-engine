@@ -3,10 +3,10 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "entity/component/physics/rigid_body.h"
-#include "entity/component/physics/collider.h"
 #include "entity/manager.h" // EntityReference :(
-#include "physics/util.h"
+#include "physics/rigid_body.h"
+#include "physics/collider.h"
+#include "physics-bullet/util.h"
 
 namespace wage {
   

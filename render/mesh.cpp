@@ -1,4 +1,4 @@
-#include "entity/component/render/mesh.h"
+#include "render/mesh.h"
 
 #include <vector>
 #include <iostream>

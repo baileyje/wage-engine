@@ -1,4 +1,4 @@
-#include "entity/component/render/texture.h"
+#include "render/texture.h"
 
 namespace wage {
 

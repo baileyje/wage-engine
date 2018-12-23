@@ -1,15 +1,13 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-#include <btBulletDynamicsCommon.h>
-
 #include <vector>
 
 #include "core/system.h"
 
-#include "physics/entity.h"
-
 #include "messaging/messaging.h"
+
+#include "entity/manager.h"
 
 namespace wage {
 
@@ -23,33 +21,13 @@ namespace wage {
 
     LIFECYCLE_FUNC(init)
 
-    LIFECYCLE_FUNC(start)
+    virtual void add(EntityReference entity) = 0;
 
-    LIFECYCLE_FUNC(fixedUpdate)
+    virtual void remove(EntityReference entity) = 0;
 
-    LIFECYCLE_FUNC(deinit)
-
-    void add(EntityReference entity);
-
-    void remove(EntityReference entity);
-
-    void on(AddEntityMessage& message);
+    virtual void on(AddEntityMessage& message);
     
-    void on(DestroyEntityMessage& message);
-
-  private:
-
-    btDefaultCollisionConfiguration collisionConfiguration;
-    
-    btCollisionDispatcher dispatcher;
-
-    btDbvtBroadphase overlappingPairCache;
-
-    btSequentialImpulseConstraintSolver solver;  
-
-    btDiscreteDynamicsWorld dynamicsWorld;  
-
-    std::vector<PhysicsEntity*> entities;
+    virtual void on(DestroyEntityMessage& message);
 
   };
 

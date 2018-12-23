@@ -1,4 +1,4 @@
-#include "physics/entity.h"
+#include "physics-bullet/entity.h"
 
 namespace wage {
 

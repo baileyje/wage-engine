@@ -8,6 +8,7 @@ cc_binary(
     "//input",
     "//jsrt",
     "//physics",
+    "//physics-bullet",
     "//engine",
     "//fs",
     "//assets",
