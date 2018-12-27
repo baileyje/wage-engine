@@ -32,6 +32,8 @@
 
 #include "ui/label.h"
 
+#include "memory/allocator.h"
+
 using namespace wage;
 
 ComponentCallback MoveIt = [](ComponentContext* context) {
@@ -147,10 +149,11 @@ void addEntity(EntityManager* manager, Vector position) {
     entity->getTransform().setPosition(position);
     entity->getTransform().setLocalScale(Vector(1, 1, 1));
     entity
-      ->add(new RigidBody(0.001))
+      ->add(RigidBody::create(0.001))
       ->add(Raise)
       ->add(&Mesh::Cube)
-      ->add(&Collider::Box);
+      ->add(&Collider::Box)
+      ->add(MeshRenderer::Instance);
 }
 
 void addRandomEntity(EntityManager* manager) {
@@ -164,13 +167,13 @@ EntityReference addMover(EntityManager* manager) {
   mover->getTransform().setPosition(Vector(0, 0, 0));
   mover->getTransform().setLocalScale(Vector(5, 5, 5));
   mover
-    ->add(new RigidBody(0.0005))
+    ->add(RigidBody::create(0.0005))
     ->add(&Mesh::Sphere)
     ->add(&Collider::Sphere)
     ->add(MeshRenderer::Instance)
     ->add(MoveIt)
     // ->add(CamMove)
-    ->add(new Material(new Texture("textures/mover.png")));
+    ->add(make<Material>(make<Texture>("textures/mover.png")));
 
   // EntityReference follower = manager->create();
   // follower->getTransform().setPosition(Vector(4, 10, 0));
@@ -201,23 +204,23 @@ void drawGrid(EntityManager* manager) {
 }
 
 void setupSystems(Core* core, std::string path) {
-  FileSystem* localFs = new LocalFileSystem(path);
-  core->add<FileSystem>(localFs);
-  core->add<AssetManager>(new FsAssetManager(localFs));
-  core->add(new Messaging());
-  core->add(new Input());
-  core->add(new Platform());  
-  core->add(new EntityManager());
-  core->add(new Jsrt());
-  core->add(new Engine());
-  core->add<Renderer>(new GlRenderer());
-  core->add<Physics>(new BulletPhysics());
+  // FileSystem* localFs = new LocalFileSystem(path);
+  auto fileSystem = core->add<FileSystem, LocalFileSystem>(path);
+  core->add<AssetManager, FsAssetManager>(fileSystem);
+  core->add<Messaging>();
+  core->add<Input>();
+  core->add<Platform>();
+  core->add<EntityManager>();
+  core->add<Jsrt>();
+  core->add<Engine>();
+  core->add<Renderer, GlRenderer>();
+  core->add<Physics, BulletPhysics>();
 }
 
 void setupScene(EntityManager* manager) {
   EntityReference dirLight = manager->create();
   dirLight->getTransform().setRotation(Vector(-45, 0, 0));
-  DirectionalLight* temp = new DirectionalLight();
+  DirectionalLight* temp = make<DirectionalLight>();
   temp->setDiffuse(Color(0.7,0.7,0.7,1));
   temp->setAmbient(Color(0.4,0.4,0.4,1));
   dirLight->add(temp);
@@ -244,14 +247,14 @@ void setupScene(EntityManager* manager) {
   ground->getTransform().setLocalScale(Vector(200, 2, 200));
   ground->getTransform().setRotation(Vector(0, 0, 0));
   ground
-    ->add(new RigidBody(0.0, kinematic))
+    ->add(RigidBody::create(0.0, kinematic))
     ->add(&Mesh::Cube)
     ->add(&Collider::Box)
     ->add(MeshRenderer::Instance);
 
   auto mover = addMover(manager);
 
-  Camera* camera = new PerspectiveCamera();
+  Camera* camera = make<PerspectiveCamera>();
   EntityReference cameraEntity = manager->create();  
   cameraEntity->getTransform().setPosition(Vector(0, 15, -30));
   cameraEntity->getTransform().setRotation(Vector(10, 0.0, 0));
@@ -259,12 +262,12 @@ void setupScene(EntityManager* manager) {
     ->add(camera)
     ->add(CamRotate)
     // ->add(CamMove);
-    ->add(new Follow(mover));
+    ->add(make<Follow>(mover));
   Camera::main = camera;
 
   // drawGrid(manager);
   Font font("fonts/ARCADE.TTF", 60);
-  Label* label = new Label("Hello", font, Color(1, 1, 1, 0));
+  auto label = make<Label>("Hello", font, Color(1, 1, 1, 0));
   EntityReference labelEntity = manager->create();  
   labelEntity->getTransform().setPosition(Vector(100, 100, 0));  
   labelEntity->add(label);
@@ -272,6 +275,10 @@ void setupScene(EntityManager* manager) {
 
 // So far so dumb
 int main(int argc, char* argv[]) {
+
+  Font* val = make<Font>("fonts/ARCADE.TTF", 60);
+  printf("Path: %s\n", val->path().c_str());
+
   char buffer[255];
   std::string path = std::string(getcwd(buffer, sizeof(buffer)));  
   signal(SIGINT, intHandler);  
@@ -282,6 +289,7 @@ int main(int argc, char* argv[]) {
   setupScene(manager);
   Core::Instance->init();
   Core::Instance->start();
+  
   return 0;
 }
 

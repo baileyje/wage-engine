@@ -8,7 +8,8 @@ cc_library(
 		"//entity",
 		"//assets",
 		"//platform",
-		"//math"
+		"//math",
+		"//memory"
 	],
 	visibility = ["//visibility:public"]	
 )

@@ -79,10 +79,8 @@ namespace wage {
       bool boxIn = false;
       for (int j = 0; j < 8; j++) {
         Vector testPoint = box.position + box.halfDim * cornerOffsets[j];  
-        printf("TestP: %f:%f:%f\n", testPoint.x, testPoint.y, testPoint.z);
         bool pointIn = true;
         for(int i = 0; i < 6; i++) {
-          Vector planeNormal = planes[i].normal;
           if (halfPlaneTest(testPoint, planes[i]) == 0) {
             // printf("TestP: %f:%f:%f\n", testPoint.x, testPoint.y, testPoint.z);
             // printf("BoxP: %f:%f:%f:%f\n", box.position.x, box.position.y, box.position.z, box.halfDim);

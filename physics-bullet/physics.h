@@ -19,7 +19,7 @@ namespace wage {
     
     BulletPhysics();
 
-    ~BulletPhysics();
+    virtual ~BulletPhysics();
 
     LIFECYCLE_FUNC(init)
 

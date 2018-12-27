@@ -5,6 +5,8 @@
 
 #include "core/logger.h"
 
+#include "memory/allocator.h"
+
 #include "math/vector.h"
 
 #include "render-gl/mesh_renderable.h"
@@ -41,7 +43,6 @@ namespace wage {
     GlProgram::Default->load(assetManager);
     GlProgram::Font->load(assetManager);
     textureManager.setAssetManager(assetManager);
-    assetManager->load(GlFont::JankyFont);
     fontManager.setAssetManager(assetManager);
     // GlTexture::Default->load(assetManager);
   }
@@ -52,11 +53,11 @@ namespace wage {
   }
 
   void GlRenderer::renderText(Vector position, std::string text, Font font, Color color) {
-    uiQueue.add(new GlTextRenderable(&fontManager, position, text, font, color));
+    uiQueue.add(makeTemp<GlTextRenderable>(&fontManager, position, text, font, color));
   }
 
   void GlRenderer::renderMesh(Transform transform, Mesh* mesh, Material* material) {
-    meshQueue.add(new GlMeshRenderable(
+    meshQueue.add(makeTemp<GlMeshRenderable>(
       &vaoManager, &textureManager, transform, mesh, material
     ));
   }

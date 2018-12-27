@@ -1,6 +1,7 @@
 #include "fs/local.h"
 
 #include <fstream>
+#include "memory/allocator.h"
 
 namespace wage {
 
@@ -11,9 +12,7 @@ namespace wage {
   }
 
   File* LocalFileSystem::read(std::string path) {
-    std::string fullPath = base + "/" + path;
-    std::ifstream stream(fullPath, std::fstream::binary);    
-    return new File(stream);
+    return make<File>(base + "/" + path);
   }
 
 }

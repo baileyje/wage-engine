@@ -66,7 +66,7 @@ namespace wage {
       // Iterate through all characters
       std::string::const_iterator c;
       for (c = text_.begin(); c != text_.end(); c++) {
-          GlCharacter* ch = GlFont::JankyFont->characterFor(*c);
+          GlCharacter* ch = font->characterFor(*c);
           ch->bind();
 
           GLfloat xpos = x + ch->bearing.x * scale;

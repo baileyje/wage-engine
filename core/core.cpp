@@ -6,12 +6,13 @@
 #include "core/system/context.h"
 #include "core/system.h"
 #include "core/logger.h"
+#include "memory/allocator.h"
 
 namespace wage {
 
   typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
-  Core* Core::Instance = new Core();
+  Core* Core::Instance = make<Core>();
 
   Core::Core() : running(false) {  
     timeStep = 1.0/60.0;
@@ -57,6 +58,7 @@ namespace wage {
     for (auto system : systems) {
       system->update(&context);
     }
+    Allocator::Temporary()->clear();
   }
 
   void Core::fixedUpdate() {

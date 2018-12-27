@@ -2,6 +2,7 @@
 #define OBJECT_POOL_H
 
 #include <vector>
+#include <cassert>
 
 namespace wage {
 
@@ -63,6 +64,11 @@ namespace wage {
 
       inline size_t getIndex() {
         return index;
+      }
+
+      inline T* get() {
+        assert(isValid());
+        return pool->get(index);
       }
 
     private:
@@ -210,8 +216,8 @@ namespace wage {
       storage[index].next = listTail;
     }
 
-    Reference create() {
-      // Check if freeTail.prev
+    template <typename... Args>
+    Reference create(Args... args) {
       size_t index = OutOfBounds;
       if (storage[freeTail].prev != freeHead) {
         index = storage[freeTail].prev;
@@ -223,6 +229,7 @@ namespace wage {
       }    
       addToList(index, tail);
       storage[index].valid = true;
+      new (&(storage[index].item)) T(args...);
       return Reference(this, index, storage[index].version);
     }
 

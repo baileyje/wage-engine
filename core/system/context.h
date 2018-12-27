@@ -16,12 +16,6 @@ namespace wage {
 
     virtual ~SystemContext() {}
 
-    // TODO:  I don't like systems being in the context.  How will we expose this so JSRT if needed? 
-    template <typename T>
-    void add(T* system) {
-      core->add<T>(system);
-    }
-
     template <typename T>
     T* get() {
       return core->get<T>();

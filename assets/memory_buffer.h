@@ -30,7 +30,6 @@ namespace wage {
     }
 
     inline void fill(unsigned char* data, size_t length) {
-      printf("Length: %d\n", length);
       length_ = length;
       if (length <= 0) {
         data_ = nullptr;

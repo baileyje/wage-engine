@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "core/logger.h"
+#include "memory/allocator.h"
 
 #include "jsrt/util.h"
 #include "jsrt/module_manager.h"
@@ -28,7 +29,7 @@ namespace wage {
   void Jsrt::init(SystemContext* context) {
     this->context = context;
     
-    moduleManager = new ModuleManager(context->get<FileSystem>());
+    moduleManager = make<ModuleManager>(context->get<FileSystem>());
     ModuleManager::shared = moduleManager;
     
     JsRuntimeAttributes attrs = static_cast<JsRuntimeAttributes>(JsRuntimeAttributeAllowScriptInterrupt
@@ -150,9 +151,8 @@ namespace wage {
   JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState) {
     Logger::debug("Added JS system...");
     Jsrt * runtime = (Jsrt *)callbackState;
-    JsSystem* system = new JsSystem(stringFromValue(arguments[1]),  arguments[2]);
     // TODO: Figure out how this should
-    runtime->getContext()->add(system);
+    Core::Instance->add<JsSystem>(stringFromValue(arguments[1]),  arguments[2]);
     // TODO: Break this out
     JsValueRef undefinedValue;
     if (JsGetUndefinedValue(&undefinedValue) == JsNoError) {

@@ -18,7 +18,6 @@ namespace wage {
     
     virtual void load(Asset* asset) {
       queue.dispatch([this,asset]{
-        printf("Loading!\n");
         performLoad(asset);
       });      
     }

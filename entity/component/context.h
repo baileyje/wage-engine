@@ -20,6 +20,7 @@ namespace wage {
     virtual double getDeltaTime() const = 0;
 
     virtual Entity* getEntity() = 0;
+
   };
 
 }

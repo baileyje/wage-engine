@@ -3,6 +3,4 @@
 
 namespace wage {
 
-  GlFont* GlFont::JankyFont = new GlFont("fonts/ARCADE.TTF", 48);
-
 }

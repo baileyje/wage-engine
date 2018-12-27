@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 
+#include "memory/allocator.h"
 #include "tiny_obj_loader.h"
 
 namespace wage {
@@ -268,7 +269,7 @@ namespace wage {
 
     // TODO: Some kind of id genner
     std::cout << indices[0] << std::endl;
-    return new Mesh("GennedMesh", vertices, normals, texts, indices);
+    return make<Mesh>("GennedMesh", vertices, normals, texts, indices);
   }
 
 }

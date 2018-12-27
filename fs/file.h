@@ -13,6 +13,11 @@ namespace wage {
 
     typedef std::vector<unsigned char> Buffer;
 
+    File(std::string path)  {
+      std::ifstream stream(path, std::fstream::binary);
+      _data = Buffer(std::istreambuf_iterator<char>(stream), {});
+    }
+
     File(Buffer buffer) : _data(buffer) {      
     }
 

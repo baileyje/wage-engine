@@ -1,5 +1,7 @@
 #include "entity/entity.h"
 
+#include "memory/allocator.h"
+
 #include "entity/component.h"
 #include "entity/context.h"
 #include "entity/component/context.h"
@@ -62,7 +64,7 @@ namespace wage {
   LIFECYCLE_FUNC(stop)
 
   Entity* Entity::add(ComponentCallback func) {
-    add<FunctionComponent>(new FunctionComponent(func));    
+    add<FunctionComponent>(make<FunctionComponent>(func));    
     return this;
   }
 

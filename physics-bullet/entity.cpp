@@ -1,21 +1,25 @@
 #include "physics-bullet/entity.h"
 
+#include "memory/allocator.h"
+
 namespace wage {
 
   btCollisionShape* PhysicsEntity::shapeFor(EntityReference entity) {
     Collider* collider = entity->get<Collider>();
     if (!collider) {
-      return new btEmptyShape();
+      return make<btEmptyShape>();
     }
     Vector scale = entity->getTransform().getScale();  
     switch(collider->getType()) {
       // TODO: Support more shapes
       case box: {
+        printf("Boxage\n");
         btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);			
-        return new btBoxShape(halfExtents);
+        return make<btBoxShape>(halfExtents);
       }
       case sphere: {
-        return new btSphereShape(scale.x / 2.0);
+        printf("Spherage\n");
+        return make<btSphereShape>(scale.x / 2.0);
       }
       default: return nullptr;
     }	
@@ -24,18 +28,19 @@ namespace wage {
   btRigidBody* PhysicsEntity::rigidBodyFor(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape) {
     btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
     btVector3 localInertia(0, 0, 0);
-    if (rigidBody->getMass() != 0.f) {
+    if (rigidBody->getMass() != 0.f) {      
       shape->calculateLocalInertia(rigidBody->getMass(), localInertia);
     }    
-    btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+    btDefaultMotionState* myMotionState = make<btDefaultMotionState>(startTransform);
     btRigidBody::btRigidBodyConstructionInfo cInfo(rigidBody->getMass(), myMotionState, shape, localInertia);
-    btRigidBody* body = new btRigidBody(cInfo);  
+    btRigidBody* body = make<btRigidBody>(cInfo);  
     if (rigidBody->getType() == kinematic) {
       body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     } else if (rigidBody->getType() == immovable) {
+      printf("immovable\n");
       body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
     }
-    //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
+    //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);    
     body->setUserIndex(-1);
     return body;
   }
@@ -53,12 +58,12 @@ namespace wage {
         body->setGravity(btVector3(0, 0, 0));
       }
       object = body;
-    }	else {
-      object = new btCollisionObject();
+    }	else {      
+      object = make<btCollisionObject>();
       object->setCollisionShape(shape);
       dynamicsWorld->addCollisionObject(object);
     }
-    return new PhysicsEntity(entity, shape, body, object);
+    return make<PhysicsEntity>(entity, shape, body, object);
   }
 
   btTransform PhysicsEntity::getTransform() {

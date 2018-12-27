@@ -3,10 +3,9 @@
 
 #include <unordered_map>
 
+#include "memory/allocator.h"
 #include "assets/manager.h"
-
 #include "render-gl/font.h"
-
 #include "render/font.h"
 
 namespace wage {
@@ -18,7 +17,7 @@ namespace wage {
     GlFont* load(Font& font) {
       GlFont* glFont = cache[font.path()];
       if (glFont == nullptr) {
-        glFont = new GlFont(font.path(), font.size());
+        glFont = make<GlFont>(font.path(), font.size());
         cache[font.path()] = glFont;
         assetManager->load(glFont);
       }

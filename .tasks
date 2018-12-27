@@ -10,6 +10,8 @@ Core:
 ✔ Add/Remove Entity messages @done (11/18/2018, 8:15:23 AM)
 ☐ Add Start/Stop to components
 ☐ Memory allocator
+    ☐ Permanent Arena
+    ☐ Frame Arena
 ☐ Better virtual filesystem support
 ☐ integrate script component
 ☐ better project structure
@@ -54,7 +56,7 @@ Sound:
 ☐ Literally anything
 
 Physics:
-☐ Split out bullet
+✔ Split out bullet @done (12/22/2018, 7:56:19 PM)
 ☐ More collider types
 ☐ Compound shapes
 ☐ Joints?
@@ -62,4 +64,6 @@ Physics:
 Game:
 ☐ Some strategy for restarting scene
 
+Script:
+☐ Add Lua script interface
 

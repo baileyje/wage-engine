@@ -9,7 +9,7 @@
       "name": "(lldb) Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/bazel-out/darwin-fastbuild/bin/wage",
+      "program": "${workspaceFolder}/bazel-out/darwin-dbg/bin/wage",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

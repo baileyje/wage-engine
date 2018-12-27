@@ -3,8 +3,8 @@
 
 #include <unordered_map>
 
+#include "memory/allocator.h"
 #include "assets/manager.h"
-
 #include "render-gl/texture.h"
 
 namespace wage {
@@ -16,7 +16,7 @@ namespace wage {
     GlTexture* load(Texture* texture) {
       GlTexture* glTexture = cache[texture->getId()];
       if (glTexture == nullptr) {
-        glTexture = new GlTexture(texture);
+        glTexture = make<GlTexture>(texture);
         cache[texture->getId()] = glTexture;
         assetManager->load(glTexture);
       }

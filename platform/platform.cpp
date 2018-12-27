@@ -1,6 +1,7 @@
 #include "platform/platform.h"
 
 #include "core/logger.h"
+#include "memory/allocator.h"
 
 namespace wage {
 
@@ -23,15 +24,16 @@ namespace wage {
     int screenWidth = 0;
     int screenHeight = 0;
     glfwGetFramebufferSize(glfWindow, &screenWidth, &screenHeight);
-    window = new Window(glfWindow, screenWidth, screenHeight);
-    
+    window = make<Window>(glfWindow, screenWidth, screenHeight);    
     glfwPollEvents();
   }
 
   void Platform::deinit(SystemContext* context) {
     glfwDestroyWindow(window->as<GLFWwindow>());
     glfwTerminate();
-    delete window;
+    // TODO: Cleanup window
+    // delete window;
+
   }
 
 }

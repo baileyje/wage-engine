@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "core/system/map.h"
+#include "memory/allocator.h"
 
 namespace wage {
 
@@ -27,12 +28,26 @@ namespace wage {
     void stop();  
 
     template <typename T>
-    void add(T* system) {  
+    void addSystem(T* system) {  
       systems.add<T>(system);  
       if (running) {
         // system->init(this);      
         start(system);
       }
+    }
+
+    template <typename T, typename... Args>
+    T* add(Args... args) {  
+      auto instance = make<T>(args...);
+      addSystem<T>(instance);
+      return instance;
+    }
+
+    template <typename T, typename I, typename... Args>
+    I* add(Args... args) {  
+      auto instance = make<I>(args...);
+      addSystem<T>(instance);
+      return instance;
     }
 
     template <typename T>

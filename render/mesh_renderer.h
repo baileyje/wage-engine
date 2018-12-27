@@ -3,6 +3,7 @@
 
 
 #include "core/core.h"
+#include "memory/allocator.h"
 #include "render/renderer.h"
 #include "entity/component/dynamic.h"
 
@@ -26,7 +27,7 @@ namespace wage {
 
   };
 
-  MeshRenderer* MeshRenderer::Instance = new MeshRenderer();
+  MeshRenderer* MeshRenderer::Instance = make<MeshRenderer>();
 
 }
 

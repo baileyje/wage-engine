@@ -28,6 +28,10 @@ namespace wage {
 
     static PhysicsEntity* from(EntityReference entity, btDiscreteDynamicsWorld* dynamicsWorld);
 
+    PhysicsEntity(EntityReference entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
+      : entity(entity), shape(shape), rigidBody(rigidBody), object(object) {    
+    }
+
     void applyForces();
 
     void updateEntityTransform();
@@ -47,10 +51,6 @@ namespace wage {
     }
 
   private: 
-
-    PhysicsEntity(EntityReference entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
-      : entity(entity), shape(shape), rigidBody(rigidBody), object(object) {    
-    }
 
     static btCollisionShape* shapeFor(EntityReference entity);
 
