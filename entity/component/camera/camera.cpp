@@ -1,8 +1,10 @@
 #include "entity/component/camera/camera.h"
 
 
+
+
 namespace wage {
 
-  Camera* Camera::main = nullptr;
+  ComponentReference<Camera> Camera::main = ComponentReference<Camera>();
 
 }

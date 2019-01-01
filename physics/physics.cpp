@@ -18,7 +18,7 @@ namespace wage {
 
 	void Physics::on(AddEntityMessage& message) {
 		auto entity = message.getEntity();
-		if (entity->get<RigidBody>() != nullptr) {
+		if (entity.get<RigidBody>().valid()) {
 			add(entity);
 		}		
 	}

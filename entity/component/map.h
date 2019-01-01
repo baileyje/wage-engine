@@ -51,13 +51,28 @@ namespace wage {
 
     ~ComponentMap() {}
 
+    template <typename T, typename... Args>
+    inline T* add(Args... args) {
+      auto component = Allocator::Permanent()->create<T>(args...);
+      return addComponent(component);
+    }
+
     template <typename T>
-    inline void add(T* component) {
+    inline T* addComponent(T* component) {
       values.push_back(component);
       std::string name = component->getName();
       map[name].push_back(component);
       nameMap[typeid(component)] = name;
+      return component;
     }
+
+    // template <typename T>
+    // inline void add(Reference<T> component) {
+    //   values.push_back(component);
+    //   std::string name = component->getName();
+    //   map[name].push_back(component);
+    //   nameMap[typeid(component)] = name;
+    // }
 
     inline ComponentIterator begin() {
       return values.begin();

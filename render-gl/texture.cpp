@@ -5,7 +5,7 @@
 
 namespace wage {
 
-  GlTexture::GlTexture(Texture* texture) : Asset(texture->getPath()), texture(texture), pushed(false) {  
+  GlTexture::GlTexture(Texture* texture) : Asset(texture->getPath()), pushed(false), texture(texture) {  
   }
 
   GlTexture::~GlTexture() {

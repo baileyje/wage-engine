@@ -20,7 +20,7 @@ namespace wage {
     static GlProgram* Font;
 
     GlProgram(std::string vertexPath, std::string fragmentPath) :
-      vertexShader(vertexPath, GL_VERTEX_SHADER), fragmentShader(fragmentPath, GL_FRAGMENT_SHADER), linked_(false) {
+      vertexShader(vertexPath, GL_VERTEX_SHADER), fragmentShader(fragmentPath, GL_FRAGMENT_SHADER), bound_(false), linked_(false) {
     }
 
     ~GlProgram() {
@@ -50,7 +50,7 @@ namespace wage {
       if ( infoLogLength > 0 ){
         std::vector<char> errorMessage(infoLogLength+1);
         GL_FAIL_CHECK(glGetProgramInfoLog(id_, infoLogLength, NULL, &errorMessage[0]));
-        Logger::error("%s\n", &errorMessage[0]);
+        Logger::error("Link error:", &errorMessage[0]);
       }
       linked_ = true;
     }

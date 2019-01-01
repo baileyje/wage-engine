@@ -3,19 +3,24 @@
 
 #include <string>
 
-#include "entity/component/context.h"
+#include "math/transform.h"
 
 namespace wage {
+
+  // TODO: Move to network safe ids
+  typedef unsigned long ComponentId;
+
+  typedef std::string ComponentName;
 
   class Component {
 
   public:
 
-    Component(std::string name) : name(name) {};
+    Component(ComponentName name) : name(name) {};
 
     virtual ~Component() {};
 
-    inline std::string getName() {
+    inline ComponentName getName() {
       return name;
     }
 
@@ -33,7 +38,7 @@ namespace wage {
 
   private:
 
-    std::string name;
+    ComponentName name;
 
     Transform* transform;
     

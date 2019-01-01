@@ -28,7 +28,7 @@ namespace wage {
     
   public:
 
-    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform transform, Mesh* mesh, Material* material) 
+    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform transform, ComponentReference<Mesh> mesh, ComponentReference<Material> material) 
       : vaoManager_(vaoManager), textureManager_(textureManager), transform(transform), mesh(mesh), material(material) {}
 
     inline VaoManager* vaoManager() {
@@ -109,7 +109,7 @@ namespace wage {
         glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->getOuterCutOff())));
       }
       Texture* texture = Texture::Default;
-      if (material != nullptr) {
+      if (material.valid()) {
         texture = material->getTexture();
         if (material->getTexture() != nullptr) {
           texture = material->getTexture();
@@ -146,9 +146,9 @@ namespace wage {
 
     Transform transform;
 
-    Mesh* mesh;
+    ComponentReference<Mesh> mesh;
 
-    Material* material;
+    ComponentReference<Material> material;
 
   };
 

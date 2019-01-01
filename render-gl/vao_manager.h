@@ -15,7 +15,7 @@ namespace wage {
   
   public:
 
-    VertexArray* load(Mesh* mesh) {
+    VertexArray* load(ComponentReference<Mesh> mesh) {
       VertexArray* vao = cache[mesh->getId()];
       if (vao == nullptr) {
         vao = make<VertexArray>();

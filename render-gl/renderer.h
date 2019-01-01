@@ -21,7 +21,7 @@ namespace wage {
 
     void renderText(Vector position, std::string text, Font font, Color color);
 
-    void renderMesh(Transform transform, Mesh* mesh, Material* material);
+    void renderMesh(Transform transform, ComponentReference<Mesh> mesh, ComponentReference<Material> material);
     
     virtual void beginUpdate();
 

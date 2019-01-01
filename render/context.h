@@ -14,7 +14,7 @@ namespace wage {
 
   public:
 
-    RenderContext(Camera* camera, Vector2 screenSize,
+    RenderContext(ComponentReference<Camera> camera, Vector2 screenSize,
       std::vector<DirectionalLight*> dirLights, std::vector<PointLight*> pointLights, std::vector<Spotlight*> spotlights) 
       : camera_(camera), screenSize_(screenSize),
       dirLights_(dirLights), pointLights_(pointLights), spotlights_(spotlights) {
@@ -23,7 +23,7 @@ namespace wage {
           cameraPosition_ = camera->getTransform()->getPosition();
       }
 
-    inline Camera* camera() {
+    inline ComponentReference<Camera> camera() {
       return camera_;
     }
 
@@ -57,7 +57,7 @@ namespace wage {
 
   private:
   
-    Camera* camera_;
+    ComponentReference<Camera> camera_;
 
     Vector2 screenSize_;
 

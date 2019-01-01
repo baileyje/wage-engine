@@ -42,12 +42,13 @@ namespace wage {
 	}
 
 	void BulletPhysics::deinit(SystemContext* context) {
-		for (auto entity : entities) {
-			if (entity->getObject()) {
-				dynamicsWorld.removeCollisionObject(entity->getObject());
-			}
-			delete entity;
-		}
+		// TODO: Evaluate memory free, etc.
+		// for (auto entity : entities) {
+		// 	if (entity->getObject()) {
+		// 		dynamicsWorld.removeCollisionObject(entity->getObject());
+		// 	}
+		// 	delete entity;
+		// }
 	}
 
 	void BulletPhysics::add(EntityReference entity) {	

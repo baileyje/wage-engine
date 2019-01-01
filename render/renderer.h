@@ -39,7 +39,7 @@ namespace wage {
 
     virtual void renderText(Vector position, std::string text, Font font, Color color) = 0;
 
-    virtual void renderMesh(Transform transform, Mesh* mesh, Material* material) = 0;
+    virtual void renderMesh(Transform transform, ComponentReference<Mesh> mesh, ComponentReference<Material> material) = 0;
     
   protected:
 

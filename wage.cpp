@@ -37,8 +37,8 @@
 using namespace wage;
 
 ComponentCallback MoveIt = [](ComponentContext* context) {
-  Entity* entity = context->getEntity();
-  RigidBody* body = entity->get<RigidBody>();
+  auto entity = context->getEntity();
+  auto body = entity.get<RigidBody>();
   if (Input::isPressed(GLFW_KEY_W)) {
     body->addImpulse(Vector(0, 0, 0.0004));
   }
@@ -89,8 +89,7 @@ ComponentCallback CamRotate = [](ComponentContext* context) {
 
 ComponentCallback Raise = [](ComponentContext* context) {
   if (Input::isPressed(GLFW_KEY_M)) {
-    Entity* entity = context->getEntity();
-    RigidBody* body = entity->get<RigidBody>();
+    auto body = context->getEntity().get<RigidBody>();
     body->addImpulse(Vector(0, 0.0004, 0));
   }
 };
@@ -104,6 +103,7 @@ public:
 
   void start(ComponentContext* context) {
     offset = context->getTransform().getPosition() - target->getTransform().getPosition();
+    printf("Offset: %f:%f:%f\n", offset.x, offset.y, offset.z);
   }
 
   void update(ComponentContext* context) {
@@ -131,7 +131,7 @@ public:
     } 
     Vector dir = target->getTransform().getPosition() - context->getTransform().getPosition();
     Vector movement = (glm::normalize(dir) * 0.0005);
-    context->getEntity()->get<RigidBody>()->addImpulse(movement);
+    context->getEntity().get<RigidBody>()->addImpulse(movement);
   }
 
 private:
@@ -149,11 +149,11 @@ void addEntity(EntityManager* manager, Vector position) {
     entity->getTransform().setPosition(position);
     entity->getTransform().setLocalScale(Vector(1, 1, 1));
     entity
-      ->add(RigidBody::create(0.001))
-      ->add(Raise)
-      ->add(&Mesh::Cube)
-      ->add(&Collider::Box)
-      ->add(MeshRenderer::Instance);
+      .create<RigidBody>(0.001)
+      .onUpdate(Raise)
+      .add(&Mesh::Cube)
+      .add(&Collider::Box)
+      .add(MeshRenderer::Instance);
 }
 
 void addRandomEntity(EntityManager* manager) {
@@ -167,13 +167,13 @@ EntityReference addMover(EntityManager* manager) {
   mover->getTransform().setPosition(Vector(0, 0, 0));
   mover->getTransform().setLocalScale(Vector(5, 5, 5));
   mover
-    ->add(RigidBody::create(0.0005))
-    ->add(&Mesh::Sphere)
-    ->add(&Collider::Sphere)
-    ->add(MeshRenderer::Instance)
-    ->add(MoveIt)
+    .create<RigidBody>(0.0005)
+    .add(&Mesh::Sphere)
+    .add(&Collider::Sphere)
+    .add(MeshRenderer::Instance)
+    .onUpdate(MoveIt)
     // ->add(CamMove)
-    ->add(make<Material>(make<Texture>("textures/mover.png")));
+    .create<Material>(make<Texture>("textures/mover.png"));
 
   // EntityReference follower = manager->create();
   // follower->getTransform().setPosition(Vector(4, 10, 0));
@@ -204,6 +204,7 @@ void drawGrid(EntityManager* manager) {
 }
 
 void setupSystems(Core* core, std::string path) {
+  Allocator::Assets();
   // FileSystem* localFs = new LocalFileSystem(path);
   auto fileSystem = core->add<FileSystem, LocalFileSystem>(path);
   core->add<AssetManager, FsAssetManager>(fileSystem);
@@ -223,7 +224,7 @@ void setupScene(EntityManager* manager) {
   DirectionalLight* temp = make<DirectionalLight>();
   temp->setDiffuse(Color(0.7,0.7,0.7,1));
   temp->setAmbient(Color(0.4,0.4,0.4,1));
-  dirLight->add(temp);
+  dirLight.add(temp);
 
   // EntityReference pointLight = manager->create();
   // pointLight->getTransform().setPosition(Vector(0, 2, 0));
@@ -247,37 +248,41 @@ void setupScene(EntityManager* manager) {
   ground->getTransform().setLocalScale(Vector(200, 2, 200));
   ground->getTransform().setRotation(Vector(0, 0, 0));
   ground
-    ->add(RigidBody::create(0.0, kinematic))
-    ->add(&Mesh::Cube)
-    ->add(&Collider::Box)
-    ->add(MeshRenderer::Instance);
+    .create<RigidBody>(0.0, kinematic)
+    .add(&Mesh::Cube)
+    .add(&Collider::Box)
+    .add(MeshRenderer::Instance);
+
+  // auto ref = manager->componentManager().create<RigidBody>(ground.getWrapped(), 0.0, kinematic);
+  // printf("\n\n\Created - %s!!!!\n\n\n\n", ref->getName().c_str());
+  
+  // for (auto thing = manager->componentManager().begin<RigidBody>(); thing != manager->componentManager().end<RigidBody>(); ++thing) {
+  //   printf("\n\n\nFOUND - %s!!!!\n\n\n\n", thing->getName().c_str());
+  // }
 
   auto mover = addMover(manager);
 
-  Camera* camera = make<PerspectiveCamera>();
   EntityReference cameraEntity = manager->create();  
   cameraEntity->getTransform().setPosition(Vector(0, 15, -30));
   cameraEntity->getTransform().setRotation(Vector(10, 0.0, 0));
   cameraEntity
-    ->add(camera)
-    ->add(CamRotate)
-    // ->add(CamMove);
-    ->add(make<Follow>(mover));
-  Camera::main = camera;
+    .create<Camera, PerspectiveCamera>()
+    .create<Follow>(mover)
+    .onUpdate(CamRotate);
+  // printf("Null? %d\n", cameraEntity.get<PerspectiveCamera>() == nullptr);
+  // exit(1);
+  Camera::main = cameraEntity.get<Camera>();
 
   // drawGrid(manager);
   Font font("fonts/ARCADE.TTF", 60);
   auto label = make<Label>("Hello", font, Color(1, 1, 1, 0));
   EntityReference labelEntity = manager->create();  
   labelEntity->getTransform().setPosition(Vector(100, 100, 0));  
-  labelEntity->add(label);
+  labelEntity.add(label);  
 }
 
 // So far so dumb
 int main(int argc, char* argv[]) {
-
-  Font* val = make<Font>("fonts/ARCADE.TTF", 60);
-  printf("Path: %s\n", val->path().c_str());
 
   char buffer[255];
   std::string path = std::string(getcwd(buffer, sizeof(buffer)));  

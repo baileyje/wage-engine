@@ -13,7 +13,7 @@ namespace wage {
 
   public:
 
-    AssetManager() : System("AssetManager"), queue("AssetLoad", 4) {
+    AssetManager() : System("AssetManager"), queue("AssetLoad", 1) {
     }
     
     virtual void load(Asset* asset) {

@@ -15,7 +15,7 @@ namespace wage {
       // if (!found.empty()) {
       //   return found[0];
       // }
-      return entityManager->with("Camera")[0];
+      // return entityManager->with("Camera")[0];
     }
 
   private:

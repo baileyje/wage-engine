@@ -11,10 +11,12 @@
 #include "entity/entity.h"
 #include "memory/object_pool.h"
 #include "messaging/messaging.h"
+#include "entity/component/manager.h"
+#include "entity/component/context.h"
+#include "entity/reference.h"
+#include "entity/context.h"
 
 namespace wage {
-
-  typedef ObjectPool<Entity>::Reference EntityReference;
 
   typedef std::vector<EntityReference> EntityList;
 
@@ -51,6 +53,43 @@ namespace wage {
     DestroyEntityMessage(EntityReference entity) : EntityMessage(entity) {}
   };
 
+  // TODO: Extract out
+  class EntityComponentContext : public ComponentContext {
+
+  public:
+
+    EntityComponentContext(EntityReference entity, EntityContext* context) : entity(entity), context(context) {    
+    }
+
+    inline Transform& getTransform() {
+      return entity->getTransform();
+    }
+
+    inline double getTime() const {
+      return context->getTime();
+    }
+
+    inline double getDeltaTime() const {
+      return context->getDeltaTime();
+    }
+
+    // inline ComponentMap<Component>* getComponents() {
+    //   return entity->getComponents();
+    // }
+
+    inline EntityReference getEntity() {
+      return entity;
+    }
+      
+
+  private:
+
+    EntityReference entity;
+
+    EntityContext* context;
+
+  };
+
   class EntityManager: public System {
 
   public:
@@ -60,7 +99,15 @@ namespace wage {
     virtual ~EntityManager() {}
 
     void init(SystemContext* context) {
-      messaging = context->get<Messaging>();
+    }
+
+    void start(SystemContext* context) {
+      // TODO: Evaluate where this belongs
+      EntityContext entityContext(context->getTime(), context->getDeltaTime()); 
+      for (auto itr = componentManager_.dynamicBegin(); itr != componentManager_.dynamicEnd(); ++itr) {
+        EntityComponentContext componentContext(EntityReference(&componentManager_, (*itr).entity()), &entityContext);
+        (*itr)->start(&componentContext);
+      }
     }
     
     /*
@@ -70,6 +117,7 @@ namespace wage {
       4.  Queue destroys
     */
     void update(SystemContext* context) {
+      auto messaging = context->get<Messaging>();
       if (!messaging) {
         return;
       }
@@ -91,11 +139,18 @@ namespace wage {
         destroys.push_back(entity);
       }
       destroyRequests.clear();
+      
+      // TODO: Evaluate where this belongs
+      EntityContext entityContext(context->getTime(), context->getDeltaTime()); 
+      for (auto itr = componentManager_.dynamicBegin(); itr != componentManager_.dynamicEnd(); ++itr) {
+        EntityComponentContext componentContext(EntityReference(&componentManager_, (*itr).entity()), &entityContext);
+        (*itr)->update(&componentContext);
+      }
     }
 
     inline EntityReference create() {
-      EntityReference ref = pool.create();
-      ref->setId(Entity::nextId());
+      auto poolRef = pool.create();
+      EntityReference ref = EntityReference(&componentManager_, poolRef);
       byId[ref->getId()] = ref;        
       adds.push_back(ref);
       return ref;
@@ -109,7 +164,7 @@ namespace wage {
       return byId[id];
     }
 
-    EntityList with(std::string componentName);
+    // EntityList with(std::string componentName);
 
     inline EntityIterator begin() {
       return pool.begin();
@@ -123,13 +178,15 @@ namespace wage {
       pool.debug();    
     }
 
+    inline ComponentManager& componentManager() {
+      return componentManager_;
+    }
+
   private:
 
     std::unordered_map<EntityId, EntityReference> byId;
 
     ObjectPool<Entity> pool;
-
-    Messaging* messaging;
 
     std::vector<EntityReference> adds;
     
@@ -137,6 +194,7 @@ namespace wage {
     
     std::vector<EntityReference> destroys;
 
+    ComponentManager componentManager_;
   };
 
 }

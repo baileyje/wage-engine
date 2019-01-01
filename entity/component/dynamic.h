@@ -2,8 +2,11 @@
 #define DYNAMIC_COMPONENT_H
 
 #include "entity/component.h"
+// #include "entity/component/context.h"
 
 namespace wage {
+
+  class ComponentContext;
 
   class DynamicComponent : public Component {
 

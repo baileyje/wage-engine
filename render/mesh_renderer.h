@@ -6,6 +6,7 @@
 #include "memory/allocator.h"
 #include "render/renderer.h"
 #include "entity/component/dynamic.h"
+#include "entity/component/context.h"
 
 namespace wage {
 
@@ -22,7 +23,7 @@ namespace wage {
     virtual ~MeshRenderer() {}
 
     void update(ComponentContext* context) {
-      Core::Instance->get<Renderer>()->renderMesh(context->getTransform(), context->getEntity()->get<Mesh>(), context->getEntity()->get<Material>());
+      Core::Instance->get<Renderer>()->renderMesh(context->getTransform(), context->getEntity().get<Mesh>(), context->getEntity().get<Material>());
     }
 
   };

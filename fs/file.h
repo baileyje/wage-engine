@@ -1,9 +1,10 @@
 #ifndef FILE_SYSTEM_FILE_H
 #define FILE_SYSTEM_FILE_H
 
+#include <iostream>
 #include <fstream>
-#include <iterator>
-#include <vector>
+
+#include "memory/allocator.h"
 
 namespace wage {
 
@@ -11,30 +12,30 @@ namespace wage {
 
   public:
 
-    typedef std::vector<unsigned char> Buffer;
-
     File(std::string path)  {
-      std::ifstream stream(path, std::fstream::binary);
-      _data = Buffer(std::istreambuf_iterator<char>(stream), {});
-    }
-
-    File(Buffer buffer) : _data(buffer) {      
-    }
-
-    File(std::ifstream& stream) : _data(std::istreambuf_iterator<char>(stream), {} ) {      
+      std::ifstream file(path, std::ios::in|std::ios::binary|std::ios::ate);
+      size_ = file.tellg();
+      printf("Path: %s\n", path.c_str());
+      printf("Length: %zu\n", size_);      
+      file.seekg (0, std::ios::beg);
+      data_ = (unsigned char*)Allocator::Assets()->allocate(size_ + 15);
+      file.read ((char*)data_, size_);
+      file.close();
     }
 
     inline unsigned char* data() {
-      return _data.data();
+      return data_;
     }
 
     inline size_t length() {
-      return _data.size();
+      return size_;
     }
 
   private:
 
-    Buffer _data;
+    unsigned char* data_;
+
+    size_t size_;
 
   };
 

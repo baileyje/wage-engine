@@ -26,18 +26,16 @@ namespace wage {
     assetManager = context->get<AssetManager>();
     // // TODO: Listen for changes to entities and figure out how to get these!!!
     // // ALSO, GROSS
+    // TODO: Make some kind of compomnent list type to avoid this iterator shaz bot.
     EntityManager* manager = context->get<EntityManager>();
-    auto dirLightEntities = manager->with("DirectionalLight");
-    for (auto entity : dirLightEntities) {
-      dirLights.push_back(entity->get<DirectionalLight>());
+    for (auto light = manager->componentManager().begin<DirectionalLight>(); light != manager->componentManager().end<DirectionalLight>(); ++light) {
+      dirLights.push_back(light.operator->().operator->());
     }
-    auto pointLightEntities = manager->with("PointLight");
-    for (auto entity : pointLightEntities) {
-      pointLights.push_back(entity->get<PointLight>());
+    for (auto light = manager->componentManager().begin<PointLight>(); light != manager->componentManager().end<PointLight>(); ++light) {
+      pointLights.push_back(light.operator->().operator->());
     }
-    auto spotlightEntities = manager->with("Spotlight");
-    for (auto entity : spotlightEntities) {
-      spotlights.push_back(entity->get<Spotlight>());
+    for (auto light = manager->componentManager().begin<Spotlight>(); light != manager->componentManager().end<Spotlight>(); ++light) {
+      spotlights.push_back(light.operator->().operator->());
     }
   }
 
@@ -59,7 +57,7 @@ namespace wage {
     beginUpdate();
     EntityManager* manager = context->get<EntityManager>();
     auto camera = Camera::main;
-    if (camera == nullptr) {
+    if (!camera.valid()) {
       Logger::error("No Camera");
       return;
     }

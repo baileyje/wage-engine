@@ -2,10 +2,9 @@
 #define COMPONENT_CONTEXT_H
 
 #include "math/transform.h"
+#include "entity/reference.h"
 
 namespace wage {
-
-  class Entity;
 
   class ComponentContext {
 
@@ -19,7 +18,7 @@ namespace wage {
 
     virtual double getDeltaTime() const = 0;
 
-    virtual Entity* getEntity() = 0;
+    virtual EntityReference getEntity() = 0;
 
   };
 

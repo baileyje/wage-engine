@@ -3,6 +3,7 @@
 
 #include "entity/component.h"
 #include "math/frustum.h"
+#include "entity/component/reference.h"
 
 namespace wage {
 
@@ -12,7 +13,7 @@ namespace wage {
 
   public:
 
-    static Camera* main;
+    static ComponentReference<Camera> main;
 
     Camera(CameraType type) : Component("Camera"), type(type) {    
     }

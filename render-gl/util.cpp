@@ -24,6 +24,7 @@ namespace wage {
           default: break;
         }
       }
+      exit(1);
     }
   }
   

@@ -111,8 +111,7 @@ namespace wage {
         characters.insert(std::pair<char, GlCharacter>(c, character));        
       }
       FT_Done_Face(face);
-      FT_Done_FreeType(freeType );
-      // exit(0);
+      FT_Done_FreeType(freeType);
     }
 
   private:

@@ -19,11 +19,12 @@ namespace wage {
     }
 
     ~PhysicsEntity() {    
-      if (rigidBody && rigidBody->getMotionState()) {
-        delete rigidBody->getMotionState();
-      }
-      delete object; // NOT rigidBody
-      delete shape;
+      // TODO: Evaluate memory usage. Assume these are lost.
+      // if (rigidBody && rigidBody->getMotionState()) {
+      //   delete rigidBody->getMotionState();
+      // }      
+      // delete object; // NOT rigidBody
+      // delete shape;
     }  
 
     static PhysicsEntity* from(EntityReference entity, btDiscreteDynamicsWorld* dynamicsWorld);
@@ -54,7 +55,7 @@ namespace wage {
 
     static btCollisionShape* shapeFor(EntityReference entity);
 
-    static btRigidBody* rigidBodyFor(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape);
+    static btRigidBody* rigidBodyFor(ComponentReference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape);
     
     EntityReference entity;
 

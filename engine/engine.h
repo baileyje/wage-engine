@@ -17,10 +17,10 @@ namespace wage {
 
     ~Engine() {}
 
-    LIFECYCLE_FUNC(start)
-    LIFECYCLE_FUNC(update)
-    LIFECYCLE_FUNC(fixedUpdate)
-    LIFECYCLE_FUNC(stop)
+    // LIFECYCLE_FUNC(start)
+    // LIFECYCLE_FUNC(update)
+    // LIFECYCLE_FUNC(fixedUpdate)
+    // LIFECYCLE_FUNC(stop)
 
   };
 

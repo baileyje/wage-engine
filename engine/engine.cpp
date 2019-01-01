@@ -16,9 +16,9 @@ void Engine::Name(SystemContext* context) { \
 
 namespace wage {
 
-  LIFECYCLE_FUNC_IMPL(start)
-  LIFECYCLE_FUNC_IMPL(update)
-  LIFECYCLE_FUNC_IMPL(fixedUpdate)
-  LIFECYCLE_FUNC_IMPL(stop)
+  // LIFECYCLE_FUNC_IMPL(start)
+  // LIFECYCLE_FUNC_IMPL(update)
+  // LIFECYCLE_FUNC_IMPL(fixedUpdate)
+  // LIFECYCLE_FUNC_IMPL(stop)
 
 }

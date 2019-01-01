@@ -15,6 +15,7 @@ namespace wage {
     typedef std::function<void(void)> Operation;
 
   public:
+    
     DispatchQueue(std::string name, size_t threadCount = 1);
     
     ~DispatchQueue();

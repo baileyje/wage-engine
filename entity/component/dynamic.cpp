@@ -1,5 +1,7 @@
 #include "entity/component/dynamic.h"
 
+#include "entity/component/context.h"
+
 namespace wage {
 
   void DynamicComponent::start(ComponentContext* context) {};

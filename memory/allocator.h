@@ -14,6 +14,8 @@ namespace wage {
     static Allocator* Permanent();
 
     static Allocator* Temporary();
+
+    static Allocator* Assets();
     
     Allocator(size_t size) : size(size) {
       std::cout << "Acquiring " << size << " bytes of memory" << std::endl;
@@ -65,7 +67,6 @@ namespace wage {
 
   template <typename T, typename... Args>
   T* make(Args... args) {
-    printf("perm\n");
     return Allocator::Permanent()->create<T>(args...);
   }
 

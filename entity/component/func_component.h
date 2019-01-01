@@ -4,18 +4,15 @@
 #include <sstream>
 #include <functional>
 
-#include "entity/component/context.h"
 #include "entity/component/dynamic.h"
 
 namespace wage {
-
-  typedef std::function<void(ComponentContext* contesxt)> ComponentCallback;
 
   class FunctionComponent : public DynamicComponent {
 
   public:
 
-    FunctionComponent(ComponentCallback compCallback) : DynamicComponent(FunctionComponent::nextName()), compCallback(compCallback) {
+    FunctionComponent(std::function<void(ComponentContext* context)> compCallback) : DynamicComponent(FunctionComponent::nextName()), compCallback(compCallback) {
     }
 
     void update(ComponentContext* context) {

@@ -21,14 +21,9 @@ namespace wage {
 
     template <typename... Args>
     static RigidBody* create(Args... args) {
-      // auto ref = Pool.create(args...);
-      // auto ptr = ref.get();
-      // printf("Is Nul? %d\n", ptr == nullptr);      
-      // printf("Val: %f\n", ptr->getMass());
-      // printf("Typ: %d\n", ptr->getType());
-      // exit(1);
-
-      return make<RigidBody>(args...);
+      auto ref = Pool.create(args...);
+      auto ptr = ref.get();
+      return ptr;
     }
 
     RigidBody(float mass = 0, RigidBodyType type = dynamic) : Component("RigidBody"), mass(mass), affectedByGravity(true), type(type) {}

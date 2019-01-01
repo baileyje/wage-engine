@@ -10,8 +10,11 @@ Core:
 ✔ Add/Remove Entity messages @done (11/18/2018, 8:15:23 AM)
 ☐ Add Start/Stop to components
 ☐ Memory allocator
-    ☐ Permanent Arena
-    ☐ Frame Arena
+    ✔ Permanent Arena @done (12/29/2018, 10:29:07 AM)
+    ✔ Frame Arena @done (12/29/2018, 10:29:08 AM)
+    ☐ Evaluate Permanent usage
+    ☐ Allow pool expansion
+    ☐ General reference strategy
 ☐ Better virtual filesystem support
 ☐ integrate script component
 ☐ better project structure
