@@ -14,7 +14,7 @@ Core:
     ✔ Frame Arena @done (12/29/2018, 10:29:08 AM)
     ☐ Evaluate Permanent usage
     ☐ Allow pool expansion
-    ☐ General reference strategy
+    ✔ General reference strategy @done (1/1/2019, 8:45:24 PM)
 ☐ Better virtual filesystem support
 ☐ integrate script component
 ☐ better project structure
@@ -49,11 +49,14 @@ Renderer:
 ✔ Mesh cache @done (12/9/2018, 9:15:41 PM)
 ☐ Not the worst material ever...
   ☐ Maybe support cloning a common one
-☐ Font support
+✔ Font support @done (1/1/2019, 8:45:42 PM)
 
 Asset Manager:
 ✔ Async loading @done (12/19/2018, 8:58:20 PM)
 ☐ Caching
+
+Input:
+☐ Mouse input
 
 Sound:
 ☐ Literally anything

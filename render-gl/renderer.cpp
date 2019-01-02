@@ -23,7 +23,7 @@ namespace wage {
     Renderer::start(context);
     glfwMakeContextCurrent(window->as<GLFWwindow>());
     gladLoadGL();
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
     
     GL_FAIL_CHECK(glEnable(GL_DEPTH_TEST));
     GL_FAIL_CHECK(glDepthFunc(GL_LESS));

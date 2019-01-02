@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
+#include <sstream>
 
 #include "math/vector.h"
 #include "math/matrix.h"
@@ -103,7 +104,6 @@ public:
 
   void start(ComponentContext* context) {
     offset = context->getTransform().getPosition() - target->getTransform().getPosition();
-    printf("Offset: %f:%f:%f\n", offset.x, offset.y, offset.z);
   }
 
   void update(ComponentContext* context) {
@@ -137,6 +137,35 @@ public:
 private:
 
   EntityReference target;
+
+};
+
+class FpsDisplay : public DynamicComponent {
+
+public:
+
+  FpsDisplay(ComponentReference<Label> label) :  DynamicComponent("FPS"), label(label), lastTime(0), frames(0) {}
+
+  void update(ComponentContext* context) {
+    double currentTime = context->getTime();
+    frames++;
+    if ( currentTime - lastTime >= 1.0 ) {
+      std::cout << "FPS: " << frames << std::endl;
+      std::ostringstream os;
+      os << "FPS: " << frames;
+      label->set(os.str());
+      frames = 0;
+      lastTime = currentTime;
+    }
+  }
+
+private:
+
+  ComponentReference<Label> label;
+
+  double lastTime;
+
+  int frames;  
 
 };
 
@@ -239,7 +268,7 @@ void setupScene(EntityManager* manager) {
   // spot->setQuadratic(0.000001);
   // spotlight->add(spot);
 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 500; i++) {
      addRandomEntity(manager);
   }
 
@@ -275,10 +304,10 @@ void setupScene(EntityManager* manager) {
 
   // drawGrid(manager);
   Font font("fonts/ARCADE.TTF", 60);
-  auto label = make<Label>("Hello", font, Color(1, 1, 1, 0));
   EntityReference labelEntity = manager->create();  
-  labelEntity->getTransform().setPosition(Vector(100, 100, 0));  
-  labelEntity.add(label);  
+  labelEntity->getTransform().setPosition(Vector(20, 0, 0));   
+  labelEntity.create<Label>("FPS: ", font, Color(1, 1, 1, 0));  
+  labelEntity.create<FpsDisplay>(labelEntity.get<Label>());
 }
 
 // So far so dumb

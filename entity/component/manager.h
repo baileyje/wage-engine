@@ -249,7 +249,7 @@ namespace wage {
 
   private: 
     
-    // TODO: Evaluate if this is a reasonable memory pattern.    
+    // TODO: Move to sparse sets.
     std::unordered_map<EntityId, std::vector<ComponentId>> map;
 
     std::unordered_map<ComponentName, std::vector<ComponentId>> byName;
