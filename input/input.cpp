@@ -7,27 +7,32 @@
 #include "core/logger.h"
 
 namespace wage {
-  static std::unordered_set<int> frameKeys;
+  
+  Input* Input::Instance = nullptr;
 
   void Input::start(SystemContext* context) {
     Logger::info("Starting Input System");
+    Input::Instance = this;
     Platform* platform = context->get<Platform>();
-    window = platform->getWindow()->as<GLFWwindow>();
-    glfwSetWindowUserPointer(window, this);
-    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+    window = platform->getWindow();
+    glfwSetWindowUserPointer(window->as<GLFWwindow>(), this);
+    glfwSetKeyCallback(window->as<GLFWwindow>(), [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+      auto input = static_cast<Input*>(glfwGetWindowUserPointer(window));
       if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
         return;
       } else if (action == GLFW_PRESS) {
-        frameKeys.insert(key);
+        input->frameKeys.insert(key);
       } else if (action == GLFW_RELEASE) {
-        frameKeys.erase(key);
+        input->frameKeys.erase(key);
       }
     });
+    // Input::Instance->setMousePosition(Vector2(1024/2, 768/2));
+    glfwSetInputMode(window->as<GLFWwindow>(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   }
 
   void Input::update(SystemContext* context) {
-    if (glfwWindowShouldClose(window)) {
+    if (glfwWindowShouldClose(window->as<GLFWwindow>())) {
       context->shouldStop();    
       return;
     }
@@ -35,6 +40,16 @@ namespace wage {
 
   bool Input::isPressed(int key) {
     return frameKeys.count(key) > 0;
+  }
+
+  Vector2 Input::mousePosition() {
+    double x, y;
+    glfwGetCursorPos(window->as<GLFWwindow>(), &x, &y);
+    return Vector2(x, y); 
+  }
+
+  void  Input::setMousePosition(Vector2 position) {
+    glfwSetCursorPos(window->as<GLFWwindow>(), position.x, position.y);
   }
 
 }

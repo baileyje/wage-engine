@@ -7,6 +7,8 @@
 #include <unordered_set>
 
 #include "core/system.h"
+#include "platform/window.h"
+#include "math/vector.h"
 
 namespace wage {
 
@@ -14,6 +16,8 @@ namespace wage {
 
   public:
     
+    static Input* Instance;
+
     Input() : System("input") { }
 
     ~Input() {}
@@ -22,14 +26,20 @@ namespace wage {
     
     LIFECYCLE_FUNC(update)
 
-    static bool isPressed(int key);
+    bool isPressed(int key);
+
+    Vector2 mousePosition();
+    
+    void setMousePosition(Vector2 position);
 
   private: 
     
-    GLFWwindow* window;
+    Window* window;
     
+    std::unordered_set<int> frameKeys;
+
   };
 
 }
 
-#endif //INPUT_H
+#endif //INPU T_H

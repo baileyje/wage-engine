@@ -148,6 +148,15 @@ namespace wage {
       }
     }
 
+    void fixedUpdate(SystemContext* context) {
+      // TODO: Evaluate where this belongs
+      EntityContext entityContext(context->getTime(), context->getDeltaTime()); 
+      for (auto itr = componentManager_.dynamicBegin(); itr != componentManager_.dynamicEnd(); ++itr) {
+        EntityComponentContext componentContext(EntityReference(&componentManager_, (*itr).entity()), &entityContext);
+        (*itr)->fixedUpdate(&componentContext);
+      }
+    }
+
     inline EntityReference create() {
       auto poolRef = pool.create();
       EntityReference ref = EntityReference(&componentManager_, poolRef);

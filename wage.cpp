@@ -40,56 +40,81 @@ using namespace wage;
 ComponentCallback MoveIt = [](ComponentContext* context) {
   auto entity = context->getEntity();
   auto body = entity.get<RigidBody>();
-  if (Input::isPressed(GLFW_KEY_W)) {
+  if (Input::Instance->isPressed(GLFW_KEY_W)) {
     body->addImpulse(Vector(0, 0, 0.0004));
   }
-  if (Input::isPressed(GLFW_KEY_S)) {
+  if (Input::Instance->isPressed(GLFW_KEY_S)) {
     body->addImpulse(Vector(0, 0, -0.0004));
   } 
-  if (Input::isPressed(GLFW_KEY_A)) {
+  if (Input::Instance->isPressed(GLFW_KEY_A)) {
     body->addImpulse(Vector(0.0004, 0, 0));
   }
-  if (Input::isPressed(GLFW_KEY_D)) {
+  if (Input::Instance->isPressed(GLFW_KEY_D)) {
     body->addImpulse(Vector(-0.0004, 0, 0));
   }
-  if (Input::isPressed(GLFW_KEY_SPACE)) {
+  if (Input::Instance->isPressed(GLFW_KEY_SPACE)) {
     body->addImpulse(Vector(0, 0.001, 0));
   }
-  if (Input::isPressed(GLFW_KEY_LEFT_SHIFT)) {
+  if (Input::Instance->isPressed(GLFW_KEY_LEFT_SHIFT)) {
     body->addImpulse(Vector(0, -0.0001, 0));
+  }  
+};
+
+class CamLook : public DynamicComponent {
+
+public: 
+
+  CamLook() : DynamicComponent("CamLook"), lastPos(Vector2()), mouseSpeed(0.2) {
   }
+
+  void start(ComponentContext* context) {
+    lastPos = Input::Instance->mousePosition();
+  }
+
+  void update(ComponentContext* context) {
+    auto mousePos = Input::Instance->mousePosition();
+    // printf("Mouse Pos: %f:%f\n", mousePos.x, mousePos.y);
+    auto dx = lastPos.x - mousePos.x;
+    auto dy = lastPos.y - mousePos.y;
+
+    Transform transform = context->getEntity()->getTransform();
+    Vector rotation = eulerAngles(transform.getRotation());
+    auto yaw = mouseSpeed * context->getDeltaTime() * dx;
+    auto pitch = mouseSpeed * context->getDeltaTime() * dy;
+    // printf("Yaw: %f\n", yaw);
+    // printf("Pitch: %f\n", pitch);
+    rotation += Vector(-pitch, yaw, 0);
+    context->getEntity()->getTransform().setRotation(Vector(btDegrees(rotation.x), btDegrees(rotation.y), btDegrees(rotation.z)));
+    lastPos = mousePos;
+  }
+
+private:
+
+    Vector2 lastPos;
+
+    float mouseSpeed;
+
+
 };
 
 ComponentCallback CamMove = [](ComponentContext* context) {
   Transform& transform = context->getEntity()->getTransform();
-  if (Input::isPressed(GLFW_KEY_UP)) {
+  if (Input::Instance->isPressed(GLFW_KEY_UP)) {
       transform.getLocalPosition() += Vector(0, 0, 1);
   }
-  if (Input::isPressed(GLFW_KEY_DOWN)) {
+  if (Input::Instance->isPressed(GLFW_KEY_DOWN)) {
     transform.getLocalPosition() +=  Vector(0, 0, -1);
   } 
-  if (Input::isPressed(GLFW_KEY_LEFT)) {
+  if (Input::Instance->isPressed(GLFW_KEY_LEFT)) {
     transform.getLocalPosition() += Vector(-1, 0, 0);
   }
-  if (Input::isPressed(GLFW_KEY_RIGHT)) {
+  if (Input::Instance->isPressed(GLFW_KEY_RIGHT)) {
     transform.getLocalPosition() += Vector(1, 0, 0);
   }
 };
 
-ComponentCallback CamRotate = [](ComponentContext* context) {
-  Transform transform = context->getEntity()->getTransform();
-  Vector rotation = eulerAngles(transform.getRotation());
-  if (Input::isPressed(GLFW_KEY_COMMA)) {
-    rotation += Vector(0, 0.005, 0);
-  }
-  if (Input::isPressed(GLFW_KEY_PERIOD)) {
-    rotation -= Vector(0, 0.005, 0);
-  }
-  context->getEntity()->getTransform().setRotation(Vector(btDegrees(rotation.x), btDegrees(rotation.y), btDegrees(rotation.z)));
-};
-
 ComponentCallback Raise = [](ComponentContext* context) {
-  if (Input::isPressed(GLFW_KEY_M)) {
+  if (Input::Instance->isPressed(GLFW_KEY_M)) {
     auto body = context->getEntity().get<RigidBody>();
     body->addImpulse(Vector(0, 0.0004, 0));
   }
@@ -297,9 +322,7 @@ void setupScene(EntityManager* manager) {
   cameraEntity
     .create<Camera, PerspectiveCamera>()
     .create<Follow>(mover)
-    .onUpdate(CamRotate);
-  // printf("Null? %d\n", cameraEntity.get<PerspectiveCamera>() == nullptr);
-  // exit(1);
+    .create<CamLook>();
   Camera::main = cameraEntity.get<Camera>();
 
   // drawGrid(manager);

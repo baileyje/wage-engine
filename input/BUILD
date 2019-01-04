@@ -6,6 +6,7 @@ cc_library(
 	deps = [
 		"//core",
 		"//platform",
+		"//math",
 	],
 	visibility = ["//visibility:public"]
 )
