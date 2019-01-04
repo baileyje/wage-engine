@@ -1,10 +1,14 @@
 #include "input/input.h"
 
-#include <iostream>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+
+
+#include <iostream>
 #include "platform/platform.h"
 #include "core/system/context.h"
 #include "core/logger.h"
+#include "input/key_event.h"
 
 namespace wage {
   
@@ -13,6 +17,7 @@ namespace wage {
   void Input::start(SystemContext* context) {
     Logger::info("Starting Input System");
     Input::Instance = this;
+    messaging = context->get<Messaging>();
     Platform* platform = context->get<Platform>();
     window = platform->getWindow();
     glfwSetWindowUserPointer(window->as<GLFWwindow>(), this);
@@ -25,6 +30,19 @@ namespace wage {
         input->frameKeys.insert(key);
       } else if (action == GLFW_RELEASE) {
         input->frameKeys.erase(key);
+      }
+      if (input->messaging) {
+        auto eventType = KeyEventType::press;
+        switch (action) {
+          case GLFW_RELEASE:
+            eventType = KeyEventType::release;
+            break;
+          case GLFW_REPEAT:
+            eventType = KeyEventType::repeat;
+            break;
+        }
+        KeyEvent event(key, eventType);
+        input->messaging->send(event);
       }
     });
     // Input::Instance->setMousePosition(Vector2(1024/2, 768/2));

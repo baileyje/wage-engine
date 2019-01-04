@@ -27,6 +27,7 @@ Entity:
   ☐ Cone
 ✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)
 ☐ Component object pool
+☐ Move components to sparse sets. Ref: https://www.geeksforgeeks.org/sparse-set/
 
 
 Renderer:
@@ -56,7 +57,13 @@ Asset Manager:
 ☐ Caching
 
 Input:
-☐ Mouse input
+✔ Key press @done (1/4/2019, 4:28:33 PM)
+✔ Mouse position @done (1/4/2019, 4:28:34 PM)
+☐ Mouse Press
+☐ Key press callback
+☐ Mouse Positon callback
+☐ Mouse Press callbacks
+
 
 Sound:
 ☐ Literally anything

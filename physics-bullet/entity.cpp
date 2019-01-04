@@ -12,11 +12,11 @@ namespace wage {
     Vector scale = entity->getTransform().getScale();  
     switch(collider->getType()) {
       // TODO: Support more shapes
-      case box: {
+      case ColliderType::box: {
         btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);			
         return make<btBoxShape>(halfExtents);
       }
-      case sphere: {
+      case ColliderType::sphere: {
         return make<btSphereShape>(scale.x / 2.0);
       }
       default: return nullptr;
@@ -32,9 +32,9 @@ namespace wage {
     btDefaultMotionState* myMotionState = make<btDefaultMotionState>(startTransform);
     btRigidBody::btRigidBodyConstructionInfo cInfo(rigidBody->getMass(), myMotionState, shape, localInertia);
     btRigidBody* body = make<btRigidBody>(cInfo);
-    if (rigidBody->getType() == kinematic) {
+    if (rigidBody->getType() == RigidBodyType::kinematic) {
       body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-    } else if (rigidBody->getType() == immovable) {
+    } else if (rigidBody->getType() == RigidBodyType::immovable) {
       body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
     }
     //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);    
@@ -79,7 +79,7 @@ namespace wage {
       return;
     }
     auto entityBody = entity.get<RigidBody>();
-    if (!entityBody.valid() || entityBody->getType() != dynamic) {
+    if (!entityBody.valid() || entityBody->getType() != RigidBodyType::dynamic) {
       return;
     }
     btVector3 impulse = fromVector(entityBody->getImpulse());
@@ -113,7 +113,7 @@ namespace wage {
       return;
     }
     auto entityBody = entity.get<RigidBody>();
-    if (entityBody->getType() == dynamic) {
+    if (entityBody->getType() == RigidBodyType::dynamic) {
       return;
     }  
     btTransform transform = fromTransform(entity->getTransform());

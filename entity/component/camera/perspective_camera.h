@@ -13,7 +13,7 @@ namespace wage {
     }
 
     PerspectiveCamera(float fov, float nearClip, float farClip) 
-      : Camera(perspective), fov(fov), nearClip(nearClip), farClip(farClip) {
+      : Camera(CameraType::perspective), fov(fov), nearClip(nearClip), farClip(farClip) {
     }
 
     inline float getFov() {

@@ -11,6 +11,7 @@
 #include "core/core.h"
 #include "platform/platform.h"
 #include "input/input.h"
+#include "input/key_event.h"
 #include "messaging/messaging.h"
 #include "fs/local.h"
 #include "assets/fs_manager.h"
@@ -257,12 +258,27 @@ void drawGrid(EntityManager* manager) {
   }
 }
 
+class KeyLogger : public MessageListener<KeyEvent> {
+
+public:
+
+  void on(KeyEvent& event) {
+    printf("Got one -> %d -> %d\n", 
+      event.key(),
+      static_cast<std::underlying_type<KeyEventType>::type>(event.type())
+    );
+  }
+
+};
+
 void setupSystems(Core* core, std::string path) {
   Allocator::Assets();
   // FileSystem* localFs = new LocalFileSystem(path);
   auto fileSystem = core->add<FileSystem, LocalFileSystem>(path);
   core->add<AssetManager, FsAssetManager>(fileSystem);
-  core->add<Messaging>();
+  auto messaging = core->add<Messaging>();
+  auto logger = new KeyLogger();
+  messaging->listen(logger);
   core->add<Input>();
   core->add<Platform>();
   core->add<EntityManager>();
@@ -302,7 +318,7 @@ void setupScene(EntityManager* manager) {
   ground->getTransform().setLocalScale(Vector(200, 2, 200));
   ground->getTransform().setRotation(Vector(0, 0, 0));
   ground
-    .create<RigidBody>(0.0, kinematic)
+    .create<RigidBody>(0.0, RigidBodyType::kinematic)
     .add(&Mesh::Cube)
     .add(&Collider::Box)
     .add(MeshRenderer::Instance);
@@ -347,6 +363,7 @@ int main(int argc, char* argv[]) {
   Core::Instance->init();
   Core::Instance->start();
   
+
   return 0;
 }
 

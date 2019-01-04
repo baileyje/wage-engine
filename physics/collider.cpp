@@ -2,8 +2,8 @@
 
 namespace wage {
 
-  Collider Collider::Box = Collider(box);
+  Collider Collider::Box = Collider(ColliderType::box);
 
-  Collider Collider::Sphere = Collider(sphere);
+  Collider Collider::Sphere = Collider(ColliderType::sphere);
 
 }

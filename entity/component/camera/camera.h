@@ -7,7 +7,7 @@
 
 namespace wage {
 
-  enum CameraType { perspective, orthographic };
+  enum class CameraType { perspective, orthographic };
 
   class Camera : public Component  {
 

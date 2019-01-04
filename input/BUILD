@@ -7,6 +7,7 @@ cc_library(
 		"//core",
 		"//platform",
 		"//math",
+		"//messaging",
 	],
 	visibility = ["//visibility:public"]
 )

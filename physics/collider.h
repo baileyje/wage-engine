@@ -5,13 +5,13 @@
 
 namespace wage {
 
-  enum ColliderType { box, sphere, mesh };
+  enum class ColliderType { box, sphere, mesh };
 
   class Collider : public Component {
     
   public:
 
-    Collider() : Collider(box) {    
+    Collider() : Collider(ColliderType::box) {    
     }
 
     Collider(ColliderType type) : Component("Collider"), type(type) {    

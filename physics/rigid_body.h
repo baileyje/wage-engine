@@ -11,7 +11,7 @@
 
 namespace wage {
 
-  enum RigidBodyType {
+  enum class RigidBodyType {
     dynamic, kinematic, immovable
   };
 
@@ -26,7 +26,7 @@ namespace wage {
       return ptr;
     }
 
-    RigidBody(float mass = 0, RigidBodyType type = dynamic) : Component("RigidBody"), mass(mass), affectedByGravity(true), type(type) {}
+    RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : Component("RigidBody"), mass(mass), affectedByGravity(true), type(type) {}
 
     ~RigidBody() {}
 
