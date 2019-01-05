@@ -1,29 +1,27 @@
-#ifndef INPUT_KEY_EVENT_H
-#define INPUT_KEY_EVENT_H
+#ifndef INPUT_MOUSE_BUTTON_EVENT_H
+#define INPUT_MOUSE_BUTTON_EVENT_H
 
 #include <initializer_list>
-
-#include "input/key.h"
 #include "input/key_modifier.h"
 
 namespace wage {
 
-  enum class KeyEventType {
-    press, release, repeat
+  enum class MouseButtonEventType {
+    press, release
   };
 
-  class KeyEvent {
+  class MouseButtonEvent {
   
   public:
 
-    KeyEvent(Key key, KeyEventType type, int modifiers) : key_(key), type_(type), modifiers_(modifiers) {
+    MouseButtonEvent(int button, MouseButtonEventType type, int modifiers) : button_(button), type_(type), modifiers_(modifiers) {
     }
 
-    inline Key key() {
-      return key_;
+    inline int button() {
+      return button_;
     }
 
-    inline KeyEventType type() {
+    inline MouseButtonEventType type() {
       return type_;
     }
 
@@ -46,9 +44,9 @@ namespace wage {
 
   private:
     
-    Key key_;
+    int button_;
 
-    KeyEventType type_;
+    MouseButtonEventType type_;
 
     int modifiers_;
 
@@ -56,4 +54,4 @@ namespace wage {
 
 }
 
-#endif //INPUT_KEY_EVENT_H
+#endif //INPUT_MOUSE_BUTTON_EVENT_H

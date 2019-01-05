@@ -16,7 +16,7 @@ namespace wage {
     
     static Input* Instance;
 
-    Input() : System("input"), messaging(nullptr) { }
+    Input() : System("input"), window(nullptr), messaging(nullptr) { }
 
     ~Input() {}
 
@@ -27,8 +27,6 @@ namespace wage {
     bool isPressed(int key);
 
     Vector2 mousePosition();
-    
-    void setMousePosition(Vector2 position);
 
   private: 
     

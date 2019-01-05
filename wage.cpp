@@ -12,6 +12,9 @@
 #include "platform/platform.h"
 #include "input/input.h"
 #include "input/key_event.h"
+#include "input/mouse_button_event.h"
+#include "input/mouse_move_event.h"
+#include "input/mouse_scroll_event.h"
 #include "messaging/messaging.h"
 #include "fs/local.h"
 #include "assets/fs_manager.h"
@@ -258,27 +261,55 @@ void drawGrid(EntityManager* manager) {
   }
 }
 
-class KeyLogger : public MessageListener<KeyEvent> {
+class InputLogger : 
+  public MessageListener<KeyEvent>, 
+  public MessageListener<MouseButtonEvent>,
+  public MessageListener<MouseMoveEvent>,
+  public MessageListener<MouseScrollEvent> {
 
 public:
 
   void on(KeyEvent& event) {
-    printf("Got one -> %d -> %d\n", 
+    printf("Key -> %d -> %d -> %d\n", 
       event.key(),
-      static_cast<std::underlying_type<KeyEventType>::type>(event.type())
+      event.type(),
+      event.set({ KeyModifier::shift, KeyModifier::alt })
     );
   }
 
+  void on(MouseButtonEvent& event) {
+    printf("Mouse Button -> %d -> %d -> %D\n", 
+      event.button(),
+      event.type(),
+      event.set(KeyModifier::shift)
+    );
+  }
+
+  void on(MouseMoveEvent& event) {
+    printf("Mouse Move -> %f:%f\n", 
+      event.position().x,
+      event.position().y
+    );
+  }
+
+  void on(MouseScrollEvent& event) {
+    printf("Mouse Scroll -> %f:%f\n", 
+      event.position().x,
+      event.position().y
+    );
+  }
 };
 
 void setupSystems(Core* core, std::string path) {
   Allocator::Assets();
-  // FileSystem* localFs = new LocalFileSystem(path);
   auto fileSystem = core->add<FileSystem, LocalFileSystem>(path);
   core->add<AssetManager, FsAssetManager>(fileSystem);
   auto messaging = core->add<Messaging>();
-  auto logger = new KeyLogger();
-  messaging->listen(logger);
+  auto inputLogger = new InputLogger();
+  messaging->listen<KeyEvent>(inputLogger);
+  messaging->listen<MouseButtonEvent>(inputLogger);
+  messaging->listen<MouseMoveEvent>(inputLogger);
+  messaging->listen<MouseScrollEvent>(inputLogger);
   core->add<Input>();
   core->add<Platform>();
   core->add<EntityManager>();
