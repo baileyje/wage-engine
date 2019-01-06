@@ -3,9 +3,8 @@
 
 #include <vector>
 
-#include "core/system.h"
-
-#include "entity/entity.h"
+#include "engine/core/system.h"
+#include "engine/entity/entity.h"
 
 namespace wage {
 

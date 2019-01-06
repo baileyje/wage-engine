@@ -1,9 +1,9 @@
 #include "engine/engine.h"
 
-#include "core/system/context.h"
-#include "entity/context.h"
-#include "entity/manager.h"
-#include "entity/component.h"
+#include "engine/core/system/context.h"
+#include "engine/entity/context.h"
+#include "engine/entity/manager.h"
+#include "engine/entity/component.h"
 
 #define LIFECYCLE_FUNC_IMPL(Name) \
 void Engine::Name(SystemContext* context) { \

@@ -4,10 +4,15 @@ cc_library(
 	srcs = glob(["*.cpp"]),
 	hdrs = glob(["*.h"]),
 	deps = [
-		"//core",
-		"//entity",
-		"//jsrt",
-		"//third_party/chakracore"
+		"//engine/core",
+    "//engine/platform",
+    "//engine/input",
+    "//engine/jsrt",
+    "//engine/physics",
+    "//engine/fs",
+    "//engine/assets",
+    "//engine/render",
+    "//engine/ui"
 	],
 	visibility = ["//visibility:public"]
 )

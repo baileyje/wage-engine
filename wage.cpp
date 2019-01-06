@@ -5,39 +5,38 @@
 #include <stdlib.h>
 #include <sstream>
 
-#include "math/vector.h"
-#include "math/matrix.h"
-
-#include "core/core.h"
-#include "platform/platform.h"
-#include "input/input.h"
-#include "input/key_event.h"
-#include "input/mouse_button_event.h"
-#include "input/mouse_move_event.h"
-#include "input/mouse_scroll_event.h"
-#include "messaging/messaging.h"
-#include "fs/local.h"
-#include "assets/fs_manager.h"
-#include "jsrt/jsrt.h"
-#include "physics-bullet/physics.h"
-#include "render-gl/renderer.h"
-#include "render/mesh_renderer.h"
+#include "engine/math/vector.h"
+#include "engine/math/matrix.h"
+#include "engine/core/core.h"
+#include "engine/platform/platform.h"
+#include "engine/input/input.h"
+#include "engine/input/key_event.h"
+#include "engine/input/mouse_button_event.h"
+#include "engine/input/mouse_move_event.h"
+#include "engine/input/mouse_scroll_event.h"
+#include "engine/messaging/messaging.h"
+#include "engine/fs/local.h"
+#include "engine/assets/fs_manager.h"
+#include "engine/jsrt/jsrt.h"
+#include "engine/render/mesh_renderer.h"
 #include "engine/engine.h"
-#include "entity/entity.h"
-#include "entity/component.h"
-#include "entity/component/dynamic.h"
-#include "physics/rigid_body.h"
-#include "physics/collider.h"
-#include "render/mesh.h"
-#include "render/material.h"
-#include "entity/component/camera/perspective_camera.h"
-#include "entity/component/lighting/directional_light.h"
-#include "entity/component/lighting/point_light.h"
-#include "entity/component/lighting/spotlight.h"
+#include "engine/entity/entity.h"
+#include "engine/entity/component.h"
+#include "engine/entity/component/dynamic.h"
+#include "engine/physics/rigid_body.h"
+#include "engine/physics/collider.h"
+#include "engine/render/mesh.h"
+#include "engine/render/material.h"
+#include "engine/entity/component/camera/perspective_camera.h"
+#include "engine/entity/component/lighting/directional_light.h"
+#include "engine/entity/component/lighting/point_light.h"
+#include "engine/entity/component/lighting/spotlight.h"
+#include "engine/ui/label.h"
+#include "engine/memory/allocator.h"
 
-#include "ui/label.h"
+#include "engine-ext/physics-bullet/physics.h"
+#include "engine-ext/render-gl/renderer.h"
 
-#include "memory/allocator.h"
 
 using namespace wage;
 
@@ -97,7 +96,6 @@ private:
     Vector2 lastPos;
 
     float mouseSpeed;
-
 
 };
 

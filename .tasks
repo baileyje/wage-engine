@@ -16,8 +16,7 @@ Core:
     ☐ Allow pool expansion
     ✔ General reference strategy @done (1/1/2019, 8:45:24 PM)
 ☐ Better virtual filesystem support
-☐ integrate script component
-☐ better project structure
+☐ Better project structure
 ☐ Change to smart pointers
 
 Entity:
@@ -55,6 +54,7 @@ Renderer:
 Asset Manager:
 ✔ Async loading @done (12/19/2018, 8:58:20 PM)
 ☐ Caching
+☐ Cache removal
 
 Input:
 ✔ Key press @done (1/4/2019, 4:28:33 PM)
@@ -63,8 +63,7 @@ Input:
 ✔ Key press callback @done (1/4/2019, 10:09:16 PM)
 ✔ Mouse Positon callback @done (1/4/2019, 10:09:17 PM)
 ✔ Mouse Press callback @done (1/4/2019, 10:09:18 PM)
-☐ Mouse scroll callback
-
+✔ Mouse scroll callback @done (1/5/2019, 5:34:21 PM)
 
 Sound:
 ☐ Literally anything
