@@ -4,9 +4,9 @@
 #include <string>
 #include <glad/glad.h>
 
-#include "engine/assets/manager.h"
+#include "assets/manager.h"
 
-#include "engine-ext/render-gl/util.h"
+#include "render-gl/util.h"
 
 namespace wage {
 

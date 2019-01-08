@@ -1,7 +1,7 @@
 #ifndef ENTITY_COMPONENT_COLLIDER_H
 #define ENTITY_COMPONENT_COLLIDER_H
 
-#include "engine/entity/component.h"
+#include "entity/component.h"
 
 namespace wage {
 

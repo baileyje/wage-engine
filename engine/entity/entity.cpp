@@ -1,12 +1,12 @@
-#include "engine/entity/entity.h"
+#include "entity/entity.h"
 
-#include "engine/memory/allocator.h"
+#include "memory/allocator.h"
 
-#include "engine/entity/component.h"
-#include "engine/entity/context.h"
-#include "engine/entity/component/context.h"
-#include "engine/entity/reference.h"
-#include "engine/entity/component/func_component.h"
+#include "entity/component.h"
+#include "entity/context.h"
+#include "entity/component/context.h"
+#include "entity/reference.h"
+#include "entity/component/func_component.h"
 
 namespace wage {
 

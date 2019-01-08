@@ -4,8 +4,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include "engine/core/system.h"
-#include "engine/platform/window.h"
+#include "core/system.h"
+#include "platform/window.h"
 
 namespace wage {
 

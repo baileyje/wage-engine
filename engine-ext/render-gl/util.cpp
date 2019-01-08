@@ -1,6 +1,6 @@
-#include "engine-ext/render-gl/util.h"
+#include "render-gl/util.h"
 
-#include "engine/core/logger.h"
+#include "core/logger.h"
 
 namespace wage {
 

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "engine/core/core.h"
+#include "core/core.h"
 
 namespace wage {
 

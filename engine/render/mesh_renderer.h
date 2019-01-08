@@ -2,11 +2,11 @@
 #define MESH_RENDERER_H
 
 
-#include "engine/core/core.h"
-#include "engine/memory/allocator.h"
-#include "engine/render/renderer.h"
-#include "engine/entity/component/dynamic.h"
-#include "engine/entity/component/context.h"
+#include "core/core.h"
+#include "memory/allocator.h"
+#include "render/renderer.h"
+#include "entity/component/dynamic.h"
+#include "entity/component/context.h"
 
 namespace wage {
 

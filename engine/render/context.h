@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "engine/entity/component/lighting/directional_light.h"
-#include "engine/entity/component/lighting/point_light.h"
-#include "engine/entity/component/lighting/spotlight.h"
-#include "engine/entity/component/camera/camera.h"
+#include "entity/component/lighting/directional_light.h"
+#include "entity/component/lighting/point_light.h"
+#include "entity/component/lighting/spotlight.h"
+#include "entity/component/camera/camera.h"
 
 namespace wage {
 

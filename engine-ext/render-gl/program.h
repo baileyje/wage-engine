@@ -4,9 +4,9 @@
 #include <vector>
 #include <glad/glad.h>
 
-#include "engine/core/logger.h"
+#include "core/logger.h"
 
-#include "engine-ext/render-gl/shader.h"
+#include "render-gl/shader.h"
 
 namespace wage {
 

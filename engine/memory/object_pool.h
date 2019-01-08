@@ -4,8 +4,8 @@
 #include <vector>
 #include <cassert>
 
-#include "engine/memory/allocator.h"
-#include "engine/memory/reference.h"
+#include "memory/allocator.h"
+#include "memory/reference.h"
 
 namespace wage {
 

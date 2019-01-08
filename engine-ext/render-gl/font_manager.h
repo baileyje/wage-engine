@@ -3,11 +3,11 @@
 
 #include <unordered_map>
 
-#include "engine/memory/allocator.h"
-#include "engine/assets/manager.h"
-#include "engine/render/font.h"
+#include "memory/allocator.h"
+#include "assets/manager.h"
+#include "render/font.h"
 
-#include "engine-ext/render-gl/font.h"
+#include "render-gl/font.h"
 
 
 namespace wage {

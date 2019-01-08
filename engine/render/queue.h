@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "engine/render/renderable.h"
-#include "engine/render/context.h"
-#include "engine/render/queue.h"
+#include "render/renderable.h"
+#include "render/context.h"
+#include "render/queue.h"
 
 namespace wage {
 

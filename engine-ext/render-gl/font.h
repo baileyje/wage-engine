@@ -8,11 +8,11 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "engine/math/vector.h"
-#include "engine/assets/manager.h"
-#include "engine/assets/memory_buffer.h"
+#include "math/vector.h"
+#include "assets/manager.h"
+#include "assets/memory_buffer.h"
 
-#include "engine-ext/render-gl/util.h"
+#include "render-gl/util.h"
 
 namespace wage {
 

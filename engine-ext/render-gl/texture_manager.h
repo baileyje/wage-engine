@@ -3,10 +3,10 @@
 
 #include <unordered_map>
 
-#include "engine/memory/allocator.h"
-#include "engine/assets/manager.h"
+#include "memory/allocator.h"
+#include "assets/manager.h"
 
-#include "engine-ext/render-gl/texture.h"
+#include "render-gl/texture.h"
 
 namespace wage {
 

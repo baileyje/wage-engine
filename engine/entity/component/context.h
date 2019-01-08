@@ -1,8 +1,8 @@
 #ifndef COMPONENT_CONTEXT_H
 #define COMPONENT_CONTEXT_H
 
-#include "engine/math/transform.h"
-#include "engine/entity/reference.h"
+#include "math/transform.h"
+#include "entity/reference.h"
 
 namespace wage {
 

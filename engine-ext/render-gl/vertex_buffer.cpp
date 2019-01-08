@@ -1,8 +1,8 @@
-#include "engine-ext/render-gl/vertex_buffer.h"
+#include "render-gl/vertex_buffer.h"
 
 #include <glad/glad.h>
 
-#include "engine-ext/render-gl/util.h"
+#include "render-gl/util.h"
 
 namespace wage {
   VertexBuffer::VertexBuffer(const void* data,  unsigned int size) {  

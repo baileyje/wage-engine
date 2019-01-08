@@ -4,8 +4,8 @@
 
 #include <string>
 
-#include "engine/core/system.h"
-#include "engine/fs/file.h"
+#include "core/system.h"
+#include "fs/file.h"
 
 namespace wage {
 

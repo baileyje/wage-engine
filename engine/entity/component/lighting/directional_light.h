@@ -1,7 +1,7 @@
 #ifndef COMPONENT_DIR_LIGHT_H
 #define COMPONENT_DIR_LIGHT_H
 
-#include "engine/entity/component/lighting/light.h"
+#include "entity/component/lighting/light.h"
 
 namespace wage {
 

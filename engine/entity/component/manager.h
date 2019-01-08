@@ -6,11 +6,11 @@
 #include <unordered_map>
 #include <vector>
 
-#include "engine/memory/object_pool.h"
-#include "engine/entity/entity.h"
-#include "engine/entity/component.h"
-#include "engine/entity/component/dynamic.h"
-#include "engine/entity/component/reference.h"
+#include "memory/object_pool.h"
+#include "entity/entity.h"
+#include "entity/component.h"
+#include "entity/component/dynamic.h"
+#include "entity/component/reference.h"
 
 namespace wage {
   

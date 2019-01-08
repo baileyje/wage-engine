@@ -3,11 +3,11 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "engine/entity/reference.h"
-#include "engine/physics/rigid_body.h"
-#include "engine/physics/collider.h"
+#include "entity/reference.h"
+#include "physics/rigid_body.h"
+#include "physics/collider.h"
 
-#include "engine-ext/physics-bullet/util.h"
+#include "physics-bullet/util.h"
 
 namespace wage {
   

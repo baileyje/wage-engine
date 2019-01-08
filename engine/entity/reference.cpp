@@ -1,6 +1,6 @@
-#include "engine/entity/reference.h"
-#include "engine/entity/component/func_component.h"
-#include "engine/entity/component/context.h"
+#include "entity/reference.h"
+#include "entity/component/func_component.h"
+#include "entity/component/context.h"
 
 namespace wage {
     

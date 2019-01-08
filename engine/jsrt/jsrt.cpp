@@ -3,12 +3,12 @@
 #include <string>
 #include <sstream>
 
-#include "engine/core/logger.h"
-#include "engine/memory/allocator.h"
-#include "engine/jsrt/util.h"
-#include "engine/jsrt/module_manager.h"
-#include "engine/jsrt/js_object_wrapper.h"
-#include "engine/jsrt/js_system.h"
+#include "core/logger.h"
+#include "memory/allocator.h"
+#include "jsrt/util.h"
+#include "jsrt/module_manager.h"
+#include "jsrt/js_object_wrapper.h"
+#include "jsrt/js_system.h"
 
 namespace wage {
 

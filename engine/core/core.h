@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "engine/core/system/map.h"
-#include "engine/memory/allocator.h"
+#include "core/system/map.h"
+#include "memory/allocator.h"
 
 namespace wage {
 

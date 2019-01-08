@@ -1,7 +1,7 @@
 #ifndef INPUT_MOUSE_MOVE_EVENT_H
 #define INPUT_MOUSE_MOVE_EVENT_H
 
-#include "engine/math/vector.h"
+#include "math/vector.h"
 
 namespace wage {
 

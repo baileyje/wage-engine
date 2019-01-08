@@ -1,9 +1,9 @@
 #ifndef ENTITY_REFERENCE_H
 #define ENTITY_REFERENCE_H
 
-#include "engine/memory/reference.h"
-#include "engine/entity/entity.h"
-#include "engine/entity/component/manager.h"
+#include "memory/reference.h"
+#include "entity/entity.h"
+#include "entity/component/manager.h"
 
 namespace wage {
 

@@ -7,7 +7,7 @@
 #include <typeinfo>
 #include <typeindex>
 
-#include "engine/core/system.h"
+#include "core/system.h"
 
 namespace wage {
  

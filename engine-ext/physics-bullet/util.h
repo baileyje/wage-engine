@@ -3,8 +3,8 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "engine/physics/rigid_body.h"
-#include "engine/math/transform.h"
+#include "physics/rigid_body.h"
+#include "math/transform.h"
 
 namespace wage {
 

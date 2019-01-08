@@ -5,11 +5,11 @@
 
 #include <vector>
 
-#include "engine/core/system.h"
-#include "engine/messaging/messaging.h"
-#include "engine/physics/physics.h"
+#include "core/system.h"
+#include "messaging/messaging.h"
+#include "physics/physics.h"
 
-#include "engine-ext/physics-bullet/entity.h"
+#include "physics-bullet/entity.h"
 
 namespace wage {
 

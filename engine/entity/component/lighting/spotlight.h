@@ -1,7 +1,7 @@
 #ifndef COMPONENT_SPOTLIGHT_H
 #define COMPONENT_SPOTLIGHT_H
 
-#include "engine/entity/component/lighting/light.h"
+#include "entity/component/lighting/light.h"
 
 namespace wage {
 

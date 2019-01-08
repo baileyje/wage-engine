@@ -3,9 +3,9 @@
 
 #include <unordered_map>
 
-#include "engine/assets/manager.h"
+#include "assets/manager.h"
 
-#include "engine-ext/render-gl/shader.h"
+#include "render-gl/shader.h"
 
 namespace wage {
 

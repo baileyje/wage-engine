@@ -3,8 +3,8 @@
 
 #include "ChakraCore.h"
 
-#include "engine/core/system.h"
-#include "engine/jsrt/js_object_wrapper.h"
+#include "core/system.h"
+#include "jsrt/js_object_wrapper.h"
 
 namespace wage {
 

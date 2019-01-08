@@ -1,7 +1,7 @@
 #ifndef LOCAL_FILE_SYSTEM_H
 #define LOCAL_FILE_SYSTEM_H
 
-#include "engine/fs/file_system.h"
+#include "fs/file_system.h"
 
 namespace wage {
   class LocalFileSystem : public FileSystem {

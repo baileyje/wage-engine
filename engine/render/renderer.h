@@ -3,19 +3,19 @@
 
 #include <unordered_map>
 
-#include "engine/core/system.h"
-#include "engine/platform/window.h"
-#include "engine/assets/manager.h"
-#include "engine/entity/manager.h"
-#include "engine/render/renderable.h"
-#include "engine/render/queue.h"
+#include "core/system.h"
+#include "platform/window.h"
+#include "assets/manager.h"
+#include "entity/manager.h"
+#include "render/renderable.h"
+#include "render/queue.h"
 
-#include "engine/entity/component/lighting/directional_light.h"
-#include "engine/entity/component/lighting/point_light.h"
-#include "engine/entity/component/lighting/spotlight.h"
-#include "engine/render/material.h"
-#include "engine/render/mesh.h"
-#include "engine/render/font.h"
+#include "entity/component/lighting/directional_light.h"
+#include "entity/component/lighting/point_light.h"
+#include "entity/component/lighting/spotlight.h"
+#include "render/material.h"
+#include "render/mesh.h"
+#include "render/font.h"
 
 namespace wage {
 

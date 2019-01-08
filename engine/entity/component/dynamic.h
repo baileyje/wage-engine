@@ -1,7 +1,7 @@
 #ifndef DYNAMIC_COMPONENT_H
 #define DYNAMIC_COMPONENT_H
 
-#include "engine/entity/component.h"
+#include "entity/component.h"
 
 namespace wage {
 

@@ -1,5 +1,5 @@
-#ifndef MEMORY_MAP_H
-#define MEMORY_MAP_H
+#ifndef UTIL_MAP_H
+#define UTIL_MAP_H
 
 #include <unordered_map>
 
@@ -115,4 +115,4 @@ namespace wage {
 
 }
 
-#endif //MEMORY_MAP_H
+#endif //UTIL_MAP_H

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "engine/assets/buffer.h"
+#include "assets/buffer.h"
 
 namespace wage {
 

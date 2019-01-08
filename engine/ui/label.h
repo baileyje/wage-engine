@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "engine/ui/component.h"
-#include "engine/render/font.h"
-#include "engine/core/core.h"
-#include "engine/render/renderer.h"
+#include "ui/component.h"
+#include "render/font.h"
+#include "core/core.h"
+#include "render/renderer.h"
 
 namespace wage {
 

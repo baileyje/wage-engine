@@ -1,9 +1,9 @@
-#include "engine/assets/fs_manager.h"
+#include "assets/fs_manager.h"
 
 #include <memory>
 
-#include "engine/assets/fs_buffer.h"
-#include "engine/memory/allocator.h"
+#include "assets/fs_buffer.h"
+#include "memory/allocator.h"
 
 namespace wage {
 

@@ -1,7 +1,7 @@
 #ifndef COMPONENT_UI_FRAME_H
 #define COMPONENT_UI_FRAME_H
 
-#include "engine/math/vector.h"
+#include "math/vector.h"
 
 namespace wage {
 

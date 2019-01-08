@@ -1,6 +1,6 @@
-#include "engine/jsrt/js_object_wrapper.h"
+#include "jsrt/js_object_wrapper.h"
 
-#include "engine/jsrt/util.h"
+#include "jsrt/util.h"
 
 namespace wage {
 

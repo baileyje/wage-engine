@@ -6,9 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "engine/core/system.h"
-
-#include "engine/memory/map.h"
+#include "core/system.h"
+#include "util/map.h"
 
 namespace wage {
 

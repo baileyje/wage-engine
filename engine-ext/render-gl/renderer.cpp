@@ -1,17 +1,17 @@
-#include "engine-ext/render-gl/renderer.h"
+#include "render-gl/renderer.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "engine/core/logger.h"
-#include "engine/memory/allocator.h"
-#include "engine/math/vector.h"
+#include "core/logger.h"
+#include "memory/allocator.h"
+#include "math/vector.h"
 
-#include "engine-ext/render-gl/mesh_renderable.h"
-#include "engine-ext/render-gl/text_renderable.h"
-#include "engine-ext/render-gl/material.h"
-#include "engine-ext/render-gl/shader.h"
-#include "engine-ext/render-gl/util.h"
+#include "render-gl/mesh_renderable.h"
+#include "render-gl/text_renderable.h"
+#include "render-gl/material.h"
+#include "render-gl/shader.h"
+#include "render-gl/util.h"
 
 
 namespace wage {

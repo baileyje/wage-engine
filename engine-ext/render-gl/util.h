@@ -5,9 +5,9 @@
 #include <iostream>
 #include <glm/glm.hpp>
 
-#include "engine/math/vector.h"
-#include "engine/math/quaternion.h"
-#include "engine/math/color.h"
+#include "math/vector.h"
+#include "math/quaternion.h"
+#include "math/color.h"
 
 namespace wage {
 

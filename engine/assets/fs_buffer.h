@@ -2,8 +2,8 @@
 #define FS_ASSET_H
 
 
-#include "engine/fs/file.h"
-#include "engine/assets/asset.h"
+#include "fs/file.h"
+#include "assets/asset.h"
 
 namespace wage {
 

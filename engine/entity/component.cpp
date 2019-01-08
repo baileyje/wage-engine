@@ -1,4 +1,4 @@
-#include "engine/entity/component.h"
+#include "entity/component.h"
 
 namespace wage {
 

@@ -1,7 +1,7 @@
-#include "engine/fs/local.h"
+#include "fs/local.h"
 
 #include <fstream>
-#include "engine/memory/allocator.h"
+#include "memory/allocator.h"
 
 namespace wage {
 

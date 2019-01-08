@@ -1,9 +1,9 @@
 #ifndef MATH_TRANSFORM_H
 #define MATH_TRANSFORM_H
 
-#include "engine/math/vector.h"
-#include "engine/math/matrix.h"
-#include "engine/math/quaternion.h"
+#include "math/vector.h"
+#include "math/matrix.h"
+#include "math/quaternion.h"
 
 
 namespace wage {

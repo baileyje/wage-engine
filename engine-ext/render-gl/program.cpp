@@ -1,6 +1,6 @@
-#include "engine-ext/render-gl/program.h"
+#include "render-gl/program.h"
 
-#include "engine/memory/allocator.h"
+#include "memory/allocator.h"
 
 namespace wage {
 

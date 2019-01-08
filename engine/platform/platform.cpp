@@ -1,7 +1,7 @@
-#include "engine/platform/platform.h"
+#include "platform/platform.h"
 
-#include "engine/core/logger.h"
-#include "engine/memory/allocator.h"
+#include "core/logger.h"
+#include "memory/allocator.h"
 
 namespace wage {
 

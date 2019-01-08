@@ -2,10 +2,10 @@
 #define MATH_FRUSTRUM_H
 
 
-#include "engine/math/vector.h"
-#include "engine/math/plane.h"
-#include "engine/math/bounding_box.h"
-#include "engine/math/bounding_sphere.h"
+#include "math/vector.h"
+#include "math/plane.h"
+#include "math/bounding_box.h"
+#include "math/bounding_sphere.h"
 
 namespace wage {
 

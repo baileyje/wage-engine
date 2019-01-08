@@ -3,12 +3,12 @@
 
 #include <string>
 
-#include "engine/render/renderable.h"
-#include "engine/render/context.h"
+#include "render/renderable.h"
+#include "render/context.h"
 
-#include "engine-ext/render-gl/material.h"
-#include "engine-ext/render-gl/font.h"
-#include "engine-ext/render-gl/font_manager.h"
+#include "render-gl/material.h"
+#include "render-gl/font.h"
+#include "render-gl/font_manager.h"
 
 namespace wage {
 

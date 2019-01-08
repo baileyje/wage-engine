@@ -3,10 +3,10 @@
 
 #include <unordered_set>
 
-#include "engine/core/system.h"
-#include "engine/messaging/messaging.h"
-#include "engine/platform/window.h"
-#include "engine/math/vector.h"
+#include "core/system.h"
+#include "messaging/messaging.h"
+#include "platform/window.h"
+#include "math/vector.h"
 
 namespace wage {
 

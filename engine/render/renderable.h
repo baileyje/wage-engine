@@ -1,9 +1,9 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
-#include "engine/math/vector.h"
+#include "math/vector.h"
 
-#include "engine/render/context.h"
+#include "render/context.h"
 
 namespace wage {
 

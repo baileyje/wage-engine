@@ -1,10 +1,10 @@
 #ifndef ENTITY_COMPONENT_REFERENCE_H
 #define ENTITY_COMPONENT_REFERENCE_H
 
-#include "engine/memory/reference.h"
-#include "engine/entity/component.h"
-#include "engine/entity/component/reference.h"
-#include "engine/entity/entity.h"
+#include "memory/reference.h"
+#include "entity/component.h"
+#include "entity/component/reference.h"
+#include "entity/entity.h"
 
 namespace wage {
 

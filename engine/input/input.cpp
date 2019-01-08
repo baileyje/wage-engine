@@ -1,18 +1,18 @@
-#include "engine/input/input.h"
+#include "input/input.h"
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#include "engine/platform/platform.h"
-#include "engine/core/system/context.h"
-#include "engine/core/logger.h"
-#include "engine/input/key_event.h"
-#include "engine/input/key.h"
-#include "engine/input/key_modifier.h"
-#include "engine/input/mouse_button_event.h"
-#include "engine/input/mouse_move_event.h"
-#include "engine/input/mouse_scroll_event.h"
+#include "platform/platform.h"
+#include "core/system/context.h"
+#include "core/logger.h"
+#include "input/key_event.h"
+#include "input/key.h"
+#include "input/key_modifier.h"
+#include "input/mouse_button_event.h"
+#include "input/mouse_move_event.h"
+#include "input/mouse_scroll_event.h"
 
 namespace wage {
   

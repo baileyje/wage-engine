@@ -1,9 +1,9 @@
-#include "engine/physics/physics.h"
+#include "physics/physics.h"
 
-#include "engine/physics/rigid_body.h"
-#include "engine/physics/collider.h"
-#include "engine/core/logger.h"
-#include "engine/core/system/context.h"
+#include "physics/rigid_body.h"
+#include "physics/collider.h"
+#include "core/logger.h"
+#include "core/system/context.h"
 
 namespace wage {
 

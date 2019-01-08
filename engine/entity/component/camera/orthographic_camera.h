@@ -1,7 +1,7 @@
 #ifndef ENTITY_ORTHOGRAPHIC_CAMERA_H
 #define ENTITY_ORTHOGRAPHIC_CAMERA_H
 
-#include "engine/entity/component/camera/camera.h"
+#include "entity/component/camera/camera.h"
 
 namespace wage {
 

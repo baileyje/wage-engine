@@ -4,10 +4,10 @@ cc_library(
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
-		"//engine/core",
-		"//engine/math",
-		"//engine/memory",
-		"//engine/messaging",
+		"//core",
+		"//math",
+		"//memory",
+		"//messaging",
 		"//third_party/tinyloader"
 	],
 	visibility = ["//visibility:public"]

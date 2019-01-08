@@ -1,14 +1,14 @@
 #ifndef GL_RENDERER_H
 #define GL_RENDERER_H
 
-#include "engine/entity/entity.h"
-#include "engine/render/renderer.h"
-#include "engine/render/queue.h"
+#include "entity/entity.h"
+#include "render/renderer.h"
+#include "render/queue.h"
 
-#include "engine-ext/render-gl/texture_manager.h"
-#include "engine-ext/render-gl/shader_manager.h"
-#include "engine-ext/render-gl/vao_manager.h"
-#include "engine-ext/render-gl/font_manager.h"
+#include "render-gl/texture_manager.h"
+#include "render-gl/shader_manager.h"
+#include "render-gl/vao_manager.h"
+#include "render-gl/font_manager.h"
 
 
 namespace wage {

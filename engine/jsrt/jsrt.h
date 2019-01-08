@@ -4,10 +4,10 @@
 #include "ChakraCore.h"
 #include <string>
 
-#include "engine/core/system.h"
-#include "engine/core/system/context.h"
-#include "engine/jsrt/module_manager.h"
-#include "engine/jsrt/js_object_wrapper.h"
+#include "core/system.h"
+#include "core/system/context.h"
+#include "jsrt/module_manager.h"
+#include "jsrt/js_object_wrapper.h"
 
 namespace wage {
 

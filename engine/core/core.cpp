@@ -1,12 +1,12 @@
-#include "engine/core/core.h"
+#include "core/core.h"
 
 #include <iostream>
 #include <chrono>
 
-#include "engine/core/system/context.h"
-#include "engine/core/system.h"
-#include "engine/core/logger.h"
-#include "engine/memory/allocator.h"
+#include "core/system/context.h"
+#include "core/system.h"
+#include "core/logger.h"
+#include "memory/allocator.h"
 
 namespace wage {
 

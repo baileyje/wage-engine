@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "engine/core/system.h"
-#include "engine/fs/file_system.h"
-#include "engine/assets/asset.h"
-#include "engine/assets/manager.h"
+#include "core/system.h"
+#include "fs/file_system.h"
+#include "assets/asset.h"
+#include "assets/manager.h"
 
 namespace wage {
 

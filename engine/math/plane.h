@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "engine/math/vector.h"
+#include "math/vector.h"
 
 
 namespace wage {

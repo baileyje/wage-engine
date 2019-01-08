@@ -1,9 +1,9 @@
 #ifndef ENTITY_COMPONENT_MATERIAL_H
 #define ENTITY_COMPONENT_MATERIAL_H
 
-#include "engine/entity/component.h"
-#include "engine/math/color.h"
-#include "engine/render/texture.h"
+#include "entity/component.h"
+#include "math/color.h"
+#include "render/texture.h"
 
 namespace wage {
   // TODO:  De-jank this

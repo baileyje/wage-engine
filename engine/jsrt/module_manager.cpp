@@ -1,7 +1,7 @@
-#include "engine/jsrt/module_manager.h"
-#include "engine/jsrt/util.h"
+#include "jsrt/module_manager.h"
+#include "jsrt/util.h"
 
-#include "engine/core/logger.h"
+#include "core/logger.h"
 
 namespace wage {
 

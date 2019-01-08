@@ -3,11 +3,11 @@
 
 #include <unordered_map>
 
-#include "engine/memory/allocator.h"
-#include "engine/render/mesh.h"
+#include "memory/allocator.h"
+#include "render/mesh.h"
 
-#include "engine-ext/render-gl/vertex_array.h"
-#include "engine-ext/render-gl/index_buffer.h"
+#include "render-gl/vertex_array.h"
+#include "render-gl/index_buffer.h"
 
 namespace wage {
 

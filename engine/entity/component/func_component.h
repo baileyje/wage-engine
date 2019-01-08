@@ -4,7 +4,7 @@
 #include <sstream>
 #include <functional>
 
-#include "engine/entity/component/dynamic.h"
+#include "entity/component/dynamic.h"
 
 namespace wage {
 

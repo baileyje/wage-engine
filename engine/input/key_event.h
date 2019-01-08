@@ -3,8 +3,8 @@
 
 #include <initializer_list>
 
-#include "engine/input/key.h"
-#include "engine/input/key_modifier.h"
+#include "input/key.h"
+#include "input/key_modifier.h"
 
 namespace wage {
 

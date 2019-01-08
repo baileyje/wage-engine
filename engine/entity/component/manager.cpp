@@ -1,4 +1,4 @@
-#include "engine/entity/component/manager.h"
+#include "entity/component/manager.h"
 
 namespace wage {
   

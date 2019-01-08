@@ -1,8 +1,8 @@
-#include "engine-ext/render-gl/shader.h"
+#include "render-gl/shader.h"
 
 #include <vector>
 
-#include "engine/core/logger.h"
+#include "core/logger.h"
 
 namespace wage {
 

@@ -1,9 +1,9 @@
-#include "engine/render/mesh.h"
+#include "render/mesh.h"
 
 #include <vector>
 #include <iostream>
 
-#include "engine/memory/allocator.h"
+#include "memory/allocator.h"
 #include "tiny_obj_loader.h"
 
 namespace wage {

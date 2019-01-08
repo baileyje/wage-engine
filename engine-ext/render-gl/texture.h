@@ -1,10 +1,10 @@
 #ifndef RENDERER_TEXTURE_H
 #define RENDERER_TEXTURE_H
 
-#include "engine/render/texture.h"
-#include "engine/assets/manager.h"
+#include "render/texture.h"
+#include "assets/manager.h"
 
-#include "engine-ext/render-gl/util.h"
+#include "render-gl/util.h"
 
 namespace wage {
 

@@ -3,9 +3,9 @@
 
 #include <string>
 
-#include "engine/core/system.h"
-#include "engine/async/dispatch_queue.h"
-#include "engine/assets/asset.h"
+#include "core/system.h"
+#include "async/dispatch_queue.h"
+#include "assets/asset.h"
 
 namespace wage {
 

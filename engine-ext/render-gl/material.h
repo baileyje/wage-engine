@@ -6,8 +6,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "engine-ext/render-gl/program.h"
-#include "engine-ext/render-gl/util.h"
+#include "render-gl/program.h"
+#include "render-gl/util.h"
 
 namespace wage {
 

@@ -1,6 +1,6 @@
-#include "engine/entity/component/dynamic.h"
+#include "entity/component/dynamic.h"
 
-#include "engine/entity/component/context.h"
+#include "entity/component/context.h"
 
 namespace wage {
 

@@ -1,8 +1,8 @@
 #ifndef COMPONENT_UI_COMPONENT_H
 #define COMPONENT_UI_COMPONENT_H
 
-#include "engine/entity/component/dynamic.h"
-#include "engine/ui/frame.h"
+#include "entity/component/dynamic.h"
+#include "ui/frame.h"
 
 namespace wage {
 

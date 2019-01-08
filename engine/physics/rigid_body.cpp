@@ -1,4 +1,4 @@
-#include "engine/physics/rigid_body.h"
+#include "physics/rigid_body.h"
 
 namespace wage {
 

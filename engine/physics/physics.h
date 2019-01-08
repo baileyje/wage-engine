@@ -3,11 +3,11 @@
 
 #include <vector>
 
-#include "engine/core/system.h"
+#include "core/system.h"
 
-#include "engine/messaging/messaging.h"
+#include "messaging/messaging.h"
 
-#include "engine/entity/manager.h"
+#include "entity/manager.h"
 
 namespace wage {
 

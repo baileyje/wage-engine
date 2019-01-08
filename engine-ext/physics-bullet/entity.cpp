@@ -1,6 +1,6 @@
-#include "engine-ext/physics-bullet/entity.h"
+#include "physics-bullet/entity.h"
 
-#include "engine/memory/allocator.h"
+#include "memory/allocator.h"
 
 namespace wage {
 

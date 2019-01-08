@@ -6,15 +6,15 @@
 #include <string>
 
 
-#include "engine/core/system.h"
-#include "engine/core/system/context.h"
-#include "engine/entity/entity.h"
-#include "engine/memory/object_pool.h"
-#include "engine/messaging/messaging.h"
-#include "engine/entity/component/manager.h"
-#include "engine/entity/component/context.h"
-#include "engine/entity/reference.h"
-#include "engine/entity/context.h"
+#include "core/system.h"
+#include "core/system/context.h"
+#include "entity/entity.h"
+#include "memory/object_pool.h"
+#include "messaging/messaging.h"
+#include "entity/component/manager.h"
+#include "entity/component/context.h"
+#include "entity/reference.h"
+#include "entity/context.h"
 
 namespace wage {
 

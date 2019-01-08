@@ -1,6 +1,6 @@
-#include "engine/jsrt/util.h"
+#include "jsrt/util.h"
 
-#include "engine/core/logger.h"
+#include "core/logger.h"
 
 namespace wage {
   std::string errorCodeToString(int code) {

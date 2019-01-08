@@ -1,16 +1,13 @@
-#include "engine/render/renderer.h"
+#include "render/renderer.h"
 
 #include <vector>
 #include <sstream>
 
-#include "engine/platform/platform.h"
-
-#include "engine/core/logger.h"
-#include "engine/core/system/context.h"
-
-#include "engine/render/context.h"
-
-#include "engine/entity/component/camera/camera.h"
+#include "platform/platform.h"
+#include "core/logger.h"
+#include "core/system/context.h"
+#include "render/context.h"
+#include "entity/component/camera/camera.h"
 
 namespace wage {
 

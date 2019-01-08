@@ -4,7 +4,7 @@
 #include <string>
 #include "ChakraCore.h"
 
-#include "engine/jsrt/util.h"
+#include "jsrt/util.h"
 
 namespace wage {
 

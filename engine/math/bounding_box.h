@@ -1,7 +1,7 @@
 #ifndef MATH_BOUNDING_BOX_H
 #define MATH_BOUNDING_BOX_H
 
-#include "engine/math/vector.h"
+#include "math/vector.h"
 
 namespace wage {
 

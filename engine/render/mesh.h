@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <cmath>
 
-#include "engine/entity/component.h"
-#include "engine/math/vector.h"
+#include "entity/component.h"
+#include "math/vector.h"
 
 namespace wage {
   typedef std::vector<Vector> VertexVector;

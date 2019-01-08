@@ -16,7 +16,7 @@ Core:
     ☐ Allow pool expansion
     ✔ General reference strategy @done (1/1/2019, 8:45:24 PM)
 ☐ Better virtual filesystem support
-☐ Better project structure
+✔ Better project structure @done (1/5/2019, 9:17:21 PM)
 ☐ Change to smart pointers
 
 Entity:
@@ -25,7 +25,6 @@ Entity:
   ✔ Sphere @done (12/4/2018, 9:29:07 PM)
   ☐ Cone
 ✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)
-☐ Component object pool
 ☐ Move components to sparse sets. Ref: https://www.geeksforgeeks.org/sparse-set/
 
 

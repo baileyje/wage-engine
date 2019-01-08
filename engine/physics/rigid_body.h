@@ -3,11 +3,11 @@
 
 #include <vector>
 
-#include "engine/memory/object_pool.h"
-#include "engine/memory/allocator.h"
+#include "memory/object_pool.h"
+#include "memory/allocator.h"
 
-#include "engine/entity/component.h"
-#include "engine/math/vector.h"
+#include "entity/component.h"
+#include "math/vector.h"
 
 namespace wage {
 

@@ -1,9 +1,9 @@
 #ifndef ENTITY_CAMERA_H
 #define ENTITY_CAMERA_H
 
-#include "engine/entity/component.h"
-#include "engine/math/frustum.h"
-#include "engine/entity/component/reference.h"
+#include "entity/component.h"
+#include "math/frustum.h"
+#include "entity/component/reference.h"
 
 namespace wage {
 

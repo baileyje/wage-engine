@@ -1,8 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "engine/entity/entity.h"
-#include "engine/entity/manager.h"
+#include "entity/entity.h"
+#include "entity/manager.h"
 
 namespace wage {
 

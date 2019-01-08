@@ -1,6 +1,6 @@
-#include "engine/jsrt/js_system.h"
+#include "jsrt/js_system.h"
 
-#include "engine/core/system/context.h"
+#include "core/system/context.h"
 
 namespace wage {
 

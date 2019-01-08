@@ -1,8 +1,8 @@
 #ifndef COMPONENT_LIGHT_H
 #define COMPONENT_LIGHT_H
 
-#include "engine/entity/component.h"
-#include "engine/math/color.h"
+#include "entity/component.h"
+#include "math/color.h"
 
 namespace wage {
 

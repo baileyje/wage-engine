@@ -1,4 +1,4 @@
-#include "engine-ext/physics-bullet/util.h"
+#include "physics-bullet/util.h"
 
 namespace wage {
 

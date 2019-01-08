@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <queue>
 
-#include "engine/fs/file_system.h"
+#include "fs/file_system.h"
 
 namespace wage {
 
