@@ -196,6 +196,28 @@ private:
 
 };
 
+class PosDisplay : public DynamicComponent {
+
+public:
+
+  PosDisplay(ComponentReference<Label> label, EntityReference target) :  DynamicComponent("POS"), label(label), target(target) {}
+
+  void fixedUpdate(ComponentContext* context) {
+    auto pos = target->getTransform().getPosition();
+    std::ostringstream os;
+    os << "POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
+    label->set(os.str());
+  }
+
+private:
+
+  ComponentReference<Label> label;
+
+  EntityReference target;
+
+};
+
+
 Core* coreRef;
 
 void intHandler(int);
@@ -370,12 +392,16 @@ void setupScene(EntityManager* manager) {
     .create<CamLook>();
   Camera::main = cameraEntity.get<Camera>();
 
-  // drawGrid(manager);
   Font font("fonts/ARCADE.TTF", 60);
-  EntityReference labelEntity = manager->create();  
-  labelEntity->getTransform().setPosition(Vector(20, 0, 0));   
-  labelEntity.create<Label>("FPS: ", font, Color(1, 1, 1, 0));  
-  labelEntity.create<FpsDisplay>(labelEntity.get<Label>());
+  EntityReference fpsLabelEntity = manager->create();  
+  fpsLabelEntity->getTransform().setPosition(Vector(20, 0, 0));   
+  fpsLabelEntity.create<Label>("FPS: ", font, Color(1, 1, 1, 0));  
+  fpsLabelEntity.create<FpsDisplay>(fpsLabelEntity.get<Label>());
+
+  EntityReference posLabelEntity = manager->create();  
+  posLabelEntity->getTransform().setPosition(Vector(300, 0, 0));   
+  posLabelEntity.create<Label>("POS: ", font, Color(1, 1, 1, 0));  
+  posLabelEntity.create<PosDisplay>(posLabelEntity.get<Label>(), mover);
 }
 
 // So far so dumb
