@@ -17,13 +17,13 @@ namespace wage {
 
     void unbind() const;
 
-    VertexBufferLayout* getLayout();
+    VertexBufferLayout* layout();
 
   private:
 
     unsigned int id;
 
-    VertexBufferLayout layout;
+    VertexBufferLayout layout_;
   };
 
 }

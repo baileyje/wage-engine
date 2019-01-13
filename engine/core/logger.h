@@ -23,22 +23,22 @@ namespace wage {
 
     static LogLevel error;
 
-    LogLevel(int severity, std::string name, int colorCode) : severity(severity), name(name), colorCode(colorCode) {
+    LogLevel(int severity, std::string name, int colorCode) : severity_(severity), name_(name), colorCode_(colorCode) {
     }
 
-    inline int getSeverity() { return severity; }
+    inline int severity() { return severity_; }
 
-    inline std::string getName() { return name; }
+    inline std::string name() { return name_; }
 
-    inline int getColorCode() { return colorCode; }
+    inline int colorCode() { return colorCode_; }
 
   private:
 
-    int severity;
+    int severity_;
 
-    std::string name;
+    std::string name_;
 
-    int colorCode;
+    int colorCode_;
 
   };
 
@@ -68,28 +68,16 @@ namespace wage {
     }
 
     static const char* nameForLevel(LogLevel level) {
-      // static const char* names[] = {
-      //   "DEBUG",
-      //   "INFO",
-      //   "WARN",
-      //   "ERROR"
-      // };
-      // int levelIdx = static_cast<std::underlying_type<LogLevel>::type>(level);
-      return level.getName().c_str();
+      return level.name().c_str();
     }
 
     static int colorForLevel(LogLevel level) {
-      // switch(level) {
-      //   case LogLevel::error: return 31;
-      //   case LogLevel::warn: return 33;
-      //   default: return 32;
-      // }
-      return level.getColorCode();
+      return level.colorCode();
     }
 
     template <typename... Args>
     static void log(LogLevel level, std::string& message, Args... args) {
-      if (level.getSeverity() >= CurrentLevel.getSeverity()) {      
+      if (level.severity() >= CurrentLevel.severity()) {      
         std::cout << "\033[" << colorForLevel(level) << ";1m" << nameForLevel(level) << "\033[0m ";
         write(message, args...);
         std::cout << std::endl;

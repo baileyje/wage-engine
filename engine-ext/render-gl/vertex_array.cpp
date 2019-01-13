@@ -14,14 +14,14 @@ namespace wage {
 
   void VertexArray::addBuffer(VertexBuffer* buffer) {
     buffer->bind();
-    VertexBufferLayout* layout = buffer->getLayout();
-    const auto& elements = layout->getElements();
+    VertexBufferLayout* layout = buffer->layout();
+    const auto& elements = layout->elements();
     unsigned int offset = 0;
     for (unsigned int i = 0; i < elements.size(); i++) {
       auto& element = elements[i];
       GL_FAIL_CHECK(glEnableVertexAttribArray(index));
-      GL_FAIL_CHECK(glVertexAttribPointer(index, element.count, element.type, element.normalized, layout->getStride() , (void*)offset));
-      offset += element.count * VertexBufferElement::getSizeOf(element.type);
+      GL_FAIL_CHECK(glVertexAttribPointer(index, element.count, element.type, element.normalized, layout->stride() , (void*)offset));
+      offset += element.count * VertexBufferElement::sizeOf(element.type);
       index++;
     }  
   }

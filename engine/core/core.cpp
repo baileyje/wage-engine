@@ -14,8 +14,7 @@ namespace wage {
 
   Core* Core::Instance = make<Core>();
 
-  Core::Core() : running(false) {  
-    timeStep = 1.0/60.0;
+  Core::Core() : running(false), time_(0), timeStep_(1.0/60.0), deltaTime_(0) {  
   }
 
   Core::~Core() {
@@ -33,7 +32,7 @@ namespace wage {
     Logger::info("Starting WAGE Core");
     SystemContext context (this);
     for (auto system : systems) {
-      Logger::info("Starting ", system->getName().c_str());
+      Logger::info("Starting ", system->name().c_str());
       system->start(&context);
     } 
     TimePoint lastTime = std::chrono::high_resolution_clock::now();
@@ -41,13 +40,13 @@ namespace wage {
     while (running) {    
       TimePoint currentTime = std::chrono::high_resolution_clock::now();
       double delta = (std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime)).count();
-      time += delta;
+      time_ += delta;
       lastTime = currentTime;
-      deltaTime = delta;    
+      deltaTime_ = delta;    
       accumulator += delta;
-      if (accumulator >= timeStep) {
+      if (accumulator >= timeStep()) {
         fixedUpdate();
-        accumulator -= timeStep;
+        accumulator -= timeStep();
       }
       update();
     }
@@ -76,7 +75,7 @@ namespace wage {
     running = false;
     SystemContext context(this);
     for (auto system = systems.begin(); system != systems.end(); ++system) {
-      Logger::info("Stopping ", (*system)->getName().c_str());
+      Logger::info("Stopping ", (*system)->name().c_str());
       (*system)->stop(&context);
     }
     deinit();
@@ -86,7 +85,7 @@ namespace wage {
     Logger::info("Initializing WAGE Core.");
     SystemContext context(this);
     for (auto system : systems) {    
-      Logger::info("Initializing ", system->getName().c_str());
+      Logger::info("Initializing ", system->name().c_str());
       system->init(&context);
     }
   }
@@ -95,7 +94,7 @@ namespace wage {
     Logger::info("Deinitializing WAGE Core.");
     SystemContext context(this);
     for (auto system = systems.begin(); system != systems.end(); ++system) {
-      Logger::info("Deinitializing ", (*system)->getName().c_str());
+      Logger::info("Deinitializing ", (*system)->name().c_str());
       (*system)->deinit(&context);
     }
   }

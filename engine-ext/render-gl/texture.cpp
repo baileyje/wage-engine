@@ -5,14 +5,11 @@
 
 namespace wage {
 
-  GlTexture::GlTexture(Texture* texture) : Asset(texture->getPath()), pushed(false), texture(texture) {  
-  }
-
   GlTexture::~GlTexture() {
-    if (data) {
-      stbi_image_free(data);
-    }    
-  }
+      if (data) {
+        stbi_image_free(data);
+      }    
+    }
 
   void GlTexture::onLoad(Buffer* buffer) {
     data = stbi_load_from_memory(buffer->data(), buffer->length(), &width, &height, &channels, 0);

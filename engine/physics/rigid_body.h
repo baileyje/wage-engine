@@ -26,65 +26,65 @@ namespace wage {
       return ptr;
     }
 
-    RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : Component("RigidBody"), mass(mass), affectedByGravity(true), type(type) {}
+    RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : Component("RigidBody"), mass_(mass), affectedByGravity_(true), type_(type) {}
 
     ~RigidBody() {}
 
-    inline float getMass() {
-      return mass;
+    inline float mass() {
+      return mass_;
     }
 
     inline void setAffectedByGravity(bool affected) {
-      affectedByGravity = affected;
+      affectedByGravity_ = affected;
     }
 
     inline bool isAffectedByGravity() {
-      return affectedByGravity;
+      return affectedByGravity_;
     }
 
     inline void addForce(Vector force) {
-      this->force += force;
+      force_ += force;
     }
 
     inline void addImpulse(Vector impulse) {
-      this->impulse += impulse;
+      impulse_ += impulse;
     }
 
-    inline RigidBodyType getType() {
-      return type;
+    inline RigidBodyType type() {
+      return type_;
     }
 
-    inline Vector getForce() {
-      return force;
+    inline Vector force() {
+      return force_;
     }
 
-    inline Vector getImpulse() {
-      return impulse;
+    inline Vector impulse() {
+      return impulse_;
     }
 
     inline void clearImpulse() {
-      impulse = Vector();
+      impulse_ = Vector();
     }
 
     inline void clearForce() {
-      force = Vector();
+      force_ = Vector();
     }  
 
   private:
 
-    float mass;
+    float mass_;
 
-    bool affectedByGravity;
+    bool affectedByGravity_;
 
-    Vector impulse;
+    Vector impulse_;
 
-    Vector force;
+    Vector force_;
     
     // Vector newVelocity;
 
     // Vector acceleration;
 
-    RigidBodyType type;
+    RigidBodyType type_;
 
     static ObjectPool<RigidBody> Pool;
     

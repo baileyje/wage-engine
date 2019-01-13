@@ -23,7 +23,7 @@ namespace wage {
     virtual ~MeshRenderer() {}
 
     void update(ComponentContext* context) {
-      Core::Instance->get<Renderer>()->renderMesh(context->getTransform(), context->getEntity().get<Mesh>(), context->getEntity().get<Material>());
+      Core::Instance->get<Renderer>()->renderMesh(context->transform(), context->entity().get<Mesh>(), context->entity().get<Material>());
     }
 
   };

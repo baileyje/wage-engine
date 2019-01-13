@@ -21,13 +21,13 @@ namespace wage {
 
     LIFECYCLE_FUNC(deinit)
     
-    Window* getWindow() {
-      return window;
+    Window* window() {
+      return window_;
     }
 
   private:
 
-    Window* window;
+    Window* window_;
     
   };
 

@@ -23,8 +23,8 @@ namespace wage {
     GL_FAIL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
   }
 
-  VertexBufferLayout* VertexBuffer::getLayout() {
-    return &layout;
+  VertexBufferLayout* VertexBuffer::layout() {
+    return &layout_;
   }
 
 }

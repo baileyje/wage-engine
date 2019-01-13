@@ -16,27 +16,27 @@ namespace wage {
   public:
 
     VertexArray* load(ComponentReference<Mesh> mesh) {
-      VertexArray* vao = cache[mesh->getId()];
+      VertexArray* vao = cache[mesh->id()];
       if (vao == nullptr) {
         vao = make<VertexArray>();
         vao->bind();        
         // Create Verts Buff    
-        VertexBuffer* verts = make<VertexBuffer>(mesh->getVertices().data(), mesh->getVertices().size() * 3 * sizeof(float));
-        verts->getLayout()->pushFloat(3);
+        VertexBuffer* verts = make<VertexBuffer>(mesh->vertices().data(), mesh->vertices().size() * 3 * sizeof(float));
+        verts->layout()->pushFloat(3);
         vao->addBuffer(verts);
         // Create Norms Buff
-        VertexBuffer* norms = make<VertexBuffer>(mesh->getNormals().data(), mesh->getNormals().size() * 3 * sizeof(float));
-        norms->getLayout()->pushFloat(3);
+        VertexBuffer* norms = make<VertexBuffer>(mesh->normals().data(), mesh->normals().size() * 3 * sizeof(float));
+        norms->layout()->pushFloat(3);
         vao->addBuffer(norms);
         // Create Texture Buff
-        VertexBuffer* uvs = make<VertexBuffer>(mesh->getUvs().data(), mesh->getUvs().size() * 3 * sizeof(float));
-        uvs->getLayout()->pushFloat(2);
+        VertexBuffer* uvs = make<VertexBuffer>(mesh->uvs().data(), mesh->uvs().size() * 3 * sizeof(float));
+        uvs->layout()->pushFloat(2);
         vao->addBuffer(uvs);  
         
-        IndexBuffer* indices = make<IndexBuffer>((const unsigned int*)mesh->getIndices().data(), mesh->getIndices().size());
+        IndexBuffer* indices = make<IndexBuffer>((const unsigned int*)mesh->indices().data(), mesh->indices().size());
         indices->bind();
         
-        cache[mesh->getId()] = vao;
+        cache[mesh->id()] = vao;
       }
       return vao;
     }

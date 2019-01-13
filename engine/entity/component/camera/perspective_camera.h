@@ -13,35 +13,35 @@ namespace wage {
     }
 
     PerspectiveCamera(float fov, float nearClip, float farClip) 
-      : Camera(CameraType::perspective), fov(fov), nearClip(nearClip), farClip(farClip) {
+      : Camera(CameraType::perspective), fov_(fov), nearClip_(nearClip), farClip_(farClip) {
     }
 
-    inline float getFov() {
-      return fov;
+    inline float fov() {
+      return fov_;
     }
 
     inline void setFov(float fov) {
-      this->fov = fov;
+      fov_ = fov;
     }
 
-    inline float getNearClip() {
-      return nearClip;
+    inline float nearClip() {
+      return nearClip_;
     }
 
     inline void setNearClip(float nearClip) {
-      this->nearClip = nearClip;
+      nearClip_ = nearClip;
     }
 
-    inline float getFarClip() {
-      return farClip;
+    inline float farClip() {
+      return farClip_;
     }
 
     inline void setFarClip(float farClip) {
-      this->farClip = farClip;
+      farClip_ = farClip;
     }
 
     inline Matrix screenProjection(Vector2 screenSize) {
-      return glm::perspective(glm::radians(getFov()), screenSize.x / screenSize.y, getNearClip(), getFarClip());
+      return glm::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
     }
 
     inline Frustum frustum(Vector2 screenSize) {
@@ -54,11 +54,11 @@ namespace wage {
 
   private:
 
-    float fov;
+    float fov_;
 
-    float nearClip;
+    float nearClip_;
 
-    float farClip;
+    float farClip_;
 
   };
 

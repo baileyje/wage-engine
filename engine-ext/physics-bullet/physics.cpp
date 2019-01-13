@@ -22,7 +22,7 @@ namespace wage {
 	void BulletPhysics::fixedUpdate(SystemContext* context) {
 		// Get Physics up to speed
 		for (auto physicsEntity : entities) {
-			if (!physicsEntity->getEntity().isValid()) {
+			if (!physicsEntity->entity().isValid()) {
 				continue;
 			}
 			physicsEntity->updateShapeTransform();
@@ -30,11 +30,11 @@ namespace wage {
 		}
 
 		// Run the Simulation
-		dynamicsWorld.stepSimulation(context->getTimeStep(), 3);	
+		dynamicsWorld.stepSimulation(context->timeStep(), 3);	
 
 		// Get entities up to speed
 		for (auto physicsEntity : entities) {
-			if (!physicsEntity->getEntity().isValid()) {
+			if (!physicsEntity->entity().isValid()) {
 				continue;
 			}
 			physicsEntity->updateEntityTransform();
@@ -57,11 +57,11 @@ namespace wage {
 
 	void BulletPhysics::remove(EntityReference entity) {
 		for (auto ent = entities.begin(); ent != entities.end(); ++ent) {
-			if ((*ent)->getEntity() == entity) {
-				if ((*ent)->getRigidBody()) {
-					dynamicsWorld.removeRigidBody((*ent)->getRigidBody());
+			if ((*ent)->entity() == entity) {
+				if ((*ent)->rigidBody()) {
+					dynamicsWorld.removeRigidBody((*ent)->rigidBody());
 				} else {
-					dynamicsWorld.removeCollisionObject((*ent)->getObject());
+					dynamicsWorld.removeCollisionObject((*ent)->object());
 				}		
 				entities.erase(ent);
 				return;

@@ -16,31 +16,31 @@ namespace wage {
 
   public:
 
-    Component(ComponentName name) : name(name) {};
+    Component(ComponentName name) : name_(name) {};
 
     virtual ~Component() {};
 
-    inline ComponentName getName() {
-      return name;
+    inline ComponentName name() {
+      return name_;
     }
 
     virtual bool isDynamic() {
       return false;
     }
 
-    virtual Transform* getTransform() {
-      return transform;
+    virtual Transform* transform() {
+      return transform_;
     }
 
     virtual void setTransform(Transform* transform) {
-      this->transform = transform;
+      transform_ = transform;
     }
 
   private:
 
-    ComponentName name;
+    ComponentName name_;
 
-    Transform* transform;
+    Transform* transform_;
     
   };
 

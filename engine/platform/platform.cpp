@@ -24,12 +24,12 @@ namespace wage {
     int screenWidth = 0;
     int screenHeight = 0;
     glfwGetFramebufferSize(glfWindow, &screenWidth, &screenHeight);
-    window = make<Window>(glfWindow, screenWidth, screenHeight);    
+    window_ = make<Window>(glfWindow, screenWidth, screenHeight);    
     glfwPollEvents();
   }
 
   void Platform::deinit(SystemContext* context) {
-    glfwDestroyWindow(window->as<GLFWwindow>());
+    glfwDestroyWindow(window_->as<GLFWwindow>());
     glfwTerminate();
     // TODO: Cleanup window
     // delete window;

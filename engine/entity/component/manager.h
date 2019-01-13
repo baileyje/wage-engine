@@ -148,7 +148,7 @@ namespace wage {
     template <typename T>
     inline void setupComponent(Reference<Entity> entity, ComponentEntry entry) {
       auto component = entry.component<T>();
-      component->setTransform(&entity->getTransform());
+      component->setTransform(&entity->transform());
       if (component->isDynamic()) {
         dynamicComponents.push_back(entry.id());
       }
@@ -169,13 +169,13 @@ namespace wage {
     template <typename T>
     inline ComponentReference<T> add(Reference<Entity> entity, T* component) {
       auto entry = ComponentEntry(nextId(), entity, (void*)component, &typeid(component));
-      // printf("Added: %d -> %d -> %s\n", entity->getId(), reference.id(), typeid(component).name());
+      // printf("Added: %d -> %d -> %s\n", entity->id(), reference.id(), typeid(component).name());
       setupComponent<T>(entity, entry);
-      ComponentName name = component->getName();
+      ComponentName name = component->name();
       nameMap[typeid(component)] = name;
       byId[entry.id()] = entry;
       byName[name].push_back(entry.id());
-      map[entity->getId()].push_back(entry.id());      
+      map[entity->id()].push_back(entry.id());      
       return ComponentReference<T>(entry.id(), entity, component);
     }
 
@@ -202,12 +202,12 @@ namespace wage {
 
     template <typename T>
     inline ComponentReference<T> get(Reference<Entity> entity) {
-      // std::cout << map[entity->getId()].size() << std::endl;
-      // printf("EntId: %d\n", entity->getId());
-      auto itr = map.find(entity->getId());
+      // std::cout << map[entity->id()].size() << std::endl;
+      // printf("EntId: %d\n", entity->id());
+      auto itr = map.find(entity->id());
       if (itr != map.end()) {
         // TODO: Ensure map has entry
-        for (auto id : map[entity->getId()]) {
+        for (auto id : map[entity->id()]) {
           auto entry = entryFor(id);
           // auto value = get<T>(id);
           // printf("CompId: %d -> %s\n", id, typeid(value).name());

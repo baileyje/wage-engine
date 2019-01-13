@@ -25,7 +25,7 @@ namespace wage {
     Input::Instance = this;
     messaging = context->get<Messaging>();
     Platform* platform = context->get<Platform>();
-    window = platform->getWindow();
+    window = platform->window();
     auto glfwWindow = window->as<GLFWwindow>();
     glfwSetWindowUserPointer(glfwWindow, this);
     glfwSetKeyCallback(glfwWindow, [](GLFWwindow* window, int keyCode, int scancode, int action, int mods) {

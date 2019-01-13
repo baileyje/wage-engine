@@ -14,62 +14,62 @@ namespace wage {
     }
 
     Spotlight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff) 
-      : Light("Spotlight", ambient, diffuse, specular), constant(constant), linear(linear), quadratic(quadratic), cutOff(cutOff), outerCutOff(outerCutOff)  {    
+      : Light("Spotlight", ambient, diffuse, specular), constant_(constant), linear_(linear), quadratic_(quadratic), cutOff_(cutOff), outerCutOff_(outerCutOff)  {    
     }
 
     ~Spotlight() {}
     
     inline void setConstant(float constant) {
-      this->constant = constant;
+      constant_ = constant;
     }
 
-    inline float getConstant() {
-      return constant;
+    inline float constant() {
+      return constant_;
     }
 
     inline void setLinear(float linear) {
-      this->linear = linear;
+      linear_ = linear;
     }
 
-    inline float getLinear() {
-      return linear;
+    inline float linear() {
+      return linear_;
     }
 
     inline void setQuadratic(float quadratic) {
-      this->quadratic = quadratic;
+      quadratic_ = quadratic;
     }
 
-    inline float getQuadratic() {
-      return quadratic;
+    inline float quadratic() {
+      return quadratic_;
     }
 
     inline void setCutOff(float cutOff) {
-      this->cutOff = cutOff;
+      cutOff_ = cutOff;
     }
 
-    inline float getCutOff() {
-      return cutOff;
+    inline float cutOff() {
+      return cutOff_;
     }
 
     inline void setOuterCutOff(float cutOff) {
-      this->outerCutOff = cutOff;
+      outerCutOff_ = cutOff;
     }
 
-    inline float getOuterCutOff() {
-      return outerCutOff;
+    inline float outerCutOff() {
+      return outerCutOff_;
     }
 
   private:
 
-      float constant;
+      float constant_;
       
-      float linear;
+      float linear_;
       
-      float quadratic;
+      float quadratic_;
 
-      float cutOff;
+      float cutOff_;
 
-      float outerCutOff;
+      float outerCutOff_;
   };
 
 }

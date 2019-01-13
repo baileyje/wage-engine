@@ -7,19 +7,19 @@ namespace wage {
 
   public:
 
-    EntityContext(const double time, const double deltaTime) : time(time), deltaTime(deltaTime)  { }
+    EntityContext(const double time, const double deltaTime) : time_(time), deltaTime_(deltaTime)  { }
 
     virtual ~EntityContext() { }
 
-    double getTime() const { return time; }
+    double time() const { return time_; }
 
-    double getDeltaTime() const { return deltaTime; }
+    double deltaTime() const { return deltaTime_; }
     
   private:
 
-    double time;
+    double time_;
 
-    double deltaTime;
+    double deltaTime_;
 
   };
 

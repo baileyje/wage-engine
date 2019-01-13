@@ -11,42 +11,42 @@ namespace wage {
   public:
 
     Light(std::string name, Color ambient, Color diffuse, Color specular) 
-      : Component(name), ambient(ambient), diffuse(diffuse), specular(specular) {    
+      : Component(name), ambient_(ambient), diffuse_(diffuse), specular_(specular) {    
     }
 
     ~Light() {}
 
-    Color* getAmbient() {
-      return &ambient;
+    Color* ambient() {
+      return &ambient_;
     }
 
     inline void setAmbient(Color ambient) {
-      this->ambient = ambient;
+      ambient_ = ambient;
     }
 
-    inline Color* getDiffuse() {
-      return &diffuse;
+    inline Color* diffuse() {
+      return &diffuse_;
     }
 
     inline void setDiffuse(Color diffuse) {
-      this->diffuse = diffuse;
+      diffuse_ = diffuse;
     }
 
-    inline Color* getSpecular() {
-      return &specular;
+    inline Color* specular() {
+      return &specular_;
     }
 
     inline void setSpecular(Color specular) {
-      this->specular = specular;
+      specular_ = specular;
     }
 
   protected:
 
-    Color ambient;
+    Color ambient_;
 
-    Color diffuse;
+    Color diffuse_;
 
-    Color specular;
+    Color specular_;
 
 
   };

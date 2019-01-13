@@ -12,65 +12,65 @@ namespace wage {
 
   public:
 
-    Transform() : parent(nullptr), position(0, 0, 0), scale(1, 1, 1), rotation(Vector(0,0,0)) {}
+    Transform() : parent_(nullptr), position_(0, 0, 0), scale_(1, 1, 1), rotation_(Vector(0,0,0)) {}
 
     ~Transform() {}
 
-    inline Vector& getLocalPosition() { return position; }
+    inline Vector& localPosition() { return position_; }
 
-    inline void setLocalPosition(Vector position) { this->position = position; };
+    inline void setLocalPosition(Vector position) { position_ = position; };
 
-    inline Vector getPosition() { 
-      if (parent) {
-        return parent->getPosition() + position;
+    inline Vector position() { 
+      if (parent_) {
+        return parent_->position() + position_;
       }
-      return position; 
+      return position_; 
     }
 
     inline void setPosition(Vector position) { 
-      if (parent) {
-        this->position = position - parent->getPosition();
+      if (parent_) {
+        position_ = position - parent_->position();
         return;
       }   
-      this->position = position;
+      position_ = position;
     }
 
-    inline Vector& getLocalScale() { 
-      return scale; 
+    inline Vector& localScale() { 
+      return scale_; 
     }
 
-    inline Vector getScale() { 
-      if (parent) {
-        Vector parentScale = parent->getScale();
+    inline Vector scale() { 
+      if (parent_) {
+        Vector parentScale = parent_->scale();
         return Vector(
-          parentScale.x * scale.x, 
-          parentScale.y * scale.y, 
-          parentScale.z * scale.z 
+          parentScale.x * scale_.x, 
+          parentScale.y * scale_.y, 
+          parentScale.z * scale_.z 
         );
       }    
-      return scale; 
+      return scale_; 
     }
 
-    inline void setLocalScale(Vector scale) { this->scale = scale; };
+    inline void setLocalScale(Vector scale) { scale_ = scale; };
 
-    inline Quaternion& getLocalRotation() { 
-      return rotation; 
+    inline Quaternion& localRotation() { 
+      return rotation_; 
     }
 
-    inline Quaternion getRotation() { 
-      if (parent) {
-        Quaternion parentQuat = parent->getRotation();
-        return parentQuat * this->rotation;      
+    inline Quaternion rotation() { 
+      if (parent_) {
+        Quaternion parentQuat = parent_->rotation();
+        return parentQuat * rotation_;
       }
-      return rotation; 
+      return rotation_; 
     }
 
     inline void setLocalRotation(Quaternion rotation) {    
-      this->rotation = rotation; 
+      rotation_ = rotation; 
     }
 
     inline void setLocalRotation(Vector eulers) { 
-      this->rotation = quatFromEulers(eulers);
+      rotation_ = quatFromEulers(eulers);
     }
 
     inline void setRotation(Vector eulers) { 
@@ -78,52 +78,52 @@ namespace wage {
     }
 
     inline void setRotation(Quaternion rotation) { 
-      if (parent) {
-        Quaternion parentQuat = parent->getRotation();
-        this->rotation = rotation * Quaternion(
+      if (parent_) {
+        Quaternion parentQuat = parent_->rotation();
+        rotation_ = rotation * Quaternion(
           parentQuat.w,
           -parentQuat.x,
           -parentQuat.y,
           -parentQuat.z        
         );   
       } else {
-        this->rotation = rotation;
+        rotation_ = rotation;
       }        
     }
 
     inline Matrix localPorjection() {
-      Matrix translation = glm::translate(glm::mat4(1), position);
-      Matrix scale = glm::scale(glm::mat4(1), this->scale);
-      Matrix rotate = glm::toMat4(this->rotation);
+      Matrix translation = glm::translate(glm::mat4(1), position_);
+      Matrix scale = glm::scale(glm::mat4(1), scale_);
+      Matrix rotate = glm::toMat4(rotation_);
       return translation * rotate * scale;
     }
 
     inline Matrix worldPorjection() {
       Matrix local = localPorjection();
-      if (parent) {
-        Matrix parentProjection = parent->worldPorjection();
+      if (parent_) {
+        Matrix parentProjection = parent_->worldPorjection();
         return parentProjection * local;
       }
       return local;
     }
 
-    inline Transform* getParent() { 
-      return parent;
+    inline Transform* parent() { 
+      return parent_;
     }
 
     inline void setParent(Transform* parent) { 
-      this->parent = parent;
+      parent_ = parent;
     }
 
   private:
 
-    Transform* parent;
+    Transform* parent_;
 
-    Vector position;
+    Vector position_;
     
-    Vector scale;
+    Vector scale_;
 
-    Quaternion rotation;
+    Quaternion rotation_;
 
   };
 

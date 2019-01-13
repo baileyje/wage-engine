@@ -30,35 +30,35 @@ namespace wage {
     ~GlMaterial();
 
     inline void setProgram(GlProgram* program) {
-      this->program = program;
+      program_ = program;
     }
 
-    inline GlProgram* getProgram() {
-      return program;
+    inline GlProgram* program() {
+      return program_;
     }
 
     inline void setFloat(std::string name, float value) {
-      GL_FAIL_CHECK(glUniform1f(glGetUniformLocation(program->id(), name.c_str()), value));
+      GL_FAIL_CHECK(glUniform1f(glGetUniformLocation(program_->id(), name.c_str()), value));
     }
 
     inline void setBool(std::string name, bool value) {
-      GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(program->id(), name.c_str()), (int)value));
+      GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(program_->id(), name.c_str()), (int)value));
     }
 
     inline void setInt(std::string name, int value) {
-      GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(program->id(), name.c_str()), value));
+      GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(program_->id(), name.c_str()), value));
     }  
 
     inline void setMat4(std::string name,const glm::mat4 &value) {
-      GL_FAIL_CHECK(glUniformMatrix4fv(glGetUniformLocation(program->id(), name.c_str()), 1, GL_FALSE, &value[0][0]));
+      GL_FAIL_CHECK(glUniformMatrix4fv(glGetUniformLocation(program_->id(), name.c_str()), 1, GL_FALSE, &value[0][0]));
     }
 
     inline void  setVec3(std::string name, const glm::vec3 &value) {
-      GL_FAIL_CHECK(glUniform3fv(glGetUniformLocation(program->id(), name.c_str()), 1, &value[0]));
+      GL_FAIL_CHECK(glUniform3fv(glGetUniformLocation(program_->id(), name.c_str()), 1, &value[0]));
     }
 
     inline void setVec4(std::string name, const glm::vec4 &value) {
-      GL_FAIL_CHECK(glUniform4fv(glGetUniformLocation(program->id(), name.c_str()), 1, &value[0]));
+      GL_FAIL_CHECK(glUniform4fv(glGetUniformLocation(program_->id(), name.c_str()), 1, &value[0]));
     }
 
     void bind() const;
@@ -67,7 +67,7 @@ namespace wage {
 
   private:
 
-    GlProgram* program;
+    GlProgram* program_;
 
     UniformMap uniforms;
 

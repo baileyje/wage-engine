@@ -12,13 +12,13 @@ namespace wage {
 
     virtual ~ComponentContext() { }
 
-    virtual Transform& getTransform() = 0;
+    virtual Transform& transform() = 0;
     
-    virtual double getTime() const = 0;
+    virtual double time() const = 0;
 
-    virtual double getDeltaTime() const = 0;
+    virtual double deltaTime() const = 0;
 
-    virtual EntityReference getEntity() = 0;
+    virtual EntityReference entity() = 0;
 
   };
 

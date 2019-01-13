@@ -26,7 +26,7 @@ namespace wage {
     }
 
     void update(ComponentContext* context) {
-      Core::Instance->get<Renderer>()->renderText(getTransform()->getPosition(), text(), font(), color());
+      Core::Instance->get<Renderer>()->renderText(transform()->position(), text(), font(), color());
     }
 
     inline std::string text() {

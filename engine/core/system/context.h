@@ -21,11 +21,11 @@ namespace wage {
       return core->get<T>();
     }
 
-    virtual double getTimeStep();
+    virtual double timeStep();
 
-    virtual double getTime();
+    virtual double time();
 
-    virtual double getDeltaTime();
+    virtual double deltaTime();
 
     virtual void shouldStop();
 

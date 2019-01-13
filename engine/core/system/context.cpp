@@ -6,16 +6,16 @@ namespace wage {
     core->shouldStop();
   }
 
-  double SystemContext::getTimeStep() {
-    return core->getTimeStep();
+  double SystemContext::timeStep() {
+    return core->timeStep();
   }
 
-  double SystemContext::getTime() {
-    return core->getTime();
+  double SystemContext::time() {
+    return core->time();
   }
 
-  double SystemContext::getDeltaTime() {
-    return core->getDeltaTime();
+  double SystemContext::deltaTime() {
+    return core->deltaTime();
   }
 
 }

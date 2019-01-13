@@ -14,42 +14,42 @@ namespace wage {
     }
 
     PointLight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic) 
-      : Light("PointLight", ambient, diffuse, specular), constant(constant), linear(linear), quadratic(quadratic)  {    
+      : Light("PointLight", ambient, diffuse, specular), constant_(constant), linear_(linear), quadratic_(quadratic)  {    
     }
 
     ~PointLight() {}
     
     inline void setConstant(float constant) {
-      this->constant = constant;
+      constant_ = constant;
     }
 
-    inline float getConstant() {
-      return constant;
+    inline float constant() {
+      return constant_;
     }
 
     inline void setLinear(float linear) {
-      this->linear = linear;
+      linear_ = linear;
     }
 
-    inline float getLinear() {
-      return linear;
+    inline float linear() {
+      return linear_;
     }
 
     inline void setQuadratic(float quadratic) {
-      this->quadratic = quadratic;
+      quadratic_ = quadratic;
     }
 
-    inline float getQuadratic() {
-      return quadratic;
+    inline float quadratic() {
+      return quadratic_;
     }
 
   private:
 
-      float constant;
+      float constant_;
       
-      float linear;
+      float linear_;
       
-      float quadratic;
+      float quadratic_;
 
   };
 

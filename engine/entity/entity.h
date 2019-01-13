@@ -3,13 +3,13 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 #include "math/transform.h"
 
 namespace wage {
 
-  // TODO: Move to network safe ids
-  typedef unsigned long EntityId;
+  typedef uint32_t EntityId;
 
   #define InvalidEntityId 0
 
@@ -17,79 +17,30 @@ namespace wage {
 
   public:
 
-    Entity() : id(nextId()) {} 
+    Entity() : id_(nextId()) {} 
 
     virtual ~Entity();
 
     // Copy
     Entity(Entity&& src) {
-      id = std::move(src.id);
-      transform = std::move(src.transform);
+      id_ = std::move(src.id_);
+      transform_ = std::move(src.transform_);
     }
 
     // Move
     Entity& operator=(Entity&& src) {
-      id = std::move(src.id);
-      transform = std::move(src.transform);
+      id_ = std::move(src.id_);
+      transform_ = std::move(src.transform_);
       return *this;
     }
 
-    inline EntityId getId() { return id; }
+    inline EntityId id() { return id_; }
 
-    inline void setId(EntityId id) { this->id = id; }
+    inline void setId(EntityId id) { id_ = id; }
     
-    inline Transform& getTransform() { return transform; }
+    inline Transform& transform() { return transform_; }
 
-    inline void setTransform(Transform transform) { this->transform = transform; }
-
-    // inline void setupComponent(Component* component) {
-    //   component->setTransform(&transform);
-    //   if (component->isDynamic()) {
-    //     DynamicComponent* asDynamic = dynamic_cast<DynamicComponent*>(component);
-    //     dynamicComponents.push_back(asDynamic);
-    //   }
-    // }
-
-    // template <typename T, typename... Args>
-    // inline Entity* add(Args... args) {
-    //   auto component = components.add<T>(args...);
-    //   Component* asComponent = dynamic_cast<Component*>(component);
-    //   setupComponent(asComponent);
-    //   return this;
-    // }
-
-    // template <typename T, typename... Args>
-    // inline Entity* create(Args... args) {
-    //   auto component = components.add<T>(args...);
-    //   Component* asComponent = dynamic_cast<Component*>(component);
-    //   setupComponent(asComponent);
-    //   return this;
-    // }
-
-    // template <class T>
-    // inline Entity* add(T* component) { 
-    //   components.addComponent<T>(component);
-    //   Component* asComponent = dynamic_cast<Component*>(component);
-    //   setupComponent(asComponent);
-    //   return this;
-    // }
-
-    // Entity* onUpdate(ComponentCallback func);
-
-    // template <typename T>
-    // inline T* get() { 
-    //   return components.get<T>();
-    // }
-
-    // inline ComponentMap<Component>* getComponents() { return &components; }
-    
-    // void start(EntityContext* context);
-
-    // void update(EntityContext* context);
-
-    // void fixedUpdate(EntityContext* context);
-
-    // void stop(EntityContext* context);
+    inline void setTransform(Transform transform) { transform_ = transform; }
 
   private:
     
@@ -97,13 +48,9 @@ namespace wage {
       return CurrentId++;
     }
 
-    EntityId id;
+    EntityId id_;
 
-    Transform transform;
-
-    // ComponentMap<Component> components;
-
-    // std::vector<DynamicComponent*> dynamicComponents;
+    Transform transform_;
 
     static EntityId CurrentId;
 

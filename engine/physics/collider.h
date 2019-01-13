@@ -14,13 +14,13 @@ namespace wage {
     Collider() : Collider(ColliderType::box) {    
     }
 
-    Collider(ColliderType type) : Component("Collider"), type(type) {    
+    Collider(ColliderType type) : Component("Collider"), type_(type) {    
     }
 
     ~Collider() {}
 
-    inline ColliderType getType() const {
-      return type;
+    inline ColliderType type() const {
+      return type_;
     }
 
     static Collider Box;
@@ -29,7 +29,7 @@ namespace wage {
 
   private:
 
-    ColliderType type;
+    ColliderType type_;
 
   };
 

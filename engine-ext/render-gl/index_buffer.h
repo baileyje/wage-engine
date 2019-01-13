@@ -15,15 +15,15 @@ namespace wage {
 
     void unbind() const;
 
-    inline unsigned int getCount() const {
-      return count;
+    inline unsigned int count() const {
+      return count_;
     }
 
   private:
 
     // const unsigned int* data;
     
-    unsigned int count;
+    unsigned int count_;
 
     unsigned int id;
 

@@ -23,9 +23,9 @@ namespace wage {
   void JsSystem::fixedUpdate(SystemContext* context) {
     // TODO: Ensure system has `fixedUpdate`
     JsObjectWrapper jsContext;
-    jsContext.set("time", context->getTime());
-    jsContext.set("deltaTime", context->getDeltaTime());
-    jsContext.set("timeStep", context->getTimeStep());
+    jsContext.set("time", context->time());
+    jsContext.set("deltaTime", context->deltaTime());
+    jsContext.set("timeStep", context->timeStep());
     JsValueRef args[] = { jsContext.get() };
     object.invoke("fixedUpdate", args, 1); 
   }
@@ -33,9 +33,9 @@ namespace wage {
   void JsSystem::update(SystemContext* context) {
     // TODO: Ensure system has `update`
     JsObjectWrapper jsContext;
-    jsContext.set("time", context->getTime());
-    jsContext.set("deltaTime", context->getDeltaTime());
-    jsContext.set("timeStep", context->getTimeStep());
+    jsContext.set("time", context->time());
+    jsContext.set("deltaTime", context->deltaTime());
+    jsContext.set("timeStep", context->timeStep());
     JsValueRef args[] = { jsContext.get() };
     object.invoke("update", args, 1); 
   }

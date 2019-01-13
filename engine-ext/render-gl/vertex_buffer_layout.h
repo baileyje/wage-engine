@@ -14,7 +14,7 @@ namespace wage {
     
     unsigned int normalized;
 
-    static unsigned int getSizeOf(unsigned int type) {
+    static unsigned int sizeOf(unsigned int type) {
       switch(type) {
         case GL_FLOAT: return 4;
         case GL_UNSIGNED_INT: return 4;
@@ -28,35 +28,35 @@ namespace wage {
 
   public:
     
-    VertexBufferLayout() : stride(0) {}
+    VertexBufferLayout() : stride_(0) {}
 
     ~VertexBufferLayout() {}
 
     VertexBufferLayout* pushFloat(unsigned int count) { 
-      elements.push_back({ GL_FLOAT, count, GL_FALSE });
-      stride += count * VertexBufferElement::getSizeOf(GL_FLOAT);
+      elements_.push_back({ GL_FLOAT, count, GL_FALSE });
+      stride_ += count * VertexBufferElement::sizeOf(GL_FLOAT);
       return this;
     } 
 
     VertexBufferLayout* pushUInt(unsigned int count) { 
-      elements.push_back({ GL_UNSIGNED_INT, count, GL_TRUE });
-      stride += count * VertexBufferElement::getSizeOf(GL_UNSIGNED_INT);
+      elements_.push_back({ GL_UNSIGNED_INT, count, GL_TRUE });
+      stride_ += count * VertexBufferElement::sizeOf(GL_UNSIGNED_INT);
       return this;
     } 
 
-    inline unsigned int getStride() const {
-      return stride;
+    inline unsigned int stride() const {
+      return stride_;
     }
 
-    inline std::vector<VertexBufferElement> getElements() const  {
-      return elements;
+    inline std::vector<VertexBufferElement> elements() const  {
+      return elements_;
     }
 
   private:
     
-    std::vector<VertexBufferElement> elements;
+    std::vector<VertexBufferElement> elements_;
 
-    unsigned int stride;
+    unsigned int stride_;
 
   };
 

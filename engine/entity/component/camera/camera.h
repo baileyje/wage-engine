@@ -15,22 +15,22 @@ namespace wage {
 
     static ComponentReference<Camera> main;
 
-    Camera(CameraType type) : Component("Camera"), type(type) {    
+    Camera(CameraType type) : Component("Camera"), type_(type) {    
     }
 
     ~Camera() {    
     }
 
-    inline CameraType getType() {
-      return type;
+    inline CameraType type() {
+      return type_;
     }
 
     virtual Matrix screenProjection(Vector2 screenSize) = 0;
 
     Matrix viewProjection() {
-      Transform* transform = getTransform();
-      Vector camPos = transform->getPosition();
-      Quaternion rotation = transform->getRotation();
+      Transform* trans = transform();
+      Vector camPos = trans->position();
+      Quaternion rotation = trans->rotation();
       Vector camFront = rotation * Vector(0, 0, 1);
       Vector camUp = rotation * Vector(0, 1, 0);
       return glm::lookAt(camPos, camPos + camFront, camUp);
@@ -40,7 +40,7 @@ namespace wage {
 
   private:
 
-    CameraType type;
+    CameraType type_;
 
   };
 

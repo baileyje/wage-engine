@@ -18,43 +18,43 @@ namespace wage {
   public:
 
     Mesh(std::string id, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices) 
-      : Component("Mesh"), id(id), vertices(vertices), normals(normals), uvs(uvs), indices(indices), maxDim(0) {
-        for (auto vertex : vertices) {
+      : Component("Mesh"), id_(id), vertices_(vertices), normals_(normals), uvs_(uvs), indices_(indices), maxDim_(0) {
+        for (auto vertex : vertices_) {
           // printf("Vert:%s - %f:%f:%f\n", id.c_str(), vertex.x, vertex.y, vertex.z);
-          maxDim.x = std::max(maxDim.x, std::abs(vertex.x));
-          maxDim.y = std::max(maxDim.y, std::abs(vertex.y));
-          maxDim.z = std::max(maxDim.z, std::abs(vertex.z));
+          maxDim_.x = std::max(maxDim_.x, std::abs(vertex.x));
+          maxDim_.y = std::max(maxDim_.y, std::abs(vertex.y));
+          maxDim_.z = std::max(maxDim_.z, std::abs(vertex.z));
         }
       }
     
     virtual ~Mesh();
 
-    inline unsigned int getElementCount() {
-      return indices.size();
+    inline unsigned int elementCount() {
+      return indices_.size();
     }
 
-    inline VertexVector& getVertices() {
-      return vertices;
+    inline VertexVector& vertices() {
+      return vertices_;
     }
 
-    inline VertexVector& getNormals() {
-      return normals;
+    inline VertexVector& normals() {
+      return normals_;
     }
 
-    inline Vertex2Vector& getUvs() {
-      return uvs;
+    inline Vertex2Vector& uvs() {
+      return uvs_;
     }
 
-    inline IndexVector& getIndices() {
-      return indices;
+    inline IndexVector& indices() {
+      return indices_;
     }
 
-    inline std::string getId() const {
-      return id;
+    inline std::string id() const {
+      return id_;
     }
 
-    inline Vector getMaxDim() {
-      return maxDim; 
+    inline Vector maxDim() {
+      return maxDim_; 
     }
 
     static Mesh Cube;
@@ -69,17 +69,17 @@ namespace wage {
   
   protected:
 
-    std::string id;
+    std::string id_;
 
-    VertexVector vertices;
+    VertexVector vertices_;
     
-    VertexVector normals;
+    VertexVector normals_;
 
-    Vertex2Vector uvs;
+    Vertex2Vector uvs_;
 
-    IndexVector indices;
+    IndexVector indices_;
 
-    Vector maxDim;
+    Vector maxDim_;
 
   };
 

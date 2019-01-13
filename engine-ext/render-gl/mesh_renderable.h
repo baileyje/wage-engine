@@ -34,12 +34,12 @@ namespace wage {
     }
 
     virtual Vector position() {
-      return transform.getPosition();
+      return transform.position();
     }
 
     virtual BoundingBox boundingBox() {
-      Vector maxDims = mesh->getMaxDim();
-      Vector scale = transform.getScale();
+      Vector maxDims = mesh->maxDim();
+      Vector scale = transform.scale();
       Vector scaledMaxHalfDim(
         maxDims.x * scale.x,
         maxDims.y * scale.y,
@@ -68,11 +68,11 @@ namespace wage {
       for (auto light : context->dirLights()) {
         std::stringstream base;
         base << "dirLights[" << idx++ << "]";
-        Vector cameraEulers = glm::eulerAngles(light->getTransform()->getRotation());
+        Vector cameraEulers = glm::eulerAngles(light->transform()->rotation());
         glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
-        glMaterial.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
-        glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
-        glMaterial.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
+        glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
+        glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
+        glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
       }
       
       glMaterial.setInt("numPointLights", context->pointLights().size());
@@ -80,13 +80,13 @@ namespace wage {
       for (auto light : context->pointLights()) {
         std::stringstream base;
         base << "pointLights[" << idx++ << "]";
-        glMaterial.setVec3(base.str() + ".position", light->getTransform()->getPosition());
-        glMaterial.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
-        glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
-        glMaterial.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
-        glMaterial.setFloat(base.str() + ".constant", light->getConstant());
-        glMaterial.setFloat(base.str() + ".linear", light->getLinear());
-        glMaterial.setFloat(base.str() + ".quadratic", light->getQuadratic());
+        glMaterial.setVec3(base.str() + ".position", light->transform()->position());
+        glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
+        glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
+        glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
+        glMaterial.setFloat(base.str() + ".constant", light->constant());
+        glMaterial.setFloat(base.str() + ".linear", light->linear());
+        glMaterial.setFloat(base.str() + ".quadratic", light->quadratic());
       }
 
       glMaterial.setInt("numSpotLights", context->spotlights().size());
@@ -94,24 +94,21 @@ namespace wage {
       for (auto light : context->spotlights()) {
         std::stringstream base;
         base << "spotLights[" << idx++ << "]";
-        glMaterial.setVec3(base.str() + ".position", light->getTransform()->getPosition());
-        Vector cameraEulers = glm::eulerAngles(light->getTransform()->getRotation());
+        glMaterial.setVec3(base.str() + ".position", light->transform()->position());
+        Vector cameraEulers = glm::eulerAngles(light->transform()->rotation());
         glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
-        glMaterial.setVec3(base.str() + ".ambient", vec3From(light->getAmbient()));
-        glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->getDiffuse()));
-        glMaterial.setVec3(base.str() + ".specular", vec3From(light->getSpecular()));
-        glMaterial.setFloat(base.str() + ".constant", light->getConstant());
-        glMaterial.setFloat(base.str() + ".linear", light->getLinear());
-        glMaterial.setFloat(base.str() + ".quadratic", light->getQuadratic());
-        glMaterial.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->getCutOff())));
-        glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->getOuterCutOff())));
+        glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
+        glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
+        glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
+        glMaterial.setFloat(base.str() + ".constant", light->constant());
+        glMaterial.setFloat(base.str() + ".linear", light->linear());
+        glMaterial.setFloat(base.str() + ".quadratic", light->quadratic());
+        glMaterial.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->cutOff())));
+        glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->outerCutOff())));
       }
       Texture* texture = Texture::Default;
-      if (material.valid()) {
-        texture = material->getTexture();
-        if (material->getTexture() != nullptr) {
-          texture = material->getTexture();
-        }
+      if (material.valid() && material->texture() != nullptr) {
+        texture = material->texture();
       }
       GlTexture* glTexture = textureManager_->load(texture);
       glTexture->bind();
@@ -130,7 +127,7 @@ namespace wage {
       GlMaterial material(program);
       setupMaterial(material, context);
       material.bind();
-      GL_FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->getElementCount(), GL_UNSIGNED_INT, 0));
+      GL_FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->elementCount(), GL_UNSIGNED_INT, 0));
       vao->unbind();
       // glTexture->unbind();  TODO: How do we get this thing..
       material.unbind();

@@ -20,7 +20,7 @@ namespace wage {
       dirLights_(dirLights), pointLights_(pointLights), spotlights_(spotlights) {
           screenProjection_ = camera->screenProjection(screenSize);
           viewProjection_ = camera->viewProjection();
-          cameraPosition_ = camera->getTransform()->getPosition();
+          cameraPosition_ = camera->transform()->position();
       }
 
     inline ComponentReference<Camera> camera() {

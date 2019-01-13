@@ -17,14 +17,14 @@ namespace wage {
 	}
 
 	void Physics::on(AddEntityMessage& message) {
-		auto entity = message.getEntity();
+		auto entity = message.entity();
 		if (entity.get<RigidBody>().valid()) {
 			add(entity);
 		}		
 	}
 
 	void Physics::on(DestroyEntityMessage& message) {
-		remove(message.getEntity());
+		remove(message.entity());
 	}
 
 }

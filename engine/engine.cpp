@@ -7,7 +7,7 @@
 
 #define LIFECYCLE_FUNC_IMPL(Name) \
 void Engine::Name(SystemContext* context) { \
-  EntityContext entityContext(context->getTime(), context->getDeltaTime()); \
+  EntityContext entityContext(context->time(), context->deltaTime()); \
   EntityManager* manager = context->get<EntityManager>(); \
   for (auto& entity : *manager) { \
     entity->Name(&entityContext); \

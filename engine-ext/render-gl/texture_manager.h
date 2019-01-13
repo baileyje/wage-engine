@@ -15,10 +15,10 @@ namespace wage {
   public:
 
     GlTexture* load(Texture* texture) {
-      GlTexture* glTexture = cache[texture->getId()];
+      GlTexture* glTexture = cache[texture->id()];
       if (glTexture == nullptr) {
         glTexture = make<GlTexture>(texture);
-        cache[texture->getId()] = glTexture;
+        cache[texture->id()] = glTexture;
         assetManager->load(glTexture);
       }
       return glTexture;

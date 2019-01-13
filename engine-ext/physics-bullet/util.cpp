@@ -5,8 +5,8 @@ namespace wage {
   btTransform fromTransform(Transform& transform) {
     btTransform btTransform;
     btTransform.setIdentity();
-    btTransform.setOrigin(fromVector(transform.getPosition()));  
-    Quaternion transformRotation = transform.getRotation();
+    btTransform.setOrigin(fromVector(transform.position()));  
+    Quaternion transformRotation = transform.rotation();
     btQuaternion rotation(
       transformRotation.x,
       transformRotation.y,

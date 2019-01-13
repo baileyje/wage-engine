@@ -12,12 +12,13 @@ namespace wage {
 
   public:
 
-    GlTexture(Texture* texture);
+    GlTexture(Texture* texture) : Asset(texture->path()), pushed(false), texture_(texture) {  
+    }
 
     ~GlTexture();
 
-    inline Texture* getTexture() {
-      return texture;
+    inline Texture* texture() {
+      return texture_;
     }
 
     void load(AssetManager* assetManager);
@@ -36,7 +37,7 @@ namespace wage {
 
     bool pushed;
 
-    Texture* texture;
+    Texture* texture_;
 
     std::unique_ptr<Asset> vertexSource;
 
