@@ -13,17 +13,17 @@ namespace wage {
     UiComponent(std::string name) : DynamicComponent(name) {
     }
 
-    UiComponent(std::string name, Frame frame) : DynamicComponent(name), frame_(frame) {}
+    UiComponent(std::string name, Frame frame) : DynamicComponent(name), _frame(frame) {}
 
     virtual ~UiComponent() {}
 
     inline Frame frame() {
-      return frame_;
+      return _frame;
     }
 
   private:
 
-    Frame frame_;
+    Frame _frame;
 
   };
 

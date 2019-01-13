@@ -23,22 +23,22 @@ namespace wage {
 
     static LogLevel error;
 
-    LogLevel(int severity, std::string name, int colorCode) : severity_(severity), name_(name), colorCode_(colorCode) {
+    LogLevel(int severity, std::string name, int colorCode) : _severity(severity), _name(name), _colorCode(colorCode) {
     }
 
-    inline int severity() { return severity_; }
+    inline int severity() { return _severity; }
 
-    inline std::string name() { return name_; }
+    inline std::string name() { return _name; }
 
-    inline int colorCode() { return colorCode_; }
+    inline int colorCode() { return _colorCode; }
 
   private:
 
-    int severity_;
+    int _severity;
 
-    std::string name_;
+    std::string _name;
 
-    int colorCode_;
+    int _colorCode;
 
   };
 

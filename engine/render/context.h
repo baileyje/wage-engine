@@ -16,62 +16,62 @@ namespace wage {
 
     RenderContext(ComponentReference<Camera> camera, Vector2 screenSize,
       std::vector<DirectionalLight*> dirLights, std::vector<PointLight*> pointLights, std::vector<Spotlight*> spotlights) 
-      : camera_(camera), screenSize_(screenSize),
-      dirLights_(dirLights), pointLights_(pointLights), spotlights_(spotlights) {
-          screenProjection_ = camera->screenProjection(screenSize);
-          viewProjection_ = camera->viewProjection();
-          cameraPosition_ = camera->transform()->position();
+      : _camera(camera), _screenSize(screenSize),
+      _dirLights(dirLights), _pointLights(pointLights), _spotlights(spotlights) {
+          _screenProjection = camera->screenProjection(screenSize);
+          _viewProjection = camera->viewProjection();
+          _cameraPosition = camera->transform()->position();
       }
 
     inline ComponentReference<Camera> camera() {
-      return camera_;
+      return _camera;
     }
 
     inline Vector2 screenSize() {
-      return screenSize_;
+      return _screenSize;
     }
 
     inline Matrix screenProjection() {
-      return screenProjection_;
+      return _screenProjection;
     }
     
     inline Vector cameraPosition() {
-      return cameraPosition_;
+      return _cameraPosition;
     }
     
     inline Matrix viewProjection() {
-      return viewProjection_;
+      return _viewProjection;
     }
 
     inline std::vector<DirectionalLight*> dirLights() {
-      return dirLights_;
+      return _dirLights;
     }
 
     inline std::vector<PointLight*> pointLights() {
-      return pointLights_;
+      return _pointLights;
     }
 
     inline std::vector<Spotlight*> spotlights() {
-      return spotlights_;
+      return _spotlights;
     }
 
   private:
   
-    ComponentReference<Camera> camera_;
+    ComponentReference<Camera> _camera;
 
-    Vector2 screenSize_;
+    Vector2 _screenSize;
 
-    Matrix screenProjection_;
+    Matrix _screenProjection;
     
-    Vector cameraPosition_;
+    Vector _cameraPosition;
     
-    Matrix viewProjection_;
+    Matrix _viewProjection;
 
-    std::vector<DirectionalLight*> dirLights_;
+    std::vector<DirectionalLight*> _dirLights;
 
-    std::vector<PointLight*> pointLights_;
+    std::vector<PointLight*> _pointLights;
 
-    std::vector<Spotlight*> spotlights_;
+    std::vector<Spotlight*> _spotlights;
   };
 
 }

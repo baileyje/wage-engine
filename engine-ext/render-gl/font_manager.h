@@ -21,18 +21,18 @@ namespace wage {
       if (glFont == nullptr) {
         glFont = make<GlFont>(font.path(), font.size());
         cache[font.path()] = glFont;
-        assetManager->load(glFont);
+        _assetManager->load(glFont);
       }
       return glFont;
     }
 
-    inline void setAssetManager(AssetManager* assetManager) {
-      this->assetManager = assetManager;
+    inline void assetManager(AssetManager* assetManager) {
+      _assetManager = assetManager;
     }
 
   private:
 
-    AssetManager* assetManager;
+    AssetManager* _assetManager;
 
     std::unordered_map<std::string, GlFont*> cache;
 

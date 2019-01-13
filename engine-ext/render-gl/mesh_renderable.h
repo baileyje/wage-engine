@@ -27,10 +27,10 @@ namespace wage {
   public:
 
     GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform transform, ComponentReference<Mesh> mesh, ComponentReference<Material> material) 
-      : vaoManager_(vaoManager), textureManager_(textureManager), transform(transform), mesh(mesh), material(material) {}
+      : _vaoManager(vaoManager), _textureManager(textureManager), transform(transform), mesh(mesh), material(material) {}
 
     inline VaoManager* vaoManager() {
-      return vaoManager_;
+      return _vaoManager;
     }
 
     virtual Vector position() {
@@ -110,7 +110,7 @@ namespace wage {
       if (material.valid() && material->texture() != nullptr) {
         texture = material->texture();
       }
-      GlTexture* glTexture = textureManager_->load(texture);
+      GlTexture* glTexture = _textureManager->load(texture);
       glTexture->bind();
       glMaterial.setInt("material.diffuse", 0);
       glMaterial.setFloat("material.shininess", 32.0f);
@@ -135,9 +135,9 @@ namespace wage {
 
   private:
 
-    VaoManager* vaoManager_;
+    VaoManager* _vaoManager;
 
-    GlTextureManager* textureManager_;
+    GlTextureManager* _textureManager;
 
     Transform transform;
 

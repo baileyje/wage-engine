@@ -33,17 +33,17 @@ namespace wage {
     DispatchQueue& operator=(DispatchQueue&& rhs) = delete;
 
   private:
-    std::string name_;
+    std::string _name;
     
-    std::mutex lock_;
+    std::mutex _lock;
     
-    std::vector<std::thread> threads_;
+    std::vector<std::thread> _threads;
     
-    std::queue<Operation> queue_;
+    std::queue<Operation> _queue;
     
-    std::condition_variable condition_;
+    std::condition_variable _condition;
     
-    bool quit_ = false;
+    bool _quit = false;
 
     void threadHandler(void);
   };

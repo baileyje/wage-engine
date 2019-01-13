@@ -61,15 +61,15 @@ namespace wage {
     }
 
     inline double timeStep() {
-      return timeStep_;
+      return _timeStep;
     }
 
     inline double time() {
-      return time_;
+      return _time;
     }
 
     inline double deltaTime() {
-      return deltaTime_;
+      return _deltaTime;
     }
     
   private:
@@ -86,11 +86,11 @@ namespace wage {
     
     bool running;
 
-    double timeStep_;
+    double _timeStep;
 
-    double time_;
+    double _time;
 
-    double deltaTime_;
+    double _deltaTime;
 
   };
 

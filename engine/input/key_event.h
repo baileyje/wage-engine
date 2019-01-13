@@ -16,24 +16,24 @@ namespace wage {
   
   public:
 
-    KeyEvent(Key key, KeyEventType type, int modifiers) : key_(key), type_(type), modifiers_(modifiers) {
+    KeyEvent(Key key, KeyEventType type, int modifiers) : _key(key), _type(type), _modifiers(modifiers) {
     }
 
     inline Key key() {
-      return key_;
+      return _key;
     }
 
     inline KeyEventType type() {
-      return type_;
+      return _type;
     }
 
     inline int modifiers() {
-      return modifiers_;
+      return _modifiers;
     }
 
     bool set(KeyModifier mod) {
       int intMod = (int)mod;
-      return (modifiers_ & intMod) > 0;
+      return (_modifiers & intMod) > 0;
     }
 
     bool set(std::initializer_list<KeyModifier> mods) {
@@ -46,11 +46,11 @@ namespace wage {
 
   private:
     
-    Key key_;
+    Key _key;
 
-    KeyEventType type_;
+    KeyEventType _type;
 
-    int modifiers_;
+    int _modifiers;
 
   };
 

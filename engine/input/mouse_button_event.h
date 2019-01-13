@@ -14,24 +14,24 @@ namespace wage {
   
   public:
 
-    MouseButtonEvent(int button, MouseButtonEventType type, int modifiers) : button_(button), type_(type), modifiers_(modifiers) {
+    MouseButtonEvent(int button, MouseButtonEventType type, int modifiers) : _button(button), _type(type), _modifiers(modifiers) {
     }
 
     inline int button() {
-      return button_;
+      return _button;
     }
 
     inline MouseButtonEventType type() {
-      return type_;
+      return _type;
     }
 
     inline int modifiers() {
-      return modifiers_;
+      return _modifiers;
     }
 
     bool set(KeyModifier mod) {
       int intMod = (int)mod;
-      return (modifiers_ & intMod) > 0;
+      return (_modifiers & intMod) > 0;
     }
 
     bool set(std::initializer_list<KeyModifier> mods) {
@@ -44,11 +44,11 @@ namespace wage {
 
   private:
     
-    int button_;
+    int _button;
 
-    MouseButtonEventType type_;
+    MouseButtonEventType _type;
 
-    int modifiers_;
+    int _modifiers;
 
   };
 

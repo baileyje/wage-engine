@@ -19,18 +19,18 @@ namespace wage {
       if (glTexture == nullptr) {
         glTexture = make<GlTexture>(texture);
         cache[texture->id()] = glTexture;
-        assetManager->load(glTexture);
+        _assetManager->load(glTexture);
       }
       return glTexture;
     }
 
-    inline void setAssetManager(AssetManager* assetManager) {
-      this->assetManager = assetManager;
+    inline void assetManager(AssetManager* assetManager) {
+      _assetManager = assetManager;
     }
 
   private:
 
-    AssetManager* assetManager;
+    AssetManager* _assetManager;
 
     std::unordered_map<std::string, GlTexture*> cache;
 

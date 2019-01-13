@@ -18,43 +18,43 @@ namespace wage {
   public:
 
     Mesh(std::string id, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices) 
-      : Component("Mesh"), id_(id), vertices_(vertices), normals_(normals), uvs_(uvs), indices_(indices), maxDim_(0) {
-        for (auto vertex : vertices_) {
+      : Component("Mesh"), _id(id), _vertices(vertices), _normals(normals), _uvs(uvs), _indices(indices), _maxDim(0) {
+        for (auto vertex : _vertices) {
           // printf("Vert:%s - %f:%f:%f\n", id.c_str(), vertex.x, vertex.y, vertex.z);
-          maxDim_.x = std::max(maxDim_.x, std::abs(vertex.x));
-          maxDim_.y = std::max(maxDim_.y, std::abs(vertex.y));
-          maxDim_.z = std::max(maxDim_.z, std::abs(vertex.z));
+          _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
+          _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
+          _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
         }
       }
     
     virtual ~Mesh();
 
     inline unsigned int elementCount() {
-      return indices_.size();
+      return _indices.size();
     }
 
     inline VertexVector& vertices() {
-      return vertices_;
+      return _vertices;
     }
 
     inline VertexVector& normals() {
-      return normals_;
+      return _normals;
     }
 
     inline Vertex2Vector& uvs() {
-      return uvs_;
+      return _uvs;
     }
 
     inline IndexVector& indices() {
-      return indices_;
+      return _indices;
     }
 
     inline std::string id() const {
-      return id_;
+      return _id;
     }
 
     inline Vector maxDim() {
-      return maxDim_; 
+      return _maxDim; 
     }
 
     static Mesh Cube;
@@ -69,17 +69,17 @@ namespace wage {
   
   protected:
 
-    std::string id_;
+    std::string _id;
 
-    VertexVector vertices_;
+    VertexVector _vertices;
     
-    VertexVector normals_;
+    VertexVector _normals;
 
-    Vertex2Vector uvs_;
+    Vertex2Vector _uvs;
 
-    IndexVector indices_;
+    IndexVector _indices;
 
-    Vector maxDim_;
+    Vector _maxDim;
 
   };
 

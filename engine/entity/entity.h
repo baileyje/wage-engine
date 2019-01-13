@@ -17,30 +17,30 @@ namespace wage {
 
   public:
 
-    Entity() : id_(nextId()) {} 
+    Entity() : _id(nextId()) {} 
 
     virtual ~Entity();
 
     // Copy
     Entity(Entity&& src) {
-      id_ = std::move(src.id_);
-      transform_ = std::move(src.transform_);
+      _id = std::move(src._id);
+      _transform = std::move(src._transform);
     }
 
     // Move
     Entity& operator=(Entity&& src) {
-      id_ = std::move(src.id_);
-      transform_ = std::move(src.transform_);
+      _id = std::move(src._id);
+      _transform = std::move(src._transform);
       return *this;
     }
 
-    inline EntityId id() { return id_; }
+    inline EntityId id() { return _id; }
 
-    inline void setId(EntityId id) { id_ = id; }
+    inline void id(EntityId id) { _id = id; }
     
-    inline Transform& transform() { return transform_; }
+    inline Transform& transform() { return _transform; }
 
-    inline void setTransform(Transform transform) { transform_ = transform; }
+    inline void transform(Transform transform) { _transform = transform; }
 
   private:
     
@@ -48,9 +48,9 @@ namespace wage {
       return CurrentId++;
     }
 
-    EntityId id_;
+    EntityId _id;
 
-    Transform transform_;
+    Transform _transform;
 
     static EntityId CurrentId;
 

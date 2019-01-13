@@ -37,6 +37,8 @@
 #include "physics-bullet/physics.h"
 #include "render-gl/renderer.h"
 
+#include "util/property.h"
+
 
 using namespace wage;
 
@@ -87,7 +89,7 @@ public:
     // printf("Yaw: %f\n", yaw);
     // printf("Pitch: %f\n", pitch);
     rotation += Vector(-pitch, yaw, 0);
-    context->entity()->transform().setRotation(Vector(btDegrees(rotation.x), btDegrees(rotation.y), btDegrees(rotation.z)));
+    context->entity()->transform().rotation(Vector(btDegrees(rotation.x), btDegrees(rotation.y), btDegrees(rotation.z)));
     lastPos = mousePos;
   }
 
@@ -134,7 +136,7 @@ public:
   }
 
   void update(ComponentContext* context) {
-    context->transform().setPosition(target->transform().position() + offset);
+    context->transform().position(target->transform().position() + offset);
   }
 
 private:
@@ -224,8 +226,8 @@ void intHandler(int);
 
 void addEntity(EntityManager* manager, Vector position) {
   EntityReference entity = manager->create();    
-    entity->transform().setPosition(position);
-    entity->transform().setLocalScale(Vector(1, 1, 1));
+    entity->transform().position(position);
+    entity->transform().localScale(Vector(1, 1, 1));
     entity
       .create<RigidBody>(0.001)
       .onUpdate(Raise)
@@ -242,8 +244,8 @@ void addRandomEntity(EntityManager* manager) {
 
 EntityReference addMover(EntityManager* manager) {
   EntityReference mover = manager->create();
-  mover->transform().setPosition(Vector(0, 0, 0));
-  mover->transform().setLocalScale(Vector(5, 5, 5));
+  mover->transform().position(Vector(0, 0, 0));
+  mover->transform().localScale(Vector(5, 5, 5));
   mover
     .create<RigidBody>(0.0005)
     .add(&Mesh::Sphere)
@@ -341,10 +343,10 @@ void setupSystems(Core* core, std::string path) {
 
 void setupScene(EntityManager* manager) {
   EntityReference dirLight = manager->create();
-  dirLight->transform().setRotation(Vector(-45, 0, 0));
+  dirLight->transform().rotation(Vector(-45, 0, 0));
   DirectionalLight* temp = make<DirectionalLight>();
-  temp->setDiffuse(Color(0.7,0.7,0.7,1));
-  temp->setAmbient(Color(0.4,0.4,0.4,1));
+  temp->diffuse(Color(0.7,0.7,0.7,1));
+  temp->ambient(Color(0.4,0.4,0.4,1));
   dirLight.add(temp);
 
   // EntityReference pointLight = manager->create();
@@ -365,9 +367,9 @@ void setupScene(EntityManager* manager) {
   }
 
   EntityReference ground = manager->create();
-  ground->transform().setPosition(Vector(0, -2, 0));
-  ground->transform().setLocalScale(Vector(200, 2, 200));
-  ground->transform().setRotation(Vector(0, 0, 0));
+  ground->transform().position(Vector(0, -2, 0));
+  ground->transform().localScale(Vector(200, 2, 200));
+  ground->transform().rotation(Vector(0, 0, 0));
   ground
     .create<RigidBody>(0.0, RigidBodyType::kinematic)
     .add(&Mesh::Cube)
@@ -384,8 +386,8 @@ void setupScene(EntityManager* manager) {
   auto mover = addMover(manager);
 
   EntityReference cameraEntity = manager->create();  
-  cameraEntity->transform().setPosition(Vector(0, 15, -30));
-  cameraEntity->transform().setRotation(Vector(10, 0.0, 0));
+  cameraEntity->transform().position(Vector(0, 15, -30));
+  cameraEntity->transform().rotation(Vector(10, 0.0, 0));
   cameraEntity
     .create<Camera, PerspectiveCamera>()
     .create<Follow>(mover)
@@ -394,12 +396,12 @@ void setupScene(EntityManager* manager) {
 
   Font font("fonts/ARCADE.TTF", 60);
   EntityReference fpsLabelEntity = manager->create();  
-  fpsLabelEntity->transform().setPosition(Vector(20, 0, 0));   
+  fpsLabelEntity->transform().position(Vector(20, 0, 0));   
   fpsLabelEntity.create<Label>("FPS: ", font, Color(1, 1, 1, 0));  
   fpsLabelEntity.create<FpsDisplay>(fpsLabelEntity.get<Label>());
 
   EntityReference posLabelEntity = manager->create();  
-  posLabelEntity->transform().setPosition(Vector(300, 0, 0));   
+  posLabelEntity->transform().position(Vector(300, 0, 0));   
   posLabelEntity.create<Label>("POS: ", font, Color(1, 1, 1, 0));  
   posLabelEntity.create<PosDisplay>(posLabelEntity.get<Label>(), mover);
 }
@@ -411,6 +413,19 @@ int main(int argc, char* argv[]) {
   std::string path = std::string(getcwd(buffer, sizeof(buffer)));
   printf("Path: %s\n", path.c_str());
   signal(SIGINT, intHandler);  
+
+  Property<int> prop;
+  
+  // printf("Value: %d\n", val);
+  prop = 4;
+  auto& val = prop;
+
+  // auto poop = [](int& val) {
+  //   printf("Value: %d\n", val);
+  // };
+  // poop(prop);
+
+  // printf("Value: %d\n", prop());
   
   setupSystems(Core::Instance, path);
   EntityManager* manager = Core::Instance->get<EntityManager>();

@@ -9,24 +9,24 @@ namespace wage {
   
   public:
 
-    Font(std::string path, int size) : path_(path), size_(size) {}
+    Font(std::string path, int size) : _path(path), _size(size) {}
 
     Font() {      
     }
 
     inline std::string path() {
-      return path_;
+      return _path;
     }
     
     inline int size() {
-      return size_;
+      return _size;
     }
 
   private:
 
-    std::string path_;
+    std::string _path;
     
-    int size_;
+    int _size;
 
   };
 

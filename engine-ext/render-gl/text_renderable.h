@@ -17,10 +17,10 @@ namespace wage {
   public:
 
     GlTextRenderable(GlFontManager* fontManager, Vector position, std::string text, Font font, Color color) 
-      : fontManager_(fontManager), position_(position), text_(text), font_(font), color_(color) {}
+      : _fontManager(fontManager), _position(position), _text(text), _font(font), _color(color) {}
 
     virtual Vector position() {
-      return position_;
+      return _position;
     }
 
     virtual BoundingBox boundingBox() {      
@@ -34,7 +34,7 @@ namespace wage {
     }
 
     virtual void render(RenderContext* context) {      
-      GlFont* font = fontManager_->load(font_);
+      GlFont* font = _fontManager->load(_font);
       if (!font->loaded()) {
         return;
       }
@@ -55,22 +55,22 @@ namespace wage {
       GlProgram* program = GlProgram::Font;
       program->bind();
       glUniformMatrix4fv(glGetUniformLocation(program->id(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-      glUniform3f(glGetUniformLocation(program->id(), "textColor"), color_.r, color_.g, color_.b);
+      glUniform3f(glGetUniformLocation(program->id(), "textColor"), _color.r, _color.g, _color.b);
       glActiveTexture(GL_TEXTURE0);
       glBindVertexArray(VAO);
 
       float scale = 1;
-      float x = position_.x;
+      float x = _position.x;
 
       
       // Iterate through all characters
       std::string::const_iterator c;
-      for (c = text_.begin(); c != text_.end(); c++) {
+      for (c = _text.begin(); c != _text.end(); c++) {
           GlCharacter* ch = font->characterFor(*c);
           ch->bind();
 
           GLfloat xpos = x + ch->bearing.x * scale;
-          GLfloat ypos = position_.y - (ch->size.y - ch->bearing.y) * scale;
+          GLfloat ypos = _position.y - (ch->size.y - ch->bearing.y) * scale;
 
           GLfloat w = ch->size.x * scale;
           GLfloat h = ch->size.y * scale;
@@ -102,15 +102,15 @@ namespace wage {
 
   private:
 
-    GlFontManager* fontManager_;
+    GlFontManager* _fontManager;
 
-    Vector position_;
+    Vector _position;
 
-    std::string text_;
+    std::string _text;
 
-    Font font_;
+    Font _font;
 
-    Color color_;
+    Color _color;
 
   };
 

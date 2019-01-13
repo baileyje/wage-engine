@@ -11,9 +11,32 @@ namespace wage {
   public:
 
     Property<T>& operator=(T newValue) {
-      printf("Setting!\n");
-      value = newValue;
+      set(newValue);
       return *this;
+    }
+
+    T& operator&() {
+      return get();
+    }
+
+    T* operator*() {
+      return &get();
+    }
+
+    T* operator->() {
+      return &get();
+    }
+
+    T& operator()() {
+      return get();
+    }
+
+    inline T& get() {
+      return value;
+    }
+    
+    inline void set(T newValue) {
+      value = newValue;
     }
 
   private:

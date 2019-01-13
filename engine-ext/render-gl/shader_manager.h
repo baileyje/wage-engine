@@ -24,13 +24,13 @@ namespace wage {
       return nullptr;
     }
 
-    inline void setAssetManager(AssetManager* assetManager) {
-      this->assetManager = assetManager;
+    inline void assetManager(AssetManager* assetManager) {
+      _assetManager = assetManager;
     }
 
   private:
 
-    AssetManager* assetManager;
+    AssetManager* _assetManager;
 
     // std::unordered_map<std::string, GlTexture*> cache;
 

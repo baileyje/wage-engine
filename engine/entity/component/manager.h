@@ -39,41 +39,41 @@ namespace wage {
       
     public:
 
-      ComponentEntry() : id_(0), entity_(Reference<Entity>()), component_(nullptr), typeId_(nullptr) {}
+      ComponentEntry() : _id(0), _entity(Reference<Entity>()), _component(nullptr), _typeId(nullptr) {}
 
-      ComponentEntry(ComponentId id, Reference<Entity> entity, void* component, const std::type_info* typeId) : id_(id), entity_(entity), component_(component), typeId_(typeId) {
+      ComponentEntry(ComponentId id, Reference<Entity> entity, void* component, const std::type_info* typeId) : _id(id), _entity(entity), _component(component), _typeId(typeId) {
       }
 
       inline ComponentId id() {
-        return id_;
+        return _id;
       }
 
       inline Reference<Entity> entity() {
-        return entity_;
+        return _entity;
       }
 
       template <typename T>
       inline T* component() {
-        return static_cast<T*>(component_);
+        return static_cast<T*>(_component);
       }
 
       inline const std::type_info* typeId() {
-        return typeId_;
+        return _typeId;
       }
 
       inline bool valid() {
-        return component_ != nullptr;
+        return _component != nullptr;
       }
 
     private:
 
-      ComponentId id_;
+      ComponentId _id;
 
-      Reference<Entity> entity_;
+      Reference<Entity> _entity;
       
-      void* component_;
+      void* _component;
 
-      const std::type_info* typeId_;
+      const std::type_info* _typeId;
 
     };
   
@@ -148,7 +148,7 @@ namespace wage {
     template <typename T>
     inline void setupComponent(Reference<Entity> entity, ComponentEntry entry) {
       auto component = entry.component<T>();
-      component->setTransform(&entity->transform());
+      component->transform(&entity->transform());
       if (component->isDynamic()) {
         dynamicComponents.push_back(entry.id());
       }

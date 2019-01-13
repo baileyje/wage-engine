@@ -22,36 +22,36 @@ namespace wage {
     }
 
     ~MemoryBuffer() {
-      // printf("Length2: %d\n", length_);
-      // if (length_ > 0) {
-      //   free(data_);
+      // printf("Length2: %d\n", _length);
+      // if (_length > 0) {
+      //   free(_data);
       // }      
       // TODO: Remve leak!!
     }
 
     inline void fill(unsigned char* data, size_t length) {
-      length_ = length;
+      _length = length;
       if (length <= 0) {
-        data_ = nullptr;
+        _data = nullptr;
         return;
       }
-      data_ = (unsigned char*)malloc(length);
-      memcpy(data_, data, length);      
+      _data = (unsigned char*)malloc(length);
+      memcpy(_data, data, length);      
     }
 
     inline unsigned char* data() {
-      return data_;
+      return _data;
     }
 
     inline size_t length() {
-      return length_;
+      return _length;
     }
 
   private:
 
-    unsigned char* data_;
+    unsigned char* _data;
     
-    size_t length_;
+    size_t _length;
   
   };
 

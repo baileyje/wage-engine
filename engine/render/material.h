@@ -14,31 +14,31 @@ namespace wage {
     Material() : Material(Color(1, 0, 1, 1)) {
     }
 
-    Material(Color color) : Component("Material"), color_(color) {    
+    Material(Color color) : Component("Material"), _color(color) {    
     }
 
-    Material(Texture* texture) : Component("Material"), color_(Color(1, 0, 1, 1)), texture_(texture) {    
+    Material(Texture* texture) : Component("Material"), _color(Color(1, 0, 1, 1)), _texture(texture) {    
     }
 
     ~Material() {}
 
-    inline void setColor(Color color) {
-      color_ = color;
+    inline void color(Color color) {
+      _color = color;
     }
 
     inline Color color()  {
-      return color_;
+      return _color;
     }
 
     inline Texture*  texture()  {
-      return texture_;
+      return _texture;
     }
 
   private:
   
-    Color color_;
+    Color _color;
 
-    Texture* texture_;
+    Texture* _texture;
 
   };
 

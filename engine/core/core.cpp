@@ -14,7 +14,7 @@ namespace wage {
 
   Core* Core::Instance = make<Core>();
 
-  Core::Core() : running(false), time_(0), timeStep_(1.0/60.0), deltaTime_(0) {  
+  Core::Core() : running(false), _time(0), _timeStep(1.0/60.0), _deltaTime(0) {  
   }
 
   Core::~Core() {
@@ -40,9 +40,9 @@ namespace wage {
     while (running) {    
       TimePoint currentTime = std::chrono::high_resolution_clock::now();
       double delta = (std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime)).count();
-      time_ += delta;
+      _time += delta;
       lastTime = currentTime;
-      deltaTime_ = delta;    
+      _deltaTime = delta;    
       accumulator += delta;
       if (accumulator >= timeStep()) {
         fixedUpdate();

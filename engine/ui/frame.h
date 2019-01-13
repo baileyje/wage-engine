@@ -11,23 +11,23 @@ namespace wage {
 
     Frame() {}
 
-    Frame(Vector2 position, Vector2 size) : position_(position), size_(size) {}
+    Frame(Vector2 position, Vector2 size) : _position(position), _size(size) {}
 
     virtual ~Frame() {}
 
     inline Vector2 position() {
-      return position_;      
+      return _position;      
     }
 
     inline Vector2 size() {
-      return size_;
+      return _size;
     }
 
   private:
 
-    Vector2 position_;
+    Vector2 _position;
 
-    Vector2 size_;
+    Vector2 _size;
 
   };
 

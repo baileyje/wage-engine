@@ -13,7 +13,7 @@ namespace wage {
 
   public:
 
-    System(std::string name) : name_(name) {};
+    System(std::string name) : _name(name) {};
     
     virtual ~System() {};
 
@@ -29,11 +29,11 @@ namespace wage {
 
     virtual void deinit(SystemContext* context) {};
 
-    virtual std::string name() { return name_; };
+    virtual std::string name() { return _name; };
 
   private:
 
-    std::string name_;
+    std::string _name;
 
   };
 

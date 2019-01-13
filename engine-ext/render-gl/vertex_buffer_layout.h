@@ -28,35 +28,35 @@ namespace wage {
 
   public:
     
-    VertexBufferLayout() : stride_(0) {}
+    VertexBufferLayout() : _stride(0) {}
 
     ~VertexBufferLayout() {}
 
     VertexBufferLayout* pushFloat(unsigned int count) { 
-      elements_.push_back({ GL_FLOAT, count, GL_FALSE });
-      stride_ += count * VertexBufferElement::sizeOf(GL_FLOAT);
+      _elements.push_back({ GL_FLOAT, count, GL_FALSE });
+      _stride += count * VertexBufferElement::sizeOf(GL_FLOAT);
       return this;
     } 
 
     VertexBufferLayout* pushUInt(unsigned int count) { 
-      elements_.push_back({ GL_UNSIGNED_INT, count, GL_TRUE });
-      stride_ += count * VertexBufferElement::sizeOf(GL_UNSIGNED_INT);
+      _elements.push_back({ GL_UNSIGNED_INT, count, GL_TRUE });
+      _stride += count * VertexBufferElement::sizeOf(GL_UNSIGNED_INT);
       return this;
     } 
 
     inline unsigned int stride() const {
-      return stride_;
+      return _stride;
     }
 
     inline std::vector<VertexBufferElement> elements() const  {
-      return elements_;
+      return _elements;
     }
 
   private:
     
-    std::vector<VertexBufferElement> elements_;
+    std::vector<VertexBufferElement> _elements;
 
-    unsigned int stride_;
+    unsigned int _stride;
 
   };
 

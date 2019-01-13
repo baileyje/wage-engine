@@ -7,7 +7,7 @@ namespace wage {
 
   public:
 
-    Window(void* wrapped, int width, int height) : wrapped(wrapped), width_(width), height_(height) {      
+    Window(void* wrapped, int width, int height) : wrapped(wrapped), _width(width), _height(height) {      
     }
 
     virtual ~Window() {}
@@ -18,20 +18,20 @@ namespace wage {
     }
 
     inline int width() {
-      return width_;
+      return _width;
     }
 
     inline int height() {
-      return height_;
+      return _height;
     }
 
   private:
   
     void* wrapped;
 
-    int width_;
+    int _width;
 
-    int height_;
+    int _height;
 
   };
 

@@ -14,28 +14,28 @@ namespace wage {
 
     File(std::string path)  {
       std::ifstream file(path, std::ios::in|std::ios::binary|std::ios::ate);
-      size_ = file.tellg();
+      _size = file.tellg();
       printf("Path: %s\n", path.c_str());
-      printf("Length: %zu\n", size_);      
+      printf("Length: %zu\n", _size);      
       file.seekg (0, std::ios::beg);
-      data_ = (unsigned char*)Allocator::Assets()->allocate(size_ + 15);
-      file.read ((char*)data_, size_);
+      _data = (unsigned char*)Allocator::Assets()->allocate(_size + 15);
+      file.read ((char*)_data, _size);
       file.close();
     }
 
     inline unsigned char* data() {
-      return data_;
+      return _data;
     }
 
     inline size_t length() {
-      return size_;
+      return _size;
     }
 
   private:
 
-    unsigned char* data_;
+    unsigned char* _data;
 
-    size_t size_;
+    size_t _size;
 
   };
 

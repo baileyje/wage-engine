@@ -31,7 +31,7 @@ namespace wage {
     static PhysicsEntity* from(EntityReference entity, btDiscreteDynamicsWorld* dynamicsWorld);
 
     PhysicsEntity(EntityReference entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
-      : entity_(entity), shape_(shape), rigidBody_(rigidBody), object_(object) {    
+      : _entity(entity), _shape(shape), _rigidBody(rigidBody), _object(object) {    
     }
 
     void applyForces();
@@ -41,15 +41,15 @@ namespace wage {
     void updateShapeTransform();
 
     inline btRigidBody* rigidBody() {
-      return rigidBody_;
+      return _rigidBody;
     }
 
     inline btCollisionObject* object() {
-      return object_;
+      return _object;
     }
 
     inline EntityReference entity() {
-      return entity_;
+      return _entity;
     }
 
   private: 
@@ -58,15 +58,15 @@ namespace wage {
 
     static btRigidBody* rigidBodyFor(ComponentReference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape);
     
-    EntityReference entity_;
+    EntityReference _entity;
 
     btTransform transform(); 
 
-    btCollisionShape* shape_;
+    btCollisionShape* _shape;
 
-    btRigidBody* rigidBody_;
+    btRigidBody* _rigidBody;
 
-    btCollisionObject* object_;
+    btCollisionObject* _object;
 
   };
 

@@ -16,12 +16,12 @@ namespace wage {
 
   public:
 
-    Component(ComponentName name) : name_(name) {};
+    Component(ComponentName name) : _name(name) {};
 
     virtual ~Component() {};
 
     inline ComponentName name() {
-      return name_;
+      return _name;
     }
 
     virtual bool isDynamic() {
@@ -29,18 +29,18 @@ namespace wage {
     }
 
     virtual Transform* transform() {
-      return transform_;
+      return _transform;
     }
 
-    virtual void setTransform(Transform* transform) {
-      transform_ = transform;
+    virtual void transform(Transform* transform) {
+      _transform = transform;
     }
 
   private:
 
-    ComponentName name_;
+    ComponentName _name;
 
-    Transform* transform_;
+    Transform* _transform;
     
   };
 

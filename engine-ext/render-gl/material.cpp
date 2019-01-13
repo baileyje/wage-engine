@@ -6,18 +6,18 @@
 
 namespace wage {
 
-  GlMaterial::GlMaterial(GlProgram* program) : program_(program) {
+  GlMaterial::GlMaterial(GlProgram* program) : _program(program) {
   }
 
   GlMaterial::~GlMaterial() {
   }
 
   void GlMaterial::bind() const {
-    program_->bind();  
+    _program->bind();  
   }
 
   void GlMaterial::unbind() const {
-    program_->unbind();
+    _program->unbind();
   }
 
 }

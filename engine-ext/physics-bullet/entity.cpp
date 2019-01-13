@@ -65,17 +65,17 @@ namespace wage {
 
   btTransform PhysicsEntity::transform() {
     btTransform transform;
-    if (rigidBody_ && rigidBody_->getMotionState()) {
-      rigidBody_->getMotionState()->getWorldTransform(transform);
+    if (_rigidBody && _rigidBody->getMotionState()) {
+      _rigidBody->getMotionState()->getWorldTransform(transform);
       
     } else {  
-      transform = rigidBody_->getWorldTransform();
+      transform = _rigidBody->getWorldTransform();
     }
     return transform;
   }
 
   void PhysicsEntity::applyForces() {
-    if (!rigidBody_) {
+    if (!_rigidBody) {
       return;
     }
     auto entityBody = entity().get<RigidBody>();
@@ -84,32 +84,32 @@ namespace wage {
     }
     btVector3 impulse = fromVector(entityBody->impulse());
     if (impulse.length() > 0) {
-      rigidBody_->applyCentralImpulse(impulse);	
+      _rigidBody->applyCentralImpulse(impulse);	
       entityBody->clearImpulse();
     }
     btVector3 force = fromVector(entityBody->force());
     if (force.length() > 0) {
-      rigidBody_->applyCentralForce(force);	
+      _rigidBody->applyCentralForce(force);	
     }			
-    rigidBody_->activate(true);
+    _rigidBody->activate(true);
   }
 
   void PhysicsEntity::updateEntityTransform() {
-    if (!rigidBody_) {
+    if (!_rigidBody) {
       return;
     }
     btTransform trans = transform();  
-    entity()->transform().setPosition(fromBTVector(trans.getOrigin()));
+    entity()->transform().position(fromBTVector(trans.getOrigin()));
     btQuaternion rotation = trans.getRotation();
     // btScalar yawZ, pitchY, rollX;
     // rotation.getEulerZYX(yawZ, pitchY, rollX);
-    entity()->transform().setRotation(
+    entity()->transform().rotation(
       Quaternion(rotation.w(), rotation.x(), rotation.y(), rotation.z())
     );
   }
 
   void PhysicsEntity::updateShapeTransform() {
-    if (!rigidBody_) {
+    if (!_rigidBody) {
       return;
     }
     auto entityBody = entity().get<RigidBody>();
@@ -117,7 +117,7 @@ namespace wage {
       return;
     }  
     btTransform transform = fromTransform(entity()->transform());
-    rigidBody_->getMotionState()->setWorldTransform(transform);
+    _rigidBody->getMotionState()->setWorldTransform(transform);
   }
 
 }

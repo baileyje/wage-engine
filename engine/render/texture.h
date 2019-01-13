@@ -12,13 +12,13 @@ namespace wage {
 
     static Texture* Default;
 
-    Texture(std::string path) : path_(path) {
+    Texture(std::string path) : _path(path) {
     }
 
     ~Texture() {}
 
     inline std::string path() {
-      return path_;
+      return _path;
     }
 
     inline std::string id() {
@@ -27,7 +27,7 @@ namespace wage {
 
   private:
 
-    std::string path_;
+    std::string _path;
 
   };
 

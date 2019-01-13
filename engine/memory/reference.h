@@ -28,21 +28,21 @@ namespace wage {
     Reference() : Reference(nullptr, OutOfBounds, 0) {
     }
 
-    Reference(Source* source, size_t index, size_t version) : source_(source), index_(index), version_(version) {
+    Reference(Source* source, size_t index, size_t version) : _source(source), _index(index), _version(version) {
     }
 
     virtual ~Reference() {}
 
     inline bool isValid() {
-      return source_->isValid(*this);
+      return _source->isValid(*this);
     }
 
     virtual void free() const {
-      source_->free(*this);
+      _source->free(*this);
     };
 
     virtual T* get() {
-      return source_->get(*this);
+      return _source->get(*this);
     }
 
     operator bool() const { 
@@ -68,7 +68,7 @@ namespace wage {
     }
 
     bool operator==(const Reference& other) const {
-      return source_ == other.source_ && index_ == other.index_;
+      return _source == other._source && _index == other._index;
     }
     
     bool operator!=(const Reference& other) const {
@@ -76,24 +76,24 @@ namespace wage {
     }
 
     inline Source* source() {
-      return source_;
+      return _source;
     }
 
     inline size_t index() {
-      return index_;
+      return _index;
     }
 
     inline size_t version() {
-      return version_;
+      return _version;
     }
 
   private:
     
-    Source* source_;
+    Source* _source;
     
-    size_t index_;
+    size_t _index;
 
-    size_t version_;
+    size_t _version;
   
   };
 

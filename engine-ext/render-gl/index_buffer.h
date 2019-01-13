@@ -16,14 +16,14 @@ namespace wage {
     void unbind() const;
 
     inline unsigned int count() const {
-      return count_;
+      return _count;
     }
 
   private:
 
     // const unsigned int* data;
     
-    unsigned int count_;
+    unsigned int _count;
 
     unsigned int id;
 

@@ -13,55 +13,55 @@ namespace wage {
     }
 
     OrthographicCamera(float left, float right, float top, float bottom, float nearClip, float farClip) 
-      : Camera(orthographic), left_(left), right_(right), top_(top), bottom_(bottom), nearClip_(nearClip), farClip_(farClip) {
+      : Camera(CameraType::Orthographic), _left(left), _right(right), _top(top), _bottom(bottom), _nearClip(nearClip), _farClip(farClip) {
     }
 
     inline float left() {
-      return left_;
+      return _left;
     }
 
     inline void left(float left) {
-      left_ = left;
+      _left = left;
     }
 
     inline float right() {
-      return right_;
+      return _right;
     }
 
     inline void right(float right) {
-      right_ = right;
+      _right = right;
     }
 
     inline float top() {
-      return top_;
+      return _top;
     }
 
     inline void top(float top) {
-      top_ = top;
+      _top = top;
     }
 
     inline float bottom() {
-      return bottom_;
+      return _bottom;
     }
 
     inline void bottom(float bottom) {
-      bottom_ = bottom;
+      _bottom = bottom;
     }
 
     inline float nearClip() {
-      return nearClip_;
+      return _nearClip;
     }
 
     inline void nearClip(float nearClip) {
-      nearClip_ = nearClip;
+      _nearClip = nearClip;
     }
 
     inline float farClip() {
-      return farClip_;
+      return _farClip;
     }
 
     void farClip(float farClip) {
-      farClip_ = farClip;
+      _farClip = farClip;
     }
 
     inline Matrix screenProjection(Vector2 screenSize) {
@@ -79,17 +79,17 @@ namespace wage {
 
   private:
 
-    float left_;
+    float _left;
 
-    float right_;
+    float _right;
 
-    float top_;
+    float _top;
 
-    float bottom_;
+    float _bottom;
 
-    float nearClip_;
+    float _nearClip;
 
-    float farClip_;
+    float _farClip;
 
   };
 

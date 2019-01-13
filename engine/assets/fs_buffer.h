@@ -11,7 +11,7 @@ namespace wage {
     
   public:
 
-    FileBuffer(File* file) : file_(file) {      
+    FileBuffer(File* file) : _file(file) {      
     }
 
     inline unsigned char* data() {
@@ -23,12 +23,12 @@ namespace wage {
     }
 
     inline File* file() {
-      return file_;
+      return _file;
     }
 
   private:
 
-    File* file_;
+    File* _file;
   
   };
 

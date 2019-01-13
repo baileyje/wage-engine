@@ -9,16 +9,16 @@ namespace wage {
   
   public:
 
-    MouseMoveEvent(Vector2 position) : position_(position) {
+    MouseMoveEvent(Vector2 position) : _position(position) {
     }
 
     inline Vector2 position() {
-      return position_;
+      return _position;
     }
 
   private:
     
-    Vector2 position_;
+    Vector2 _position;
 
   };
 

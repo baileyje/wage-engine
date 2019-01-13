@@ -22,12 +22,12 @@ namespace wage {
     LIFECYCLE_FUNC(deinit)
     
     Window* window() {
-      return window_;
+      return _window;
     }
 
   private:
 
-    Window* window_;
+    Window* _window;
     
   };
 

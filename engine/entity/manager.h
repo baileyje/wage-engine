@@ -26,17 +26,17 @@ namespace wage {
 
   public:
 
-    EntityMessage(EntityReference entity) : entity_(entity) {}
+    EntityMessage(EntityReference entity) : _entity(entity) {}
     
     virtual ~EntityMessage() {}
 
     inline EntityReference entity() {
-      return entity_;
+      return _entity;
     }
 
     private:
 
-      EntityReference entity_;
+      EntityReference _entity;
   };
 
   class AddEntityMessage : public EntityMessage {  
@@ -58,7 +58,7 @@ namespace wage {
 
   public:
 
-    EntityComponentContext(EntityReference entity, EntityContext* context) : entity_(entity), context(context) {    
+    EntityComponentContext(EntityReference entity, EntityContext* context) : _entity(entity), context(context) {    
     }
 
     inline Transform& transform() {
@@ -78,13 +78,13 @@ namespace wage {
     // }
 
     inline EntityReference entity() {
-      return entity_;
+      return _entity;
     }
       
 
   private:
 
-    EntityReference entity_;
+    EntityReference _entity;
 
     EntityContext* context;
 
@@ -104,8 +104,8 @@ namespace wage {
     void start(SystemContext* context) {
       // TODO: Evaluate where this belongs
       EntityContext entityContext(context->time(), context->deltaTime()); 
-      for (auto itr = componentManager_.dynamicBegin(); itr != componentManager_.dynamicEnd(); ++itr) {
-        EntityComponentContext componentContext(EntityReference(&componentManager_, (*itr).entity()), &entityContext);
+      for (auto itr = _componentManager.dynamicBegin(); itr != _componentManager.dynamicEnd(); ++itr) {
+        EntityComponentContext componentContext(EntityReference(&_componentManager, (*itr).entity()), &entityContext);
         (*itr)->start(&componentContext);
       }
     }
@@ -142,8 +142,8 @@ namespace wage {
       
       // TODO: Evaluate where this belongs
       EntityContext entityContext(context->time(), context->deltaTime()); 
-      for (auto itr = componentManager_.dynamicBegin(); itr != componentManager_.dynamicEnd(); ++itr) {
-        EntityComponentContext componentContext(EntityReference(&componentManager_, (*itr).entity()), &entityContext);
+      for (auto itr = _componentManager.dynamicBegin(); itr != _componentManager.dynamicEnd(); ++itr) {
+        EntityComponentContext componentContext(EntityReference(&_componentManager, (*itr).entity()), &entityContext);
         (*itr)->update(&componentContext);
       }
     }
@@ -151,15 +151,15 @@ namespace wage {
     void fixedUpdate(SystemContext* context) {
       // TODO: Evaluate where this belongs
       EntityContext entityContext(context->time(), context->deltaTime()); 
-      for (auto itr = componentManager_.dynamicBegin(); itr != componentManager_.dynamicEnd(); ++itr) {
-        EntityComponentContext componentContext(EntityReference(&componentManager_, (*itr).entity()), &entityContext);
+      for (auto itr = _componentManager.dynamicBegin(); itr != _componentManager.dynamicEnd(); ++itr) {
+        EntityComponentContext componentContext(EntityReference(&_componentManager, (*itr).entity()), &entityContext);
         (*itr)->fixedUpdate(&componentContext);
       }
     }
 
     inline EntityReference create() {
       auto poolRef = pool.create();
-      EntityReference ref = EntityReference(&componentManager_, poolRef);
+      EntityReference ref = EntityReference(&_componentManager, poolRef);
       byId[ref->id()] = ref;        
       adds.push_back(ref);
       return ref;
@@ -188,7 +188,7 @@ namespace wage {
     }
 
     inline ComponentManager& componentManager() {
-      return componentManager_;
+      return _componentManager;
     }
 
   private:
@@ -203,7 +203,7 @@ namespace wage {
     
     std::vector<EntityReference> destroys;
 
-    ComponentManager componentManager_;
+    ComponentManager _componentManager;
   };
 
 }

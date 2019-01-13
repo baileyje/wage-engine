@@ -24,7 +24,7 @@ namespace wage {
   }
 
   VertexBufferLayout* VertexBuffer::layout() {
-    return &layout_;
+    return &_layout;
   }
 
 }

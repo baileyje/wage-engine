@@ -7,7 +7,7 @@
 
 namespace wage {
 
-  enum class CameraType { perspective, orthographic };
+  enum class CameraType { Perspective, Orthographic };
 
   class Camera : public Component  {
 
@@ -15,14 +15,14 @@ namespace wage {
 
     static ComponentReference<Camera> main;
 
-    Camera(CameraType type) : Component("Camera"), type_(type) {    
+    Camera(CameraType type) : Component("Camera"), _type(type) {    
     }
 
     ~Camera() {    
     }
 
     inline CameraType type() {
-      return type_;
+      return _type;
     }
 
     virtual Matrix screenProjection(Vector2 screenSize) = 0;
@@ -40,7 +40,7 @@ namespace wage {
 
   private:
 
-    CameraType type_;
+    CameraType _type;
 
   };
 

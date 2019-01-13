@@ -13,9 +13,9 @@ namespace wage {
   
   public: 
 
-    ComponentReference() : id_(0), entity_(Reference<Entity>()), component_(nullptr) {}
+    ComponentReference() : _id(0), _entity(Reference<Entity>()), _component(nullptr) {}
 
-    ComponentReference(ComponentId id, Reference<Entity> entity, T* component) : id_(id), entity_(entity), component_(component) {
+    ComponentReference(ComponentId id, Reference<Entity> entity, T* component) : _id(id), _entity(entity), _component(component) {
     }
 
     static ComponentReference<T> NotFound;
@@ -37,28 +37,28 @@ namespace wage {
     }
 
     inline ComponentId id() {
-      return id_;
+      return _id;
     }
 
     inline Reference<Entity> entity() {
-      return entity_;
+      return _entity;
     }
 
     inline T* component() {
-      return component_;
+      return _component;
     }
 
     inline bool valid() {
-      return component_ != nullptr;
+      return _component != nullptr;
     }
 
   private:
     
-    ComponentId id_;
+    ComponentId _id;
 
-    Reference<Entity> entity_;
+    Reference<Entity> _entity;
     
-    T* component_;
+    T* _component;
    
   };
 

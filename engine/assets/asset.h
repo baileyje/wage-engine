@@ -13,25 +13,25 @@ namespace wage {
 
     typedef std::string Key;
 
-    Asset(Key key) : key_(key), loaded_(false) {      
+    Asset(Key key) : _key(key), _loaded(false) {      
     }
 
     virtual Key key() {
-      return key_;
+      return _key;
     }
 
     virtual bool loaded() {
-      return loaded_;
+      return _loaded;
     }
 
     virtual Buffer* buffer() {
-      return buffer_;
+      return _buffer;
     };
 
     virtual void set(Buffer* buffer) {
-      buffer_ = buffer;
+      _buffer = buffer;
       onLoad(buffer);
-      loaded_ = true;
+      _loaded = true;
     }
 
     virtual void onLoad(Buffer* buffer) {      
@@ -39,11 +39,11 @@ namespace wage {
 
   private:
     
-    Key key_;
+    Key _key;
 
-    bool loaded_;
+    bool _loaded;
 
-    Buffer* buffer_;
+    Buffer* _buffer;
 
   };
 

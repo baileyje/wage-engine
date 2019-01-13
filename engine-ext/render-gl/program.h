@@ -19,17 +19,17 @@ namespace wage {
     static GlProgram* Font;
 
     GlProgram(std::string vertexPath, std::string fragmentPath) :
-      vertexShader(vertexPath, GL_VERTEX_SHADER), fragmentShader(fragmentPath, GL_FRAGMENT_SHADER), bound_(false), linked_(false) {
+      vertexShader(vertexPath, GL_VERTEX_SHADER), fragmentShader(fragmentPath, GL_FRAGMENT_SHADER), _bound(false), _linked(false) {
     }
 
     ~GlProgram() {
-      GL_FAIL_CHECK(glDeleteProgram(id_));
+      GL_FAIL_CHECK(glDeleteProgram(_id));
     }
     
     void load(AssetManager* assetManager) {
       assetManager->load(&vertexShader);
       assetManager->load(&fragmentShader);    
-      id_ = glCreateProgram();
+      _id = glCreateProgram();
     }
 
     void link() {
@@ -40,43 +40,43 @@ namespace wage {
       GLint result = GL_FALSE;
       int infoLogLength;
 
-      GL_FAIL_CHECK(glAttachShader(id_, vertexShader.id()));
-      GL_FAIL_CHECK(glAttachShader(id_, fragmentShader.id()));
-      GL_FAIL_CHECK(glLinkProgram(id_));
+      GL_FAIL_CHECK(glAttachShader(_id, vertexShader.id()));
+      GL_FAIL_CHECK(glAttachShader(_id, fragmentShader.id()));
+      GL_FAIL_CHECK(glLinkProgram(_id));
 
-      GL_FAIL_CHECK(glGetProgramiv(id_, GL_LINK_STATUS, &result));
-      GL_FAIL_CHECK(glGetProgramiv(id_, GL_INFO_LOG_LENGTH, &infoLogLength));
+      GL_FAIL_CHECK(glGetProgramiv(_id, GL_LINK_STATUS, &result));
+      GL_FAIL_CHECK(glGetProgramiv(_id, GL_INFO_LOG_LENGTH, &infoLogLength));
       if ( infoLogLength > 0 ){
         std::vector<char> errorMessage(infoLogLength+1);
-        GL_FAIL_CHECK(glGetProgramInfoLog(id_, infoLogLength, NULL, &errorMessage[0]));
+        GL_FAIL_CHECK(glGetProgramInfoLog(_id, infoLogLength, NULL, &errorMessage[0]));
         Logger::error("Link error:", &errorMessage[0]);
       }
-      linked_ = true;
+      _linked = true;
     }
 
     void bind() {
-      if (!linked_) {
+      if (!_linked) {
         if (!loaded()) {
           return;
         }
         link();
       }
-      GL_FAIL_CHECK(glUseProgram(id_));
-      bound_ = true;
+      GL_FAIL_CHECK(glUseProgram(_id));
+      _bound = true;
     }
 
     void unbind() {      
       GL_FAIL_CHECK(glUseProgram(0));
-      bound_ = false;
+      _bound = false;
     }
 
     void unlink() {
-      GL_FAIL_CHECK(glDetachShader(id_, vertexShader.id()));
-      GL_FAIL_CHECK(glDetachShader(id_, fragmentShader.id()));
+      GL_FAIL_CHECK(glDetachShader(_id, vertexShader.id()));
+      GL_FAIL_CHECK(glDetachShader(_id, fragmentShader.id()));
     }
 
     inline unsigned int id() {
-      return id_;
+      return _id;
     }
 
     inline bool loaded() {
@@ -84,20 +84,20 @@ namespace wage {
     }
 
     inline bool linked() {
-      return linked_;
+      return _linked;
     }
   
   private:
     
-    unsigned int id_;
+    unsigned int _id;
 
     GlShader vertexShader;
     
     GlShader fragmentShader;
 
-    bool bound_;
+    bool _bound;
 
-    bool linked_;
+    bool _linked;
   };
 
 }

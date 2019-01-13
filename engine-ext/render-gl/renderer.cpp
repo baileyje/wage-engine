@@ -35,12 +35,12 @@ namespace wage {
     Logger::info("Graphics Renderer: ", renderer);
     
     // Intialize default render assets
-    shaderManager.setAssetManager(assetManager);
+    shaderManager.assetManager(assetManager);
     // GlShader::Default->load(assetManager);
     GlProgram::Default->load(assetManager);
     GlProgram::Font->load(assetManager);
-    textureManager.setAssetManager(assetManager);
-    fontManager.setAssetManager(assetManager);
+    textureManager.assetManager(assetManager);
+    fontManager.assetManager(assetManager);
     // GlTexture::Default->load(assetManager);
   }
 

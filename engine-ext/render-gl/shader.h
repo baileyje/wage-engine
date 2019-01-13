@@ -18,11 +18,11 @@ namespace wage {
     }
 
     virtual ~GlShader() {
-      GL_FAIL_CHECK(glDeleteShader(id_));
+      GL_FAIL_CHECK(glDeleteShader(_id));
     }
 
     inline unsigned int id() {
-      return id_;
+      return _id;
     }
 
     void onLoad(Buffer* buffer);
@@ -31,7 +31,7 @@ namespace wage {
 
   private:
 
-    unsigned int id_;
+    unsigned int _id;
 
     GLenum shaderType;
   };

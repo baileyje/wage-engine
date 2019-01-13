@@ -13,31 +13,31 @@ namespace wage {
     }
 
     PerspectiveCamera(float fov, float nearClip, float farClip) 
-      : Camera(CameraType::perspective), fov_(fov), nearClip_(nearClip), farClip_(farClip) {
+      : Camera(CameraType::Perspective), _fov(fov), _nearClip(nearClip), _farClip(farClip) {
     }
 
     inline float fov() {
-      return fov_;
+      return _fov;
     }
 
-    inline void setFov(float fov) {
-      fov_ = fov;
+    inline void fov(float fov) {
+      _fov = fov;
     }
 
     inline float nearClip() {
-      return nearClip_;
+      return _nearClip;
     }
 
-    inline void setNearClip(float nearClip) {
-      nearClip_ = nearClip;
+    inline void nearClip(float nearClip) {
+      _nearClip = nearClip;
     }
 
     inline float farClip() {
-      return farClip_;
+      return _farClip;
     }
 
-    inline void setFarClip(float farClip) {
-      farClip_ = farClip;
+    inline void farClip(float farClip) {
+      _farClip = farClip;
     }
 
     inline Matrix screenProjection(Vector2 screenSize) {
@@ -54,11 +54,11 @@ namespace wage {
 
   private:
 
-    float fov_;
+    float _fov;
 
-    float nearClip_;
+    float _nearClip;
 
-    float farClip_;
+    float _farClip;
 
   };
 

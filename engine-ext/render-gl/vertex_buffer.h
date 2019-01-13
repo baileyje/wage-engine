@@ -23,7 +23,7 @@ namespace wage {
 
     unsigned int id;
 
-    VertexBufferLayout layout_;
+    VertexBufferLayout _layout;
   };
 
 }

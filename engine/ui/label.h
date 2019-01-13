@@ -15,11 +15,11 @@ namespace wage {
   public:
   
     Label(Frame frame, std::string text, Font font, Color color) : 
-      UiComponent("Label", frame), text_(text), font_(font), color_(color) {    
+      UiComponent("Label", frame), _text(text), _font(font), _color(color) {    
     }
 
     Label(std::string text, Font font, Color color = Color(1, 1, 1, 1)) : 
-      UiComponent("Label"), text_(text), font_(font), color_(color) {
+      UiComponent("Label"), _text(text), _font(font), _color(color) {
     }
 
     virtual ~Label() {      
@@ -30,36 +30,36 @@ namespace wage {
     }
 
     inline std::string text() {
-      return text_;
+      return _text;
     }
 
     inline void set(std::string text) {
-      text_ = text;
+      _text = text;
     }
 
     inline Font font() {
-      return font_;
+      return _font;
     }
 
-    void setFont(Font font) {
-      font_ = font;
+    void font(Font font) {
+      _font = font;
     }
 
     inline Color color() {
-      return color_;
+      return _color;
     }
 
-    inline void setColor(Color color) {
-      color_ = color;
+    inline void color(Color color) {
+      _color = color;
     }
 
   private:
   
-    std::string text_;
+    std::string _text;
 
-    Font font_;
+    Font _font;
 
-    Color color_;
+    Color _color;
   };
 
 }
