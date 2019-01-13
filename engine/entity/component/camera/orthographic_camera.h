@@ -13,55 +13,55 @@ namespace wage {
     }
 
     OrthographicCamera(float left, float right, float top, float bottom, float nearClip, float farClip) 
-      : Camera(orthographic), left(left), right(right), top(top), bottom(bottom), nearClip(nearClip), farClip(farClip) {
+      : Camera(orthographic), left_(left), right_(right), top_(top), bottom_(bottom), nearClip_(nearClip), farClip_(farClip) {
     }
 
-    inline float getLeft() {
-      return left;
+    inline float left() {
+      return left_;
     }
 
-    inline void setLeft(float left) {
-      this->left = left;
+    inline void left(float left) {
+      left_ = left;
     }
 
-    inline float getRight() {
-      return right;
+    inline float right() {
+      return right_;
     }
 
-    inline void setRight(float right) {
-      this->right = right;
+    inline void right(float right) {
+      right_ = right;
     }
 
-    inline float getTop() {
-      return top;
+    inline float top() {
+      return top_;
     }
 
-    inline void setTop(float top) {
-      this->top = top;
+    inline void top(float top) {
+      top_ = top;
     }
 
-    inline float getBottom() {
-      return bottom;
+    inline float bottom() {
+      return bottom_;
     }
 
-    inline void setBottom(float bottom) {
-      this->bottom = bottom;
+    inline void bottom(float bottom) {
+      bottom_ = bottom;
     }
 
-    inline float getNearClip() {
-      return nearClip;
+    inline float nearClip() {
+      return nearClip_;
     }
 
-    inline void setNearClip(float nearClip) {
-      this->nearClip = nearClip;
+    inline void nearClip(float nearClip) {
+      nearClip_ = nearClip;
     }
 
-    inline float getFarClip() {
-      return farClip;
+    inline float farClip() {
+      return farClip_;
     }
 
-    void setFarClip(float farClip) {
-      this->farClip = farClip;
+    void farClip(float farClip) {
+      farClip_ = farClip;
     }
 
     inline Matrix screenProjection(Vector2 screenSize) {
@@ -79,17 +79,17 @@ namespace wage {
 
   private:
 
-    float left;
+    float left_;
 
-    float right;
+    float right_;
 
-    float top;
+    float top_;
 
-    float bottom;
+    float bottom_;
 
-    float nearClip;
+    float nearClip_;
 
-    float farClip;
+    float farClip_;
 
   };
 
