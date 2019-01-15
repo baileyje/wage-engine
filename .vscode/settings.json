@@ -52,6 +52,7 @@
         "typeindex": "cpp",
         "__debug": "cpp",
         "fstream": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "cassert": "cpp"
     }
 }

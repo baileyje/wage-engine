@@ -7,6 +7,9 @@
 #include "memory/allocator.h"
 #include "memory/reference.h"
 
+#include "memory/pool_storage.h"
+#include "memory/fixed_storage.h"
+
 namespace wage {
 
   template <typename T>
@@ -129,7 +132,7 @@ namespace wage {
     
     static const size_t reserved = 4;
 
-    ObjectPool(int poolSize = 1000) : poolSize(poolSize), currentSize(0) {
+    ObjectPool(int poolSize = 1000) : /* storage(poolSize), */ poolSize(poolSize), currentSize(0) {
       clear();
     }
 
@@ -230,6 +233,7 @@ namespace wage {
       return index < currentSize ? &storage[index].item : nullptr;
     }
 
+    // FixedStorage<Node> storage;
     Node* storage;
     
     int poolSize;

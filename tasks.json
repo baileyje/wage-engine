@@ -5,10 +5,11 @@
       {
           "label": "Build Run",
           "type": "shell",
-          "command": "bazel build :wage --verbose_failures --sandbox_debug",
+          "command": "bazel build -c dbg --strip=never --verbose_failures --sandbox_debug //...",
           "windows": {
             "command": ".\\scripts\\test.cmd"
           },
+          "cwd": "${workspaceFolder}/game",
           "group": "build", 
           "presentation": {
               "reveal": "always",

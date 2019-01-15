@@ -38,6 +38,7 @@
 #include "render-gl/renderer.h"
 
 #include "util/property.h"
+#include "memory/dynamic_storage.h"
 
 
 using namespace wage;
@@ -414,19 +415,14 @@ int main(int argc, char* argv[]) {
   printf("Path: %s\n", path.c_str());
   signal(SIGINT, intHandler);  
 
-  Property<int> prop;
-  
-  // printf("Value: %d\n", val);
-  prop = 4;
-  auto& val = prop;
-
-  // auto poop = [](int& val) {
-  //   printf("Value: %d\n", val);
-  // };
-  // poop(prop);
-
-  // printf("Value: %d\n", prop());
-  
+  DynamicStorage<int> pool(2);
+  pool[0];
+  pool[1];
+  pool[2];
+  pool[3];
+  pool[4];
+  pool[5];
+ 
   setupSystems(Core::Instance, path);
   EntityManager* manager = Core::Instance->get<EntityManager>();
   Mesh::generatePrimitives();
@@ -434,7 +430,6 @@ int main(int argc, char* argv[]) {
   Core::Instance->init();
   Core::Instance->start();
   
-
   return 0;
 }
 
