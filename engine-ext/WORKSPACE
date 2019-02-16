@@ -4,11 +4,11 @@ local_repository(
     path = "../engine"
 )
 
-# new_local_repository(
-#     name = "glfw",
-#     path = "/usr/local/Cellar/glfw/3.2.1",
-#     build_file = "third_party/glfw/BUILD"
-# )
+new_local_repository(
+    name = "bullet",
+    path = "/usr/local/Cellar/bullet/2.87_1",
+    build_file = "third_party/bullet/BUILD"
+)
 
 # new_local_repository(
 #     name = "glm",
@@ -22,8 +22,20 @@ local_repository(
 #     build_file = "third_party/bullet/BUILD"
 # )
 
-# new_local_repository(
+new_local_repository(
+    name = "freetype",
+    path = "/usr/local/Cellar/freetype/2.9",
+    build_file = "third_party/freetype/BUILD"
+)
+
+# new_http_archive(       
 #     name = "freetype",
-#     path = "/usr/local/Cellar/freetype/2.9",
-#     build_file = "third_party/freetype/BUILD"
+#     build_file = "//third_party/freetype/BUILD",
+#     sha256 = "33a28fabac471891d0523033e99c0005b95e5618dc8ffa7fa47f9dadcacb1c9b",
+#     strip_prefix = "freetype-2.8",
+#     urls = [
+#         "https://mirror.bazel.build/download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz",
+#         "http://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz",
+#     ]
 # )
+

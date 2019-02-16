@@ -1,18 +1,13 @@
 
 cc_library(
 	name = "engine",
-	srcs = glob(["*.cpp"]),
-	hdrs = glob(["*.h"]),
+	srcs = glob(["**/*.cpp"]),
+	hdrs = glob(["**/*.h"]),
 	deps = [
-		"//core",
-    "//platform",
-    "//input",
-    "//jsrt",
-    "//physics",
-    "//fs",
-    "//assets",
-    "//render",
-    "//ui"
+		"@glfw",
+    "//third_party/glm",
+    "//third_party/chakracore",
+    "//third_party/tinyloader"
 	],
 	visibility = ["//visibility:public"]
 )

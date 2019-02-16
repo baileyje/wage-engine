@@ -2,11 +2,11 @@
 #define DYNAMIC_STORAGE_H
 
 #include <cassert>
+#include <vector>
 
 #include "memory/pool_storage.h"
 
-// #include "memory/allocator.h"
-// #include "memory/reference.h"
+#include "memory/allocator.h"
 
 namespace wage {
 
@@ -23,34 +23,55 @@ namespace wage {
       
     }
 
-    virtual IndexType next() {
-      return 0;
-    }
-
-    virtual void put(IndexType index, T value) {
-
-    }
-
     T& get(IndexType index) {
       int chunkIndex = index / _chunkSize;
+      auto chunk = chunkAt(chunkIndex);
       int itemIndex = index % _chunkSize;
-      printf("Lookup:  %d -> %d\n", chunkIndex, itemIndex);
-      // return index < currentSize ? &storage[index].item : nullptr;
-      auto res = new T;
-      return *res;
+      // printf("Lookup:  %d -> %d\n", chunkIndex, itemIndex);
+      return chunk._storage[itemIndex];
     }
 
-    // const T* get(Index index) const {
-    //   // return index < currentSize ? &storage[index].item : nullptr;
-    //   return nullptr;
-    // }
+  private:
 
-    // Node* storage;
-    
+    class Chunk {
+
+      friend class DynamicStorage;
+      
+      Chunk() : _storage(nullptr), allocated(false) {}
+
+      T* _storage;
+
+      bool allocated;
+
+    };
+
+    private:
+
+    Chunk& chunkAt(IndexType chunkIndex) {
+      // printf("Getting Chunk: %d\n", chunkIndex);      
+      if (chunks.size() <= chunkIndex) {
+        // printf("Creating Chunk!\n");
+        for (int i = 0; chunks.size() <= chunkIndex; ++i) {
+          printf("Adding chunk!\n");
+          chunks.push_back({});
+        }
+        // chunks.reserve(chunkIndex + 2);
+      }
+      // printf("Here!\n");
+      if (!chunks[chunkIndex].allocated) {
+        size_t allocSize = sizeof(T) * _chunkSize; // + sizeof(T) - 1;
+        chunks[chunkIndex]._storage = (T*)Allocator::Permanent()->allocate(allocSize, alignof(T));
+        chunks[chunkIndex].allocated = true;
+      }
+      return chunks[chunkIndex];
+    }
+   
     int _chunkSize;
 
-    // int _currentSize;
+    int _capacity;
 
+    std::vector<Chunk> chunks;
+  
   };
 
 }

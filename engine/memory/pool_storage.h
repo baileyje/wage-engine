@@ -12,10 +12,6 @@ namespace wage {
     
     virtual void clear() = 0;
 
-    // virtual IndexType next() = 0;
-
-    virtual void put(IndexType index, T value) = 0; 
-
     virtual T& get(IndexType index) = 0;
 
     virtual T& operator[](IndexType index) {

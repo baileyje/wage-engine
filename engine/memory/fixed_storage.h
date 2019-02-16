@@ -4,6 +4,7 @@
 #include <cassert>
 
 #include "memory/pool_storage.h"
+#include "memory/allocator.h"
 
 
 namespace wage {
@@ -18,19 +19,15 @@ namespace wage {
     }
     
     virtual void clear() {
+      // Something better than this maybe....
       size_t allocSize = sizeof(T) * _capacity; // + sizeof(T) - 1;
-      _storage = (T*)Allocator::Permanent()->allocate(allocSize, alignof(T));    
+      _storage = (T*)Allocator::Permanent()->allocate(allocSize, alignof(T));
     }
 
-    virtual IndexType next() {
-      // return _size;
-      return 0;
-    }
-
-    virtual void put(IndexType index, T value) {
-      assert(index < _capacity);
-      // _storage[index] = value;
-    } 
+    // virtual void put(IndexType index, T value) {
+    //   assert(index < _capacity);
+    //   _storage[index] = value;
+    // } 
 
     virtual T& get(IndexType index) {
       assert(index < _capacity);

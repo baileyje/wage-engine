@@ -293,33 +293,33 @@ class InputLogger :
 public:
 
   void on(KeyEvent& event) {
-    printf("Key -> %d -> %d -> %d\n", 
-      event.key(),
-      event.type(),
-      event.set({ KeyModifier::shift, KeyModifier::alt })
-    );
+    // printf("Key -> %d -> %d -> %d\n", 
+    //   event.key(),
+    //   event.type(),
+    //   event.set({ KeyModifier::shift, KeyModifier::alt })
+    // );
   }
 
   void on(MouseButtonEvent& event) {
-    printf("Mouse Button -> %d -> %d -> %D\n", 
-      event.button(),
-      event.type(),
-      event.set(KeyModifier::shift)
-    );
+    // printf("Mouse Button -> %d -> %d -> %D\n", 
+    //   event.button(),
+    //   event.type(),
+    //   event.set(KeyModifier::shift)
+    // );
   }
 
   void on(MouseMoveEvent& event) {
-    printf("Mouse Move -> %f:%f\n", 
-      event.position().x,
-      event.position().y
-    );
+    // printf("Mouse Move -> %f:%f\n", 
+    //   event.position().x,
+    //   event.position().y
+    // );
   }
 
   void on(MouseScrollEvent& event) {
-    printf("Mouse Scroll -> %f:%f\n", 
-      event.position().x,
-      event.position().y
-    );
+    // printf("Mouse Scroll -> %f:%f\n", 
+    //   event.position().x,
+    //   event.position().y
+    // );
   }
 };
 
@@ -369,7 +369,7 @@ void setupScene(EntityManager* manager) {
 
   EntityReference ground = manager->create();
   ground->transform().position(Vector(0, -2, 0));
-  ground->transform().localScale(Vector(200, 2, 200));
+  ground->transform().localScale(Vector(2000, 2, 2000));
   ground->transform().rotation(Vector(0, 0, 0));
   ground
     .create<RigidBody>(0.0, RigidBodyType::kinematic)
@@ -415,14 +415,6 @@ int main(int argc, char* argv[]) {
   printf("Path: %s\n", path.c_str());
   signal(SIGINT, intHandler);  
 
-  DynamicStorage<int> pool(2);
-  pool[0];
-  pool[1];
-  pool[2];
-  pool[3];
-  pool[4];
-  pool[5];
- 
   setupSystems(Core::Instance, path);
   EntityManager* manager = Core::Instance->get<EntityManager>();
   Mesh::generatePrimitives();

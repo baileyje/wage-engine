@@ -15,9 +15,9 @@ namespace wage {
 
     public:  
       
-      virtual bool isValid(Reference ref) const = 0;
+      virtual bool isValid(Reference ref) = 0;
 
-      virtual void free(Reference ref) const = 0;
+      virtual void free(Reference ref) = 0;
 
       virtual T* get(Reference ref) = 0;
 

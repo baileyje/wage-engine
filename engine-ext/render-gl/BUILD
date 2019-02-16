@@ -4,17 +4,12 @@ cc_library(
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
-		"@engine//core",
-		"@engine//platform",
-		"@engine//assets",
-		"@engine//entity",				
-		"@engine//math",
-		"@engine//render",		
+		"@engine",
 		"//third_party/glad",
 		"//third_party/stb_image",
 		"@freetype",
 		"@glfw",
-		"@glm",
+		"@engine//third_party/glm",
 	],
 	visibility = ["//visibility:public"]	
 )

@@ -9,6 +9,7 @@
 
 #include "memory/pool_storage.h"
 #include "memory/fixed_storage.h"
+#include "memory/dynamic_storage.h"
 
 namespace wage {
 
@@ -132,22 +133,22 @@ namespace wage {
     
     static const size_t reserved = 4;
 
-    ObjectPool(int poolSize = 1000) : /* storage(poolSize), */ poolSize(poolSize), currentSize(0) {
+    ObjectPool(int poolSize = 100) : storage(poolSize + reserved), poolSize(poolSize), currentSize(0) {
       clear();
     }
 
     void clear() {
       printf("Clear!\n");
       currentSize = reserved;
-      size_t allocSize = sizeof(T) * poolSize; // + sizeof(T) - 1;
-      storage = (Node*)Allocator::Permanent()->allocate(allocSize, alignof(T));      
+      // size_t allocSize = sizeof(T) * poolSize; // + sizeof(T) - 1;
+      // storage = (Node*)Allocator::Permanent()->allocate(allocSize, alignof(T));      
       storage[head].next = tail;
       storage[tail].prev = head;
       storage[freeHead].next = freeTail;
       storage[freeTail].prev = freeHead;
     }
 
-    void addToList(size_t index, size_t listTail) const {
+    void addToList(size_t index, size_t listTail) {
       assert(index >= reserved && listTail < reserved);
       size_t prev = storage[listTail].prev;
       storage[listTail].prev = index;
@@ -165,30 +166,30 @@ namespace wage {
         removeFromList(index);      
       } else {
         index = currentSize++;
-        // fstorage.push_back(Node(index));
-      }    
+      }
       addToList(index, tail);
       storage[index].valid = true;
       new (&(storage[index].item)) T(args...);
       return Reference<T>(this, index, storage[index].version);
     }
 
-    void removeFromList(size_t index) const {
+    void removeFromList(size_t index) {
       storage[storage[index].prev].next = storage[index].next;
       storage[storage[index].next].prev = storage[index].prev;    
     }
 
-    void free(Reference<T> ref) const {
+    void free(Reference<T> ref) {
       if (isValid(ref)) {
         free(ref.index());
       }
     }
 
-    void free(size_t index) const {
+    void free(size_t index) {
       storage[index].valid = false;
       storage[index].item.~T();
       new (&(storage[index].item)) T;
       removeFromList(index);
+      printf("Free!\n");
       addToList(index, freeTail);
     }
 
@@ -219,8 +220,9 @@ namespace wage {
       return get(ref.index());
     }
 
-    bool isValid(Reference<T> ref) const {
-        return ref.source() != nullptr && storage[ref.index()].valid && storage[ref.index()].version == ref.version();
+    bool isValid(Reference<T> ref) {
+      auto& node = storage.get(ref.index());
+      return ref.source() != nullptr && node.valid && node.version == ref.version();
     }
 
   private:
@@ -234,7 +236,8 @@ namespace wage {
     }
 
     // FixedStorage<Node> storage;
-    Node* storage;
+    DynamicStorage<Node> storage;
+    // Node* storage;
     
     int poolSize;
 

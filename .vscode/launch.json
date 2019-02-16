@@ -9,13 +9,14 @@
       "name": "(lldb) Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/game/bazel-out/darwin-dbg/bin/wage",
+      "program": "${workspaceFolder}/game/bazel-bin/wage",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/game",
       "environment": [],
-      "externalConsole": true,
-      "MIMode": "lldb"
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "preLaunchTask": "build-debug"
     },
    
   

@@ -6,7 +6,6 @@ namespace wage {
     static auto instance = new Allocator(1024*1024* 50);
     return instance;
   }
-  
 
   Allocator* Allocator::Temporary() {
     static auto instance = new Allocator(1024*1024*50);
