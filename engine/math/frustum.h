@@ -90,10 +90,8 @@ namespace wage {
             break;  
           }
         }
-        printf("PIn: %d\n", pointIn);
         boxIn |= pointIn;
       }
-      printf("BIn: %d\n", boxIn);
       return boxIn;
     }
 

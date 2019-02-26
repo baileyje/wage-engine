@@ -39,7 +39,7 @@ namespace wage {
 
     virtual void renderText(Vector position, std::string text, Font font, Color color) = 0;
 
-    virtual void renderMesh(Transform transform, ComponentReference<Mesh> mesh, ComponentReference<Material> material) = 0;
+    virtual void renderMesh(Reference<Transform> transform, Reference<Mesh, ComponentId> mesh, Reference<Material, ComponentId> material) = 0;
     
   protected:
 
@@ -54,13 +54,6 @@ namespace wage {
     Window* window;
 
     AssetManager* assetManager;
-
-    // TODO: Hate these here!
-    std::vector<DirectionalLight*> dirLights;
-
-    std::vector<PointLight*> pointLights;
-
-    std::vector<Spotlight*> spotlights;
 
     RenderQueue meshQueue;
 

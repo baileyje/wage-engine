@@ -21,9 +21,9 @@ namespace wage {
 
     LIFECYCLE_FUNC(init)
 
-    virtual void add(EntityReference entity) = 0;
+    virtual void add(Entity entity) = 0;
 
-    virtual void remove(EntityReference entity) = 0;
+    virtual void remove(Entity entity) = 0;
 
     virtual void on(AddEntityMessage& message);
     

@@ -16,13 +16,14 @@ namespace wage {
 
 	void BulletPhysics::init(SystemContext* context) {
     Physics::init(context);
-		dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
+		// dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
+		dynamicsWorld.setGravity(btVector3(0, 0, 0));
 	}
 
 	void BulletPhysics::fixedUpdate(SystemContext* context) {
 		// Get Physics up to speed
 		for (auto physicsEntity : entities) {
-			if (!physicsEntity->entity().isValid()) {
+			if (!physicsEntity->entity().valid()) {
 				continue;
 			}
 			physicsEntity->updateShapeTransform();
@@ -34,7 +35,7 @@ namespace wage {
 
 		// Get entities up to speed
 		for (auto physicsEntity : entities) {
-			if (!physicsEntity->entity().isValid()) {
+			if (!physicsEntity->entity().valid()) {
 				continue;
 			}
 			physicsEntity->updateEntityTransform();
@@ -51,11 +52,13 @@ namespace wage {
 		// }
 	}
 
-	void BulletPhysics::add(EntityReference entity) {	
-		entities.push_back(PhysicsEntity::from(entity, &dynamicsWorld));
+	void BulletPhysics::add(Entity entity) {
+		if (entity.has<RigidBody>()) {
+			entities.push_back(PhysicsEntity::from(entity, &dynamicsWorld));
+		}
 	}
 
-	void BulletPhysics::remove(EntityReference entity) {
+	void BulletPhysics::remove(Entity entity) {
 		for (auto ent = entities.begin(); ent != entities.end(); ++ent) {
 			if ((*ent)->entity() == entity) {
 				if ((*ent)->rigidBody()) {

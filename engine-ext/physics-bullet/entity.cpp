@@ -4,12 +4,12 @@
 
 namespace wage {
 
-  btCollisionShape* PhysicsEntity::shapeFor(EntityReference entity) {
+  btCollisionShape* PhysicsEntity::shapeFor(Entity entity) {
     auto collider = entity.get<Collider>();
     if (!collider.valid()) {
       return make<btEmptyShape>();
     }
-    Vector scale = entity->transform().scale();  
+    Vector scale = entity.get<Transform>()->scale();  
     switch(collider->type()) {
       // TODO: Support more shapes
       case ColliderType::box: {
@@ -23,7 +23,7 @@ namespace wage {
     }	
   }
 
-  btRigidBody* PhysicsEntity::rigidBodyFor(ComponentReference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape) {
+  btRigidBody* PhysicsEntity::rigidBodyFor(Reference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape) {
     btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
     btVector3 localInertia(0, 0, 0);    
     if (rigidBody->mass() != 0.f) {      
@@ -42,13 +42,13 @@ namespace wage {
     return body;
   }
 
-  PhysicsEntity* PhysicsEntity::from(EntityReference entity, btDiscreteDynamicsWorld* dynamicsWorld) {
+  PhysicsEntity* PhysicsEntity::from(Entity entity, btDiscreteDynamicsWorld* dynamicsWorld) {
     btCollisionShape* shape = shapeFor(entity);
     btRigidBody* body = nullptr;
     btCollisionObject* object = nullptr;
     auto entityBody = entity.get<RigidBody>();
     if (entityBody.valid()) {
-      body = rigidBodyFor(entityBody, fromTransform(entity->transform()), shape);
+      body = rigidBodyFor(entityBody, fromTransform(*entity.get<Transform>()), shape);
       dynamicsWorld->addRigidBody(body);
       // Must come after added to world.    
       if (!entityBody->isAffectedByGravity()) {
@@ -98,12 +98,13 @@ namespace wage {
     if (!_rigidBody) {
       return;
     }
-    btTransform trans = transform();  
-    entity()->transform().position(fromBTVector(trans.getOrigin()));
+    btTransform trans = transform();
+    // printf("Before: %f:%f:%f\n", entity().get<Transform>()->position().x, entity().get<Transform>()->position().y, entity().get<Transform>()->position().z);
+    entity().get<Transform>()->position(fromBTVector(trans.getOrigin()));
     btQuaternion rotation = trans.getRotation();
     // btScalar yawZ, pitchY, rollX;
     // rotation.getEulerZYX(yawZ, pitchY, rollX);
-    entity()->transform().rotation(
+    entity().get<Transform>()->rotation(
       Quaternion(rotation.w(), rotation.x(), rotation.y(), rotation.z())
     );
   }
@@ -116,7 +117,7 @@ namespace wage {
     if (entityBody->type() == RigidBodyType::dynamic) {
       return;
     }  
-    btTransform transform = fromTransform(entity()->transform());
+    btTransform transform = fromTransform(*entity().get<Transform>());
     _rigidBody->getMotionState()->setWorldTransform(transform);
   }
 

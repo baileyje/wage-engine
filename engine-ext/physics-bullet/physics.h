@@ -27,9 +27,9 @@ namespace wage {
 
     LIFECYCLE_FUNC(deinit)
 
-    void add(EntityReference entity);
+    void add(Entity entity);
 
-    void remove(EntityReference entity);
+    void remove(Entity entity);
 
   private:
 

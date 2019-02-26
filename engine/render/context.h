@@ -8,23 +8,32 @@
 #include "entity/component/lighting/spotlight.h"
 #include "entity/component/camera/camera.h"
 
+#include "math/transform.h"
+
+#include "ecs/registry.h"
+
 namespace wage {
 
   class RenderContext {
 
   public:
 
-    RenderContext(ComponentReference<Camera> camera, Vector2 screenSize,
-      std::vector<DirectionalLight*> dirLights, std::vector<PointLight*> pointLights, std::vector<Spotlight*> spotlights) 
-      : _camera(camera), _screenSize(screenSize),
+    RenderContext(Entity cameraEntity, Camera* camera, Vector2 screenSize,
+      std::vector<Entity> dirLights, std::vector<Entity> pointLights, std::vector<Entity> spotlights) 
+      :_cameraEntity(cameraEntity), _camera(camera), _screenSize(screenSize),
       _dirLights(dirLights), _pointLights(pointLights), _spotlights(spotlights) {
-          _screenProjection = camera->screenProjection(screenSize);
-          _viewProjection = camera->viewProjection();
-          _cameraPosition = camera->transform()->position();
+        auto camTransform = cameraEntity.get<Transform>();
+        _screenProjection = camera->screenProjection(screenSize);
+        _viewProjection = camera->viewProjection(camTransform.get());
+        _cameraPosition = camTransform->position();
       }
 
-    inline ComponentReference<Camera> camera() {
+    inline Camera* camera() {
       return _camera;
+    }
+
+    inline Entity cameraEntity() {
+      return _cameraEntity;
     }
 
     inline Vector2 screenSize() {
@@ -43,21 +52,23 @@ namespace wage {
       return _viewProjection;
     }
 
-    inline std::vector<DirectionalLight*> dirLights() {
+    inline std::vector<Entity> dirLights() {
       return _dirLights;
     }
 
-    inline std::vector<PointLight*> pointLights() {
+    inline std::vector<Entity> pointLights() {
       return _pointLights;
     }
 
-    inline std::vector<Spotlight*> spotlights() {
+    inline std::vector<Entity> spotlights() {
       return _spotlights;
     }
 
   private:
   
-    ComponentReference<Camera> _camera;
+    Entity _cameraEntity;
+
+    Camera* _camera;
 
     Vector2 _screenSize;
 
@@ -67,13 +78,13 @@ namespace wage {
     
     Matrix _viewProjection;
 
-    std::vector<DirectionalLight*> _dirLights;
+    std::vector<Entity> _dirLights;
 
-    std::vector<PointLight*> _pointLights;
+    std::vector<Entity> _pointLights;
 
-    std::vector<Spotlight*> _spotlights;
+    std::vector<Entity> _spotlights;
   };
 
-}
+} 
 
 #endif //RENDER_CONTEXT_H

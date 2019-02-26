@@ -27,7 +27,6 @@ namespace wage {
       int chunkIndex = index / _chunkSize;
       auto chunk = chunkAt(chunkIndex);
       int itemIndex = index % _chunkSize;
-      // printf("Lookup:  %d -> %d\n", chunkIndex, itemIndex);
       return chunk._storage[itemIndex];
     }
 
@@ -48,16 +47,11 @@ namespace wage {
     private:
 
     Chunk& chunkAt(IndexType chunkIndex) {
-      // printf("Getting Chunk: %d\n", chunkIndex);      
       if (chunks.size() <= chunkIndex) {
-        // printf("Creating Chunk!\n");
         for (int i = 0; chunks.size() <= chunkIndex; ++i) {
-          printf("Adding chunk!\n");
           chunks.push_back({});
         }
-        // chunks.reserve(chunkIndex + 2);
       }
-      // printf("Here!\n");
       if (!chunks[chunkIndex].allocated) {
         size_t allocSize = sizeof(T) * _chunkSize; // + sizeof(T) - 1;
         chunks[chunkIndex]._storage = (T*)Allocator::Permanent()->allocate(allocSize, alignof(T));

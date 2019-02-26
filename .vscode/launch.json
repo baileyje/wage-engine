@@ -5,6 +5,7 @@
   "version": "0.2.0",
   "configurations": [
 
+
     {
       "name": "(lldb) Launch",
       "type": "cppdbg",
@@ -17,6 +18,19 @@
       "externalConsole": false,
       "MIMode": "lldb",
       "preLaunchTask": "build-debug"
+    },
+    {
+      "name": "(lldb) Test",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/bazel-bin/test",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/game",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "preLaunchTask": "build-test-debug"
     },
    
   

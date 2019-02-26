@@ -10,7 +10,7 @@ namespace wage {
 
   public:
 
-    inline EntityReference getCamera() {
+    inline Entity getCamera() {
       // auto found = entities.with("Camera");
       // if (!found.empty()) {
       //   return found[0];

@@ -13,23 +13,26 @@
 
 namespace wage {
 
-  template <typename T>
-  class ObjectPool : public Reference<T>::Source {
-    template<typename O>
+  template <typename T, typename IndexType = uint32_t>
+  class ObjectPool : public Reference<T, IndexType>::Source {
+    
+    template<typename RT, typename RIndexType>
     friend class Reference;
 
+    typedef Reference<T, IndexType> RefType;
+
   public:
+    
+    static const IndexType OutOfBounds = static_cast<IndexType>(-1);
 
-    static const size_t OutOfBounds = static_cast<size_t>(-1);
-
-    struct Node {
+    struct Item {
       
-      Node() : Node(OutOfBounds) {}
+      Item() : Item(OutOfBounds) {}
 
-      Node(size_t index) : index(index), prev(OutOfBounds), next(OutOfBounds), valid(false), version(0) {}
+      Item(IndexType index) : index(index), prev(nullptr), next(nullptr), valid(false), version(0) {}
 
       // Move
-      Node& operator=(Node&& src) {
+      Item& operator=(Item&& src) {
         prev = std::move(src.prev);
         next = std::move(src.next);      
         item = std::move(src.item);
@@ -38,18 +41,18 @@ namespace wage {
       }
 
       // Copy
-      Node(Node&& src) {
+      Item(Item&& src) {
         prev = std::move(src.prev);
         next = std::move(src.next);      
         item = std::move(src.item);
         index = std::move(src.index);
       }
 
-      size_t index;
+      IndexType index;
 
-      size_t prev;
+      Item* prev;
       
-      size_t next;
+      Item* next;
       
       T item;
 
@@ -60,22 +63,18 @@ namespace wage {
 
     class Iterator {
       
-      typedef Reference<T>& reference;
+      friend class ObjectPool<T, IndexType>;
 
-      typedef Reference<T>* pointer;
-
-      friend class ObjectPool<T>;
-
-      friend struct Node;
+      friend struct Item;
 
     public:
       
-      Iterator(ObjectPool<T>* pool, size_t index) : pool(pool), index(index), currentRef(pool, index, pool->storage[index].version) {}
+      Iterator(ObjectPool<T, IndexType>* pool, Item* current) : pool(pool), current(current) {}
 
       ~Iterator() {}
 
       bool operator==(const Iterator& other) const {
-        return pool == other.pool && index == other.index;
+        return pool == other.pool && current == other.current;
       }
 
       bool operator!=(const Iterator& other) const {
@@ -83,8 +82,7 @@ namespace wage {
       }
 
       Iterator& operator++() {
-        index = pool->storage[index].next;
-        currentRef = Reference<T>(pool, index, pool->storage[index].version);
+        current = current->next;
         return (*this);
       }
 
@@ -95,8 +93,7 @@ namespace wage {
       }
 
       Iterator& operator--() {
-        index = pool->storage[index].prev;
-        currentRef = Reference<T>(pool, index, pool->storage[index].version);
+        current = current->prev;      
         return (*this);
       }
 
@@ -106,142 +103,123 @@ namespace wage {
         return temp;
       }
 
-      reference operator*() { return currentRef; }
+      RefType operator*() {
+        return pool->reference(current->index);
+      }
 
-      pointer operator->() { return currentRef; }
-
-      Reference<T> asReference() const {
-        return currentRef;
+      RefType operator->() { 
+        return pool->reference(current->index);
       }
 
     private:
       
-      ObjectPool<T>* pool;
+      ObjectPool<T, IndexType>* pool;
       
-      size_t index;
+      Item* current;
 
-      Reference<T> currentRef;
     };
 
-    static const size_t head = 0;
-
-    static const size_t tail = 1;
-
-    static const size_t freeHead = 2;
-
-    static const size_t freeTail = 3;
-    
-    static const size_t reserved = 4;
-
-    ObjectPool(int poolSize = 100) : storage(poolSize + reserved), poolSize(poolSize), currentSize(0) {
+    ObjectPool(int poolSize = 100) : storage(poolSize), poolSize(poolSize), currentSize(0) {
       clear();
     }
 
-    void clear() {
-      printf("Clear!\n");
-      currentSize = reserved;
-      // size_t allocSize = sizeof(T) * poolSize; // + sizeof(T) - 1;
-      // storage = (Node*)Allocator::Permanent()->allocate(allocSize, alignof(T));      
-      storage[head].next = tail;
-      storage[tail].prev = head;
-      storage[freeHead].next = freeTail;
-      storage[freeTail].prev = freeHead;
-    }
-
-    void addToList(size_t index, size_t listTail) {
-      assert(index >= reserved && listTail < reserved);
-      size_t prev = storage[listTail].prev;
-      storage[listTail].prev = index;
-      storage[prev].next = index;
-      storage[index].prev = prev;
-      storage[index].next = listTail;
-    }
-
     template <typename... Args>
-    Reference<T> create(Args... args) {
-      size_t index = OutOfBounds;
-      if (storage[freeTail].prev != freeHead) {
-        index = storage[freeTail].prev;
+    RefType create(Args... args) {
+      IndexType index = OutOfBounds;
+      if (freeTail.prev != &freeHead) {
+        index = freeTail.prev->index;
         storage[index].version++;
         removeFromList(index);      
       } else {
         index = currentSize++;
       }
-      addToList(index, tail);
+      addToList(index, &tail);
+      storage[index].index = index;
       storage[index].valid = true;
       new (&(storage[index].item)) T(args...);
-      return Reference<T>(this, index, storage[index].version);
+      return reference(index);
     }
 
-    void removeFromList(size_t index) {
-      storage[storage[index].prev].next = storage[index].next;
-      storage[storage[index].next].prev = storage[index].prev;    
+    RefType reference(IndexType index) {
+      return RefType(this, index, storage[index].version);
     }
 
-    void free(Reference<T> ref) {
-      if (isValid(ref)) {
-        free(ref.index());
-      }
-    }
-
-    void free(size_t index) {
-      storage[index].valid = false;
-      storage[index].item.~T();
-      new (&(storage[index].item)) T;
-      removeFromList(index);
-      printf("Free!\n");
-      addToList(index, freeTail);
-    }
-
-    Iterator begin() {
-      return Iterator(this, storage[head].next);
-    }
-
-    Iterator end() {
-      return Iterator(this, tail);
-    }
-
-    void debug() {
-      // printf("Head: %zu\n", head);
-      //   printf("- prev: %zu\n", storage[head].prev);
-      //   printf("- next: %zu\n", storage[head].next);
-      // for (int i = 0; i < currentSize; i++) {
-      //   auto node = storage[i];
-      //   printf("Index: %zu\n", node.index);
-      //   printf("- prev: %zu\n", node.prev);
-      //   printf("- next: %zu\n", node.next);
-      // }
-      // printf("Tail: %zu\n", tail);
-      // printf("- prev: %zu\n", storage[tail].prev);
-      // printf("- next: %zu\n", storage[tail].next);
-    }
-
-    T* get(Reference<T> ref) {
+    T* get(RefType ref) {
       return get(ref.index());
     }
 
-    bool isValid(Reference<T> ref) {
-      auto& node = storage.get(ref.index());
-      return ref.source() != nullptr && node.valid && node.version == ref.version();
+    bool valid(RefType ref) {
+      auto& item = storage.get(ref.index());
+      return ref.source() != nullptr && item.valid && item.version == ref.version();
+    }
+
+    void destroy(RefType ref) {
+      if (valid(ref)) {
+        destroy(ref.index());
+      }
+    }
+
+    Iterator begin() {
+      return Iterator(this, head.next);
+    }
+
+    Iterator end() {
+      return Iterator(this, &tail);
+    }
+
+    void clear() {
+      storage.clear();
+      currentSize = 0;
+      head.next = &tail;
+      tail.prev = &head;
+      freeHead.next = &freeTail;
+      freeTail.prev = &freeHead;
     }
 
   private:
 
-    T* get(size_t index) {
+    T* get(IndexType index) {
       return index < currentSize ? &storage[index].item : nullptr;
     }
 
-    const T* get(size_t index) const {
-      return index < currentSize ? &storage[index].item : nullptr;
+    void destroy(IndexType index) {
+      storage[index].valid = false;
+      storage[index].item.~T();
+      new (&(storage[index].item)) T;
+      removeFromList(index);
+      addToList(index, &freeTail);
     }
 
-    // FixedStorage<Node> storage;
-    DynamicStorage<Node> storage;
-    // Node* storage;
+    void addToList(IndexType index, Item* listTail) {
+      auto item = &storage[index];
+      auto prev = listTail->prev;
+      listTail->prev = item;
+      prev->next = item;
+      item->prev = prev;
+      item->next = listTail;
+    }
+
+    void removeFromList(IndexType index) {
+      auto prev = storage[index].prev;
+      auto next = storage[index].next;
+      prev->next = next;
+      next->prev = prev;    
+    }
+
+    // FixedStorage<Item> storage;
+    DynamicStorage<Item> storage;
     
-    int poolSize;
+    IndexType poolSize;
 
-    int currentSize;
+    IndexType currentSize;
+
+    Item head;
+
+    Item tail;
+
+    Item freeHead;
+
+    Item freeTail;
 
   };
 

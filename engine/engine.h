@@ -3,26 +3,46 @@
 
 #include <vector>
 
+#include "math/vector.h"
+#include "math/matrix.h"
+
+#include "memory/allocator.h"
+
+#include "core/core.h"
 #include "core/system.h"
-#include "entity/entity.h"
 
-namespace wage {
+#include "ecs/registry.h"
 
-  class Engine : public System {
+#include "platform/platform.h"
+#include "platform/window.h"
 
-  public:
-    
-    Engine() : System("Engine") { }
+#include "input/input.h"
+#include "input/key_event.h"
+#include "input/key.h"
+#include "input/key_modifier.h"
+#include "input/mouse_button_event.h"
+#include "input/mouse_move_event.h"
+#include "input/mouse_scroll_event.h"
 
-    ~Engine() {}
+#include "fs/file_system.h"
+#include "fs/local.h"
 
-    // LIFECYCLE_FUNC(start)
-    // LIFECYCLE_FUNC(update)
-    // LIFECYCLE_FUNC(fixedUpdate)
-    // LIFECYCLE_FUNC(stop)
+#include "assets/fs_manager.h"
 
-  };
+#include "physics/rigid_body.h"
+#include "physics/collider.h"
 
-}
+#include "render/mesh.h"
+#include "render/material.h"
+
+
+#include "entity/component/camera/perspective_camera.h"
+#include "entity/component/lighting/directional_light.h"
+#include "entity/component/lighting/point_light.h"
+#include "entity/component/lighting/spotlight.h"
+
+#include "ui/label.h"
+#include "ui/ui.h"
+
 
 #endif //ENGINE_H

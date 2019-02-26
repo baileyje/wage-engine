@@ -66,16 +66,17 @@ namespace wage {
 
     inline Matrix screenProjection(Vector2 screenSize) {
       return glm::ortho(
-        getLeft(), getRight(),
-        getTop(), getBottom(),
-        getNearClip(), getFarClip()
+        left(), right(),
+        top(), bottom(),
+        nearClip(), farClip()
       );
     }
 
-    
+    inline Frustum frustum(Vector2 screenSize, Transform* cameraTransform) {
+      Frustum returnFrustum;
+      return returnFrustum;
+    }
 
-    
-    
 
   private:
 

@@ -5,92 +5,72 @@
 #include <stdlib.h>
 #include <sstream>
 
-#include "math/vector.h"
-#include "math/matrix.h"
-#include "core/core.h"
-#include "platform/platform.h"
-#include "input/input.h"
-#include "input/key_event.h"
-#include "input/mouse_button_event.h"
-#include "input/mouse_move_event.h"
-#include "input/mouse_scroll_event.h"
-#include "messaging/messaging.h"
-#include "fs/local.h"
-#include "assets/fs_manager.h"
-#include "jsrt/jsrt.h"
-#include "render/mesh_renderer.h"
 #include "engine.h"
-#include "entity/entity.h"
-#include "entity/component.h"
-#include "entity/component/dynamic.h"
-#include "physics/rigid_body.h"
-#include "physics/collider.h"
-#include "render/mesh.h"
-#include "render/material.h"
-#include "entity/component/camera/perspective_camera.h"
-#include "entity/component/lighting/directional_light.h"
-#include "entity/component/lighting/point_light.h"
-#include "entity/component/lighting/spotlight.h"
-#include "ui/label.h"
-#include "memory/allocator.h"
-
 #include "physics-bullet/physics.h"
 #include "render-gl/renderer.h"
 
-#include "util/property.h"
-#include "memory/dynamic_storage.h"
-
-
 using namespace wage;
 
-ComponentCallback MoveIt = [](ComponentContext* context) {
-  auto entity = context->entity();
-  auto body = entity.get<RigidBody>();
-  if (Input::Instance->isPressed(GLFW_KEY_W)) {
-    body->addImpulse(Vector(0, 0, 0.0004));
+class MoveIt : public System {
+
+public:
+
+  MoveIt(Entity entity) : System("MoveIt"), entity(entity) {
   }
-  if (Input::Instance->isPressed(GLFW_KEY_S)) {
-    body->addImpulse(Vector(0, 0, -0.0004));
-  } 
-  if (Input::Instance->isPressed(GLFW_KEY_A)) {
-    body->addImpulse(Vector(0.0004, 0, 0));
+
+  void update(SystemContext* context) {    
+    auto body = entity.get<RigidBody>();
+    if (Input::Instance->isPressed(GLFW_KEY_W)) {
+      body->addImpulse(Vector(0, 0, 0.005));
+    }
+    if (Input::Instance->isPressed(GLFW_KEY_S)) {
+      body->addImpulse(Vector(0, 0, -0.005));
+    } 
+    if (Input::Instance->isPressed(GLFW_KEY_A)) {
+      body->addImpulse(Vector(0.005, 0, 0));
+    }
+    if (Input::Instance->isPressed(GLFW_KEY_D)) {
+      body->addImpulse(Vector(-0.005, 0, 0));
+    }
+    if (Input::Instance->isPressed(GLFW_KEY_SPACE)) {
+      body->addImpulse(Vector(0, 0.005, 0));
+    }
+    if (Input::Instance->isPressed(GLFW_KEY_LEFT_SHIFT)) {
+      body->addImpulse(Vector(0, -0.005, 0));
+    }  
   }
-  if (Input::Instance->isPressed(GLFW_KEY_D)) {
-    body->addImpulse(Vector(-0.0004, 0, 0));
-  }
-  if (Input::Instance->isPressed(GLFW_KEY_SPACE)) {
-    body->addImpulse(Vector(0, 0.001, 0));
-  }
-  if (Input::Instance->isPressed(GLFW_KEY_LEFT_SHIFT)) {
-    body->addImpulse(Vector(0, -0.0001, 0));
-  }  
+
+private:
+
+  Entity entity;
+
 };
 
-class CamLook : public DynamicComponent {
+class CamLook : public System {
 
 public: 
 
-  CamLook() : DynamicComponent("CamLook"), lastPos(Vector2()), mouseSpeed(0.2) {
+  CamLook(Entity entity) : System("CamLook"), lastPos(Vector2()), mouseSpeed(0.2), entity(entity) {
   }
 
-  void start(ComponentContext* context) {
+  void start(SystemContext* context) {
     lastPos = Input::Instance->mousePosition();
   }
 
-  void update(ComponentContext* context) {
+  void update(SystemContext* context) {
     auto mousePos = Input::Instance->mousePosition();
     // printf("Mouse Pos: %f:%f\n", mousePos.x, mousePos.y);
     auto dx = lastPos.x - mousePos.x;
     auto dy = lastPos.y - mousePos.y;
 
-    Transform transform = context->entity()->transform();
-    Vector rotation = eulerAngles(transform.rotation());
+    auto transform = entity.get<Transform>();
+    Vector rotation = eulerAngles(transform->rotation());
     auto yaw = mouseSpeed * context->deltaTime() * dx;
     auto pitch = mouseSpeed * context->deltaTime() * dy;
     // printf("Yaw: %f\n", yaw);
     // printf("Pitch: %f\n", pitch);
     rotation += Vector(-pitch, yaw, 0);
-    context->entity()->transform().rotation(Vector(btDegrees(rotation.x), btDegrees(rotation.y), btDegrees(rotation.z)));
+    transform->rotation(Vector(btDegrees(rotation.x), btDegrees(rotation.y), btDegrees(rotation.z)));
     lastPos = mousePos;
   }
 
@@ -100,83 +80,112 @@ private:
 
     float mouseSpeed;
 
+    Entity entity;
 };
 
-ComponentCallback CamMove = [](ComponentContext* context) {
-  Transform& transform = context->entity()->transform();
-  if (Input::Instance->isPressed(GLFW_KEY_UP)) {
-      transform.localPosition() += Vector(0, 0, 1);
-  }
-  if (Input::Instance->isPressed(GLFW_KEY_DOWN)) {
-    transform.localPosition() +=  Vector(0, 0, -1);
-  } 
-  if (Input::Instance->isPressed(GLFW_KEY_LEFT)) {
-    transform.localPosition() += Vector(-1, 0, 0);
-  }
-  if (Input::Instance->isPressed(GLFW_KEY_RIGHT)) {
-    transform.localPosition() += Vector(1, 0, 0);
-  }
-};
 
-ComponentCallback Raise = [](ComponentContext* context) {
-  if (Input::Instance->isPressed(GLFW_KEY_M)) {
-    auto body = context->entity().get<RigidBody>();
-    body->addImpulse(Vector(0, 0.0004, 0));
-  }
-};
+// class CamMove : public System {
 
-class Follow : public DynamicComponent {
+// public: 
+
+//   CamMove(Entity entity) : System("CamMove"), entity(entity) {
+//   }
+  
+//   void update(SystemContext* context) {
+//     Transform& transform = entity->transform();
+//     if (Input::Instance->isPressed(GLFW_KEY_UP)) {
+//         transform.localPosition() += Vector(0, 0, 1);
+//     }
+//     if (Input::Instance->isPressed(GLFW_KEY_DOWN)) {
+//       transform.localPosition() +=  Vector(0, 0, -1);
+//     } 
+//     if (Input::Instance->isPressed(GLFW_KEY_LEFT)) {
+//       transform.localPosition() += Vector(-1, 0, 0);
+//     }
+//     if (Input::Instance->isPressed(GLFW_KEY_RIGHT)) {
+//       transform.localPosition() += Vector(1, 0, 0);
+//     }
+//   }
+
+// private:
+
+//   Entity entity;
+
+// };
+
+// ComponentCallback Raise = [](ComponentContext* context) {
+//   if (Input::Instance->isPressed(GLFW_KEY_M)) {
+//     auto body = context->entity().get<RigidBody>();
+//     body->addImpulse(Vector(0, 0.0004, 0));
+//   }
+// };
+
+class Follow : public System {
 
 public: 
 
-  Follow(EntityReference target) : DynamicComponent("Follow"), target(target) {    
+  Follow(Entity follower, Entity target) : System("Follow"), follower(follower.get<Transform>()), target(target.get<Transform>()) {
   }
 
-  void start(ComponentContext* context) {
-    offset = context->transform().position() - target->transform().position();
+  void start(SystemContext* context) {
+    offset = follower->position() - target->position();
   }
 
-  void update(ComponentContext* context) {
-    context->transform().position(target->transform().position() + offset);
+  void fixedUpdate(SystemContext* context) {
+    follower->position(target->position() + offset);
   }
 
 private:
 
-  EntityReference target;
+  Reference<Transform> follower;
+
+  Reference<Transform> target;
   
   Vector offset;
 
 };
 
-class Chase : public DynamicComponent {
+class Chase : public System {
 
 public: 
 
-  Chase(EntityReference target) : DynamicComponent("Chase"), target(target) {    
+  Chase(Entity target) : System("Chase"), target(target), running(false) {    
+  }
+  void update(SystemContext* context) {
+    if (!running && Input::Instance->isPressed(GLFW_KEY_G)) {
+      running = true;
+    }
   }
 
-  void fixedUpdate(ComponentContext* context) {
-    if (glm::distance(target->transform().position(), context->transform().position()) < 2) {
-      return;
+  void fixedUpdate(SystemContext* context) {
+    if (!running) return;
+    auto manager = context->get<EntityManager>();
+    for (int i = 10; i < 500; ++i) {
+      auto entity = manager->get(i);
+      if (glm::distance(target.get<Transform>()->position(), entity.get<Transform>()->position()) < 2) {
+        continue;
+      }
+      auto dir = target.get<Transform>()->position() - entity.get<Transform>()->position();
+      auto movement = (glm::normalize(dir) * 0.0005);
+      entity.get<RigidBody>()->addImpulse(movement);
     } 
-    Vector dir = target->transform().position() - context->transform().position();
-    Vector movement = (glm::normalize(dir) * 0.0005);
-    context->entity().get<RigidBody>()->addImpulse(movement);
   }
 
 private:
 
-  EntityReference target;
+  Entity target;
+
+  bool running;
 
 };
 
-class FpsDisplay : public DynamicComponent {
+class FpsDisplay : public System {
 
 public:
 
-  FpsDisplay(ComponentReference<Label> label) :  DynamicComponent("FPS"), label(label), lastTime(0), frames(0) {}
+  FpsDisplay(Reference<Label> label) :  System("FPS"), label(label), lastTime(0), frames(0) {}
 
-  void update(ComponentContext* context) {
+  void update(SystemContext* context) {
     double currentTime = context->time();
     frames++;
     if ( currentTime - lastTime >= 1.0 ) {
@@ -191,7 +200,7 @@ public:
 
 private:
 
-  ComponentReference<Label> label;
+  Reference<Label> label;
 
   double lastTime;
 
@@ -199,14 +208,14 @@ private:
 
 };
 
-class PosDisplay : public DynamicComponent {
+class PosDisplay : public System {
 
 public:
 
-  PosDisplay(ComponentReference<Label> label, EntityReference target) :  DynamicComponent("POS"), label(label), target(target) {}
+  PosDisplay(Reference<Label> label, Entity target) :  System("POS"), label(label), target(target) {}
 
-  void fixedUpdate(ComponentContext* context) {
-    auto pos = target->transform().position();
+  void fixedUpdate(SystemContext* context) {
+    auto pos = target.get<Transform>()->position();
     std::ostringstream os;
     os << "POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
     label->set(os.str());
@@ -214,73 +223,60 @@ public:
 
 private:
 
-  ComponentReference<Label> label;
+  Reference<Label> label;
 
-  EntityReference target;
+  Entity target;
 
 };
 
-
-Core* coreRef;
-
 void intHandler(int);
 
-void addEntity(EntityManager* manager, Vector position) {
-  EntityReference entity = manager->create();    
-    entity->transform().position(position);
-    entity->transform().localScale(Vector(1, 1, 1));
-    entity
-      .create<RigidBody>(0.001)
-      .onUpdate(Raise)
-      .add(&Mesh::Cube)
-      .add(&Collider::Box)
-      .add(MeshRenderer::Instance);
+void addEntity(EntityManager* manager, Vector position, float scale) {
+  printf("Scale: %f\n", scale);
+  Entity entity = manager->create();    
+  auto transform = entity.assign<Transform>();
+  transform->position(position);
+  transform->localScale(Vector(scale, scale, scale));
+  entity.assign<RigidBody>(0.001);
+  entity.assign<Mesh>(Mesh::Sphere);
+  entity.assign<Collider>(ColliderType::sphere);
 }
 
 void addRandomEntity(EntityManager* manager) {
-  float x = rand() % 200 - 100;
-  float z = rand() % 200 - 100;
-  addEntity(manager, Vector(x, 1, z));
+  float x = rand() % 400 - 200;
+  float y = rand() % 400 - 200;
+  float z = rand() % 400 - 200;
+  float scale = (rand() % 100) / 50.0;
+  addEntity(manager, Vector(x, y, z), scale);
 }
 
-EntityReference addMover(EntityManager* manager) {
-  EntityReference mover = manager->create();
-  mover->transform().position(Vector(0, 0, 0));
-  mover->transform().localScale(Vector(5, 5, 5));
-  mover
-    .create<RigidBody>(0.0005)
-    .add(&Mesh::Sphere)
-    .add(&Collider::Sphere)
-    .add(MeshRenderer::Instance)
-    .onUpdate(MoveIt)
-    // ->add(CamMove)
-    .create<Material>(make<Texture>("textures/mover.png"));
-
-  // EntityReference follower = manager->create();
-  // follower->transform().setPosition(Vector(4, 10, 0));
-  // // follower->transform().setLocalScale(Vector(0.10, 0.10, 0.10));
-  // follower
-  //   ->add(new RigidBody(0.001))
-  //   ->add(&Mesh::Sphere)
-  //   ->add(&Collider::Sphere)
-  //   ->add(new Chase(mover));
-
+Entity addMover(EntityManager* manager) {
+  auto mover = manager->create();
+  auto transform = mover.assign<Transform>();
+  transform->position(Vector(0, 20, 0));
+  transform->localScale(Vector(10, 10, 10));
+  mover.assign<RigidBody>(0.01);
+  mover.assign<Mesh>(Mesh::Sphere);
+  mover.assign<Collider>(ColliderType::sphere);
+  mover.assign<Material>(make<Texture>("textures/mover.png"));
+  Core::Instance->add<MoveIt>(mover);
+  
   return mover;
 }
 
 void drawGrid(EntityManager* manager) {
-  addEntity(manager, Vector()); // 0,0
-  addEntity(manager, Vector(0, 0, 2)); // Z Forward
+  addEntity(manager, Vector(), 1); // 0,0
+  addEntity(manager, Vector(0, 0, 2), 1); // Z Forward
   for (int i = 1; i <= 10; ++i) {
     int offset = i * 10;
-    addEntity(manager, Vector(-offset, 0, -offset));
-    addEntity(manager, Vector(-offset, 0, 0));
-    addEntity(manager, Vector(-offset, 0, offset));
-    addEntity(manager, Vector(0, 0, offset));
-    addEntity(manager, Vector(offset, 0, offset));
-    addEntity(manager, Vector(offset, 0, 0));
-    addEntity(manager, Vector(offset, 0, -offset));
-    addEntity(manager, Vector(0, 0, -offset));
+    addEntity(manager, Vector(-offset, 0, -offset), 1);
+    addEntity(manager, Vector(-offset, 0, 0), 1);
+    addEntity(manager, Vector(-offset, 0, offset), 1);
+    addEntity(manager, Vector(0, 0, offset), 1);
+    addEntity(manager, Vector(offset, 0, offset), 1);
+    addEntity(manager, Vector(offset, 0, 0), 1);
+    addEntity(manager, Vector(offset, 0, -offset), 1);
+    addEntity(manager, Vector(0, 0, -offset), 1);
   }
 }
 
@@ -336,25 +332,25 @@ void setupSystems(Core* core, std::string path) {
   core->add<Input>();
   core->add<Platform>();
   core->add<EntityManager>();
-  core->add<Jsrt>();
-  core->add<Engine>();
+  // core->add<Jsrt>();
   core->add<Renderer, GlRenderer>();
   core->add<Physics, BulletPhysics>();
+  core->add<UI>();
 }
 
 void setupScene(EntityManager* manager) {
-  EntityReference dirLight = manager->create();
-  dirLight->transform().rotation(Vector(-45, 0, 0));
-  DirectionalLight* temp = make<DirectionalLight>();
-  temp->diffuse(Color(0.7,0.7,0.7,1));
-  temp->ambient(Color(0.4,0.4,0.4,1));
-  dirLight.add(temp);
-
-  // EntityReference pointLight = manager->create();
+  auto dirLight = manager->create();
+  auto transform = dirLight.assign<Transform>();
+  transform->rotation(Vector(-45, 0, 0));
+   auto light = dirLight.assign<DirectionalLight>();
+  light->diffuse(Color(0.7,0.7,0.7,1));
+  light->ambient(Color(0.4,0.4,0.4,1));
+  
+  // Entity pointLight = manager->create();
   // pointLight->transform().setPosition(Vector(0, 2, 0));
   // pointLight->add(new PointLight());
 
-  // EntityReference spotlight = manager->create();
+  // Entity spotlight = manager->create();
   // spotlight->transform().setPosition(Vector(0, 2, -2));
   // spotlight->transform().setRotation(Vector(-45, 0, 0));  
   // Spotlight* spot = new Spotlight();
@@ -367,44 +363,37 @@ void setupScene(EntityManager* manager) {
      addRandomEntity(manager);
   }
 
-  EntityReference ground = manager->create();
-  ground->transform().position(Vector(0, -2, 0));
-  ground->transform().localScale(Vector(2000, 2, 2000));
-  ground->transform().rotation(Vector(0, 0, 0));
-  ground
-    .create<RigidBody>(0.0, RigidBodyType::kinematic)
-    .add(&Mesh::Cube)
-    .add(&Collider::Box)
-    .add(MeshRenderer::Instance);
-
-  // auto ref = manager->componentManager().create<RigidBody>(ground.getWrapped(), 0.0, kinematic);
-  // printf("\n\n\Created - %s!!!!\n\n\n\n", ref->getName().c_str());
-  
-  // for (auto thing = manager->componentManager().begin<RigidBody>(); thing != manager->componentManager().end<RigidBody>(); ++thing) {
-  //   printf("\n\n\nFOUND - %s!!!!\n\n\n\n", thing->getName().c_str());
-  // }
+  // Entity ground = manager->create();
+  // ground->transform().position(Vector(0, -2, 0));
+  // ground->transform().localScale(Vector(2000, 2, 2000));
+  // ground->transform().rotation(Vector(0, 0, 0));
+  // ground
+  //   .create<RigidBody>(0.0, RigidBodyType::kinematic)
+  //   .add(&Mesh::Cube)
+  //   .add(&Collider::Box)
+  //   .add(MeshRenderer::Instance);
 
   auto mover = addMover(manager);
 
-  EntityReference cameraEntity = manager->create();  
-  cameraEntity->transform().position(Vector(0, 15, -30));
-  cameraEntity->transform().rotation(Vector(10, 0.0, 0));
-  cameraEntity
-    .create<Camera, PerspectiveCamera>()
-    .create<Follow>(mover)
-    .create<CamLook>();
-  Camera::main = cameraEntity.get<Camera>();
+  auto cameraEntity = manager->create();  
+  auto camTransform = cameraEntity.assign<Transform>();
+  camTransform->position(Vector(0, 15, -50));
+  camTransform->rotation(Vector(10, 0.0, 0));
+  cameraEntity.assign<PerspectiveCamera>();
+  Core::Instance->add<CamLook>(cameraEntity);
+  Core::Instance->add<Follow>(cameraEntity, mover);
 
   Font font("fonts/ARCADE.TTF", 60);
-  EntityReference fpsLabelEntity = manager->create();  
-  fpsLabelEntity->transform().position(Vector(20, 0, 0));   
-  fpsLabelEntity.create<Label>("FPS: ", font, Color(1, 1, 1, 0));  
-  fpsLabelEntity.create<FpsDisplay>(fpsLabelEntity.get<Label>());
+  auto fpsLabelEntity = manager->create();  
+  fpsLabelEntity.assign<Transform>()->position(Vector(20, 0, 0));   
+  auto fpsLabel = fpsLabelEntity.assign<Label>("FPS: ", font, Color(1, 1, 1, 0));  
+  Core::Instance->add<FpsDisplay>(fpsLabel);
 
-  EntityReference posLabelEntity = manager->create();  
-  posLabelEntity->transform().position(Vector(300, 0, 0));   
-  posLabelEntity.create<Label>("POS: ", font, Color(1, 1, 1, 0));  
-  posLabelEntity.create<PosDisplay>(posLabelEntity.get<Label>(), mover);
+  auto posLabelEntity = manager->create();  
+  posLabelEntity.assign<Transform>()->position(Vector(300, 0, 0));   
+  auto posLabel = posLabelEntity.assign<Label>("POS: ", font, Color(1, 1, 1, 0));  
+  Core::Instance->add<PosDisplay>(posLabel, mover);
+  Core::Instance->add<Chase>(mover);
 }
 
 // So far so dumb

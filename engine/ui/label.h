@@ -13,7 +13,10 @@ namespace wage {
   class Label : public UiComponent {
     
   public:
-  
+
+    Label() : UiComponent("Label") {
+    }
+
     Label(Frame frame, std::string text, Font font, Color color) : 
       UiComponent("Label", frame), _text(text), _font(font), _color(color) {    
     }
@@ -23,10 +26,6 @@ namespace wage {
     }
 
     virtual ~Label() {      
-    }
-
-    void update(ComponentContext* context) {
-      Core::Instance->get<Renderer>()->renderText(transform()->position(), text(), font(), color());
     }
 
     inline std::string text() {

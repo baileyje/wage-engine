@@ -1,7 +1,6 @@
 #ifndef GL_RENDERER_H
 #define GL_RENDERER_H
 
-#include "entity/entity.h"
 #include "render/renderer.h"
 #include "render/queue.h"
 
@@ -21,7 +20,7 @@ namespace wage {
 
     void renderText(Vector position, std::string text, Font font, Color color);
 
-    void renderMesh(Transform transform, ComponentReference<Mesh> mesh, ComponentReference<Material> material);
+    void renderMesh(Reference<Transform> transform, Reference<Mesh> mesh, Reference<Material> material);
     
     virtual void beginUpdate();
 

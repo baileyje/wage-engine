@@ -24,11 +24,6 @@ namespace wage {
       _storage = (T*)Allocator::Permanent()->allocate(allocSize, alignof(T));
     }
 
-    // virtual void put(IndexType index, T value) {
-    //   assert(index < _capacity);
-    //   _storage[index] = value;
-    // } 
-
     virtual T& get(IndexType index) {
       assert(index < _capacity);
       return _storage[index];

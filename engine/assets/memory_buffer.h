@@ -21,12 +21,8 @@ namespace wage {
     MemoryBuffer(Buffer* other) : MemoryBuffer(other->data(), other->length()) {
     }
 
-    ~MemoryBuffer() {
-      // printf("Length2: %d\n", _length);
-      // if (_length > 0) {
-      //   free(_data);
-      // }      
-      // TODO: Remve leak!!
+    ~MemoryBuffer() {      
+      // TODO: Remove leak!!
     }
 
     inline void fill(unsigned char* data, size_t length) {

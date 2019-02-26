@@ -5,17 +5,12 @@ namespace wage {
 
   DispatchQueue::DispatchQueue(std::string name, size_t threadCount) :
     _name(name), _threads(threadCount) {
-    printf("Creating dispatch queue: %s\n", name.c_str());
-    printf("Dispatch threads: %zu\n", threadCount);
-
     for(size_t i = 0; i < _threads.size(); i++) {
       _threads[i] = std::thread(&DispatchQueue::threadHandler, this);
     }
   }
 
   DispatchQueue::~DispatchQueue() {
-    printf("Destructor: Destroying dispatch threads...\n");
-
     // Signal to dispatch threads that it's time to wrap up
     std::unique_lock<std::mutex> lock(_lock);
     _quit = true;
@@ -27,7 +22,6 @@ namespace wage {
     {
       if(_threads[i].joinable())
       {
-        printf("Destructor: Joining thread %zu until completion\n", i);
         _threads[i].join();
       }
     }
@@ -79,18 +73,5 @@ namespace wage {
       }
     } while (!_quit);
   }
-
-  // int main(void)
-  // {
-  //   int r = 0;
-  //   dispatch_queue q("Phillip's Demo Dispatch Queue", 4);
-
-  //   q.dispatch([]{printf("Dispatch 1!\n");});
-  //   q.dispatch([]{printf("Dispatch 2!\n");});
-  //   q.dispatch([]{printf("Dispatch 3!\n");});
-  //   q.dispatch([]{printf("Dispatch 4!\n");});
-
-  //   return r;
-  // }
 
 }

@@ -6,7 +6,7 @@
 
 namespace wage {
   
-  template <typename T>
+  template <typename T, typename IndexType = uint32_t>
   class Reference {
   
   public:
@@ -15,42 +15,42 @@ namespace wage {
 
     public:  
       
-      virtual bool isValid(Reference ref) = 0;
+      virtual bool valid(Reference ref) = 0;
 
-      virtual void free(Reference ref) = 0;
+      virtual void destroy(Reference ref) = 0;
 
       virtual T* get(Reference ref) = 0;
 
     };
 
-    static const size_t OutOfBounds = static_cast<size_t>(-1);
+    static const IndexType OutOfBounds = static_cast<IndexType>(-1);
 
     Reference() : Reference(nullptr, OutOfBounds, 0) {
     }
 
-    Reference(Source* source, size_t index, size_t version) : _source(source), _index(index), _version(version) {
+    Reference(Source* source, IndexType index, size_t version) : _source(source), _index(index), _version(version) {
     }
 
     virtual ~Reference() {}
 
-    inline bool isValid() {
-      return _source->isValid(*this);
+    inline bool valid() {
+      return _source && _source->valid(*this);
     }
 
-    virtual void free() const {
-      _source->free(*this);
+    virtual void destroy() {
+      _source->destroy(*this);
     };
 
     virtual T* get() {
       return _source->get(*this);
     }
 
-    operator bool() const { 
-      return isValid(); 
+    operator bool() { 
+      return valid(); 
     }
 
     T* operator->() {
-      assert(isValid());
+      assert(valid());
       return get();
     }
 
@@ -59,12 +59,12 @@ namespace wage {
     }
 
     T& operator*() {
-      assert(isValid());
+      assert(valid());
       return *get();
     }
 
     const T& operator*() const {
-      return const_cast<Reference<T>*>(this)->operator*();
+      return const_cast<Reference<T, IndexType>*>(this)->operator*();
     }
 
     bool operator==(const Reference& other) const {
@@ -79,11 +79,11 @@ namespace wage {
       return _source;
     }
 
-    inline size_t index() {
+    inline IndexType index() const {
       return _index;
     }
 
-    inline size_t version() {
+    inline size_t version() const {
       return _version;
     }
 
@@ -91,7 +91,7 @@ namespace wage {
     
     Source* _source;
     
-    size_t _index;
+    IndexType _index;
 
     size_t _version;
   

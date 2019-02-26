@@ -70,8 +70,8 @@ namespace wage {
       float _cutOff;
 
       float _outerCutOff;
+  
   };
-
 }
 
 #endif //COMPONENT_SPOTLIGHT_H

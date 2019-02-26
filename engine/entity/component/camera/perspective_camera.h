@@ -44,9 +44,9 @@ namespace wage {
       return glm::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
     }
 
-    inline Frustum frustum(Vector2 screenSize) {
+    inline Frustum frustum(Vector2 screenSize, Transform* cameraTransform) {
       Frustum returnFrustum;
-      Matrix mvp =  screenProjection(screenSize) * viewProjection();
+      Matrix mvp =  screenProjection(screenSize) * viewProjection(cameraTransform);
       returnFrustum.extractPlanesFrom(mvp);
       return returnFrustum;
     }

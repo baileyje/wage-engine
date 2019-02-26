@@ -2,13 +2,14 @@
 #define ENTITY_COMPONENT_H
 
 #include <string>
+#include <cinttypes>
 
 #include "math/transform.h"
 
 namespace wage {
 
   // TODO: Move to network safe ids
-  typedef unsigned long ComponentId;
+  typedef uint32_t ComponentId;
 
   typedef std::string ComponentName;
 
@@ -24,24 +25,10 @@ namespace wage {
       return _name;
     }
 
-    virtual bool isDynamic() {
-      return false;
-    }
-
-    virtual Transform* transform() {
-      return _transform;
-    }
-
-    virtual void transform(Transform* transform) {
-      _transform = transform;
-    }
-
   private:
 
     ComponentName _name;
 
-    Transform* _transform;
-    
   };
 
 }

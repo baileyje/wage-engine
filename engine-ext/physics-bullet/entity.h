@@ -3,7 +3,7 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "entity/reference.h"
+#include "ecs/registry.h"
 #include "physics/rigid_body.h"
 #include "physics/collider.h"
 
@@ -15,7 +15,7 @@ namespace wage {
 
   public:
 
-    PhysicsEntity(EntityReference entity, btCollisionShape* shape, btRigidBody* rigidBody) 
+    PhysicsEntity(Entity entity, btCollisionShape* shape, btRigidBody* rigidBody) 
       : PhysicsEntity(entity, shape, rigidBody, rigidBody) {
     }
 
@@ -28,9 +28,9 @@ namespace wage {
       // delete shape;
     }  
 
-    static PhysicsEntity* from(EntityReference entity, btDiscreteDynamicsWorld* dynamicsWorld);
+    static PhysicsEntity* from(Entity entity, btDiscreteDynamicsWorld* dynamicsWorld);
 
-    PhysicsEntity(EntityReference entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
+    PhysicsEntity(Entity entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
       : _entity(entity), _shape(shape), _rigidBody(rigidBody), _object(object) {    
     }
 
@@ -48,17 +48,17 @@ namespace wage {
       return _object;
     }
 
-    inline EntityReference entity() {
+    inline Entity entity() {
       return _entity;
     }
 
   private: 
 
-    static btCollisionShape* shapeFor(EntityReference entity);
+    static btCollisionShape* shapeFor(Entity entity);
 
-    static btRigidBody* rigidBodyFor(ComponentReference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape);
+    static btRigidBody* rigidBodyFor(Reference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape);
     
-    EntityReference _entity;
+    Entity _entity;
 
     btTransform transform(); 
 

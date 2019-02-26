@@ -11,8 +11,7 @@ namespace wage {
   Mesh::~Mesh() {
   }
 
-  Mesh Mesh::Cube(
-    "CubeMesh",
+  Mesh* Mesh::Cube = new Mesh("CubeMesh",
     VertexVector {
       //front
       Vector(-0.5, -0.5, 0.5),
@@ -118,10 +117,9 @@ namespace wage {
       12, 13, 14, 12, 14, 15, //left
       16, 17, 18, 16, 18, 19, //upper
       20, 21, 22, 20, 22, 23 // bottom
-    }
-  );
+    });
 
-  Mesh Mesh::Quad(
+  Mesh* Mesh::Quad = new Mesh(
     "QuadMesh",
     VertexVector {
       Vector(0.5,  0.5, 0.0f),  // top right
@@ -147,7 +145,7 @@ namespace wage {
     }
   );
 
-  Mesh Mesh::Sphere("SphereMesh", {}, {}, {}, {});
+  Mesh* Mesh::Sphere = new Mesh("SphereMesh", {}, {}, {}, {});
 
   void generateSphere() {  
     VertexVector vertices;
@@ -195,7 +193,7 @@ namespace wage {
       *i++ = nextRow + nextS;
       *i++ = curRow + nextS;
     }
-    Mesh::Sphere = Mesh("SphereMesh", vertices, normals, texts, indices);
+    Mesh::Sphere = new Mesh("SphereMesh", vertices, normals, texts, indices);
   }
 
   void Mesh::generatePrimitives() {  
@@ -268,7 +266,7 @@ namespace wage {
     }
 
     // TODO: Some kind of id genner
-    std::cout << indices[0] << std::endl;
+    // std::cout << indices[0] << std::endl;
     return make<Mesh>("GennedMesh", vertices, normals, texts, indices);
   }
 

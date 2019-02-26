@@ -11,6 +11,13 @@ cc_binary(
   visibility = ["//visibility:public"]
 )
 
+genrule(
+    name = "wage_dsym",
+    srcs = [":wage"],
+    outs = ["wage.dSYM"],
+    output_to_bindir = True,
+    cmd = "dsymutil $(location :wage) -o $@"
+)
 
 cc_binary(
   name = "test",
@@ -23,9 +30,9 @@ cc_binary(
 )
 
 genrule(
-    name = "wage_dsym",
-    srcs = [":wage"],
-    outs = ["wage.dSYM"],
+    name = "test_dsym",
+    srcs = [":test"],
+    outs = ["test.dSYM"],
     output_to_bindir = True,
-    cmd = "dsymutil $(location :wage) -o $@"
+    cmd = "dsymutil $(location :test) -o $@"
 )

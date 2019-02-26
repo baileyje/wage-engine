@@ -53,7 +53,7 @@ namespace wage {
     uiQueue.add(makeTemp<GlTextRenderable>(&fontManager, position, text, font, color));
   }
 
-  void GlRenderer::renderMesh(Transform transform, ComponentReference<Mesh> mesh, ComponentReference<Material> material) {
+  void GlRenderer::renderMesh(Reference<Transform> transform, Reference<Mesh> mesh, Reference<Material> material) {
     meshQueue.add(makeTemp<GlMeshRenderable>(
       &vaoManager, &textureManager, transform, mesh, material
     ));
