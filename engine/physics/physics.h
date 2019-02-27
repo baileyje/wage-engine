@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "core/system.h"
+#include "ecs/system.h"
 
 #include "messaging/messaging.h"
 

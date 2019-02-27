@@ -14,6 +14,8 @@ namespace wage {
 
   public:
 
+    SystemContext(Core* core) : core(core) {}
+
     virtual ~SystemContext() {}
 
     template <typename T>
@@ -30,8 +32,6 @@ namespace wage {
     virtual void shouldStop();
 
   private:
-
-    SystemContext(Core* core) : core(core) {}
 
     Core* core;
 

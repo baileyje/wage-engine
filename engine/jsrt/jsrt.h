@@ -4,7 +4,7 @@
 #include "ChakraCore.h"
 #include <string>
 
-#include "core/system.h"
+#include "ecs/system.h"
 #include "core/system/context.h"
 #include "jsrt/module_manager.h"
 #include "jsrt/js_object_wrapper.h"

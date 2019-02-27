@@ -1,5 +1,5 @@
 
-#include "core/system.h"
+#include "ecs/system.h"
 #include "entity/manager.h"
 #include "render/renderer.h"
 #include "label.h"
@@ -13,10 +13,10 @@ namespace wage {
     UI() : System ("UI") {}
 
     void update(SystemContext* context) {
-      EntityManager* manager = context->get<EntityManager>();
+      EntityManager* manager = Core::Instance->get<EntityManager>();
       for (auto entity : manager->registry()->with<Label>()) {
         auto label = entity.get<Label>();
-        context->get<Renderer>()->renderText(entity.get<Transform>()->position(), label->text(), label->font(), label->color());
+        Core::Instance->get<SystemManager>()->get<Renderer>()->renderText(entity.get<Transform>()->position(), label->text(), label->font(), label->color());
       }
     }
 

@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "core/system.h"
 #include "fs/file_system.h"
 #include "assets/asset.h"
 #include "assets/manager.h"
@@ -16,8 +15,6 @@ namespace wage {
 
     FsAssetManager(FileSystem* fileSystem) : AssetManager(), fileSystem(fileSystem) {
     }
-
-    LIFECYCLE_FUNC(start)
     
     virtual void performLoad(Asset* asset);
     

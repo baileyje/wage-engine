@@ -99,7 +99,6 @@ namespace wage {
       return;
     }
     btTransform trans = transform();
-    // printf("Before: %f:%f:%f\n", entity().get<Transform>()->position().x, entity().get<Transform>()->position().y, entity().get<Transform>()->position().z);
     entity().get<Transform>()->position(fromBTVector(trans.getOrigin()));
     btQuaternion rotation = trans.getRotation();
     // btScalar yawZ, pitchY, rollX;

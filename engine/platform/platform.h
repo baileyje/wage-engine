@@ -4,22 +4,22 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include "core/system.h"
+#include "core/service.h"
 #include "platform/window.h"
 
 namespace wage {
 
-  class Platform : public System {
+  class Platform : public Service {
 
   public:
 
-    Platform() : System("Platform") { }
+    Platform() : Service("Platform") { }
 
     virtual ~Platform() { }
 
-    LIFECYCLE_FUNC(init)
+    void start();
 
-    LIFECYCLE_FUNC(deinit)
+    void stop();
     
     Window* window() {
       return _window;

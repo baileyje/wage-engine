@@ -20,10 +20,8 @@ namespace wage {
     
     ~DispatchQueue();
 
-    // dispatch and copy
     void dispatch(const Operation& op);
     
-    // dispatch and move
     void dispatch(Operation&& op);
 
     // Deleted operations
@@ -33,6 +31,7 @@ namespace wage {
     DispatchQueue& operator=(DispatchQueue&& rhs) = delete;
 
   private:
+    
     std::string _name;
     
     std::mutex _lock;

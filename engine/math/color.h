@@ -34,8 +34,6 @@ namespace wage {
       return *this;
     }
 
-  private:
-
   };
 
 }

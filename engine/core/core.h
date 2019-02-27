@@ -3,13 +3,18 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 #include "core/system/map.h"
+#include "core/service_map.h"
+#include "core/frame.h"
 #include "memory/allocator.h"
 
 namespace wage {
 
   class System;
+
+  typedef std::function<void(const Frame&)> UpdateListener;
 
   class Core {
 
@@ -30,8 +35,7 @@ namespace wage {
     template <typename T>
     void addSystem(T* system) {  
       systems.add<T>(system);  
-      if (running) {
-        // system->init(this);      
+      if (running) {   
         start(system);
       }
     }
@@ -51,7 +55,30 @@ namespace wage {
     }
 
     template <typename T>
+    void addService(T* system) {  
+      services.add<T>(system);  
+    }
+
+    template <typename T, typename... Args>
+    T* create(Args... args) {  
+      auto instance = make<T>(args...);
+      addService<T>(instance);
+      return instance;
+    }
+
+    template <typename T, typename I, typename... Args>
+    I* create(Args... args) {  
+      auto instance = make<I>(args...);
+      addService<T>(instance);
+      return instance;
+    }
+
+    template <typename T>
     inline T* get() {
+      auto result = services.get<T>();
+      if (result) {
+        return result;
+      }
       return systems.get<T>();
     }
 
@@ -60,16 +87,16 @@ namespace wage {
       stop();
     }
 
-    inline double timeStep() {
-      return _timeStep;
+    const Frame& frame() const {
+      return _frame;
+    }    
+
+    void onUpdate(UpdateListener listener) {
+      updateListeners.push_back(listener);
     }
 
-    inline double time() {
-      return _time;
-    }
-
-    inline double deltaTime() {
-      return _deltaTime;
+    void onFixedUpdate(UpdateListener listener) {
+      fixedUpdateListeners.push_back(listener);
     }
     
   private:
@@ -83,14 +110,16 @@ namespace wage {
     void start(System* system);
 
     SystemMap systems;
+
+    ServiceMap services;
     
     bool running;
 
-    double _timeStep;
+    Frame _frame;
 
-    double _time;
+    std::vector<UpdateListener> updateListeners;
 
-    double _deltaTime;
+    std::vector<UpdateListener> fixedUpdateListeners;
 
   };
 

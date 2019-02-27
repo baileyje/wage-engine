@@ -3,17 +3,17 @@
 
 #include <string>
 
-#include "core/system.h"
+#include "core/service.h"
 #include "async/dispatch_queue.h"
 #include "assets/asset.h"
 
 namespace wage {
 
-  class AssetManager : public System {
+  class AssetManager : public Service {
 
   public:
 
-    AssetManager() : System("AssetManager"), queue("AssetLoad", 1) {
+    AssetManager() : Service("AssetManager"), queue("AssetLoad", 1) {
     }
     
     virtual void load(Asset* asset) {

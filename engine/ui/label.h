@@ -17,7 +17,7 @@ namespace wage {
     Label() : UiComponent("Label") {
     }
 
-    Label(Frame frame, std::string text, Font font, Color color) : 
+    Label(LayoutFrame frame, std::string text, Font font, Color color) : 
       UiComponent("Label", frame), _text(text), _font(font), _color(color) {    
     }
 

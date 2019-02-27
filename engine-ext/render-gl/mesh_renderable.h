@@ -51,7 +51,6 @@ namespace wage {
     virtual BoundingSphere boundingSphere() {
       auto box = boundingBox();
       float radius = sqrt(box.halfDim.x * box.halfDim.x + box.halfDim.y * box.halfDim.y + box.halfDim.z * box.halfDim.z);
-      // printf("Position: %f:%f\n", box.position.x, box.position.z);
       return BoundingSphere(box.position, radius);
     }
 

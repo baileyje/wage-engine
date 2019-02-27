@@ -1,7 +1,7 @@
 #ifndef UTIL_MAP_H
 #define UTIL_MAP_H
 
-#include <unordered_map>
+#include <map>
 
 namespace wage {
 
@@ -12,10 +12,10 @@ namespace wage {
 
     typedef std::pair<KT, VT> Entry;
 
-    typedef typename std::unordered_map<KT, VT>::iterator iterator;
+    typedef typename std::map<KT, VT>::iterator iterator;
 
     struct KeyIterator {
-      using map_t = std::unordered_map<KT, VT>;
+      using map_t = std::map<KT, VT>;
       using realiterator_t = typename map_t::iterator;
       using value_t = typename std::add_const<typename map_t::key_type>::type;
       
@@ -43,7 +43,7 @@ namespace wage {
     };
 
     struct ValueIterator {
-      using map_t = std::unordered_map<KT, VT>;
+      using map_t = std::map<KT, VT>;
       using realiterator_t = typename map_t::iterator;
       using value_t = typename std::add_const<typename map_t::mapped_type>::type;
       
@@ -109,7 +109,7 @@ namespace wage {
 
   private:
 
-    std::unordered_map<KT, VT> storage;
+    std::map<KT, VT> storage;
 
   };
 

@@ -3,28 +3,28 @@
 
 #include <unordered_set>
 
-#include "core/system.h"
+#include "core/service.h"
 #include "messaging/messaging.h"
 #include "platform/window.h"
 #include "math/vector.h"
 
+#include "input/key.h"
+
 namespace wage {
 
-  class Input : public System {
+  class Input : public Service {
 
   public:
     
     static Input* Instance;
 
-    Input() : System("input"), window(nullptr), messaging(nullptr) { }
+    Input() : Service("input"), window(nullptr), messaging(nullptr) { }
 
     ~Input() {}
 
-    LIFECYCLE_FUNC(start)
+    void start();
     
-    LIFECYCLE_FUNC(update)
-
-    bool isPressed(int key);
+    bool isPressed(Key key);
 
     Vector2 mousePosition();
 

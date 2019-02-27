@@ -4,16 +4,16 @@
 
 #include <string>
 
-#include "core/system.h"
+#include "core/service.h"
 #include "fs/file.h"
 
 namespace wage {
 
-  class FileSystem : public System {
+  class FileSystem : public Service {
 
   public:
 
-    FileSystem() : System("FileSystem") {    
+    FileSystem() : Service("FileSystem") {    
     }
 
     ~FileSystem() {}

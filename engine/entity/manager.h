@@ -6,12 +6,13 @@
 #include <string>
 
 
-#include "core/system.h"
+#include "core/service.h"
 #include "core/system/context.h"
 #include "memory/object_pool.h"
 #include "messaging/messaging.h"
 
 #include "ecs/registry.h"
+
 
 namespace wage {
 
@@ -48,18 +49,19 @@ namespace wage {
     DestroyEntityMessage(Entity entity) : EntityMessage(entity) {}
   };
 
-  class EntityManager: public System {
+  class EntityManager: public Service {
 
   public:
 
-    EntityManager() : System("EntityManager") {}
+    EntityManager() : Service("EntityManager") {}
 
     virtual ~EntityManager() {}
 
-    void init(SystemContext* context) {
-    }
 
-    void start(SystemContext* context) {
+    void start() override {
+      Core::Instance->onUpdate([&](const Frame& frame) {
+        update();
+      });
     }
     
     /*
@@ -68,8 +70,8 @@ namespace wage {
       4.  Send requested destroy messages    
       4.  Queue destroys
     */
-    void update(SystemContext* context) {
-      auto messaging = context->get<Messaging>();
+    void update() {
+      auto messaging = Core::Instance->get<Messaging>();
       if (!messaging) {
         return;
       }
@@ -90,9 +92,6 @@ namespace wage {
         destroys.push_back(entity);
       }
       destroyRequests.clear();      
-    }
-
-    void fixedUpdate(SystemContext* context) {
     }
 
     inline Entity create() {

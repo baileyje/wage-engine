@@ -16,15 +16,15 @@ namespace wage {
     Asset(Key key) : _key(key), _loaded(false) {      
     }
 
-    virtual Key key() {
+    virtual Key key() const {
       return _key;
     }
 
-    virtual bool loaded() {
+    virtual bool loaded() const {
       return _loaded;
     }
 
-    virtual Buffer* buffer() {
+    virtual Buffer* buffer() const {
       return _buffer;
     };
 

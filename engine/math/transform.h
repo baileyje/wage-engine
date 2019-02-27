@@ -69,7 +69,7 @@ namespace wage {
       _rotation = rotation; 
     }
 
-    inline void lLocalRotation(Vector eulers) { 
+    inline void localRotation(Vector eulers) { 
       _rotation = quatFromEulers(eulers);
     }
 

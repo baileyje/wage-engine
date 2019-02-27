@@ -7,7 +7,7 @@
 #include <typeinfo>
 #include <typeindex>
 
-#include "core/system.h"
+#include "core/service.h"
 
 namespace wage {
  
@@ -20,11 +20,11 @@ namespace wage {
   };
 
 
-  class Messaging : public System {
+  class Messaging : public Service {
 
   public:
 
-    Messaging() : System("Messaging") {}
+    Messaging() : Service("Messaging") {}
 
     ~Messaging() {}
 

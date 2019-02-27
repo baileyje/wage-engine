@@ -9,9 +9,10 @@
 #include "memory/allocator.h"
 
 #include "core/core.h"
-#include "core/system.h"
 
 #include "ecs/registry.h"
+#include "ecs/system.h"
+#include "ecs/system_manager.h"
 
 #include "platform/platform.h"
 #include "platform/window.h"

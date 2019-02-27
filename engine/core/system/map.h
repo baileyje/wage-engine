@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "core/system.h"
+#include "ecs/system.h"
 #include "util/map.h"
 
 namespace wage {
@@ -19,22 +19,7 @@ namespace wage {
 
   public:
 
-
     SystemMap() {}
-
-    // ComponentMap(ComponentMap&& src) {
-    //   values = std::move(src.values);
-    //   map = std::move(src.map);
-    //   nameMap = std::move(src.nameMap);
-    // }
-
-    // // Move
-    // ComponentMap& operator=(ComponentMap&& src) {
-    //   values = std::move(src.values);
-    //   map = std::move(src.map);
-    //   nameMap = std::move(src.nameMap);
-    //   return *this;
-    // }
 
     ~SystemMap() {}
 

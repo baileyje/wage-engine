@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include "core/system.h"
+#include "ecs/system.h"
 #include "platform/window.h"
 #include "assets/manager.h"
 #include "entity/manager.h"

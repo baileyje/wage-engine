@@ -5,15 +5,15 @@
 
 namespace wage {
 
-  class Frame {
+  class LayoutFrame {
 
   public:
 
-    Frame() {}
+    LayoutFrame() {}
 
-    Frame(Vector2 position, Vector2 size) : _position(position), _size(size) {}
+    LayoutFrame(Vector2 position, Vector2 size) : _position(position), _size(size) {}
 
-    virtual ~Frame() {}
+    virtual ~LayoutFrame() {}
 
     inline Vector2 position() {
       return _position;      

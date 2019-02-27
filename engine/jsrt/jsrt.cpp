@@ -28,7 +28,7 @@ namespace wage {
   void Jsrt::init(SystemContext* context) {
     this->context = context;
     
-    moduleManager = make<ModuleManager>(context->get<FileSystem>());
+    moduleManager = make<ModuleManager>(Core::Instance->get<FileSystem>());
     ModuleManager::shared = moduleManager;
     
     JsRuntimeAttributes attrs = static_cast<JsRuntimeAttributes>(JsRuntimeAttributeAllowScriptInterrupt

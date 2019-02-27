@@ -4,7 +4,7 @@
 #include <sstream>
 #include <functional>
 
-#include "core/system.h"
+#include "ecs/system.h"
 
 namespace wage {
 

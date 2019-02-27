@@ -4,7 +4,7 @@
 #include <chrono>
 
 #include "core/system/context.h"
-#include "core/system.h"
+#include "ecs/system.h"
 #include "core/logger.h"
 #include "memory/allocator.h"
 
@@ -14,7 +14,8 @@ namespace wage {
 
   Core* Core::Instance = make<Core>();
 
-  Core::Core() : running(false), _time(0), _timeStep(1.0/60.0), _deltaTime(0) {  
+  Core::Core() : running(false) {  
+    _frame._timeStep = 1.0/60.0;
   }
 
   Core::~Core() {
@@ -30,6 +31,10 @@ namespace wage {
     }
     running = true;    
     Logger::info("Starting WAGE Core");
+    for (auto service : services) {
+      Logger::info("Starting ", service->name().c_str());
+      service->start();
+    } 
     SystemContext context (this);
     for (auto system : systems) {
       Logger::info("Starting ", system->name().c_str());
@@ -40,13 +45,13 @@ namespace wage {
     while (running) {    
       TimePoint currentTime = std::chrono::high_resolution_clock::now();
       double delta = (std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime)).count();
-      _time += delta;
+      _frame._time += delta;
       lastTime = currentTime;
-      _deltaTime = delta;    
+      _frame._deltaTime = delta;    
       accumulator += delta;
-      if (accumulator >= timeStep()) {
+      if (accumulator >= _frame.timeStep()) {
         fixedUpdate();
-        accumulator -= timeStep();
+        accumulator -= _frame.timeStep();
       }
       update();
     }
@@ -54,16 +59,19 @@ namespace wage {
 
   void Core::update() {
     SystemContext context(this);
-    for (auto system : systems) {
-      system->update(&context);
+    // for (auto system : systems) {
+    //   system->update(&context);
+    // }
+    for (auto listener : updateListeners) {
+      listener(frame());
     }
     Allocator::Temporary()->clear();
   }
 
   void Core::fixedUpdate() {
     SystemContext context(this);
-    for (auto system : systems) {
-      system->fixedUpdate(&context);
+    for (auto listener : fixedUpdateListeners) {
+      listener(frame());
     }
   }
 
@@ -78,7 +86,6 @@ namespace wage {
       Logger::info("Stopping ", (*system)->name().c_str());
       (*system)->stop(&context);
     }
-    deinit();
   }
 
   void Core::init() {

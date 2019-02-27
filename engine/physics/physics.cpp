@@ -12,8 +12,8 @@ namespace wage {
 	Physics::~Physics() {}
 
 	void Physics::init(SystemContext* context) {
-		context->get<Messaging>()->listen<AddEntityMessage>(this);
-		context->get<Messaging>()->listen<DestroyEntityMessage>(this);
+		Core::Instance->get<Messaging>()->listen<AddEntityMessage>(this);
+		Core::Instance->get<Messaging>()->listen<DestroyEntityMessage>(this);
 	}
 
 	void Physics::on(AddEntityMessage& message) {

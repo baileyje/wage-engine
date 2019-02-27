@@ -7,15 +7,15 @@ namespace wage {
   }
 
   double SystemContext::timeStep() {
-    return core->timeStep();
+    return core->frame().timeStep();
   }
 
   double SystemContext::time() {
-    return core->time();
+    return core->frame().time();
   }
 
   double SystemContext::deltaTime() {
-    return core->deltaTime();
+    return core->frame().deltaTime();
   }
 
 }

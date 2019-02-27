@@ -9,7 +9,7 @@ namespace wage {
     Logger::error("GLFW Error: %s", description);
   }
 
-  void Platform::init(SystemContext* context)  {
+  void Platform::start()  {
     glfwSetErrorCallback(errorCallback);
     if (!glfwInit()) {
       Logger::error("GLFW Init Failed.");
@@ -28,7 +28,7 @@ namespace wage {
     glfwPollEvents();
   }
 
-  void Platform::deinit(SystemContext* context) {
+  void Platform::stop() {
     glfwDestroyWindow(_window->as<GLFWwindow>());
     glfwTerminate();
     // TODO: Cleanup window

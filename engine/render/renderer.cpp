@@ -21,9 +21,9 @@ namespace wage {
   }
 
   void Renderer::start(SystemContext* context) {
-    Platform* platform = context->get<Platform>();
+    auto platform = Core::Instance->get<Platform>();
     window = platform->window();
-    assetManager = context->get<AssetManager>();
+    assetManager = Core::Instance->get<AssetManager>();
   }
 
   void Renderer::renderMeshes(EntityManager* manager, RenderContext* renderContext) {    
@@ -58,7 +58,7 @@ namespace wage {
 
   void Renderer::update(SystemContext* context) {  
     beginUpdate();
-    auto manager = context->get<EntityManager>();
+    auto manager = Core::Instance->get<EntityManager>();
     auto camera = cameraAndEntity(manager);
     if (!std::get<0>(camera).valid()) {
       Logger::error("No Camera");
