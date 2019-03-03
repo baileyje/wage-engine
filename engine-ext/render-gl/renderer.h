@@ -16,7 +16,7 @@ namespace wage {
   
   public:
 
-    LIFECYCLE_FUNC(start)
+    void start();
 
     void renderText(Vector position, std::string text, Font font, Color color);
 

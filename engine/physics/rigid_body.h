@@ -6,7 +6,6 @@
 #include "memory/object_pool.h"
 #include "memory/allocator.h"
 
-#include "entity/component.h"
 #include "math/vector.h"
 
 namespace wage {
@@ -15,18 +14,11 @@ namespace wage {
     dynamic, kinematic, immovable
   };
 
-  class RigidBody : public Component {
+  class RigidBody {
 
   public:
 
-    template <typename... Args>
-    static RigidBody* create(Args... args) {
-      auto ref = Pool.create(args...);
-      auto ptr = ref.get();
-      return ptr;
-    }
-
-    RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : Component("RigidBody"), _mass(mass), _affectedByGravity(true), _type(type) {}
+    RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : _mass(mass), _affectedByGravity(true), _type(type), _shouldStop(false) {}
 
     ~RigidBody() {}
 
@@ -50,16 +42,32 @@ namespace wage {
       _impulse += impulse;
     }
 
-    inline RigidBodyType type() {
+    inline RigidBodyType type() const {
       return _type;
     }
 
-    inline Vector force() {
+    inline Vector force() const {
       return _force;
     }
 
-    inline Vector impulse() {
+    inline Vector impulse() const {
       return _impulse;
+    }
+
+    inline Vector linearVelocity() const {
+      return _linearVelocity;
+    }
+
+    inline void linearVelocity(Vector linearVelocity) {
+      _linearVelocity = linearVelocity;
+    }
+
+    inline bool shouldStop() const {
+      return _shouldStop;
+    }
+
+    inline void shouldStop(bool shouldStop) {
+      _shouldStop = shouldStop;
     }
 
     inline void clearImpulse() {
@@ -68,7 +76,11 @@ namespace wage {
 
     inline void clearForce() {
       _force = Vector();
-    }  
+    }
+
+    inline void clearShouldStop() {
+      _shouldStop = false;
+    }
 
   private:
 
@@ -79,15 +91,12 @@ namespace wage {
     Vector _impulse;
 
     Vector _force;
-    
-    // Vector newVelocity;
 
-    // Vector acceleration;
+    Vector _linearVelocity;
 
     RigidBodyType _type;
 
-    static ObjectPool<RigidBody> Pool;
-    
+    bool _shouldStop;
   };
 
 }

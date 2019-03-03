@@ -12,7 +12,7 @@ namespace wage {
 
   public:
 
-    Transform() : _parent(nullptr), _position(0, 0, 0), _scale(1, 1, 1), _rotation(Vector(0,0,0)) {}
+    Transform() : _parent(nullptr), _position(Vector::Zero), _scale(Vector::One), _rotation(Vector::Zero) {}
 
     ~Transform() {}
 
@@ -70,11 +70,11 @@ namespace wage {
     }
 
     inline void localRotation(Vector eulers) { 
-      _rotation = quatFromEulers(eulers);
+      _rotation = Quaternion::fromEulers(eulers);
     }
 
     inline void rotation(Vector eulers) { 
-      rotation(quatFromEulers(eulers));
+      rotation(Quaternion::fromEulers(eulers));
     }
 
     inline void rotation(Quaternion rotation) { 
@@ -92,9 +92,9 @@ namespace wage {
     }
 
     inline Matrix localPorjection() {
-      Matrix translation = glm::translate(glm::mat4(1), _position);
-      Matrix scale = glm::scale(glm::mat4(1), _scale);
-      Matrix rotate = glm::toMat4(_rotation);
+      Matrix translation = Matrix(1).translate(_position);
+      Matrix scale = Matrix(1).scale(_scale);
+      Matrix rotate = Matrix(_rotation);
       return translation * rotate * scale;
     }
 

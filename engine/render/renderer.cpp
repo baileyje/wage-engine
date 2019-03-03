@@ -6,10 +6,10 @@
 
 #include "platform/platform.h"
 #include "core/logger.h"
-#include "core/system/context.h"
+#include "ecs/system_context.h"
 #include "render/context.h"
-#include "entity/component/camera/perspective_camera.h"
-#include "entity/component/camera/orthographic_camera.h"
+#include "component/camera/perspective_camera.h"
+#include "component/camera/orthographic_camera.h"
 #include "render/material.h"
 
 namespace wage {
@@ -17,22 +17,16 @@ namespace wage {
   Renderer::~Renderer() {
   }
 
-  void Renderer::init(SystemContext* context)  {
-  }
-
-  void Renderer::start(SystemContext* context) {
+  void Renderer::start() {
     auto platform = Core::Instance->get<Platform>();
     window = platform->window();
     assetManager = Core::Instance->get<AssetManager>();
+    Core::Instance->onUpdate([&](const Frame& frame) {
+      update();
+    });
   }
 
-  void Renderer::renderMeshes(EntityManager* manager, RenderContext* renderContext) {    
-    for (auto entity : manager->registry()->with<Mesh>()) {
-      auto trans = entity.get<Transform>();
-      auto mesh = entity.get<Mesh>();
-      auto mat = entity.get<Material>();
-      renderMesh(trans, mesh, mat);
-    }
+  void Renderer::renderMeshes(EntityManager* manager, RenderContext* renderContext) {
     meshQueue.cull(renderContext);
     meshQueue.sort(renderContext);
     meshQueue.render(renderContext);
@@ -56,7 +50,7 @@ namespace wage {
     return { Entity(), nullptr };
   }
 
-  void Renderer::update(SystemContext* context) {  
+  void Renderer::update() {  
     beginUpdate();
     auto manager = Core::Instance->get<EntityManager>();
     auto camera = cameraAndEntity(manager);
@@ -77,17 +71,10 @@ namespace wage {
       spotlights.push_back(ent);
     }
     RenderContext renderContext(std::get<0>(camera), std::get<1>(camera), Vector2(window->width(),  window->height()), dirLights, pointLights, spotlights);
-  
     renderMeshes(manager, &renderContext);
     // TODO: Sprites
     renderUi(manager, &renderContext);
     endUpdate();
-  }
-
-  void Renderer::stop(SystemContext* context) {
-  }
-
-  void Renderer::deinit(SystemContext* context) {
   }
 
 }

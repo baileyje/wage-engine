@@ -84,13 +84,23 @@ namespace wage {
     }
     btVector3 impulse = fromVector(entityBody->impulse());
     if (impulse.length() > 0) {
-      _rigidBody->applyCentralImpulse(impulse);	
+      _rigidBody->applyCentralImpulse(impulse);
+      
+      if (_rigidBody->getLinearVelocity().length() > 100) {
+        _rigidBody->applyCentralImpulse(-impulse);
+      }      
       entityBody->clearImpulse();
     }
     btVector3 force = fromVector(entityBody->force());
     if (force.length() > 0) {
       _rigidBody->applyCentralForce(force);	
-    }			
+      entityBody->clearForce();
+    }
+    if (entityBody->shouldStop()) {
+      printf("Stopping!\n");   
+      _rigidBody->setLinearVelocity(btVector3(0, 0, 0));      
+      entityBody->clearShouldStop();
+    }
     _rigidBody->activate(true);
   }
 

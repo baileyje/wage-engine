@@ -1,7 +1,7 @@
 #ifndef COMPONENT_SPOTLIGHT_H
 #define COMPONENT_SPOTLIGHT_H
 
-#include "entity/component/lighting/light.h"
+#include "component/lighting/light.h"
 
 namespace wage {
 
@@ -14,7 +14,7 @@ namespace wage {
     }
 
     Spotlight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff) 
-      : Light("Spotlight", ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff)  {    
+      : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff)  {    
     }
 
     ~Spotlight() {}

@@ -4,9 +4,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-#include "platform/platform.h"
-#include "core/system/context.h"
+#include "core/core.h"
 #include "core/logger.h"
+#include "platform/platform.h"
+
 #include "input/key_event.h"
 #include "input/key.h"
 #include "input/key_modifier.h"

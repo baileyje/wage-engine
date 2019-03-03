@@ -13,9 +13,9 @@
 #include "render/context.h"
 #include "render/mesh.h"
 #include "render/material.h"
-#include "entity/component/lighting/directional_light.h"
-#include "entity/component/lighting/point_light.h"
-#include "entity/component/lighting/spotlight.h"
+#include "component/lighting/directional_light.h"
+#include "component/lighting/point_light.h"
+#include "component/lighting/spotlight.h"
 
 #include "render-gl/material.h"
 
@@ -67,7 +67,7 @@ namespace wage {
         auto light = lightEntity.get<DirectionalLight>();
         std::stringstream base;
         base << "dirLights[" << idx++ << "]";
-        Vector cameraEulers = glm::eulerAngles(lightEntity.get<Transform>()->rotation());
+        Vector cameraEulers = lightEntity.get<Transform>()->rotation().eulerAngles();
         glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
         glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
         glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
@@ -96,7 +96,7 @@ namespace wage {
         std::stringstream base;
         base << "spotLights[" << idx++ << "]";
         glMaterial.setVec3(base.str() + ".position", lightEntity.get<Transform>()->position());
-        Vector cameraEulers = glm::eulerAngles(lightEntity.get<Transform>()->rotation());
+        Vector cameraEulers = lightEntity.get<Transform>()->rotation().eulerAngles();
         glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
         glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
         glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));

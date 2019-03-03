@@ -1,7 +1,7 @@
 #ifndef COMPONENT_POINT_LIGHT_H
 #define COMPONENT_POINT_LIGHT_H
 
-#include "entity/component/lighting/light.h"
+#include "component/lighting/light.h"
 
 namespace wage {
 
@@ -14,7 +14,7 @@ namespace wage {
     }
 
     PointLight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic) 
-      : Light("PointLight", ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic)  {    
+      : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic)  {    
     }
 
     ~PointLight() {}

@@ -16,7 +16,7 @@ namespace wage {
     }
 
     float distance(const Vector& point) const {
-      return glm::dot(point, normal) + d;
+      return Vector::dot(point, normal) + d;
     }
 
   	Vector normal;

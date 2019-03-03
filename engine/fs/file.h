@@ -21,11 +21,11 @@ namespace wage {
       file.close();
     }
 
-    inline unsigned char* data() {
+    inline const unsigned char* data() const {
       return _data;
     }
 
-    inline size_t length() {
+    inline size_t length() const {
       return _size;
     }
 

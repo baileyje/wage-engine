@@ -6,6 +6,7 @@
 #include "math/plane.h"
 #include "math/bounding_box.h"
 #include "math/bounding_sphere.h"
+#include "math/matrix.h"
 
 namespace wage {
 
@@ -98,58 +99,59 @@ namespace wage {
     void extractPlanesFrom(Matrix matrix) {
       // Right Frustum Plane
       // Add first column of the matrix to the fourth column
+      glm::mat4 glmMatrix = matrix.glm();
       planes[PLANE_RIGHT].normal = Vector(
-        matrix[0][3] - matrix[0][0],
-        matrix[1][3] - matrix[1][0],
-        matrix[2][3] - matrix[2][0]
+        glmMatrix[0][3] - glmMatrix[0][0],
+        glmMatrix[1][3] - glmMatrix[1][0],
+        glmMatrix[2][3] - glmMatrix[2][0]
       );
-      planes[PLANE_RIGHT].d = matrix[3][3] - matrix[3][0];
+      planes[PLANE_RIGHT].d = glmMatrix[3][3] - glmMatrix[3][0];
 
       // Left Frustum Plane
       // Subtract first column of matrix from the fourth column
       planes[PLANE_LEFT].normal = Vector(
-        matrix[0][3] + matrix[0][0],
-        matrix[1][3] + matrix[1][0],
-        matrix[2][3] + matrix[2][0]  
+        glmMatrix[0][3] + glmMatrix[0][0],
+        glmMatrix[1][3] + glmMatrix[1][0],
+        glmMatrix[2][3] + glmMatrix[2][0]  
       );
-      planes[PLANE_LEFT].d = matrix[3][3] + matrix[3][0];
+      planes[PLANE_LEFT].d = glmMatrix[3][3] + glmMatrix[3][0];
 
       // Bottom Frustum Plane
       // Subtract second column of matrix from the fourth column
       planes[PLANE_BOTTOM].normal = Vector(
-        matrix[0][3] + matrix[0][1],
-        matrix[1][3] + matrix[1][1],
-        matrix[2][3] + matrix[2][1]
+        glmMatrix[0][3] + glmMatrix[0][1],
+        glmMatrix[1][3] + glmMatrix[1][1],
+        glmMatrix[2][3] + glmMatrix[2][1]
       );
-      planes[PLANE_BOTTOM].d = matrix[3][3] + matrix[3][1];
+      planes[PLANE_BOTTOM].d = glmMatrix[3][3] + glmMatrix[3][1];
 
       // Top Frustum Plane
       // Add second column of the matrix to the fourth column
       planes[PLANE_TOP].normal = Vector(
-        matrix[0][3] - matrix[0][1],
-        matrix[1][3] - matrix[1][1],
-        matrix[2][3] - matrix[2][1]
+        glmMatrix[0][3] - glmMatrix[0][1],
+        glmMatrix[1][3] - glmMatrix[1][1],
+        glmMatrix[2][3] - glmMatrix[2][1]
       );
-      planes[PLANE_TOP].d = matrix[3][3] - matrix[3][1];
+      planes[PLANE_TOP].d = glmMatrix[3][3] - glmMatrix[3][1];
 
       // Far Frustum Plane
       // We could add the third column to the fourth column to get the near plane,
       // but we don't have to do this because the third column IS the near plane
       planes[PLANE_FAR].normal = Vector(
-        matrix[0][3] - matrix[0][2],
-        matrix[1][3] - matrix[1][2],
-        matrix[2][3] - matrix[2][2]
+        glmMatrix[0][3] - glmMatrix[0][2],
+        glmMatrix[1][3] - glmMatrix[1][2],
+        glmMatrix[2][3] - glmMatrix[2][2]
       );
-      planes[PLANE_FAR].d = matrix[3][3] - matrix[3][2];
+      planes[PLANE_FAR].d = glmMatrix[3][3] - glmMatrix[3][2];
 
       // Near Frustum Plane
       // Subtract third column of matrix from the fourth column
       planes[PLANE_NEAR].normal = Vector(
-        matrix[0][3] + matrix[0][2],
-        matrix[1][3] + matrix[1][2],
-        matrix[2][3] + matrix[2][2]
+        glmMatrix[0][3] + glmMatrix[0][2],
+        glmMatrix[1][3] + glmMatrix[1][2],
+        glmMatrix[2][3] + glmMatrix[2][2]
       );
-      planes[PLANE_NEAR].d = matrix[3][3] + matrix[3][2];
+      planes[PLANE_NEAR].d = glmMatrix[3][3] + glmMatrix[3][2];
 
       // Normalize them
       for (int i=0; i < 6; i++){

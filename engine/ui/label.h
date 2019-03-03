@@ -14,15 +14,15 @@ namespace wage {
     
   public:
 
-    Label() : UiComponent("Label") {
+    Label() : UiComponent() {
     }
 
     Label(LayoutFrame frame, std::string text, Font font, Color color) : 
-      UiComponent("Label", frame), _text(text), _font(font), _color(color) {    
+      UiComponent(frame), _text(text), _font(font), _color(color) {    
     }
 
     Label(std::string text, Font font, Color color = Color(1, 1, 1, 1)) : 
-      UiComponent("Label"), _text(text), _font(font), _color(color) {
+      UiComponent(), _text(text), _font(font), _color(color) {
     }
 
     virtual ~Label() {      

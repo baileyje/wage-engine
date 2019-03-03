@@ -1,7 +1,7 @@
 #ifndef ENTITY_PERSPECTIVE_CAMERA_H
 #define ENTITY_PERSPECTIVE_CAMERA_H
 
-#include "entity/component/camera/camera.h"
+#include "component/camera/camera.h"
 
 namespace wage {
 
@@ -41,7 +41,7 @@ namespace wage {
     }
 
     inline Matrix screenProjection(Vector2 screenSize) {
-      return glm::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
+      return Matrix::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
     }
 
     inline Frustum frustum(Vector2 screenSize, Transform* cameraTransform) {

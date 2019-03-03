@@ -1,17 +1,16 @@
 #ifndef COMPONENT_LIGHT_H
 #define COMPONENT_LIGHT_H
 
-#include "entity/component.h"
 #include "math/color.h"
 
 namespace wage {
 
-  class Light : public Component {
+  class Light {
 
   public:
 
-    Light(std::string name, Color ambient, Color diffuse, Color specular) 
-      : Component(name), _ambient(ambient), _diffuse(diffuse), _specular(specular) {    
+    Light(Color ambient, Color diffuse, Color specular) 
+      : _ambient(ambient), _diffuse(diffuse), _specular(specular) {    
     }
 
     ~Light() {}

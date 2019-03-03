@@ -30,7 +30,6 @@ namespace wage {
     virtual void cull(RenderContext* context) {
       std::vector<Renderable*> valid;
       Frustum frustum = context->camera()->frustum(context->screenSize(), context->cameraEntity().get<Transform>().get());
-      int idx = 0;
       for (auto renderable : renderables) {        
         if (frustum.contains(renderable->boundingSphere())) {
           valid.push_back(renderable);

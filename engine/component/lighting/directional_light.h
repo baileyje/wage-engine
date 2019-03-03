@@ -1,7 +1,7 @@
 #ifndef COMPONENT_DIR_LIGHT_H
 #define COMPONENT_DIR_LIGHT_H
 
-#include "entity/component/lighting/light.h"
+#include "component/lighting/light.h"
 
 namespace wage {
 
@@ -13,7 +13,7 @@ namespace wage {
     }
 
     DirectionalLight(Color ambient, Color diffuse, Color specular) 
-      : Light("DirectionalLight", ambient, diffuse, specular) {    
+      : Light(ambient, diffuse, specular) {    
     }
 
     ~DirectionalLight() {}

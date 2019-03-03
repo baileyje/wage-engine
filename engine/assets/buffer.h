@@ -7,9 +7,9 @@ namespace wage {
 
   public:
   
-    virtual unsigned char* data() = 0;
+    virtual const unsigned char* data() const = 0;
 
-    virtual size_t length() = 0;
+    virtual size_t length() const = 0;
   
   };
 

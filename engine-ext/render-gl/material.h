@@ -9,6 +9,8 @@
 #include "render-gl/program.h"
 #include "render-gl/util.h"
 
+#include "math/matrix.h"
+
 namespace wage {
 
   struct Uniform {
@@ -49,12 +51,15 @@ namespace wage {
       GL_FAIL_CHECK(glUniform1i(glGetUniformLocation(_program->id(), name.c_str()), value));
     }  
 
-    inline void setMat4(std::string name,const glm::mat4 &value) {
-      GL_FAIL_CHECK(glUniformMatrix4fv(glGetUniformLocation(_program->id(), name.c_str()), 1, GL_FALSE, &value[0][0]));
+    inline void setMat4(std::string name, const Matrix &value) {
+      auto mat4 = value.glm();
+      GL_FAIL_CHECK(glUniformMatrix4fv(glGetUniformLocation(_program->id(), name.c_str()), 1, GL_FALSE, glm::value_ptr(mat4)));
     }
 
-    inline void  setVec3(std::string name, const glm::vec3 &value) {
-      GL_FAIL_CHECK(glUniform3fv(glGetUniformLocation(_program->id(), name.c_str()), 1, &value[0]));
+    inline void  setVec3(std::string name, const Vector &value) {
+      // TODO: IS this real???
+      auto v3 = value.glm();
+      GL_FAIL_CHECK(glUniform3fv(glGetUniformLocation(_program->id(), name.c_str()), 1, glm::value_ptr(v3)));
     }
 
     inline void setVec4(std::string name, const glm::vec4 &value) {

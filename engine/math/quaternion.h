@@ -4,17 +4,47 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
+#include "math/vector.h"
+
 namespace wage {
 
-  typedef glm::quat Quaternion;
+  class Quaternion {
 
-  static Quaternion quatFromEulers(Vector vector) {    
-    return Quaternion(Vector(
-      glm::radians(vector.x),
-      glm::radians(vector.y),
-      glm::radians(vector.z)
-    ));
-  }
+  public:
+
+    float x;
+
+    float y;
+
+    float z;
+
+    float w;
+
+    Quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+
+    Quaternion(Vector vector);
+
+    static Quaternion fromEulers(const Vector& vector);     
+
+    Vector eulerAngles() const;
+  
+    Quaternion& operator*=(const Quaternion& rhs);
+
+    friend Quaternion operator*(Quaternion lhs, const Quaternion& rhs) {
+      lhs *= rhs;
+      return lhs;
+    }
+
+    // TODO: Get rid of this someday
+    inline glm::quat glm() const {
+      return glm::quat(w, x, y, z);
+    }
+
+    Quaternion rotated(float angle, Vector axis) const;
+
+  };
+
+  Vector operator*(Quaternion quat, const Vector& vector);
 
 }
 

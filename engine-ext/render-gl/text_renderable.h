@@ -24,7 +24,7 @@ namespace wage {
     }
 
     virtual BoundingBox boundingBox() {      
-      return BoundingBox(position(), Vector3(1000, 1000, 1000));
+      return BoundingBox(position(), Vector(1000, 1000, 1000));
     }
 
     virtual BoundingSphere boundingSphere() {
@@ -39,7 +39,7 @@ namespace wage {
         return;
       }
 
-      Matrix projection = glm::ortho(0.0f, context->screenSize().x, 0.0f, context->screenSize().y);
+      Matrix projection = Matrix::orthographic(0.0f, context->screenSize().x, 0.0f, context->screenSize().y);
 
       GLuint VAO, VBO;
       glGenVertexArrays(1, &VAO);
@@ -54,7 +54,7 @@ namespace wage {
       
       GlProgram* program = GlProgram::Font;
       program->bind();
-      glUniformMatrix4fv(glGetUniformLocation(program->id(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+      glUniformMatrix4fv(glGetUniformLocation(program->id(), "projection"), 1, GL_FALSE, glm::value_ptr(projection.glm()));
       glUniform3f(glGetUniformLocation(program->id(), "textColor"), _color.r, _color.g, _color.b);
       glActiveTexture(GL_TEXTURE0);
       glBindVertexArray(VAO);

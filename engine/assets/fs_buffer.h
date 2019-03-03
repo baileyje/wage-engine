@@ -14,15 +14,15 @@ namespace wage {
     FileBuffer(File* file) : _file(file) {      
     }
 
-    inline unsigned char* data() {
+    inline const unsigned char* data() const {
       return file()->data();
     }
 
-    inline size_t length() {
+    inline size_t length() const {
       return file()->length();
     }
 
-    inline File* file() {
+    inline const File* file() const {
       return _file;
     }
 

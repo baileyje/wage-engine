@@ -20,7 +20,7 @@ namespace wage {
     Allocator(size_t size) : size(size) {
       std::cout << "Acquiring " << size << " bytes of memory" << std::endl;
       memory = malloc(size * sizeof(void*));
-      base = memory; //(void *)(((uintptr_t)memory+15) & ~ (uintptr_t)0x0F);
+      base = memory;
       current = base;
     }
 
@@ -30,7 +30,7 @@ namespace wage {
 
     template <typename T, typename... Args>
     T* create(Args... args) {
-      void* alloced = allocate(sizeof(T), alignof(T));
+      auto alloced = allocate(sizeof(T), alignof(T));
       return new(alloced)T(args...);
     }
 

@@ -1,19 +1,18 @@
 #ifndef COMPONENT_UI_COMPONENT_H
 #define COMPONENT_UI_COMPONENT_H
 
-#include "entity/component.h"
 #include "ui/frame.h"
 
 namespace wage {
 
-  class UiComponent : public Component {
+  class UiComponent {
 
   public:
 
-    UiComponent(std::string name) : Component(name) {
+    UiComponent() {
     }
 
-    UiComponent(std::string name, LayoutFrame frame) : Component(name), _frame(frame) {}
+    UiComponent(LayoutFrame frame) : _frame(frame) {}
 
     virtual ~UiComponent() {}
 

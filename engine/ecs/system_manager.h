@@ -2,18 +2,16 @@
 #define ECS_SYSTEM_MANAGER_H
 
 #include <typeindex>
-#include <typeinfo>
-#include <unordered_map>
 #include <vector>
 
 #include "core/service.h"
 #include "ecs/system.h"
-#include "core/system/context.h"
-#include "util/map.h"
+#include "ecs/system_context.h"
+#include "ecs/entity_manager.h"
 
 namespace wage {
 
-  typedef Map<std::type_index, System*>::ValueIterator SystemtIterator;
+  typedef std::vector<std::unique_ptr<System>>::iterator SystemIterator;
 
   class SystemManager : public Service {
 
@@ -26,20 +24,20 @@ namespace wage {
 
     void start() override {
       // TODO: What if added after start
-      SystemContext context(Core::Instance);
-      for (auto system : *this) {
+      SystemContext context(Core::Instance->get<EntityManager>(), Core::Instance->frame());
+      for (auto system : systems) {
         system->init(&context);
         system->start(&context);
       }
       Core::Instance->onUpdate([&](const Frame& frame) {
-        SystemContext context(Core::Instance);
-        for (auto system : *this) {
+        SystemContext context(Core::Instance->get<EntityManager>(), Core::Instance->frame());
+        for (auto system : systems) {
           system->update(&context);
         }
       });
       Core::Instance->onFixedUpdate([&](const Frame& frame) {
-        SystemContext context(Core::Instance);
-        for (auto system : *this) {
+        SystemContext context(Core::Instance->get<EntityManager>(), Core::Instance->frame());
+        for (auto system : systems) {
           system->fixedUpdate(&context);
         }
       });
@@ -48,7 +46,7 @@ namespace wage {
     template <typename T, typename I, typename... Args>
     I* create(Args... args) {  
       auto instance = make<I>(args...);
-      add<T>(instance);
+      add(instance);
       return instance;
     }
 
@@ -57,35 +55,15 @@ namespace wage {
       return create<T, T>(args...);
     }
 
-    template <typename T>
-    inline void add(T* system) {
-      map[typeid(system)] = system;
-      SystemContext context(Core::Instance);      
+    inline void add(System* system) {
+      systems.push_back( { system } );
+      // TODO: Start System if already running
     }
 
-    inline SystemtIterator begin() {
-      return map.valuesBegin();
-    }
-
-    inline SystemtIterator end() {
-      return map.valuesEnd();
-    }
-    
-    template <typename T>
-    inline T* get() {
-      auto itr = map.find(typeid(T*));
-      if (itr != map.end()) {
-        System* system = itr->second;
-        if (system) {
-          return dynamic_cast<T*>(system);
-        }
-      }
-      return nullptr;
-    }
 
   private: 
-    
-    Map<std::type_index, System*> map;
+  
+    std::vector<System*> systems;
 
   };
 

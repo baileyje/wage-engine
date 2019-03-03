@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 
+#include "core/core.h"
 #include "core/logger.h"
 #include "memory/allocator.h"
 #include "jsrt/util.h"
@@ -151,7 +152,7 @@ namespace wage {
     Logger::debug("Added JS system...");
     Jsrt * runtime = (Jsrt *)callbackState;
     // TODO: Figure out how this should
-    Core::Instance->add<JsSystem>(stringFromValue(arguments[1]),  arguments[2]);
+    // Core::Instance->add<JsSystem>(stringFromValue(arguments[1]),  arguments[2]);
     // TODO: Break this out
     JsValueRef undefinedValue;
     if (JsGetUndefinedValue(&undefinedValue) == JsNoError) {

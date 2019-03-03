@@ -16,16 +16,15 @@
 
 namespace wage {
 
-  void GlRenderer::start(SystemContext* context) {
-    Renderer::start(context);
+  void GlRenderer::start() {
+    Renderer::start();
     glfwMakeContextCurrent(window->as<GLFWwindow>());
     gladLoadGL();
     glfwSwapInterval(0);
     
     GL_FAIL_CHECK(glEnable(GL_DEPTH_TEST));
     GL_FAIL_CHECK(glDepthFunc(GL_LESS));
-    GL_FAIL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
-    // GL_FAIL_CHECK(glEnable(  ));
+    GL_FAIL_CHECK(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
     GL_FAIL_CHECK(glEnable(GL_BLEND));
     GL_FAIL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     
@@ -59,8 +58,7 @@ namespace wage {
     ));
   }
 
-  void GlRenderer::endUpdate() {
-    
+  void GlRenderer::endUpdate() {    
     GL_FAIL_CHECK(glfwSwapBuffers(window->as<GLFWwindow>()));
     GL_FAIL_CHECK(glfwPollEvents());
   }

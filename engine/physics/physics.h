@@ -4,10 +4,10 @@
 #include <vector>
 
 #include "ecs/system.h"
+#include "ecs/entity_manager.h"
 
 #include "messaging/messaging.h"
 
-#include "entity/manager.h"
 
 namespace wage {
 

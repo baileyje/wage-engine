@@ -1,7 +1,7 @@
 #ifndef ENTITY_ORTHOGRAPHIC_CAMERA_H
 #define ENTITY_ORTHOGRAPHIC_CAMERA_H
 
-#include "entity/component/camera/camera.h"
+#include "component/camera/camera.h"
 
 namespace wage {
 
@@ -65,7 +65,7 @@ namespace wage {
     }
 
     inline Matrix screenProjection(Vector2 screenSize) {
-      return glm::ortho(
+      return Matrix::orthographic(
         left(), right(),
         top(), bottom(),
         nearClip(), farClip()

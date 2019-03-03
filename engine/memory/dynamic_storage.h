@@ -20,14 +20,13 @@ namespace wage {
     }
 
     void clear() {
-      
+      // TODO. Something here would be good
     }
 
     T& get(IndexType index) {
       int chunkIndex = index / _chunkSize;
       auto chunk = chunkAt(chunkIndex);
-      int itemIndex = index % _chunkSize;
-      return chunk._storage[itemIndex];
+      return chunk._storage[index % _chunkSize];
     }
 
   private:

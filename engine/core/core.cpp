@@ -3,7 +3,6 @@
 #include <iostream>
 #include <chrono>
 
-#include "core/system/context.h"
 #include "ecs/system.h"
 #include "core/logger.h"
 #include "memory/allocator.h"
@@ -34,12 +33,7 @@ namespace wage {
     for (auto service : services) {
       Logger::info("Starting ", service->name().c_str());
       service->start();
-    } 
-    SystemContext context (this);
-    for (auto system : systems) {
-      Logger::info("Starting ", system->name().c_str());
-      system->start(&context);
-    } 
+    }
     TimePoint lastTime = std::chrono::high_resolution_clock::now();
     double accumulator = 0;
     while (running) {    
@@ -58,10 +52,6 @@ namespace wage {
   }
 
   void Core::update() {
-    SystemContext context(this);
-    // for (auto system : systems) {
-    //   system->update(&context);
-    // }
     for (auto listener : updateListeners) {
       listener(frame());
     }
@@ -69,7 +59,6 @@ namespace wage {
   }
 
   void Core::fixedUpdate() {
-    SystemContext context(this);
     for (auto listener : fixedUpdateListeners) {
       listener(frame());
     }
@@ -81,34 +70,20 @@ namespace wage {
     }
     Logger::info("Stopping WAGE Core.");
     running = false;
-    SystemContext context(this);
-    for (auto system = systems.begin(); system != systems.end(); ++system) {
-      Logger::info("Stopping ", (*system)->name().c_str());
-      (*system)->stop(&context);
+    for (auto service : services) {
+      Logger::info("Starting ", service->name().c_str());
+      service->start();
     }
   }
 
   void Core::init() {
     Logger::info("Initializing WAGE Core.");
-    SystemContext context(this);
-    for (auto system : systems) {    
-      Logger::info("Initializing ", system->name().c_str());
-      system->init(&context);
-    }
+    // TODO: init Services
   }
 
   void Core::deinit() {
     Logger::info("Deinitializing WAGE Core.");
-    SystemContext context(this);
-    for (auto system = systems.begin(); system != systems.end(); ++system) {
-      Logger::info("Deinitializing ", (*system)->name().c_str());
-      (*system)->deinit(&context);
-    }
-  }
-
-  void Core::start(System* system) {
-    SystemContext context(this);
-    system->start(&context);
+    // TODO: deinit Services
   }
 
 }

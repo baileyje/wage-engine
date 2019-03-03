@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "entity/component/lighting/directional_light.h"
-#include "entity/component/lighting/point_light.h"
-#include "entity/component/lighting/spotlight.h"
-#include "entity/component/camera/camera.h"
+#include "component/lighting/directional_light.h"
+#include "component/lighting/point_light.h"
+#include "component/lighting/spotlight.h"
+#include "component/camera/camera.h"
 
 #include "math/transform.h"
 

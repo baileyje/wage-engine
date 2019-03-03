@@ -1,6 +1,6 @@
 
 #include "ecs/system.h"
-#include "entity/manager.h"
+#include "ecs/entity_manager.h"
 #include "render/renderer.h"
 #include "label.h"
 
@@ -16,7 +16,7 @@ namespace wage {
       EntityManager* manager = Core::Instance->get<EntityManager>();
       for (auto entity : manager->registry()->with<Label>()) {
         auto label = entity.get<Label>();
-        Core::Instance->get<SystemManager>()->get<Renderer>()->renderText(entity.get<Transform>()->position(), label->text(), label->font(), label->color());
+        Core::Instance->get<Renderer>()->renderText(entity.get<Transform>()->position(), label->text(), label->font(), label->color());
       }
     }
 

@@ -75,7 +75,7 @@ namespace wage {
       return !operator==(other);
     }
 
-    inline Source* source() {
+    inline const Source* source() const {
       return _source;
     }
 

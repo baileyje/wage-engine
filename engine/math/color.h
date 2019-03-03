@@ -38,4 +38,4 @@ namespace wage {
 
 }
 
-#endif //ENTITY_VECTOR_H
+#endif //ENTITY_COLOR_H

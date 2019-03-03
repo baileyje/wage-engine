@@ -33,14 +33,15 @@
 #include "physics/rigid_body.h"
 #include "physics/collider.h"
 
+#include "render/renderer.h"
+#include "render/mesh_renderer.h"
 #include "render/mesh.h"
 #include "render/material.h"
 
-
-#include "entity/component/camera/perspective_camera.h"
-#include "entity/component/lighting/directional_light.h"
-#include "entity/component/lighting/point_light.h"
-#include "entity/component/lighting/spotlight.h"
+#include "component/camera/perspective_camera.h"
+#include "component/lighting/directional_light.h"
+#include "component/lighting/point_light.h"
+#include "component/lighting/spotlight.h"
 
 #include "ui/label.h"
 #include "ui/ui.h"

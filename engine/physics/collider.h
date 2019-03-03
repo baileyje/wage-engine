@@ -1,20 +1,18 @@
 #ifndef ENTITY_COMPONENT_COLLIDER_H
 #define ENTITY_COMPONENT_COLLIDER_H
 
-#include "entity/component.h"
-
 namespace wage {
 
   enum class ColliderType { box, sphere, mesh };
 
-  class Collider : public Component {
+  class Collider {
     
   public:
 
     Collider() : Collider(ColliderType::box) {    
     }
 
-    Collider(ColliderType type) : Component("Collider"), _type(type) {    
+    Collider(ColliderType type) : _type(type) {    
     }
 
     ~Collider() {}

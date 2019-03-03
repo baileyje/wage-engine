@@ -14,7 +14,7 @@ namespace wage {
     MemoryBuffer() : MemoryBuffer(nullptr, 0) {
     }
 
-    MemoryBuffer(unsigned char* data, size_t length)  {
+    MemoryBuffer(const unsigned char* data, size_t length)  {
       fill(data, length);
     }
 
@@ -25,7 +25,7 @@ namespace wage {
       // TODO: Remove leak!!
     }
 
-    inline void fill(unsigned char* data, size_t length) {
+    inline void fill(const unsigned char* data, size_t length) {
       _length = length;
       if (length <= 0) {
         _data = nullptr;
@@ -35,11 +35,11 @@ namespace wage {
       memcpy(_data, data, length);      
     }
 
-    inline unsigned char* data() {
+    inline const unsigned char* data() const {
       return _data;
     }
 
-    inline size_t length() {
+    inline size_t length() const {
       return _length;
     }
 
