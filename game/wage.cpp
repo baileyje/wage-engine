@@ -266,7 +266,7 @@ void addEnemy(EntityManager* entityManager, SystemManager* systemManager, Vector
   entity.assign<RigidBody>(0.001);
   entity.assign<Mesh>(Mesh::Cube);
   entity.assign<Collider>(ColliderType::box);
-  entity.assign<Material>(make<Texture>("textures/metal.png"));
+  entity.assign<Material>(make<Texture>("textures/odd_space_2.png"));
   entity.assign<Enemy>();
 }
 
@@ -286,7 +286,7 @@ Entity addPlayer(EntityManager* entityManager, SystemManager* systemManager) {
   player.assign<RigidBody>(0.01);
   player.assign<Mesh>(Mesh::Sphere);
   player.assign<Collider>(ColliderType::sphere);
-  player.assign<Material>(make<Texture>("textures/mover.png"));
+  player.assign<Material>(make<Texture>("textures/earthlike_planet.png"));
   player.assign<Bearing>();
   player.assign<Player>();
   return player;
@@ -346,15 +346,15 @@ void setupScene(EntityManager* entityManager, SystemManager* systemManager) {
   //   .add(&Collider::Box)
   //   .add(MeshRenderer::Instance);
 
-  auto mover = addPlayer(entityManager, systemManager);
+  auto player = addPlayer(entityManager, systemManager);
 
   auto cameraEntity = entityManager->create();  
   auto camTransform = cameraEntity.assign<Transform>();
   camTransform->position(Vector(0, 30, -30));
   camTransform->rotation(Vector(00, 0.0, 0));
   cameraEntity.assign<PerspectiveCamera>();
-  systemManager->create<ThirdPersonCamera>(cameraEntity, mover);
-  systemManager->create<Follow>(cameraEntity, mover);
+  systemManager->create<ThirdPersonCamera>(cameraEntity, player);
+  systemManager->create<Follow>(cameraEntity, player);
 
   Font font("fonts/ARCADE.TTF", 60);
   auto fpsLabelEntity = entityManager->create();  
@@ -365,9 +365,9 @@ void setupScene(EntityManager* entityManager, SystemManager* systemManager) {
   auto posLabelEntity = entityManager->create();  
   posLabelEntity.assign<Transform>()->position(Vector(300, 0, 0));   
   auto posLabel = posLabelEntity.assign<Label>("POS: ", font, Color(1, 1, 1, 0));  
-  systemManager->create<PosDisplay>(posLabel, mover);
+  systemManager->create<PosDisplay>(posLabel, player);
   
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 200; i++) {
     addRandomEnemy(entityManager, systemManager);
   }
 

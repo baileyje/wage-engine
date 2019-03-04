@@ -34,8 +34,8 @@ namespace wage {
 
     void link() {
 
-      vertexShader.compile();
-      fragmentShader.compile();
+      // vertexShader.compile();
+      // fragmentShader.compile();
 
       GLint result = GL_FALSE;
       int infoLogLength;

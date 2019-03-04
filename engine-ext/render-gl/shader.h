@@ -25,7 +25,7 @@ namespace wage {
       return _id;
     }
 
-    void onLoad(Buffer* buffer);
+    void onLoad();
 
     void compile();
 

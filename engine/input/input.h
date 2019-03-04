@@ -18,7 +18,7 @@ namespace wage {
     
     static Input* Instance;
 
-    Input() : Service("input"), window(nullptr), messaging(nullptr) { }
+    Input() : Service("Input"), window(nullptr), messaging(nullptr) { }
 
     ~Input() {}
 

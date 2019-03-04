@@ -8,8 +8,8 @@ namespace wage {
 
   void GlShader::compile() {
     GL_FAIL_CHECK(_id = glCreateShader(shaderType));
-    const char* temp = reinterpret_cast<const char*>(buffer()->data());
-    const GLint tempLength = static_cast<const GLint>(buffer()->length());    
+    const char* temp = reinterpret_cast<const char*>(buffer->data());
+    const GLint tempLength = static_cast<const GLint>(buffer->length());    
     GL_FAIL_CHECK(glShaderSource(_id, 1, &temp, &tempLength));
     GL_FAIL_CHECK(glCompileShader(_id));
 
@@ -24,10 +24,8 @@ namespace wage {
     }
   }
 
-  void GlShader::onLoad(Buffer* buffer) {
-    // Don't like this....
-    // GL_FAIL_CHECK(_id = glCreateShader(shaderType));
-    // compile(buffer);
+  void GlShader::onLoad() {
+    compile();
   }
 
 }

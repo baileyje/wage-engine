@@ -23,7 +23,7 @@ namespace wage {
 
     void load(AssetManager* assetManager);
 
-    void onLoad(Buffer* buffer);
+    void onLoad();
 
     void bind();
 

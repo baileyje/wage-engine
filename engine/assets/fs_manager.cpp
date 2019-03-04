@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "assets/fs_buffer.h"
 #include "memory/allocator.h"
 
 namespace wage {
@@ -16,8 +15,8 @@ namespace wage {
   }
 
   void FsAssetManager::performLoad(Asset* asset) {
-    auto file = fileSystem->read(filePath(asset->key()));
-    asset->set(make<FileBuffer>(file));
+    auto buffer = fileSystem->read(filePath(asset->key()), Allocator::Assets());
+    asset->set(std::move(buffer));
   }
 
 }

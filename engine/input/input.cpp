@@ -24,7 +24,6 @@ namespace wage {
   Input* Input::Instance = new Input();;
 
   void Input::start() {
-    Logger::info("Starting Input System");
     Input::Instance = this;
     messaging = Core::Instance->get<Messaging>();
     auto platform = Core::Instance->get<Platform>();

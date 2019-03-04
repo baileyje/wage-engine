@@ -5,6 +5,8 @@
 #include <iostream>
 #include <inttypes.h>
 
+#include "core/logger.h"
+
 namespace wage {
 
   class Allocator {
@@ -17,8 +19,8 @@ namespace wage {
 
     static Allocator* Assets();
     
-    Allocator(size_t size) : size(size) {
-      std::cout << "Acquiring " << size << " bytes of memory" << std::endl;
+    Allocator(std::string name, size_t size) : name(name), size(size) {
+      Logger::debug("Acquiring ", size, " bytes of memory for allocator: ", name);
       memory = malloc(size * sizeof(void*));
       base = memory;
       current = base;
@@ -34,12 +36,12 @@ namespace wage {
       return new(alloced)T(args...);
     }
 
-    void* allocate(size_t size, size_t alignSize = 16) {
-      // std::cout << "Attempting to allocate " << size << " bytes of memory" << std::endl;
+    void* allocate(size_t size, size_t alignSize = 16) {    
+      Logger::debug("Attempting to allocate ", size, " bytes of memory for allocator: ", name);
       if (std::align(alignSize, size, current, this->size)) {
         char* c = (char*)current; // Gross
         if (c + size > ((char*)base) + this->size) {
-          std::cout << "Failed to allocate. No free space.";
+          Logger::error("Failed to allocate. No free space.");
           return nullptr;
         }
         void* result = current;
@@ -55,6 +57,8 @@ namespace wage {
 
   private:
     
+    std::string name;
+
     void* memory;
 
     void* base;

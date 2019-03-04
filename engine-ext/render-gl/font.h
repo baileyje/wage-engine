@@ -10,7 +10,7 @@
 
 #include "math/vector.h"
 #include "assets/manager.h"
-#include "assets/memory_buffer.h"
+#include "memory/buffer.h"
 
 #include "render-gl/util.h"
 
@@ -55,7 +55,7 @@ namespace wage {
 
     unsigned int textureId;
 
-    MemoryBuffer buffer;
+    Buffer buffer;
     
     Vector2 size;
     
@@ -85,7 +85,7 @@ namespace wage {
       return nullptr;    
     }
 
-    void onLoad(Buffer* buffer) {
+    void onLoad() {
       FT_Library freeType;
       if (FT_Init_FreeType(&freeType))
         std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;

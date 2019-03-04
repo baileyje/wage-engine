@@ -12,7 +12,7 @@ namespace wage {
 
   struct LoadTask {
     JsModuleRecord module;
-    File* source;    
+    std::unique_ptr<Buffer> source;    
     JsSourceContext sourceContext;	
   };
 

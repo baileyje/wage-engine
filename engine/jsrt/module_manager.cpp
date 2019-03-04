@@ -22,8 +22,7 @@ namespace wage {
       LoadTask* task = loadQueue.front();
       loadQueue.pop();
       if (task->source != NULL) {
-        parseModule(task);
-        free((char*)task->source);          
+        parseModule(task);        
       } else {
         evaluateModule(task);
       }
@@ -45,12 +44,11 @@ namespace wage {
     loaded->path = path;  
     loadedModules[path] = loaded;
     Logger::debug("ModulePath: %s\n", (moduleRoot +  path).c_str());
-    File* source = fileSystem->read(moduleRoot +  path);
-    Logger::debug("SRC: %s\n", source);
+    auto source = fileSystem->read(moduleRoot +  path, Allocator::Permanent());
     LoadTask* task = (LoadTask*)malloc(sizeof(LoadTask));  
     task->sourceContext = currentSourceContext++;
     task->module = moduleRecord;
-    task->source = source;
+    task->source = std::move(source);
     loadQueue.push(task);  
     return moduleRecord; 
   }
@@ -72,7 +70,7 @@ namespace wage {
   }
 
   void ModuleManager::parseModule(LoadTask* task) {
-    Logger::debug("Paring source:\n %s\n", task->source);
+    Logger::debug("Paring source:\n %s\n", task->source->data());
     JsValueRef exception;  
     JsErrorCode  errorCode = JsParseModuleSource(task->module, task->sourceContext, (BYTE*)task->source->data(), task->source->length(), JsParseModuleSourceFlags_DataIsUTF8, &exception);  
     if (errorCode == JsErrorScriptCompile) {

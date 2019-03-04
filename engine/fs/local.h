@@ -12,9 +12,11 @@ namespace wage {
 
     ~LocalFileSystem();
 
-    File* read(std::string path);
+    std::unique_ptr<Buffer> read(std::string path, Allocator* allocator) const override;
 
   private:
+
+    std::string fullPath(std::string relative) const;
 
     std::string base;
 

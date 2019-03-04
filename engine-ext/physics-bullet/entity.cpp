@@ -97,7 +97,6 @@ namespace wage {
       entityBody->clearForce();
     }
     if (entityBody->shouldStop()) {
-      printf("Stopping!\n");   
       _rigidBody->setLinearVelocity(btVector3(0, 0, 0));      
       entityBody->clearShouldStop();
     }

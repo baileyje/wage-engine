@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "assets/buffer.h"
+#include "memory/buffer.h"
 
 namespace wage {
 
@@ -16,6 +16,8 @@ namespace wage {
     Asset(Key key) : _key(key), _loaded(false) {      
     }
 
+    virtual ~Asset() {}
+
     virtual Key key() const {
       return _key;
     }
@@ -24,26 +26,27 @@ namespace wage {
       return _loaded;
     }
 
-    virtual Buffer* buffer() const {
-      return _buffer;
-    };
-
-    virtual void set(Buffer* buffer) {
-      _buffer = buffer;
-      onLoad(buffer);
-      _loaded = true;
+    virtual void loaded(bool loaded) {
+      _loaded = loaded;
     }
 
-    virtual void onLoad(Buffer* buffer) {      
+    virtual void set(std::shared_ptr<Buffer> buffer) {
+      printf("Set Called: %s\n", _key.c_str());
+      this->buffer = buffer;            
     }
+
+    virtual void onLoad() {
+    }
+
+  protected:
+
+    std::shared_ptr<Buffer> buffer;
 
   private:
     
     Key _key;
 
     bool _loaded;
-
-    Buffer* _buffer;
 
   };
 

@@ -1,39 +1,32 @@
 #ifndef FILE_SYSTEM_FILE_H
 #define FILE_SYSTEM_FILE_H
 
-#include <iostream>
-#include <fstream>
+#include <memory>
 
-#include "memory/allocator.h"
+#include "memory/buffer.h"
 
 namespace wage {
+
+  class FileSystem;
 
   class File {
 
   public:
 
-    File(std::string path)  {
-      std::ifstream file(path, std::ios::in|std::ios::binary|std::ios::ate);
-      _size = file.tellg();
-      file.seekg (0, std::ios::beg);
-      _data = (unsigned char*)Allocator::Assets()->allocate(_size + 15);
-      file.read ((char*)_data, _size);
-      file.close();
+    File(std::string path, const FileSystem* fileSystem) : _path(path), _fileSystem(fileSystem) {
     }
 
-    inline const unsigned char* data() const {
-      return _data;
+    inline std::string path() const {
+      return _path;
     }
 
-    inline size_t length() const {
-      return _size;
-    }
+    std::unique_ptr<Buffer> read(Allocator* allocator = nullptr) const;
 
   private:
 
-    unsigned char* _data;
+    std::string _path;
 
-    size_t _size;
+    const FileSystem* _fileSystem;
 
   };
 

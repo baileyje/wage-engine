@@ -147,7 +147,7 @@ namespace wage {
 
   Mesh* Mesh::Sphere = new Mesh("SphereMesh", {}, {}, {}, {});
 
-  void generateSphere() {  
+  void generateSphere() { 
     VertexVector vertices;
     VertexVector normals;
     Vertex2Vector texts;

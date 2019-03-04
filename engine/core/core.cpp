@@ -71,8 +71,8 @@ namespace wage {
     Logger::info("Stopping WAGE Core.");
     running = false;
     for (auto service : services) {
-      Logger::info("Starting ", service->name().c_str());
-      service->start();
+      Logger::info("Stopping ", service->name().c_str());
+      service->stop();
     }
   }
 
