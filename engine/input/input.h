@@ -15,8 +15,6 @@ namespace wage {
   class Input : public Service {
 
   public:
-    
-    static Input* Instance;
 
     Input() : Service("Input"), window(nullptr), messaging(nullptr) { }
 
@@ -24,11 +22,11 @@ namespace wage {
 
     void start();
     
-    bool isPressed(Key key);
+    virtual bool isPressed(Key key) = 0;
 
-    Vector2 mousePosition();
+    virtual Vector2 mousePosition() = 0;
 
-  private: 
+  protected: 
     
     Window* window;
     

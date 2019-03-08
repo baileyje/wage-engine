@@ -14,13 +14,16 @@ namespace wage {
 
 	BulletPhysics::~BulletPhysics() {}
 
-	void BulletPhysics::init(SystemContext* context) {
-    Physics::init(context);
+	void BulletPhysics::start() {
+    Physics::start();
 		// dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
 		dynamicsWorld.setGravity(btVector3(0, 0, 0));
+		Core::Instance->onFixedUpdate([&](const Frame& frame) {
+			fixedUpdate(frame);
+		});
 	}
 
-	void BulletPhysics::fixedUpdate(SystemContext* context) {
+	void BulletPhysics::fixedUpdate(const Frame& frame) {
 		// Get Physics up to speed
 		for (auto physicsEntity : entities) {
 			if (!physicsEntity->entity().valid()) {
@@ -31,7 +34,7 @@ namespace wage {
 		}
 
 		// Run the Simulation
-		dynamicsWorld.stepSimulation(context->timeStep(), 3);	
+		dynamicsWorld.stepSimulation(frame.timeStep(), 3);	
 
 		// Get entities up to speed
 		for (auto physicsEntity : entities) {
@@ -42,7 +45,7 @@ namespace wage {
 		}
 	}
 
-	void BulletPhysics::deinit(SystemContext* context) {
+	void BulletPhysics::stop() {
 		// TODO: Evaluate memory free, etc.
 		// for (auto entity : entities) {
 		// 	if (entity->getObject()) {

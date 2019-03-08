@@ -5,7 +5,7 @@ Core:
 ✔ Scene @done (10/27/2018, 8:18:52 AM)
 ✔ Logging @done (10/31/2018, 9:13:31 PM)
 ✔ Entity Referencing @done (11/18/2018, 8:15:15 AM)
-☐ System Referencing
+✔ Service Referencing @done (3/3/2019, 10:49:47 PM)
 ✔ Message systems @done (11/18/2018, 8:15:19 AM)
 ✔ Add/Remove Entity messages @done (11/18/2018, 8:15:23 AM)
 ☐ Add Start/Stop to components
@@ -17,7 +17,7 @@ Core:
     ✔ General reference strategy @done (1/1/2019, 8:45:24 PM)
 ☐ Better virtual filesystem support
 ✔ Better project structure @done (1/5/2019, 9:17:21 PM)
-☐ Change to smart pointers
+✔ Change to smart pointers @done (3/3/2019, 10:49:56 PM)
 
 Entity:
 
@@ -25,7 +25,7 @@ Entity:
   ✔ Sphere @done (12/4/2018, 9:29:07 PM)
   ☐ Cone
 ✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)
-☐ Move components to sparse sets. Ref: https://www.geeksforgeeks.org/sparse-set/
+✔ ßMove components to sparse sets. Ref: https://www.geeksforgeeks.org/sparse-set/ @done (3/3/2019, 10:50:04 PM)
 
 
 Renderer:
@@ -42,7 +42,7 @@ Renderer:
   ☐ Culling
     ✔ Frustum culling @done (12/15/2018, 10:28:41 AM)
     ☐ Occlusion culling
-  ☐ UI Queue
+  ✔ UI Queue @done (3/3/2019, 10:50:16 PM)
 ☐ .obj loading
 ✔ Texture cache @done (12/9/2018, 9:15:33 PM)
 ✔ Mesh cache @done (12/9/2018, 9:15:41 PM)

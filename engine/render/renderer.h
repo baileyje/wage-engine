@@ -29,7 +29,7 @@ namespace wage {
 
     virtual void start();
 
-    virtual void update();
+    virtual void render();
 
     virtual void renderText(Vector position, std::string text, Font font, Color color) = 0;
 
@@ -41,9 +41,9 @@ namespace wage {
 
     void renderUi(EntityManager* manager, RenderContext* renderContext);
 
-    virtual void beginUpdate() = 0;
+    virtual void beginRender() = 0;
 
-    virtual void endUpdate() = 0;
+    virtual void endRender() = 0;
   
   protected:
 

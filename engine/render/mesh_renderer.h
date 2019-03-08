@@ -12,13 +12,13 @@ namespace wage {
     }
 
     void update(SystemContext* context) {
-      auto manager = Core::Instance->get<EntityManager>(); 
-      for (auto entity : manager->registry()->with<Mesh>()) {
-        auto trans = entity.get<Transform>();
-        auto mesh = entity.get<Mesh>();
-        auto mat = entity.get<Material>();
-        Core::Instance->get<Renderer>()->renderMesh(trans, mesh, mat);
-      }
+      // auto manager = Core::Instance->get<EntityManager>(); 
+      // for (auto entity : manager->registry()->with<Mesh>()) {
+      //   auto trans = entity.get<Transform>();
+      //   auto mesh = entity.get<Mesh>();
+      //   auto mat = entity.get<Material>();
+      //   Core::Instance->get<Renderer>()->renderMesh(trans, mesh, mat);
+      // }
     }
 
   };

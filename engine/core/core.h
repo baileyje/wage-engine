@@ -57,19 +57,31 @@ namespace wage {
       return _frame;
     }    
 
-    void onUpdate(UpdateListener listener) {
+    inline void onInput(UpdateListener listener) {
+      inputListeners.push_back(listener);
+    }
+
+    inline void onUpdate(UpdateListener listener) {
       updateListeners.push_back(listener);
     }
 
     void onFixedUpdate(UpdateListener listener) {
       fixedUpdateListeners.push_back(listener);
     }
+
+    inline void onRender(UpdateListener listener) {
+      renderListeners.push_back(listener);
+    }
     
   private:
+
+    void processInput();
 
     void update();
 
     void fixedUpdate();
+
+    void render();
 
     void deinit();
 
@@ -79,9 +91,13 @@ namespace wage {
 
     Frame _frame;
 
+    std::vector<UpdateListener> inputListeners;
+
     std::vector<UpdateListener> updateListeners;
 
     std::vector<UpdateListener> fixedUpdateListeners;
+
+    std::vector<UpdateListener> renderListeners;
 
   };
 

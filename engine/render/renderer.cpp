@@ -21,8 +21,8 @@ namespace wage {
     auto platform = Core::Instance->get<Platform>();
     window = platform->window();
     assetManager = Core::Instance->get<AssetManager>();
-    Core::Instance->onUpdate([&](const Frame& frame) {
-      update();
+    Core::Instance->onRender([&](const Frame& frame) {
+      render();
     });
   }
 
@@ -50,8 +50,8 @@ namespace wage {
     return { Entity(), nullptr };
   }
 
-  void Renderer::update() {  
-    beginUpdate();
+  void Renderer::render() {  
+    beginRender();
     auto manager = Core::Instance->get<EntityManager>();
     auto camera = cameraAndEntity(manager);
     if (!std::get<0>(camera).valid()) {
@@ -71,10 +71,19 @@ namespace wage {
       spotlights.push_back(ent);
     }
     RenderContext renderContext(std::get<0>(camera), std::get<1>(camera), Vector2(window->width(),  window->height()), dirLights, pointLights, spotlights);
+
+    // auto manager = Core::Instance->get<EntityManager>(); 
+    for (auto entity : manager->registry()->with<Mesh>()) {
+      auto trans = entity.get<Transform>();
+      auto mesh = entity.get<Mesh>();
+      auto mat = entity.get<Material>();
+      renderMesh(trans, mesh, mat);
+    }
+
     renderMeshes(manager, &renderContext);
     // TODO: Sprites
     renderUi(manager, &renderContext);
-    endUpdate();
+    endRender();
   }
 
 }

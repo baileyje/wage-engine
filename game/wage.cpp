@@ -8,6 +8,8 @@
 #include "engine.h"
 #include "physics-bullet/physics.h"
 #include "render-gl/renderer.h"
+#include "platform-glfw/platform.h"
+#include "input-glfw/input.h"
 
 using namespace wage;
 
@@ -39,37 +41,37 @@ public:
     auto body = player.get<RigidBody>();
     auto bearing = player.get<Bearing>()->rotation;
     float force = 0.005;
-    if (Input::Instance->isPressed(Key::W)) {
+    if (Core::Instance->get<Input>()->isPressed(Key::W)) {
       body->addImpulse(
         (bearing * Vector(0, 0, 1)).normalized() * force
       );
     }
-    if (Input::Instance->isPressed(Key::S)) {
+    if (Core::Instance->get<Input>()->isPressed(Key::S)) {
       body->addImpulse(
         (bearing * Vector(0, 0, -1)).normalized() * force
       );
     } 
-    if (Input::Instance->isPressed(Key::A)) {
+    if (Core::Instance->get<Input>()->isPressed(Key::A)) {
       body->addImpulse(
         (bearing * Vector(1, 0, 0)).normalized() * force
       );
     }
-    if (Input::Instance->isPressed(Key::D)) {
+    if (Core::Instance->get<Input>()->isPressed(Key::D)) {
       body->addImpulse(
         (bearing * Vector(-1, 0, 0)).normalized() * force
       );
     }
-    if (Input::Instance->isPressed(Key::Space)) {
+    if (Core::Instance->get<Input>()->isPressed(Key::Space)) {
       body->addImpulse(
         (bearing * Vector(0, 1, 0)).normalized() * force
       );
     }
-    if (Input::Instance->isPressed(Key::LeftShift)) {
+    if (Core::Instance->get<Input>()->isPressed(Key::LeftShift)) {
       body->addImpulse(
         (bearing * Vector(0, -1, 0)).normalized() * force
       );
     }  
-    if (Input::Instance->isPressed(Key::F)) {
+    if (Core::Instance->get<Input>()->isPressed(Key::F)) {
       body->shouldStop(true);
     }  
   }
@@ -85,11 +87,11 @@ public:
   }
 
   void start(SystemContext* context) {
-    lastPos = Input::Instance->mousePosition();
+    lastPos = Core::Instance->get<Input>()->mousePosition();
   }
 
   void update(SystemContext* context) {
-    auto mousePos = Input::Instance->mousePosition();    
+    auto mousePos = Core::Instance->get<Input>()->mousePosition();    
     auto dx = lastPos.x - mousePos.x;
     auto dy = lastPos.y - mousePos.y;
     auto xRotation = player.get<Bearing>()->rotation.rotated(
@@ -159,7 +161,7 @@ public:
   }
   void update(SystemContext* context) {
     auto manager = Core::Instance->get<EntityManager>();
-    if (Input::Instance->isPressed(Key::C) && !chasing) {
+    if (Core::Instance->get<Input>()->isPressed(Key::C) && !chasing) {
       for (auto entity : manager->registry()->with<Enemy>()) {
         entity.get<RigidBody>()->shouldStop(true);        
       }
@@ -167,7 +169,7 @@ public:
       running = false;
       return;
     }
-    if (Input::Instance->isPressed(Key::R) && !running) {
+    if (Core::Instance->get<Input>()->isPressed(Key::R) && !running) {
       for (auto entity : manager->registry()->with<Enemy>()) {
         entity.get<RigidBody>()->shouldStop(true);
       }
@@ -286,7 +288,7 @@ Entity addPlayer(EntityManager* entityManager, SystemManager* systemManager) {
   player.assign<RigidBody>(0.01);
   player.assign<Mesh>(Mesh::Sphere);
   player.assign<Collider>(ColliderType::sphere);
-  player.assign<Material>(make<Texture>("textures/earthlike_planet.png"));
+  player.assign<Material>(make<Texture>("textures/test_planet.png"));
   player.assign<Bearing>();
   player.assign<Player>();
   return player;
@@ -297,15 +299,15 @@ void setupServices(Core* core, std::string path) {
   auto fileSystem = core->create<FileSystem, LocalFileSystem>(path);
   core->create<AssetManager, FsAssetManager>(fileSystem);
   core->create<Messaging>();
-  core->create<Platform>();
-  core->create<Input>();
+  core->create<Platform, GlfwPlatform>();
+  core->create<Input, GlfwInput>();
   core->create<EntityManager>();
   core->create<SystemManager>();
+  core->create<Physics, BulletPhysics>();
   core->create<Renderer, GlRenderer>();
 }
 
-void setupCoreSystems(SystemManager* systemManager) {
-  systemManager->create<Physics, BulletPhysics>();
+void setupCoreSystems(SystemManager* systemManager) {  
   systemManager->create<UI>();
   systemManager->create<MeshRenderer>();  
 }

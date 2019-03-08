@@ -48,6 +48,10 @@ namespace wage {
       return _object;
     }
 
+    inline btCollisionShape* shape() {
+      return _shape;
+    }
+
     inline Entity entity() {
       return _entity;
     }

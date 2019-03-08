@@ -15,7 +15,7 @@ namespace wage {
 
   public:
 
-    AssetManager() : Service("AssetManager"), queue("AssetLoad", 2) {
+    AssetManager() : Service("AssetManager"), queue("AssetLoad", 1) {
     }
 
     void start() {

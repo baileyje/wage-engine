@@ -1,9 +1,6 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-
 #include "core/service.h"
 #include "platform/window.h"
 
@@ -17,15 +14,11 @@ namespace wage {
 
     virtual ~Platform() { }
 
-    void start();
-
-    void stop();
-    
     Window* window() {
       return _window;
     }
 
-  private:
+  protected:
 
     Window* _window;
     

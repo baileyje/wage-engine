@@ -19,8 +19,7 @@ namespace wage {
   void GlRenderer::start() {
     Renderer::start();
     glfwMakeContextCurrent(window->as<GLFWwindow>());
-    gladLoadGL();
-    glfwSwapInterval(0);
+    gladLoadGL();    
     
     GL_FAIL_CHECK(glEnable(GL_DEPTH_TEST));
     GL_FAIL_CHECK(glDepthFunc(GL_LESS));
@@ -43,7 +42,7 @@ namespace wage {
     // GlTexture::Default->load(assetManager);
   }
 
-  void GlRenderer::beginUpdate() {
+  void GlRenderer::beginRender() {
     GL_FAIL_CHECK(glViewport(0, 0, window->width(), window->height()));
     GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   }
@@ -54,11 +53,12 @@ namespace wage {
 
   void GlRenderer::renderMesh(Reference<Transform> transform, Reference<Mesh> mesh, Reference<Material> material) {
     meshQueue.add(makeTemp<GlMeshRenderable>(
-      &vaoManager, &textureManager, transform, mesh, material
+      &vaoManager, &textureManager, *transform, mesh, material
     ));
   }
 
-  void GlRenderer::endUpdate() {    
+  void GlRenderer::endRender() {    
+    glfwSwapInterval(10);
     GL_FAIL_CHECK(glfwSwapBuffers(window->as<GLFWwindow>()));
     GL_FAIL_CHECK(glfwPollEvents());
   }

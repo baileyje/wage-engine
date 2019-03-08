@@ -3,15 +3,16 @@
 #include "physics/rigid_body.h"
 #include "physics/collider.h"
 #include "core/logger.h"
-#include "ecs/system_context.h"
+
+// #include "ecs/system_context.h"
 
 namespace wage {
 
-	Physics::Physics() : System("Physics") {}
+	Physics::Physics() : Service("Physics") {}
 
 	Physics::~Physics() {}
 
-	void Physics::init(SystemContext* context) {
+	void Physics::start() {
 		Core::Instance->get<Messaging>()->listen<AddEntityMessage>(this);
 		Core::Instance->get<Messaging>()->listen<DestroyEntityMessage>(this);
 	}

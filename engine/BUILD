@@ -4,7 +4,6 @@ cc_library(
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
-		"@glfw",
     "//third_party/glm",
     "//third_party/chakracore",
     "//third_party/tinyloader"

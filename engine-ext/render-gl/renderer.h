@@ -22,9 +22,9 @@ namespace wage {
 
     void renderMesh(Reference<Transform> transform, Reference<Mesh> mesh, Reference<Material> material);
     
-    virtual void beginUpdate();
+    virtual void beginRender();
 
-    virtual void endUpdate();
+    virtual void endRender();
 
   private:
 

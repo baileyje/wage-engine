@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "ecs/system.h"
+#include "core/service.h"
 #include "ecs/entity_manager.h"
 
 #include "messaging/messaging.h"
@@ -11,7 +11,7 @@
 
 namespace wage {
 
-  class Physics : public System, MessageListener<AddEntityMessage>, MessageListener<DestroyEntityMessage> {
+  class Physics : public Service, MessageListener<AddEntityMessage>, MessageListener<DestroyEntityMessage> {
 
   public:
     
@@ -19,15 +19,15 @@ namespace wage {
 
     ~Physics();
 
-    LIFECYCLE_FUNC(init)
+    virtual void start() override;
 
     virtual void add(Entity entity) = 0;
 
     virtual void remove(Entity entity) = 0;
 
-    virtual void on(AddEntityMessage& message);
+    virtual void on(AddEntityMessage& message) override;
     
-    virtual void on(DestroyEntityMessage& message);
+    virtual void on(DestroyEntityMessage& message) override ;
 
   };
 

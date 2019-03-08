@@ -12,7 +12,7 @@ local_repository(
 new_local_repository(
     name = "glfw",
     path = "/usr/local/Cellar/glfw/3.2.1",
-    build_file = "../engine/third_party/glfw/BUILD"
+    build_file = "../engine-ext/third_party/glfw/BUILD"
 )
 
 new_local_repository(

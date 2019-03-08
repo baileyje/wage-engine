@@ -21,15 +21,15 @@ namespace wage {
 
     virtual ~BulletPhysics();
 
-    LIFECYCLE_FUNC(init)
+    void start() override;
 
-    LIFECYCLE_FUNC(fixedUpdate)
+    void fixedUpdate(const Frame& frame);
 
-    LIFECYCLE_FUNC(deinit)
+    void stop() override;
 
-    void add(Entity entity);
+    void add(Entity entity) override;
 
-    void remove(Entity entity);
+    void remove(Entity entity) override;
 
   private:
 

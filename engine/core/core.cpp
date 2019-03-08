@@ -39,23 +39,33 @@ namespace wage {
     while (running) {    
       TimePoint currentTime = std::chrono::high_resolution_clock::now();
       double delta = (std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime)).count();
+      printf("Delta: %f\n", delta);
       _frame._time += delta;
       lastTime = currentTime;
       _frame._deltaTime = delta;    
       accumulator += delta;
-      if (accumulator >= _frame.timeStep()) {
+      update();
+      // <---- No Jitter here
+      while (accumulator >= _frame.timeStep()) {
         fixedUpdate();
         accumulator -= _frame.timeStep();
       }
-      update();
+      // Might need to sync game state here or something..
+      render(); // TODO: Why does this create jitter....
+      Allocator::Temporary()->clear();
     }
   }
+
+  void Core::processInput() {
+    for (auto listener : inputListeners) {
+      listener(frame());
+    }    
+  }  
 
   void Core::update() {
     for (auto listener : updateListeners) {
       listener(frame());
     }
-    Allocator::Temporary()->clear();
   }
 
   void Core::fixedUpdate() {
@@ -63,6 +73,12 @@ namespace wage {
       listener(frame());
     }
   }
+
+  void Core::render() {
+    for (auto listener : renderListeners) {
+      listener(frame());
+    }
+  }  
 
   void Core::stop() {
     if(!running) {

@@ -50,6 +50,6 @@ namespace wage {
 
   };
 
-}
+} 
 
 #endif //MESSAGING_H

@@ -4,6 +4,8 @@ cc_binary(
   srcs = ["wage.cpp"],
   deps = [
     "@engine",
+    "@engine_ext//platform-glfw",
+    "@engine_ext//input-glfw",
     "@engine_ext//render-gl",
     "@engine_ext//physics-bullet"
   ],
