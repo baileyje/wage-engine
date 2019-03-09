@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 #include "ecs/system.h"
 #include "core/logger.h"
@@ -39,19 +40,17 @@ namespace wage {
     while (running) {    
       TimePoint currentTime = std::chrono::high_resolution_clock::now();
       double delta = (std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime)).count();
-      printf("Delta: %f\n", delta);
       _frame._time += delta;
       lastTime = currentTime;
       _frame._deltaTime = delta;    
       accumulator += delta;
       update();
-      // <---- No Jitter here
       while (accumulator >= _frame.timeStep()) {
         fixedUpdate();
         accumulator -= _frame.timeStep();
       }
-      // Might need to sync game state here or something..
-      render(); // TODO: Why does this create jitter....
+      // Might need to sync/freeze game state here or something..
+      render();
       Allocator::Temporary()->clear();
     }
   }

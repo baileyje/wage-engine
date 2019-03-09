@@ -118,7 +118,7 @@ namespace wage {
 
     }
 
-    virtual void render(RenderContext* context) {      
+    virtual void render(RenderContext* context) {    
       VertexArray* vao = vaoManager()->load(mesh);
       vao->bind();
       auto program = GlProgram::Default;

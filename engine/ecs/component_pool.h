@@ -74,11 +74,11 @@ namespace wage {
     }
 
     bool has(EntityId entityId) {
-      return sparseIds[entityId] != INVALID_ID;
+      return sparseIds.size() > entityId && sparseIds[entityId] != INVALID_ID;
     }
 
     Reference<C, ComponentId> get(EntityId entityId) {
-      if (sparseIds[entityId] != INVALID_ID) {
+      if (sparseIds.size() > entityId && sparseIds[entityId] != INVALID_ID) {
         auto ref = pool.reference(sparseIds[entityId]);
         return Reference<C, ComponentId>(this, ref.index(), ref.version());
       }

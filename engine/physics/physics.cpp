@@ -19,7 +19,10 @@ namespace wage {
 
 	void Physics::on(AddEntityMessage& message) {
 		auto entity = message.entity();
-		if (entity.has<RigidBody>() && entity.get<RigidBody>().valid()) {
+		if (
+			(entity.has<RigidBody>() && entity.get<RigidBody>().valid()) ||
+			(entity.has<Collider>() && entity.get<Collider>().valid())
+			) {
 			add(entity);
 		}		
 	}

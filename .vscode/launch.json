@@ -4,8 +4,19 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
-
+    {
+      "name": "(lldb) Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/bazel-bin/wage",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/game",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "preLaunchTask": "build-debug"
+    },,
     {
       "name": "(lldb) Launch",
       "type": "cppdbg",

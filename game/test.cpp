@@ -45,14 +45,16 @@ int main(int argc, char* argv[]) {
 
   Registry registry;
 
+  auto entity = registry.create();
+  entity.has<Comp>();
 
-  for (int i = 0; i < 100; ++i) {
-    auto entity = registry.create();
-    entity.assign<Comp>(i);
-    // entity.assign<Comp2>();
-    entity.get<Comp>()->test();
-    // entity.get<Comp2>()->test();
-  }
+  // for (int i = 0; i < 100; ++i) {
+  //   auto entity = registry.create();
+  //   entity.assign<Comp>(i);
+  //   // entity.assign<Comp2>();
+  //   entity.get<Comp>()->test();
+  //   // entity.get<Comp2>()->test();
+  // }
 
   // for(auto it : registry.with<Comp>()) {
   //   printf("ID: %d\n", it.id());

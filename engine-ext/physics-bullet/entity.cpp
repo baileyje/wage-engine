@@ -88,32 +88,44 @@ namespace wage {
       
       if (_rigidBody->getLinearVelocity().length() > 100) {
         _rigidBody->applyCentralImpulse(-impulse);
-      }      
-      entityBody->clearImpulse();
+      }       
     }
     btVector3 force = fromVector(entityBody->force());
     if (force.length() > 0) {
-      _rigidBody->applyCentralForce(force);	
-      entityBody->clearForce();
+      _rigidBody->applyCentralForce(force);
+    }
+    btVector3 torque = fromVector(entityBody->torque());
+    if (torque.length() > 0) {
+      _rigidBody->applyTorque(torque);
+    }
+    btVector3 torqueImpulse = fromVector(entityBody->torqueImpulse());
+    if (torqueImpulse.length() > 0) {
+      _rigidBody->applyTorqueImpulse(torqueImpulse);
+    }
+    if (entityBody->shouldClearLinearVelocity()) {
+      _rigidBody->setLinearVelocity(btVector3(0, 0, 0));
+    }
+    if (entityBody->shouldClearAngularVelocity()) {
+      _rigidBody->setAngularVelocity(btVector3(0, 0, 0));
     }
     if (entityBody->shouldStop()) {
-      _rigidBody->setLinearVelocity(btVector3(0, 0, 0));      
+      _rigidBody->setLinearVelocity(btVector3(0, 0, 0));
+      _rigidBody->setAngularVelocity(btVector3(0, 0, 0));
       entityBody->clearShouldStop();
     }
+    entityBody->clearForces();    
     _rigidBody->activate(true);
   }
 
   void PhysicsEntity::updateEntityTransform() {
-    if (!_rigidBody) {
+    if (!_rigidBody || entity().get<RigidBody>()->type() != RigidBodyType::dynamic) {
       return;
     }
     btTransform trans = transform();
     entity().get<Transform>()->position(fromBTVector(trans.getOrigin()));
     btQuaternion rotation = trans.getRotation();
-    // btScalar yawZ, pitchY, rollX;
-    // rotation.getEulerZYX(yawZ, pitchY, rollX);
     entity().get<Transform>()->rotation(
-      Quaternion(rotation.w(), rotation.x(), rotation.y(), rotation.z())
+      Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w())
     );
   }
 
@@ -126,7 +138,8 @@ namespace wage {
       return;
     }  
     btTransform transform = fromTransform(*entity().get<Transform>());
-    _rigidBody->getMotionState()->setWorldTransform(transform);
+    // _rigidBody->getMotionState()->setWorldTransform(transform);
+    _rigidBody->setCenterOfMassTransform(transform);
   }
 
 }

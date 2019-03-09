@@ -13,14 +13,6 @@
 
 using namespace wage;
 
-class Bearing {
-public:
-
-  Bearing() : rotation( { 0, 0, 0 }) {}
-
-  Quaternion rotation;
-
-};
 
 class Player {  
 };
@@ -32,50 +24,56 @@ class PlayerMovement : public System {
 
 public:
 
-  PlayerMovement() : System("PlayerMovement") {
+  PlayerMovement() : System("PlayerMovement"), lastPos(Vector2()), mouseSpeed(0.0005) {
   }
 
-  void update(SystemContext* context) {    
-    // printf("Bearing: %f:%f:%f\n", bearing.x, bearing.y, bearing.z);
+  void start(SystemContext* context) {
+    lastPos = Core::Instance->get<Input>()->mousePosition();
+  }
+
+  void fixedUpdate(SystemContext* context) {    
     auto player = *Core::Instance->get<EntityManager>()->registry()->with<Player>().begin();
     auto body = player.get<RigidBody>();
-    auto bearing = player.get<Bearing>()->rotation;
-    float force = 0.005;
+    auto mousePos = Core::Instance->get<Input>()->mousePosition();    
+    auto dx = lastPos.x - mousePos.x;
+    auto dy = lastPos.y - mousePos.y;
+    auto torque = Vector3::Up * mouseSpeed * dx + Vector3::Right * mouseSpeed * -dy;
+    body->addTorqueImpulse(torque);
+    auto bearing = player.get<Transform>()->rotation();
+    float force = 0.1;
+    auto impulse = Vector3::Zero;
     if (Core::Instance->get<Input>()->isPressed(Key::W)) {
-      body->addImpulse(
-        (bearing * Vector(0, 0, 1)).normalized() * force
-      );
+      impulse += (bearing * Vector(0, 0, 1)).normalized() * force;
     }
-    if (Core::Instance->get<Input>()->isPressed(Key::S)) {
-      body->addImpulse(
-        (bearing * Vector(0, 0, -1)).normalized() * force
-      );
+    if (Core::Instance->get<Input>()->isPressed(Key::S)) {      
+      body->addImpulse((bearing * Vector(0, 0, -1)).normalized() * force);
     } 
     if (Core::Instance->get<Input>()->isPressed(Key::A)) {
-      body->addImpulse(
-        (bearing * Vector(1, 0, 0)).normalized() * force
-      );
+      impulse += (bearing * Vector(1, 0, 0)).normalized() * force;
     }
     if (Core::Instance->get<Input>()->isPressed(Key::D)) {
-      body->addImpulse(
-        (bearing * Vector(-1, 0, 0)).normalized() * force
-      );
+      impulse += (bearing * Vector(-1, 0, 0)).normalized() * force;
     }
     if (Core::Instance->get<Input>()->isPressed(Key::Space)) {
-      body->addImpulse(
-        (bearing * Vector(0, 1, 0)).normalized() * force
-      );
+      impulse += (bearing * Vector(0, 1, 0)).normalized() * force;
     }
-    if (Core::Instance->get<Input>()->isPressed(Key::LeftShift)) {
-      body->addImpulse(
-        (bearing * Vector(0, -1, 0)).normalized() * force
-      );
-    }  
+    if (Core::Instance->get<Input>()->isPressed(Key::LeftShift)) {    
+      impulse += (bearing * Vector(0, -1, 0)).normalized() * force;
+    }
+    body->addImpulse(impulse);
+    
     if (Core::Instance->get<Input>()->isPressed(Key::F)) {
       body->shouldStop(true);
-    }  
+    }
+    lastPos = mousePos;
   }
 
+private:
+
+  Vector2 lastPos;
+
+  float mouseSpeed;
+  
 };
 
 // This is a fairly lame third person rigging
@@ -83,44 +81,46 @@ class ThirdPersonCamera : public System {
 
 public: 
 
-  ThirdPersonCamera(Entity camera, Entity player) : System("ThirdPersonCamera"), lastPos(Vector2()), mouseSpeed(0.01), camera(camera), player(player) {
+  ThirdPersonCamera(Entity camera, Entity player) : System("ThirdPersonCamera"), camera(camera), player(player) {
   }
 
-  void start(SystemContext* context) {
-    lastPos = Core::Instance->get<Input>()->mousePosition();
+  void start(SystemContext* context) {    
+    followDistance = camera.get<Transform>()->position().distanceTo(player.get<Transform>()->position());
   }
 
-  void update(SystemContext* context) {
-    auto mousePos = Core::Instance->get<Input>()->mousePosition();    
-    auto dx = lastPos.x - mousePos.x;
-    auto dy = lastPos.y - mousePos.y;
-    auto xRotation = player.get<Bearing>()->rotation.rotated(
-        mouseSpeed * dx, 
-        { 0, 1, 0 }
-    );
-    auto rotation = xRotation.rotated(
-      mouseSpeed * -dy, 
-      { 1, 0, 0 }
-    );
+  void fixedUpdate(SystemContext* context) {
+
+    // printf("Pre TP Rotation,%f,%f,%f,%f\n", player.get<Transform>()->rotation().x, player.get<Transform>()->rotation().y, player.get<Transform>()->rotation().z, player.get<Transform>()->rotation().w);
+    
+  
+    // auto xRotation = player.get<Transform>()->rotation().rotated(
+    //     mouseSpeed * dx, 
+    //     { 0, 1, 0 }
+    // );
+    // auto rotation = xRotation.rotated(
+    //   mouseSpeed * -dy, 
+    //   { 1, 0, 0 }
+    // );
+    //printf("Post TP Rotation,%f,%f,%f,%f\n", rotation.x, rotation.y, rotation.z, rotation.w);
   
     // 2. Set both camera and player rotation
-    player.get<Transform>()->rotation(rotation);
-    player.get<Bearing>()->rotation = rotation;
-    camera.get<Transform>()->rotation(rotation);
+    // player.get<Transform>()->rotation(rotation);
+    // player.get<Bearing>()->rotation = rotation;
+    // camera.get<Transform>()->rotation(rotation);
     
-    // 3. Adjust camera position
-    auto rBearing = (rotation * Vector(0, 0, -1)).normalized();
-    auto distance = Vector::distance(player.get<Transform>()->position(), camera.get<Transform>()->position());
-    auto pos = player.get<Transform>()->position() + rBearing * distance;
+    // . Adjust camera position
+    auto bearing = player.get<Transform>()->rotation();
+    auto reverseBearing = (bearing * Vector(0, 0, -1)).normalized();
+    // auto distance = Vector::distance(player.get<Transform>()->position(), camera.get<Transform>()->position());
+    auto pos = player.get<Transform>()->position() + reverseBearing * followDistance;
+    printf("Cam Pos: %f:%f:%f\n", pos.x, pos.y, pos.z);
     camera.get<Transform>()->position(pos);
-    lastPos = mousePos;
+    camera.get<Transform>()->rotation(bearing);        
   }
 
 private:
 
-    Vector2 lastPos;
-
-    float mouseSpeed;
+    float followDistance;
 
     Entity camera;
 
@@ -159,7 +159,7 @@ public:
 
   EnemyMovement() : System("EnemyMovement"), chasing(false), running(false) {
   }
-  void update(SystemContext* context) {
+  void fixedUpdate(SystemContext* context) {
     auto manager = Core::Instance->get<EntityManager>();
     if (Core::Instance->get<Input>()->isPressed(Key::C) && !chasing) {
       for (auto entity : manager->registry()->with<Enemy>()) {
@@ -176,20 +176,20 @@ public:
       running = true;
       chasing = false;  
     }
-  }
+  // }
 
-  void fixedUpdate(SystemContext* context) {
-    auto manager = Core::Instance->get<EntityManager>();
+  // void fixedUpdate(SystemContext* context) {
+  //   auto manager = Core::Instance->get<EntityManager>();
     auto target = *manager->registry()->with<Player>().begin();
     if (running || chasing) {    
       for (auto entity : manager->registry()->with<Enemy>()) {
         if (!entity.valid()) {
           return;
         }
-        if (chasing && Vector::distance(target.get<Transform>()->position(), entity.get<Transform>()->position()) < 20) {
-          entity.get<RigidBody>()->shouldStop(true);
-          continue;
-        }
+        // if (chasing && Vector::distance(target.get<Transform>()->position(), entity.get<Transform>()->position()) < 20) {
+        //   entity.get<RigidBody>()->shouldStop(true);
+        //   continue;
+        // }
         auto dir = target.get<Transform>()->position() - entity.get<Transform>()->position();
         auto impulse = dir.normalized() * 0.1;
         if (running) {
@@ -258,6 +258,47 @@ private:
 
 };
 
+
+class PrePhysicsService : public Service {
+public:
+  PrePhysicsService() : Service("Poop2") {}
+
+  void start() {
+    Core::Instance->onFixedUpdate([&](const Frame&) {
+      auto registry = Core::Instance->get<EntityManager>()->registry();
+      auto entTran = (*registry->with<Player>().begin()).get<Transform>();
+      //printf("Pre Physics Rotation,%f,%f,%f,%f\n", entTran->rotation().x, entTran->rotation().y, entTran->rotation().z, entTran->rotation().w);
+    });
+  }
+};
+
+class PostPhysicsService : public Service {
+public:
+  PostPhysicsService() : Service("Poop3") {}
+
+  void start() {
+    Core::Instance->onFixedUpdate([&](const Frame&) {
+      auto registry = Core::Instance->get<EntityManager>()->registry();
+      auto entTran = (*registry->with<Player>().begin()).get<Transform>();
+      //printf("Post Physics Rotation,%f,%f,%f,%f\n", entTran->rotation().x, entTran->rotation().y, entTran->rotation().z, entTran->rotation().w);
+    });
+  }
+};
+
+class TestRenderService : public Service {
+public:
+  TestRenderService() : Service("Poop") {}
+
+  void start() {
+    Core::Instance->onRender([&](const Frame&) {
+      auto registry = Core::Instance->get<EntityManager>()->registry();
+      auto entTran = (*registry->with<Player>().begin()).get<Transform>();
+      // printf("Pre Render Rotation,%f,%f,%f,%f\n", entTran->rotation().x, entTran->rotation().y, entTran->rotation().z, entTran->rotation().w);
+    });
+  }
+
+};
+
 void intHandler(int);
 
 void addEnemy(EntityManager* entityManager, SystemManager* systemManager, Vector position, float scale) {
@@ -289,7 +330,6 @@ Entity addPlayer(EntityManager* entityManager, SystemManager* systemManager) {
   player.assign<Mesh>(Mesh::Sphere);
   player.assign<Collider>(ColliderType::sphere);
   player.assign<Material>(make<Texture>("textures/test_planet.png"));
-  player.assign<Bearing>();
   player.assign<Player>();
   return player;
 }
@@ -303,7 +343,10 @@ void setupServices(Core* core, std::string path) {
   core->create<Input, GlfwInput>();
   core->create<EntityManager>();
   core->create<SystemManager>();
+  core->create<PrePhysicsService>();  
   core->create<Physics, BulletPhysics>();
+  core->create<PostPhysicsService>();
+  core->create<TestRenderService>();
   core->create<Renderer, GlRenderer>();
 }
 
@@ -356,7 +399,7 @@ void setupScene(EntityManager* entityManager, SystemManager* systemManager) {
   camTransform->rotation(Vector(00, 0.0, 0));
   cameraEntity.assign<PerspectiveCamera>();
   systemManager->create<ThirdPersonCamera>(cameraEntity, player);
-  systemManager->create<Follow>(cameraEntity, player);
+
 
   Font font("fonts/ARCADE.TTF", 60);
   auto fpsLabelEntity = entityManager->create();  
@@ -369,9 +412,9 @@ void setupScene(EntityManager* entityManager, SystemManager* systemManager) {
   auto posLabel = posLabelEntity.assign<Label>("POS: ", font, Color(1, 1, 1, 0));  
   systemManager->create<PosDisplay>(posLabel, player);
   
-  for (int i = 0; i < 200; i++) {
-    addRandomEnemy(entityManager, systemManager);
-  }
+    for (int i = 0; i < 200; i++) {
+      addRandomEnemy(entityManager, systemManager);
+    }
 
   systemManager->create<EnemyMovement>();
   systemManager->create<PlayerMovement>();

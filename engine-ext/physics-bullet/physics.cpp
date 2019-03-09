@@ -35,6 +35,7 @@ namespace wage {
 
 		// Run the Simulation
 		dynamicsWorld.stepSimulation(frame.timeStep(), 3);	
+		// dynamicsWorld.performDiscreteCollisionDetection();
 
 		// Get entities up to speed
 		for (auto physicsEntity : entities) {
@@ -56,9 +57,7 @@ namespace wage {
 	}
 
 	void BulletPhysics::add(Entity entity) {
-		if (entity.has<RigidBody>()) {
-			entities.push_back(PhysicsEntity::from(entity, &dynamicsWorld));
-		}
+		entities.push_back(PhysicsEntity::from(entity, &dynamicsWorld));
 	}
 
 	void BulletPhysics::remove(Entity entity) {

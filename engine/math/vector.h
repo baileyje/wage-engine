@@ -227,10 +227,14 @@ namespace wage {
     }
     
     static float distance(const Vector3& left, const Vector3& right) {
+      return left.distanceTo(right);
+    }
+
+    float distanceTo(const Vector3& other) const {
       auto dist = sqrtf(
-        powf(left.x - right.x, 2) +
-        powf(left.y - right.y, 2) +
-        powf(left.z - right.z, 2) 
+        powf(x - other.x, 2) +
+        powf(y - other.y, 2) +
+        powf(z - other.z, 2) 
       );
       return dist;
     }
