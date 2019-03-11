@@ -33,24 +33,24 @@ namespace wage {
     meshQueue.clear();
   }
 
-  void Renderer::renderUi(EntityManager* manager, RenderContext* renderContext) { 
-    uiQueue.cull(renderContext);
+  void Renderer::renderUi(EntityManager* manager, RenderContext* renderContext) {
+    // uiQueue.cull(renderContext);
     uiQueue.sort(renderContext);
     uiQueue.render(renderContext);
     uiQueue.clear();
   }
 
   std::tuple<Entity, Camera*> cameraAndEntity(EntityManager* manager) {
-    for (auto entity : manager->registry()->with<PerspectiveCamera>())  {
-      return { entity, entity.get<PerspectiveCamera>().get() };
+    for (auto entity : manager->registry()->with<PerspectiveCamera>()) {
+      return {entity, entity.get<PerspectiveCamera>().get()};
     }
-    for (auto entity : manager->registry()->with<OrthographicCamera>())  {
-      return { entity, entity.get<OrthographicCamera>().get() };
+    for (auto entity : manager->registry()->with<OrthographicCamera>()) {
+      return {entity, entity.get<OrthographicCamera>().get()};
     }
-    return { Entity(), nullptr };
+    return {Entity(), nullptr};
   }
 
-  void Renderer::render() {  
+  void Renderer::render() {
     beginRender();
     auto manager = Core::Instance->get<EntityManager>();
     auto camera = cameraAndEntity(manager);
@@ -70,20 +70,11 @@ namespace wage {
     for (auto ent : manager->registry()->with<Spotlight>()) {
       spotlights.push_back(ent);
     }
-    RenderContext renderContext(std::get<0>(camera), std::get<1>(camera), Vector2(window->width(),  window->height()), dirLights, pointLights, spotlights);
-
-    // auto manager = Core::Instance->get<EntityManager>(); 
-    for (auto entity : manager->registry()->with<Mesh>()) {
-      auto trans = entity.get<Transform>();
-      auto mesh = entity.get<Mesh>();
-      auto mat = entity.get<Material>();
-      renderMesh(trans, mesh, mat);
-    }
+    RenderContext renderContext(std::get<0>(camera), std::get<1>(camera), Vector2(window->width(), window->height()), dirLights, pointLights, spotlights);
 
     renderMeshes(manager, &renderContext);
     // TODO: Sprites
     renderUi(manager, &renderContext);
     endRender();
   }
-
 }

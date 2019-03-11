@@ -5,7 +5,7 @@
 #include "render-gl/util.h"
 
 namespace wage {
-  VertexBuffer::VertexBuffer(const void* data,  unsigned int size) {  
+  VertexBuffer::VertexBuffer(const void* data, unsigned int size) {
     GL_FAIL_CHECK(glGenBuffers(1, &id));
     GL_FAIL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, id));
     GL_FAIL_CHECK(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));
@@ -15,7 +15,7 @@ namespace wage {
     GL_FAIL_CHECK(glDeleteBuffers(1, &id));
   }
 
-  void VertexBuffer::bind() const {  
+  void VertexBuffer::bind() const {
     GL_FAIL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, id));
   }
 
@@ -26,5 +26,4 @@ namespace wage {
   VertexBufferLayout* VertexBuffer::layout() {
     return &_layout;
   }
-
 }

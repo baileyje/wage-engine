@@ -6,125 +6,13 @@
 
 #include "glm/ext.hpp"
 
-
 namespace wage {
 
-  // TODO: MAKE THIS WORK. Not working due to issue with virtual method in template class.  
-  /*
-  template <int Size>
-  class VectorBase {
-  
-  public:
+  class Vector2;
 
-    static VectorBase<Size> Zero;
-
-    // Operators
-    VectorBase<Size>& operator+=(const VectorBase<Size>& rhs) {
-      for (int idx = 0; idx < Size; ++idx) {
-        this[idx] += rhs[idx];
-      }
-      return *this;
-    }
-
-    VectorBase<Size>& operator-=(const VectorBase<Size>& rhs) {
-      for (int idx = 0; idx < Size; ++idx) {
-        this[idx] -= rhs[idx];
-      }
-      return *this;
-    }
-
-    VectorBase<Size>& operator*=(const VectorBase<Size>& rhs) {
-      for (int idx = 0; idx < Size; ++idx) {
-        this[idx] *= rhs[idx];
-      }
-      return *this;
-    }
-
-    VectorBase<Size>& operator*=(const float& val) {
-      for (int idx = 0; idx < Size; ++idx) {
-        this[idx] *= val;
-      }
-      return *this;
-    }
-
-    VectorBase<Size>& operator/=(const VectorBase<Size>& rhs) {
-      for (int idx = 0; idx < Size; ++idx) {
-        this[idx] /= rhs[idx];
-      }
-      return *this;
-    }
-
-    VectorBase<Size>& operator/=(const float& val) {
-      for (int idx = 0; idx < Size; ++idx) {
-        this[idx] /= val;
-      }
-      return *this;
-    }
-
-    virtual const float& operator[](int idx) const = 0;
-
-    virtual float& operator[](int idx) = 0;
-    
-    friend VectorBase<Size> operator+(VectorBase<Size> lhs, const VectorBase<Size>& rhs) {
-      lhs += rhs;
-      return lhs;
-    }
-
-    friend VectorBase<Size> operator-(VectorBase<Size> lhs, const VectorBase<Size>& rhs) {
-      lhs -= rhs;
-      return lhs;
-    }
-
-    friend VectorBase<Size> operator*(VectorBase<Size> lhs, const VectorBase<Size>& rhs) {
-      lhs *= rhs;
-      return lhs;
-    }
-
-    friend VectorBase<Size> operator*(VectorBase<Size> lhs, const float& val) {
-      lhs *= val;
-      return lhs;
-    }
-
-    friend VectorBase<Size> operator/(VectorBase<Size> lhs, const float& val) {
-      lhs /= val;
-      return lhs;
-    }
-
-    static float dot(const VectorBase<Size>& left, const VectorBase<Size>& right) {
-      VectorBase<Size> tmp = left * right;
-      float sum = 0;
-      for (int idx = 0; idx < Size; ++idx) {
-        sum += tmp[idx];
-      }
-      return sum;
-    }
-    
-    static float distance(const VectorBase<Size>& left, const VectorBase<Size>& right) {
-      float sum = 0;
-      for (int idx = 0; idx < Size; ++idx) {
-        sum += powf(left[idx] - right[idx], 2);
-      }
-      return sqrtf(sum);
-    }
-
-    static VectorBase<Size> normalized(const VectorBase<Size>& vector) {
-      return vector / vector.magnatude();
-    }
-
-    VectorBase<Size> normalized() const {
-      return VectorBase<Size>::normalized(*this);
-    }
-
-    float magnatude() const {
-      return VectorBase<Size>::distance(Zero, *this);
-    }
-
-  };
-*/
   class Vector3 {
-  
-  public:
 
+  public:
     float x;
 
     float y;
@@ -153,14 +41,16 @@ namespace wage {
     Vector3(float v) : Vector3(v, v, v) {
     }
 
-    Vector3(float x, float y , float z) : x(x), y(y), z(z) {
+    Vector3(float x, float y, float z) : x(x), y(y), z(z) {
     }
+
+    Vector3(const Vector2& vector);
 
     // TODO: Remove!
     Vector3(glm::vec3 vec) : Vector3(vec.x, vec.y, vec.z) {
     }
 
-    // // Operators
+    // Operators
     Vector3& operator+=(const Vector3& rhs) {
       this->x += rhs.x;
       this->y += rhs.y;
@@ -225,17 +115,16 @@ namespace wage {
       Vector3 tmp = left * right;
       return tmp.x + tmp.y + tmp.z;
     }
-    
+
     static float distance(const Vector3& left, const Vector3& right) {
       return left.distanceTo(right);
     }
 
     float distanceTo(const Vector3& other) const {
       auto dist = sqrtf(
-        powf(x - other.x, 2) +
-        powf(y - other.y, 2) +
-        powf(z - other.z, 2) 
-      );
+          powf(x - other.x, 2) +
+          powf(y - other.y, 2) +
+          powf(z - other.z, 2));
       return dist;
     }
 
@@ -246,7 +135,7 @@ namespace wage {
     float magnatude() const {
       return Vector3::distance(Zero, *this);
     }
-    
+
     // TODO: REMOVE THIS JUNK!
     glm::vec3 glm() const {
       return glm::vec3(x, y, z);
@@ -254,14 +143,15 @@ namespace wage {
   };
 
   class Vector2 {
-  
-  public:
 
+  public:
     float x;
 
     float y;
 
     static Vector2 Zero;
+
+    static Vector2 One;
 
     Vector2() : Vector2(0) {
     }
@@ -270,6 +160,9 @@ namespace wage {
     }
 
     Vector2(float x, float y) : x(x), y(y) {
+    }
+
+    Vector2(const Vector3& vector) : Vector2(vector.x, vector.y) {
     }
 
     // TODO: Remove!
@@ -336,16 +229,15 @@ namespace wage {
       Vector2 tmp = left * right;
       return tmp.x + tmp.y;
     }
-    
+
     static float distance(const Vector2& left, const Vector2& right) {
       return left.distanceTo(right);
     }
 
     float distanceTo(const Vector2& vector) const {
       auto dist = sqrtf(
-        powf(x - vector.x, 2) +
-        powf(y - vector.y, 2)
-      );
+          powf(x - vector.x, 2) +
+          powf(y - vector.y, 2));
       return dist;
     }
 
@@ -356,17 +248,14 @@ namespace wage {
     float magnatude() const {
       return Vector2::distance(Zero, *this);
     }
-    
+
     // TODO: REMOVE THIS JUNK!
     glm::vec2 glm() const {
       return glm::vec2(x, y);
     }
   };
 
-  // typedef glm::vec2 Vector2;
-  
   typedef Vector3 Vector;
-
 }
 
 #endif //MATH_VECTOR_H

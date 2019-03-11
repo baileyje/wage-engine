@@ -5,15 +5,14 @@
 
 namespace wage {
 
-  class OrthographicCamera : public Camera  {
+  class OrthographicCamera : public Camera {
 
   public:
-
-    OrthographicCamera() : OrthographicCamera(0, 800, 0, 600,  -10.0f, 100.0f) {
+    OrthographicCamera() : OrthographicCamera(0, 800, 0, 600, -10.0f, 100.0f) {
     }
 
-    OrthographicCamera(float left, float right, float top, float bottom, float nearClip, float farClip) 
-      : Camera(CameraType::Orthographic), _left(left), _right(right), _top(top), _bottom(bottom), _nearClip(nearClip), _farClip(farClip) {
+    OrthographicCamera(float left, float right, float top, float bottom, float nearClip, float farClip)
+        : Camera(CameraType::orthographic), _left(left), _right(right), _top(top), _bottom(bottom), _nearClip(nearClip), _farClip(farClip) {
     }
 
     inline float left() {
@@ -66,10 +65,9 @@ namespace wage {
 
     inline Matrix screenProjection(Vector2 screenSize) {
       return Matrix::orthographic(
-        left(), right(),
-        top(), bottom(),
-        nearClip(), farClip()
-      );
+          left(), right(),
+          top(), bottom(),
+          nearClip(), farClip());
     }
 
     inline Frustum frustum(Vector2 screenSize, Transform* cameraTransform) {
@@ -77,9 +75,7 @@ namespace wage {
       return returnFrustum;
     }
 
-
   private:
-
     float _left;
 
     float _right;
@@ -91,9 +87,7 @@ namespace wage {
     float _nearClip;
 
     float _farClip;
-
   };
-
 }
 
 #endif //ENTITY_ORTHOGRAPHIC_CAMERA_H

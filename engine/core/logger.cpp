@@ -11,5 +11,4 @@ namespace wage {
   LogLevel LogLevel::error = LogLevel(3, "ERROR", 31);
 
   LogLevel Logger::CurrentLevel = LogLevel::info;
-
 }

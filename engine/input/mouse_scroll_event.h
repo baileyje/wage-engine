@@ -6,9 +6,8 @@
 namespace wage {
 
   class MouseScrollEvent {
-  
-  public:
 
+  public:
     MouseScrollEvent(Vector2 position) : _position(position) {
     }
 
@@ -17,11 +16,8 @@ namespace wage {
     }
 
   private:
-    
     Vector2 _position;
-
   };
-
 }
 
 #endif //INPUT_MOUSE_SCROLL_EVENT_H

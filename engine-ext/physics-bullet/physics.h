@@ -16,7 +16,6 @@ namespace wage {
   class BulletPhysics : public Physics {
 
   public:
-    
     BulletPhysics();
 
     virtual ~BulletPhysics();
@@ -32,21 +31,18 @@ namespace wage {
     void remove(Entity entity) override;
 
   private:
-
     btDefaultCollisionConfiguration collisionConfiguration;
-    
+
     btCollisionDispatcher dispatcher;
 
     btDbvtBroadphase overlappingPairCache;
 
-    btSequentialImpulseConstraintSolver solver;  
+    btSequentialImpulseConstraintSolver solver;
 
-    btDiscreteDynamicsWorld dynamicsWorld;  
+    btDiscreteDynamicsWorld dynamicsWorld;
 
     std::vector<PhysicsEntity*> entities;
-
   };
-
 }
 
 #endif // PHYSICS_BULLET_H

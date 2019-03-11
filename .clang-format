@@ -1,0 +1,14 @@
+BasedOnStyle: LLVM
+
+AccessModifierOffset: -2
+AllowShortIfStatementsOnASingleLine: false
+BreakBeforeBraces: Attach
+ColumnLimit: 0
+IndentCaseLabels: false
+IndentWidth: 2
+SortIncludes: false
+TabWidth: 2
+Cpp11BracedListStyle: true
+PointerAlignment: Left
+FixNamespaceComments: false
+NamespaceIndentation: All

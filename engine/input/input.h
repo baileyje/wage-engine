@@ -15,27 +15,23 @@ namespace wage {
   class Input : public Service {
 
   public:
-
-    Input() : Service("Input"), window(nullptr), messaging(nullptr) { }
+    Input() : Service("Input"), window(nullptr), messaging(nullptr) {}
 
     ~Input() {}
 
     void start();
-    
+
     virtual bool isPressed(Key key) = 0;
 
     virtual Vector2 mousePosition() = 0;
 
-  protected: 
-    
+  protected:
     Window* window;
-    
+
     std::unordered_set<int> frameKeys;
 
     Messaging* messaging;
-
   };
-
 }
 
 #endif //INPU T_H

@@ -15,18 +15,17 @@ namespace wage {
 
   template <typename T, typename IndexType = uint32_t>
   class ObjectPool : public Reference<T, IndexType>::Source {
-    
-    template<typename RT, typename RIndexType>
+
+    template <typename RT, typename RIndexType>
     friend class Reference;
 
     typedef Reference<T, IndexType> RefType;
 
   public:
-    
     static const IndexType OutOfBounds = static_cast<IndexType>(-1);
 
     struct Item {
-      
+
       Item() : Item(OutOfBounds) {}
 
       Item(IndexType index) : index(index), prev(nullptr), next(nullptr), valid(false), version(0) {}
@@ -34,7 +33,7 @@ namespace wage {
       // Move
       Item& operator=(Item&& src) {
         prev = std::move(src.prev);
-        next = std::move(src.next);      
+        next = std::move(src.next);
         item = std::move(src.item);
         index = std::move(src.index);
         return *this;
@@ -43,7 +42,7 @@ namespace wage {
       // Copy
       Item(Item&& src) {
         prev = std::move(src.prev);
-        next = std::move(src.next);      
+        next = std::move(src.next);
         item = std::move(src.item);
         index = std::move(src.index);
       }
@@ -51,9 +50,9 @@ namespace wage {
       IndexType index;
 
       Item* prev;
-      
+
       Item* next;
-      
+
       T item;
 
       bool valid;
@@ -62,13 +61,12 @@ namespace wage {
     };
 
     class Iterator {
-      
+
       friend class ObjectPool<T, IndexType>;
 
       friend struct Item;
 
     public:
-      
       Iterator(ObjectPool<T, IndexType>* pool, Item* current) : pool(pool), current(current) {}
 
       ~Iterator() {}
@@ -93,7 +91,7 @@ namespace wage {
       }
 
       Iterator& operator--() {
-        current = current->prev;      
+        current = current->prev;
         return (*this);
       }
 
@@ -107,16 +105,14 @@ namespace wage {
         return pool->reference(current->index);
       }
 
-      RefType operator->() { 
+      RefType operator->() {
         return pool->reference(current->index);
       }
 
     private:
-      
       ObjectPool<T, IndexType>* pool;
-      
-      Item* current;
 
+      Item* current;
     };
 
     ObjectPool(int poolSize = 100) : storage(poolSize), poolSize(poolSize), currentSize(0) {
@@ -129,7 +125,7 @@ namespace wage {
       if (freeTail.prev != &freeHead) {
         index = freeTail.prev->index;
         storage[index].version++;
-        removeFromList(index);      
+        removeFromList(index);
       } else {
         index = currentSize++;
       }
@@ -177,7 +173,6 @@ namespace wage {
     }
 
   private:
-
     T* get(IndexType index) {
       return index < currentSize ? &storage[index].item : nullptr;
     }
@@ -203,12 +198,12 @@ namespace wage {
       auto prev = storage[index].prev;
       auto next = storage[index].next;
       prev->next = next;
-      next->prev = prev;    
+      next->prev = prev;
     }
 
     // FixedStorage<Item> storage;
     DynamicStorage<Item> storage;
-    
+
     IndexType poolSize;
 
     IndexType currentSize;
@@ -220,9 +215,7 @@ namespace wage {
     Item freeHead;
 
     Item freeTail;
-
   };
-
 }
 
 #endif //OBJECT_POOL_H

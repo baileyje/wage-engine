@@ -1,7 +1,5 @@
 #include "render-gl/material.h"
 
-#include "glm/gtc/matrix_transform.hpp"
-
 #include "render-gl/util.h"
 
 namespace wage {
@@ -13,11 +11,10 @@ namespace wage {
   }
 
   void GlMaterial::bind() const {
-    _program->bind();  
+    _program->bind();
   }
 
   void GlMaterial::unbind() const {
     _program->unbind();
   }
-
 }

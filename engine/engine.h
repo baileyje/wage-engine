@@ -43,8 +43,7 @@
 #include "component/lighting/point_light.h"
 #include "component/lighting/spotlight.h"
 
-#include "ui/label.h"
 #include "ui/ui.h"
-
+#include "ui/system.h"
 
 #endif //ENGINE_H

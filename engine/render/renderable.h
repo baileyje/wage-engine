@@ -10,7 +10,6 @@ namespace wage {
   class Renderable {
 
   public:
-
     Renderable() {}
 
     virtual ~Renderable() {}
@@ -18,13 +17,11 @@ namespace wage {
     virtual void render(RenderContext* context) = 0;
 
     virtual Vector position() = 0;
-    
+
     virtual BoundingBox boundingBox() = 0;
 
     virtual BoundingSphere boundingSphere() = 0;
-
   };
-
 }
 
 #endif //RENDERABLE_H

@@ -4,5 +4,4 @@
 #include "memory/allocator.h"
 
 namespace wage {
-  
 }

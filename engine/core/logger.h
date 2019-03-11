@@ -5,8 +5,8 @@
 #include <cstdio>
 #include <iostream>
 
-#define LeveledLog(Level) \
-  template<typename... Args> \
+#define LeveledLog(Level)     \
+  template <typename... Args> \
   static void Level(std::string message, Args... args) { log(LogLevel::Level, message, args...); }
 
 namespace wage {
@@ -14,7 +14,6 @@ namespace wage {
   class LogLevel {
 
   public:
-
     static LogLevel debug;
 
     static LogLevel info;
@@ -33,31 +32,28 @@ namespace wage {
     inline int colorCode() { return _colorCode; }
 
   private:
-
     int _severity;
 
     std::string _name;
 
     int _colorCode;
-
   };
 
   class Logger {
 
   public:
-
     static LogLevel CurrentLevel;
 
     LeveledLog(debug)
-    
-    LeveledLog(info)
 
-    LeveledLog(warn)
+        LeveledLog(info)
 
-    LeveledLog(error)
-  
-    template <typename Arg>
-    static void write(Arg arg) {
+            LeveledLog(warn)
+
+                LeveledLog(error)
+
+                    template <typename Arg>
+                    static void write(Arg arg) {
       std::cout << arg;
     }
 
@@ -77,14 +73,13 @@ namespace wage {
 
     template <typename... Args>
     static void log(LogLevel level, std::string& message, Args... args) {
-      if (level.severity() >= CurrentLevel.severity()) {      
+      if (level.severity() >= CurrentLevel.severity()) {
         std::cout << "\033[" << colorForLevel(level) << ";1m" << nameForLevel(level) << "\033[0m ";
         write(message, args...);
         std::cout << std::endl;
       }
-    }  
+    }
   };
-
 }
 
 #endif // LOGGER_H

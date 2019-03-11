@@ -8,9 +8,8 @@ namespace wage {
   class Light {
 
   public:
-
-    Light(Color ambient, Color diffuse, Color specular) 
-      : _ambient(ambient), _diffuse(diffuse), _specular(specular) {    
+    Light(Color ambient, Color diffuse, Color specular)
+        : _ambient(ambient), _diffuse(diffuse), _specular(specular) {
     }
 
     ~Light() {}
@@ -40,16 +39,12 @@ namespace wage {
     }
 
   protected:
-
     Color _ambient;
 
     Color _diffuse;
 
     Color _specular;
-
-
   };
-
 }
 
 #endif //COMPONENT_LIGHT_H

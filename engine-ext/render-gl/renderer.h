@@ -9,25 +9,24 @@
 #include "render-gl/vao_manager.h"
 #include "render-gl/font_manager.h"
 
-
 namespace wage {
 
   class GlRenderer : public Renderer {
-  
-  public:
 
+  public:
     void start();
 
-    void renderText(Vector position, std::string text, Font font, Color color);
+    void renderText(Vector2 position, std::string text, Font font, Color color);
+
+    void renderSprite(Vector2 position, Vector2 size, Color color, Texture texture);
 
     void renderMesh(Reference<Transform> transform, Reference<Mesh> mesh, Reference<Material> material);
-    
+
     virtual void beginRender();
 
     virtual void endRender();
 
   private:
-
     VaoManager vaoManager;
 
     GlTextureManager textureManager;
@@ -40,9 +39,8 @@ namespace wage {
 
     std::vector<PointLight*> pointLights;
 
-    std::vector<Spotlight*> spotlights;    
+    std::vector<Spotlight*> spotlights;
   };
-
 }
 
 #endif //GL_RENDERER_H

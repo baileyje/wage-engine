@@ -15,11 +15,9 @@ namespace wage {
   }
 
   Quaternion Quaternion::fromEulers(const Vector& vector) {
-    return Quaternion({
-      glm::radians(vector.x),
-      glm::radians(vector.y),
-      glm::radians(vector.z)
-    });
+    return Quaternion({glm::radians(vector.x),
+                       glm::radians(vector.y),
+                       glm::radians(vector.z)});
   }
 
   Vector Quaternion::eulerAngles() const {
@@ -34,7 +32,7 @@ namespace wage {
   Quaternion& Quaternion::operator*=(const Quaternion& rhs) {
     glm::quat leftTmp = wrap(*this);
     glm::quat rightTmp = wrap(rhs);
-    leftTmp *= rightTmp; 
+    leftTmp *= rightTmp;
     x = leftTmp.x;
     y = leftTmp.y;
     z = leftTmp.z;
@@ -44,7 +42,7 @@ namespace wage {
 
   Vector operator*(Quaternion quat, const Vector& vector) {
     glm::vec3 tmp = wrap(quat) * vector.glm();
-    return Vector(tmp.x, tmp.y, tmp.z);;
+    return Vector(tmp.x, tmp.y, tmp.z);
+    ;
   }
-
 }

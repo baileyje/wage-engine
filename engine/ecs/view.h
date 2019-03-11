@@ -11,18 +11,16 @@ namespace wage {
   class View {
 
   public:
-
     typedef std::function<Entity(EntityId)> Getter;
 
     class Iterator {
-      
+
       typedef typename ComponentPool<C>::EntityComponentPair Pair;
 
       typedef typename ObjectPool<Pair, ComponentId>::Iterator WrappedIterator;
 
     public:
-      
-      Iterator(View<Entity,C>* view, WrappedIterator wrapped) : view(view), wrapped(wrapped) {
+      Iterator(View<Entity, C>* view, WrappedIterator wrapped) : view(view), wrapped(wrapped) {
       }
 
       ~Iterator() {}
@@ -57,20 +55,18 @@ namespace wage {
         return temp;
       }
 
-      Entity operator*() { 
+      Entity operator*() {
         return view->getter((*wrapped)->entityId());
       }
 
-      Entity operator->() { 
+      Entity operator->() {
         return view->getter((*wrapped)->entityId());
       }
 
     private:
-      
       View<Entity, C>* view;
 
       WrappedIterator wrapped;
-
     };
 
     View(ComponentPool<C>* pool, Getter getter) : pool(pool), getter(getter) {}
@@ -84,13 +80,10 @@ namespace wage {
     }
 
   private:
-
     ComponentPool<C>* pool;
 
     Getter getter;
-
   };
-
 }
 
 #endif // ECS_VIEW_H

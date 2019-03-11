@@ -8,11 +8,10 @@ namespace wage {
   class Buffer {
 
   public:
-
     typedef uint8_t Byte;
 
     Buffer() : _data(nullptr), _length(0) {}
-  
+
     inline Byte* data() { return _data; }
 
     inline const Byte* data() const { return _data; }
@@ -34,18 +33,14 @@ namespace wage {
         return;
       }
       allocate(length, allocator);
-      memcpy(_data, data, length);      
+      memcpy(_data, data, length);
     }
 
   private:
-
-
     Byte* _data;
-    
+
     size_t _length;
-
   };
-
 }
 
 #endif // MEMORY_BUFFER_H

@@ -10,9 +10,8 @@
 namespace wage {
 
   class GlShaderManager {
-  
-  public:
 
+  public:
     GlShader* load(std::string vertextPath, std::string fragmentPath) {
       // TODO: Cache
       // auto shader = new GlShader(
@@ -29,13 +28,10 @@ namespace wage {
     }
 
   private:
-
     AssetManager* _assetManager;
 
     // std::unordered_map<std::string, GlTexture*> cache;
-
   };
-
 }
 
 #endif //RENDERER_SHADER_MANAGER_H

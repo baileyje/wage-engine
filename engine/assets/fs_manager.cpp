@@ -18,8 +18,4 @@ namespace wage {
     auto buffer = fileSystem->read(filePath(asset->key()), Allocator::Assets());
     asset->set(std::move(buffer));
   }
-
 }
-
-
-

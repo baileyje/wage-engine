@@ -14,13 +14,12 @@ namespace wage {
   class ServiceMap {
 
   public:
-
     typedef std::vector<Service*>::iterator Iterator;
 
     template <typename T>
     inline void add(T* service) {
       services.push_back(service);
-      byType[typeid(service)] = service;      
+      byType[typeid(service)] = service;
     }
 
     inline Iterator begin() {
@@ -30,7 +29,7 @@ namespace wage {
     inline Iterator end() {
       return services.end();
     }
-    
+
     template <typename T>
     inline T* get() {
       auto itr = byType.find(typeid(T*));
@@ -43,14 +42,11 @@ namespace wage {
       return nullptr;
     }
 
-  private: 
-    
+  private:
     Map<std::type_index, Service*> byType;
 
     std::vector<Service*> services;
-
   };
-
 }
 
 #endif // CORE_SERVICE_MAP_H

@@ -8,17 +8,16 @@ namespace wage {
   class Spotlight : public Light {
 
   public:
-
-    Spotlight() 
-      : Spotlight(Color(0.0f, 0.0f, 0.0f, 1), Color(1.0f, 1.0f, 1.0f, 1), Color(1.0f, 1.0f, 1.0f, 1), 1.0f, 0.99, 0.032, 12.5, 15.0) {    
+    Spotlight()
+        : Spotlight(Color(0.0f, 0.0f, 0.0f, 1), Color::White, Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
     }
 
-    Spotlight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff) 
-      : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff)  {    
+    Spotlight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
+        : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff) {
     }
 
     ~Spotlight() {}
-    
+
     inline void constant(float constant) {
       _constant = constant;
     }
@@ -60,20 +59,16 @@ namespace wage {
     }
 
   private:
+    float _constant;
 
-      float _constant;
-      
-      float _linear;
-      
-      float _quadratic;
+    float _linear;
 
-      float _cutOff;
+    float _quadratic;
 
-      float _outerCutOff;
-  
+    float _cutOff;
+
+    float _outerCutOff;
   };
 }
 
 #endif //COMPONENT_SPOTLIGHT_H
-
- 

@@ -16,9 +16,7 @@ namespace wage {
   class SystemManager : public Service {
 
   private:
-
   public:
-
     SystemManager() : Service("SystemManager") {
     }
 
@@ -44,29 +42,25 @@ namespace wage {
     }
 
     template <typename T, typename I, typename... Args>
-    I* create(Args... args) {  
+    I* create(Args... args) {
       auto instance = make<I>(args...);
       add(instance);
       return instance;
     }
 
     template <typename T, typename... Args>
-    T* create(Args... args) {  
+    T* create(Args... args) {
       return create<T, T>(args...);
     }
 
     inline void add(System* system) {
-      systems.push_back( { system } );
+      systems.push_back({system});
       // TODO: Start System if already running
     }
 
-
-  private: 
-  
+  private:
     std::vector<System*> systems;
-
   };
-
 }
 
 #endif // ECS_SYSTEM_MANAGER_H

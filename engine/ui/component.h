@@ -1,5 +1,5 @@
-#ifndef COMPONENT_UI_COMPONENT_H
-#define COMPONENT_UI_COMPONENT_H
+#ifndef UI_COMPONENT_H
+#define UI_COMPONENT_H
 
 #include "ui/frame.h"
 
@@ -8,24 +8,24 @@ namespace wage {
   class UiComponent {
 
   public:
-
     UiComponent() {
     }
 
-    UiComponent(LayoutFrame frame) : _frame(frame) {}
+    UiComponent(UiFrame frame) : _frame(frame) {}
 
     virtual ~UiComponent() {}
 
-    inline LayoutFrame& frame() {
+    inline UiFrame frame() const {
       return _frame;
     }
 
+    inline void frame(UiFrame frame) {
+      _frame = frame;
+    }
+
   private:
-
-    LayoutFrame _frame;
-
+    UiFrame _frame;
   };
-
 }
 
-#endif //COMPONENT_UI_COMPONENT_H
+#endif // UI_COMPONENT_H

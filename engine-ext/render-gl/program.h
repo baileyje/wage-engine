@@ -13,22 +13,22 @@ namespace wage {
   class GlProgram {
 
   public:
-
     static GlProgram* Default;
 
     static GlProgram* Font;
 
-    GlProgram(std::string vertexPath, std::string fragmentPath) :
-      vertexShader(vertexPath, GL_VERTEX_SHADER), fragmentShader(fragmentPath, GL_FRAGMENT_SHADER), _bound(false), _linked(false) {
+    static GlProgram* Sprite;
+
+    GlProgram(std::string vertexPath, std::string fragmentPath) : vertexShader(vertexPath, GL_VERTEX_SHADER), fragmentShader(fragmentPath, GL_FRAGMENT_SHADER), _bound(false), _linked(false) {
     }
 
     ~GlProgram() {
       GL_FAIL_CHECK(glDeleteProgram(_id));
     }
-    
+
     void load(AssetManager* assetManager) {
       assetManager->load(&vertexShader);
-      assetManager->load(&fragmentShader);    
+      assetManager->load(&fragmentShader);
       _id = glCreateProgram();
     }
 
@@ -46,8 +46,8 @@ namespace wage {
 
       GL_FAIL_CHECK(glGetProgramiv(_id, GL_LINK_STATUS, &result));
       GL_FAIL_CHECK(glGetProgramiv(_id, GL_INFO_LOG_LENGTH, &infoLogLength));
-      if ( infoLogLength > 0 ){
-        std::vector<char> errorMessage(infoLogLength+1);
+      if (infoLogLength > 0) {
+        std::vector<char> errorMessage(infoLogLength + 1);
         GL_FAIL_CHECK(glGetProgramInfoLog(_id, infoLogLength, NULL, &errorMessage[0]));
         Logger::error("Link error:", &errorMessage[0]);
       }
@@ -65,7 +65,7 @@ namespace wage {
       _bound = true;
     }
 
-    void unbind() {      
+    void unbind() {
       GL_FAIL_CHECK(glUseProgram(0));
       _bound = false;
     }
@@ -86,20 +86,18 @@ namespace wage {
     inline bool linked() {
       return _linked;
     }
-  
+
   private:
-    
     unsigned int _id;
 
     GlShader vertexShader;
-    
+
     GlShader fragmentShader;
 
     bool _bound;
 
     bool _linked;
   };
-
 }
 
 #endif //RENDERER_PROGRAM_H

@@ -11,14 +11,13 @@
 namespace wage {
 
   class GlTextureManager {
-  
-  public:
 
-    GlTexture* load(Texture* texture) {
-      GlTexture* glTexture = cache[texture->id()];
+  public:
+    GlTexture* load(Texture texture) {
+      GlTexture* glTexture = cache[texture.id()];
       if (glTexture == nullptr) {
         glTexture = make<GlTexture>(texture);
-        cache[texture->id()] = glTexture;
+        cache[texture.id()] = glTexture;
         _assetManager->load(glTexture);
       }
       return glTexture;
@@ -29,13 +28,10 @@ namespace wage {
     }
 
   private:
-
     AssetManager* _assetManager;
 
     std::unordered_map<std::string, GlTexture*> cache;
-
   };
-
 }
 
 #endif //RENDERER_TEXTURE_MANAGER_H

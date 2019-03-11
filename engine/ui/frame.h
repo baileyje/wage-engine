@@ -5,32 +5,36 @@
 
 namespace wage {
 
-  class LayoutFrame {
+  class UiFrame {
 
   public:
+    UiFrame() {}
 
-    LayoutFrame() {}
+    UiFrame(Vector2 position, Vector2 size) : _position(position), _size(size) {}
 
-    LayoutFrame(Vector2 position, Vector2 size) : _position(position), _size(size) {}
+    virtual ~UiFrame() {}
 
-    virtual ~LayoutFrame() {}
-
-    inline Vector2 position() {
-      return _position;      
+    inline Vector2 position() const {
+      return _position;
     }
 
-    inline Vector2 size() {
+    inline void position(Vector2 position) {
+      _position = position;
+    }
+
+    inline Vector2 size() const {
       return _size;
     }
 
-  private:
+    inline void size(Vector2 size) {
+      _size = size;
+    }
 
+  private:
     Vector2 _position;
 
     Vector2 _size;
-
   };
-
 }
 
 #endif //COMPONENT_UI_FRAME_H

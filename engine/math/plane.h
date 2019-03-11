@@ -5,31 +5,22 @@
 
 #include "math/vector.h"
 
-
 namespace wage {
 
   class Plane {
 
   public:
-
-    Plane() {      
-    }
+    Plane() {}
 
     float distance(const Vector& point) const {
       return Vector::dot(point, normal) + d;
     }
 
-  	Vector normal;
-  
+    Vector normal;
+
     float d;
 
-    void debug() {
-      std::cout << "Plane: norm(" << normal.x << ":" << normal.y << ":" << normal.z << ") d: " << d << std::endl; 
-    }
-
   };
-
 }
-
 
 #endif //MATH_PLANE_H

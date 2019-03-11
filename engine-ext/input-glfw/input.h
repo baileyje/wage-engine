@@ -16,19 +16,16 @@ namespace wage {
   class GlfwInput : public Input {
 
   public:
-    
-    GlfwInput() : Input() { }
+    GlfwInput() : Input() {}
 
     ~GlfwInput() {}
 
     void start() override;
-    
+
     bool isPressed(Key key) override;
 
     Vector2 mousePosition() override;
-
   };
-
 }
 
 #endif // GLFW_INPUT_H

@@ -6,9 +6,8 @@
 namespace wage {
 
   class MouseMoveEvent {
-  
-  public:
 
+  public:
     MouseMoveEvent(Vector2 position) : _position(position) {
     }
 
@@ -17,11 +16,8 @@ namespace wage {
     }
 
   private:
-    
     Vector2 _position;
-
   };
-
 }
 
 #endif //INPUT_MOUSE_MOVE_EVENT_H

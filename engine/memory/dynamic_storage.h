@@ -14,7 +14,6 @@ namespace wage {
   class DynamicStorage : public PoolStorage<T, IndexType> {
 
   public:
-  
     DynamicStorage(int chunkSize = 100) : _chunkSize(chunkSize) { /* _currentSize(0)*/
       clear();
     }
@@ -30,21 +29,18 @@ namespace wage {
     }
 
   private:
-
     class Chunk {
 
       friend class DynamicStorage;
-      
+
       Chunk() : _storage(nullptr), allocated(false) {}
 
       T* _storage;
 
       bool allocated;
-
     };
 
-    private:
-
+  private:
     Chunk& chunkAt(IndexType chunkIndex) {
       if (chunks.size() <= chunkIndex) {
         for (int i = 0; chunks.size() <= chunkIndex; ++i) {
@@ -58,15 +54,13 @@ namespace wage {
       }
       return chunks[chunkIndex];
     }
-   
+
     int _chunkSize;
 
     int _capacity;
 
     std::vector<Chunk> chunks;
-  
   };
-
 }
 
 #endif //DYNAMIC_STORAGE_H

@@ -12,7 +12,6 @@
 
 #include "ecs/registry.h"
 
-
 namespace wage {
 
   typedef ObjectPool<Entity, EntityId>::Iterator EntityIterator;
@@ -20,53 +19,47 @@ namespace wage {
   class EntityMessage {
 
   public:
-
     EntityMessage(Entity entity) : _entity(entity) {}
-    
+
     virtual ~EntityMessage() {}
 
     inline Entity entity() {
       return _entity;
     }
 
-    private:
-
-      Entity _entity;
+  private:
+    Entity _entity;
   };
 
-  class AddEntityMessage : public EntityMessage {  
+  class AddEntityMessage : public EntityMessage {
 
   public:
-
     AddEntityMessage(Entity entity) : EntityMessage(entity) {}
   };
 
-  class DestroyEntityMessage : public EntityMessage {  
+  class DestroyEntityMessage : public EntityMessage {
 
   public:
-
     DestroyEntityMessage(Entity entity) : EntityMessage(entity) {}
   };
 
-  class EntityManager: public Service {
+  class EntityManager : public Service {
 
   public:
-
     EntityManager() : Service("EntityManager") {}
 
     virtual ~EntityManager() {}
-
 
     void start() override {
       Core::Instance->onUpdate([&](const Frame& frame) {
         update();
       });
     }
-    
+
     /*
       1.  Send Add Messages
       2.  Destroy entities
-      4.  Send requested destroy messages    
+      4.  Send requested destroy messages
       4.  Queue destroys
     */
     void update() {
@@ -90,7 +83,7 @@ namespace wage {
         messaging->send(message);
         destroys.push_back(entity);
       }
-      destroyRequests.clear();      
+      destroyRequests.clear();
     }
 
     inline Entity create() {
@@ -100,29 +93,26 @@ namespace wage {
     }
 
     inline void destroy(Entity reference) {
-      destroyRequests.push_back(reference);    
+      destroyRequests.push_back(reference);
     }
 
     inline Entity get(EntityId id) {
       return _registry.get(id);
     }
-    
+
     inline Registry* registry() {
       return &_registry;
     }
 
   private:
-
     Registry _registry;
 
     std::vector<Entity> adds;
-    
+
     std::vector<Entity> destroyRequests;
-    
+
     std::vector<Entity> destroys;
-
   };
-
 }
 
 #endif // ENTITY_MANAGER_H

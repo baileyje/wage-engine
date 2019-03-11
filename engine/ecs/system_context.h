@@ -14,7 +14,6 @@ namespace wage {
   class SystemContext {
 
   public:
-
     SystemContext(const EntityManager* entityManager, const Frame& frame) : _entityManager(entityManager), frame(frame) {}
 
     virtual ~SystemContext() {}
@@ -36,13 +35,10 @@ namespace wage {
     }
 
   private:
-
     const EntityManager* _entityManager;
 
     const Frame frame;
-
   };
-
 }
 
 #endif // CORE_SYSTEM_CONTEXT_H

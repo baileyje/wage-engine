@@ -10,28 +10,27 @@
 #include "physics-bullet/util.h"
 
 namespace wage {
-  
+
   class PhysicsEntity {
 
   public:
-
-    PhysicsEntity(Entity entity, btCollisionShape* shape, btRigidBody* rigidBody) 
-      : PhysicsEntity(entity, shape, rigidBody, rigidBody) {
+    PhysicsEntity(Entity entity, btCollisionShape* shape, btRigidBody* rigidBody)
+        : PhysicsEntity(entity, shape, rigidBody, rigidBody) {
     }
 
-    ~PhysicsEntity() {    
+    ~PhysicsEntity() {
       // TODO: Evaluate memory usage. Assume these are lost.
       // if (rigidBody && rigidBody->getMotionState()) {
       //   delete rigidBody->getMotionState();
-      // }      
+      // }
       // delete object; // NOT rigidBody
       // delete shape;
-    }  
+    }
 
     static PhysicsEntity* from(Entity entity, btDiscreteDynamicsWorld* dynamicsWorld);
 
     PhysicsEntity(Entity entity, btCollisionShape* shape, btRigidBody* rigidBody, btCollisionObject* object)
-      : _entity(entity), _shape(shape), _rigidBody(rigidBody), _object(object) {    
+        : _entity(entity), _shape(shape), _rigidBody(rigidBody), _object(object) {
     }
 
     void applyForces();
@@ -56,24 +55,21 @@ namespace wage {
       return _entity;
     }
 
-  private: 
-
+  private:
     static btCollisionShape* shapeFor(Entity entity);
 
     static btRigidBody* rigidBodyFor(Reference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape);
-    
+
     Entity _entity;
 
-    btTransform transform(); 
+    btTransform transform();
 
     btCollisionShape* _shape;
 
     btRigidBody* _rigidBody;
 
     btCollisionObject* _object;
-
   };
-
 }
 
 #endif //PHYSICS_ENTITY_H

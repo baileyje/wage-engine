@@ -9,21 +9,17 @@ namespace wage {
   class Platform : public Service {
 
   public:
+    Platform() : Service("Platform") {}
 
-    Platform() : Service("Platform") { }
-
-    virtual ~Platform() { }
+    virtual ~Platform() {}
 
     Window* window() {
       return _window;
     }
 
   protected:
-
     Window* _window;
-    
   };
-
 }
 
 #endif //PLATFORM_H

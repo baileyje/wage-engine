@@ -8,16 +8,16 @@
 
 namespace wage {
 
-  enum class CameraType { Perspective, Orthographic };
+  enum class CameraType { perspective,
+                          orthographic };
 
-  class Camera  {
+  class Camera {
 
   public:
-
-    Camera(CameraType type) :  _type(type) {    
+    Camera(CameraType type) : _type(type) {
     }
 
-    ~Camera() {    
+    ~Camera() {
     }
 
     inline CameraType type() {
@@ -37,11 +37,8 @@ namespace wage {
     virtual Frustum frustum(Vector2 screenSize, Transform* cameraTransform) = 0;
 
   private:
-
     CameraType _type;
-
   };
-
 }
 
 #endif //ENTITY_CAMERA_H

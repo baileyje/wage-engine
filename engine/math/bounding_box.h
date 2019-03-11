@@ -8,16 +8,13 @@ namespace wage {
   class BoundingBox {
 
   public:
-
-    BoundingBox(Vector position, Vector halfDim) : position(position), halfDim(halfDim) {      
+    BoundingBox(Vector position, Vector halfDim) : position(position), halfDim(halfDim) {
     }
 
     Vector position;
 
     Vector halfDim;
-
   };
-
 }
 
 #endif //MATH_BOUNDING_BOX_H

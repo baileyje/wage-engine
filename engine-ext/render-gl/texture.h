@@ -11,13 +11,12 @@ namespace wage {
   class GlTexture : public Asset {
 
   public:
-
-    GlTexture(Texture* texture) : Asset(texture->path()), pushed(false), _texture(texture) {  
+    GlTexture(Texture texture) : Asset(texture.path()), pushed(false), _texture(texture) {
     }
 
     ~GlTexture();
 
-    inline Texture* texture() {
+    inline Texture texture() {
       return _texture;
     }
 
@@ -30,14 +29,13 @@ namespace wage {
     void unbind();
 
   private:
-
     void push();
-    
+
     unsigned int id;
 
     bool pushed;
 
-    Texture* _texture;
+    Texture _texture;
 
     std::unique_ptr<Asset> vertexSource;
 
@@ -47,10 +45,8 @@ namespace wage {
 
     int channels;
 
-    unsigned char *data;
-
+    unsigned char* data;
   };
-
 }
 
 #endif //RENDERER_TEXTURE_H

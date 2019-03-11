@@ -19,15 +19,13 @@
 
 #include "render-gl/material.h"
 
-
 namespace wage {
 
   class GlMeshRenderable : public Renderable {
-    
-  public:
 
-    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform transform, Reference<Mesh> mesh, Reference<Material> material) 
-      : _vaoManager(vaoManager), _textureManager(textureManager), transform(transform), mesh(mesh), material(material) {}
+  public:
+    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform transform, Reference<Mesh> mesh, Reference<Material> material)
+        : _vaoManager(vaoManager), _textureManager(textureManager), transform(transform), mesh(mesh), material(material) {}
 
     inline VaoManager* vaoManager() {
       return _vaoManager;
@@ -41,10 +39,9 @@ namespace wage {
       Vector maxDims = mesh->maxDim();
       Vector scale = transform.scale();
       Vector scaledMaxHalfDim(
-        maxDims.x * scale.x,
-        maxDims.y * scale.y,
-        maxDims.z * scale.z
-      );
+          maxDims.x * scale.x,
+          maxDims.y * scale.y,
+          maxDims.z * scale.z);
       return BoundingBox(position(), scaledMaxHalfDim);
     }
 
@@ -60,7 +57,7 @@ namespace wage {
       glMaterial.setMat4("view", context->viewProjection());
       glMaterial.setMat4("projection", context->screenProjection());
       glMaterial.setVec3("viewPos", context->cameraPosition());
-      
+
       glMaterial.setInt("numDirLights", context->dirLights().size());
       int idx = 0;
       for (auto lightEntity : context->dirLights()) {
@@ -73,7 +70,7 @@ namespace wage {
         glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
         glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
       }
-      
+
       glMaterial.setInt("numPointLights", context->pointLights().size());
       idx = 0;
       for (auto lightEntity : context->pointLights()) {
@@ -107,18 +104,17 @@ namespace wage {
         glMaterial.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->cutOff())));
         glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->outerCutOff())));
       }
-      Texture* texture = Texture::Default;
-      if (material.valid() && material->texture() != nullptr) {
+      auto texture = Texture::Default;
+      if (material.valid()) {
         texture = material->texture();
       }
       GlTexture* glTexture = _textureManager->load(texture);
       glTexture->bind();
       glMaterial.setInt("material.diffuse", 0);
       glMaterial.setFloat("material.shininess", 32.0f);
-
     }
 
-    virtual void render(RenderContext* context) {    
+    virtual void render(RenderContext* context) {
       VertexArray* vao = vaoManager()->load(mesh);
       vao->bind();
       auto program = GlProgram::Default;
@@ -135,7 +131,6 @@ namespace wage {
     }
 
   private:
-
     VaoManager* _vaoManager;
 
     GlTextureManager* _textureManager;
@@ -145,9 +140,7 @@ namespace wage {
     Reference<Mesh> mesh;
 
     Reference<Material> material;
-
   };
-
 }
 
 #endif //MESH_RENDERABLE_H

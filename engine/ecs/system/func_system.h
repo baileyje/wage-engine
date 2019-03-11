@@ -10,12 +10,11 @@
 
 namespace wage {
 
-  
   class FuncSystem : public System {
-  
+
   public:
-  
-    enum class Event { Update, FixedUpdate };
+    enum class Event { update,
+                       fixedUpdate };
 
     FuncSystem() : System("FuncSystem") {}
 
@@ -23,7 +22,6 @@ namespace wage {
       // std::cout << "Func: " << std::typeid(this).name() << std::endl;
     }
   };
-
 }
 
 #endif // ECS_FUNC_SYSTEM

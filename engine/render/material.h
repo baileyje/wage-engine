@@ -9,14 +9,13 @@ namespace wage {
   class Material {
 
   public:
-
     Material() : Material(Color(1, 0, 1, 1)) {
     }
 
-    Material(Color color) : _color(color) {    
+    Material(Color color) : _color(color) {
     }
 
-    Material(Texture* texture) : _color(Color(1, 0, 1, 1)), _texture(texture) {    
+    Material(Texture texture) : _color(Color(1, 0, 1, 1)), _texture(texture) {
     }
 
     ~Material() {}
@@ -25,22 +24,19 @@ namespace wage {
       _color = color;
     }
 
-    inline Color color()  {
+    inline Color color() {
       return _color;
     }
 
-    inline Texture*  texture()  {
+    inline Texture texture() {
       return _texture;
     }
 
   private:
-  
     Color _color;
 
-    Texture* _texture;
-
+    Texture _texture;
   };
-
 }
 
 #endif //ENTITY_COMPONENT_MATERIAL_H

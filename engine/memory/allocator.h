@@ -12,13 +12,12 @@ namespace wage {
   class Allocator {
 
   public:
-
     static Allocator* Permanent();
 
     static Allocator* Temporary();
 
     static Allocator* Assets();
-    
+
     Allocator(std::string name, size_t size) : name(name), size(size) {
       Logger::debug("Acquiring ", size, " bytes of memory for allocator: ", name);
       memory = malloc(size * sizeof(void*));
@@ -33,10 +32,10 @@ namespace wage {
     template <typename T, typename... Args>
     T* create(Args... args) {
       auto alloced = allocate(sizeof(T), alignof(T));
-      return new(alloced)T(args...);
+      return new (alloced) T(args...);
     }
 
-    void* allocate(size_t size, size_t alignSize = 16) {    
+    void* allocate(size_t size, size_t alignSize = 16) {
       Logger::debug("Attempting to allocate ", size, " bytes of memory for allocator: ", name);
       if (std::align(alignSize, size, current, this->size)) {
         char* c = (char*)current; // Gross
@@ -56,7 +55,6 @@ namespace wage {
     }
 
   private:
-    
     std::string name;
 
     void* memory;
@@ -64,9 +62,8 @@ namespace wage {
     void* base;
 
     void* current;
-    
-    size_t size;
 
+    size_t size;
   };
 
   template <typename T, typename... Args>
@@ -79,7 +76,5 @@ namespace wage {
     return Allocator::Temporary()->create<T>(args...);
   }
 }
-
-// TODO: bad idea?
 
 #endif //MEMORY_ALLOCATOR_H

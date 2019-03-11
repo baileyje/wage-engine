@@ -10,14 +10,12 @@
 
 #include "fs/file.h"
 
-
 namespace wage {
 
   class FileSystem : public Service {
 
   public:
-
-    FileSystem() : Service("FileSystem") {    
+    FileSystem() : Service("FileSystem") {
     }
 
     ~FileSystem() {}
@@ -27,10 +25,7 @@ namespace wage {
     }
 
     virtual std::unique_ptr<Buffer> read(std::string path, Allocator* allocator) const = 0;
-
   };
-
 }
 
 #endif //FILE_SYSTEM_H
-

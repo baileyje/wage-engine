@@ -7,14 +7,11 @@
 #include "math/vector.h"
 #include "math/quaternion.h"
 
-
 namespace wage {
 
-
   class Matrix {
-  
+
   public:
-  
     static Matrix orthographic(float left, float right, float top, float bottom);
 
     static Matrix orthographic(float left, float right, float top, float bottom, float zNear, float zFar);
@@ -27,10 +24,6 @@ namespace wage {
 
     static Matrix scale(Matrix matrix, Vector scale);
 
-
-    // Matrix translation = glm::translate(glm::mat4(1), _position.glm());
-    //   Matrix scale = glm::scale(glm::mat4(1), _scale.glm());
-
     Matrix();
 
     Matrix(float val);
@@ -40,6 +33,8 @@ namespace wage {
     Matrix translate(Vector position) const;
 
     Matrix scale(Vector scale) const;
+
+    Matrix rotate(float angle, Vector vector) const;
 
     Matrix& operator*=(const Matrix& rhs);
 
@@ -53,13 +48,10 @@ namespace wage {
     }
 
   private:
-
     Matrix(glm::mat4 wrapped) : wrapped(wrapped) {}
 
     glm::mat4 wrapped;
-
   };
-
 }
 
 #endif //MATH_MATRIX_H

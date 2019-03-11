@@ -22,8 +22,7 @@ namespace wage {
   class Renderer : public Service {
 
   public:
-
-    Renderer() : Service("Renderer") { }
+    Renderer() : Service("Renderer") {}
 
     virtual ~Renderer();
 
@@ -31,12 +30,13 @@ namespace wage {
 
     virtual void render();
 
-    virtual void renderText(Vector position, std::string text, Font font, Color color) = 0;
+    virtual void renderText(Vector2 position, std::string text, Font font, Color color) = 0;
+
+    virtual void renderSprite(Vector2 position, Vector2 size, Color color, Texture texture) = 0;
 
     virtual void renderMesh(Reference<Transform> transform, Reference<Mesh, ComponentId> mesh, Reference<Material, ComponentId> material) = 0;
-  
-  protected:
 
+  protected:
     void renderMeshes(EntityManager* manager, RenderContext* renderContext);
 
     void renderUi(EntityManager* manager, RenderContext* renderContext);
@@ -44,9 +44,8 @@ namespace wage {
     virtual void beginRender() = 0;
 
     virtual void endRender() = 0;
-  
-  protected:
 
+  protected:
     Window* window;
 
     AssetManager* assetManager;
@@ -55,7 +54,6 @@ namespace wage {
 
     RenderQueue uiQueue;
   };
-
 }
 
 #endif //RENDERER_H

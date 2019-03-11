@@ -9,24 +9,25 @@ namespace wage {
     if (!collider.valid()) {
       return make<btEmptyShape>();
     }
-    Vector scale = entity.get<Transform>()->scale();  
-    switch(collider->type()) {
-      // TODO: Support more shapes
-      case ColliderType::box: {
-        btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);			
-        return make<btBoxShape>(halfExtents);
-      }
-      case ColliderType::sphere: {
-        return make<btSphereShape>(scale.x / 2.0);
-      }
-      default: return nullptr;
-    }	
+    Vector scale = entity.get<Transform>()->scale();
+    switch (collider->type()) {
+    // TODO: Support more shapes
+    case ColliderType::box: {
+      btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);
+      return make<btBoxShape>(halfExtents);
+    }
+    case ColliderType::sphere: {
+      return make<btSphereShape>(scale.x / 2.0);
+    }
+    default:
+      return nullptr;
+    }
   }
 
   btRigidBody* PhysicsEntity::rigidBodyFor(Reference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape) {
     btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
-    btVector3 localInertia(0, 0, 0);    
-    if (rigidBody->mass() != 0.f) {      
+    btVector3 localInertia(0, 0, 0);
+    if (rigidBody->mass() != 0.f) {
       shape->calculateLocalInertia(rigidBody->mass(), localInertia);
     }
     btDefaultMotionState* myMotionState = make<btDefaultMotionState>(startTransform);
@@ -37,7 +38,7 @@ namespace wage {
     } else if (rigidBody->type() == RigidBodyType::immovable) {
       body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
     }
-    //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);    
+    //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
     body->setUserIndex(-1);
     return body;
   }
@@ -50,12 +51,12 @@ namespace wage {
     if (entityBody.valid()) {
       body = rigidBodyFor(entityBody, fromTransform(*entity.get<Transform>()), shape);
       dynamicsWorld->addRigidBody(body);
-      // Must come after added to world.    
+      // Must come after added to world.
       if (!entityBody->isAffectedByGravity()) {
         body->setGravity(btVector3(0, 0, 0));
       }
       object = body;
-    }	else {      
+    } else {
       object = make<btCollisionObject>();
       object->setCollisionShape(shape);
       dynamicsWorld->addCollisionObject(object);
@@ -67,8 +68,7 @@ namespace wage {
     btTransform transform;
     if (_rigidBody && _rigidBody->getMotionState()) {
       _rigidBody->getMotionState()->getWorldTransform(transform);
-      
-    } else {  
+    } else {
       transform = _rigidBody->getWorldTransform();
     }
     return transform;
@@ -85,10 +85,10 @@ namespace wage {
     btVector3 impulse = fromVector(entityBody->impulse());
     if (impulse.length() > 0) {
       _rigidBody->applyCentralImpulse(impulse);
-      
+
       if (_rigidBody->getLinearVelocity().length() > 100) {
         _rigidBody->applyCentralImpulse(-impulse);
-      }       
+      }
     }
     btVector3 force = fromVector(entityBody->force());
     if (force.length() > 0) {
@@ -113,7 +113,7 @@ namespace wage {
       _rigidBody->setAngularVelocity(btVector3(0, 0, 0));
       entityBody->clearShouldStop();
     }
-    entityBody->clearForces();    
+    entityBody->clearForces();
     _rigidBody->activate(true);
   }
 
@@ -125,8 +125,7 @@ namespace wage {
     entity().get<Transform>()->position(fromBTVector(trans.getOrigin()));
     btQuaternion rotation = trans.getRotation();
     entity().get<Transform>()->rotation(
-      Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w())
-    );
+        Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w()));
   }
 
   void PhysicsEntity::updateShapeTransform() {
@@ -136,10 +135,9 @@ namespace wage {
     auto entityBody = entity().get<RigidBody>();
     if (entityBody->type() == RigidBodyType::dynamic) {
       return;
-    }  
+    }
     btTransform transform = fromTransform(*entity().get<Transform>());
     // _rigidBody->getMotionState()->setWorldTransform(transform);
     _rigidBody->setCenterOfMassTransform(transform);
   }
-
 }

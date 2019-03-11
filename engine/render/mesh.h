@@ -15,28 +15,27 @@ namespace wage {
   class Mesh {
 
   public:
-
-    Mesh()  {
+    Mesh() {
     }
 
-    Mesh(std::string id, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices) 
-      : _id(id), _vertices(vertices), _normals(normals), _uvs(uvs), _indices(indices), _maxDim(0) {
-        for (auto vertex : _vertices) {
-          _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
-          _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
-          _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
-        }
+    Mesh(std::string id, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices)
+        : _id(id), _vertices(vertices), _normals(normals), _uvs(uvs), _indices(indices), _maxDim(0) {
+      for (auto vertex : _vertices) {
+        _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
+        _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
+        _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
       }
+    }
 
-    Mesh(Mesh* templateMesh) 
-      : _id(templateMesh->_id), _vertices(templateMesh->_vertices), _normals(templateMesh->_normals), _uvs(templateMesh->_uvs), _indices(templateMesh->_indices), _maxDim(0) {
-        for (auto vertex : _vertices) {
-          _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
-          _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
-          _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
-        }
+    Mesh(Mesh* templateMesh)
+        : _id(templateMesh->_id), _vertices(templateMesh->_vertices), _normals(templateMesh->_normals), _uvs(templateMesh->_uvs), _indices(templateMesh->_indices), _maxDim(0) {
+      for (auto vertex : _vertices) {
+        _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
+        _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
+        _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
       }
-    
+    }
+
     virtual ~Mesh();
 
     inline unsigned int elementCount() {
@@ -64,25 +63,24 @@ namespace wage {
     }
 
     inline Vector maxDim() {
-      return _maxDim; 
+      return _maxDim;
     }
 
     static void generatePrimitives();
 
     static Mesh* load(std::string path);
-  
+
     static Mesh* Cube;
-    
+
     static Mesh* Sphere;
 
     static Mesh* Quad;
 
   protected:
-
     std::string _id;
 
     VertexVector _vertices;
-    
+
     VertexVector _normals;
 
     Vertex2Vector _uvs;
@@ -90,9 +88,7 @@ namespace wage {
     IndexVector _indices;
 
     Vector _maxDim;
-
   };
-
 }
 
 #endif //ENTITY_COMPONENT_MESH_H

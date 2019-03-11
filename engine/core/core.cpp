@@ -14,22 +14,22 @@ namespace wage {
 
   Core* Core::Instance = make<Core>();
 
-  Core::Core() : running(false) {  
-    _frame._timeStep = 1.0/60.0;
+  Core::Core() : running(false) {
+    _frame._timeStep = 1.0 / 60.0;
   }
 
   Core::~Core() {
     // TODO: Evaluate whether this makes any sense.
     // for (auto system : systems) {
-      // delete system;    
+    // delete system;
     // }
   }
 
-  void Core::start() {  
+  void Core::start() {
     if (running) {
       return;
     }
-    running = true;    
+    running = true;
     Logger::info("Starting WAGE Core");
     for (auto service : services) {
       Logger::info("Starting ", service->name().c_str());
@@ -37,12 +37,12 @@ namespace wage {
     }
     TimePoint lastTime = std::chrono::high_resolution_clock::now();
     double accumulator = 0;
-    while (running) {    
+    while (running) {
       TimePoint currentTime = std::chrono::high_resolution_clock::now();
-      double delta = (std::chrono::duration_cast<std::chrono::duration<double> >(currentTime - lastTime)).count();
+      double delta = (std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime)).count();
       _frame._time += delta;
       lastTime = currentTime;
-      _frame._deltaTime = delta;    
+      _frame._deltaTime = delta;
       accumulator += delta;
       update();
       while (accumulator >= _frame.timeStep()) {
@@ -58,8 +58,8 @@ namespace wage {
   void Core::processInput() {
     for (auto listener : inputListeners) {
       listener(frame());
-    }    
-  }  
+    }
+  }
 
   void Core::update() {
     for (auto listener : updateListeners) {
@@ -77,10 +77,10 @@ namespace wage {
     for (auto listener : renderListeners) {
       listener(frame());
     }
-  }  
+  }
 
   void Core::stop() {
-    if(!running) {
+    if (!running) {
       return;
     }
     Logger::info("Stopping WAGE Core.");
@@ -100,5 +100,4 @@ namespace wage {
     Logger::info("Deinitializing WAGE Core.");
     // TODO: deinit Services
   }
-
 }

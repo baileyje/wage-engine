@@ -8,17 +8,16 @@ namespace wage {
   class PointLight : public Light {
 
   public:
-
-    PointLight() 
-      : PointLight(Color(0.05f, 0.05f, 0.05f, 1), Color(0.8f, 0.8f, 0.8f, 1), Color(1.0f, 1.0f, 1.0f, 1), 1.0f, 0.09, 0.032) {    
+    PointLight()
+        : PointLight(Color(0.05f, 0.05f, 0.05f, 1), Color(0.8f, 0.8f, 0.8f, 1), Color::White, 1.0f, 0.09, 0.032) {
     }
 
-    PointLight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic) 
-      : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic)  {    
+    PointLight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic)
+        : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic) {
     }
 
     ~PointLight() {}
-    
+
     inline void constant(float constant) {
       _constant = constant;
     }
@@ -44,15 +43,12 @@ namespace wage {
     }
 
   private:
+    float _constant;
 
-      float _constant;
-      
-      float _linear;
-      
-      float _quadratic;
+    float _linear;
 
+    float _quadratic;
   };
-
 }
 
 #endif //COMPONENT_POINT_LIGHT_H

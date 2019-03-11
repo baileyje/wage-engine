@@ -18,7 +18,7 @@ namespace wage {
     return Matrix(glm::lookAt(eye.glm(), center.glm(), up.glm()));
   }
 
-  Matrix::Matrix() : Matrix(glm::mat4()) {} 
+  Matrix::Matrix() : Matrix(glm::mat4()) {}
 
   Matrix::Matrix(float val) : Matrix(glm::mat4(val)) {}
 
@@ -30,6 +30,10 @@ namespace wage {
     return Matrix(glm::scale(wrapped, scale.glm()));
   }
 
+  Matrix Matrix::rotate(float angle, Vector vector) const {
+    return Matrix(glm::rotate(wrapped, angle, vector.glm()));
+  }
+
   Matrix& Matrix::operator*=(const Matrix& rhs) {
     wrapped *= rhs.wrapped;
     return *this;
@@ -37,5 +41,4 @@ namespace wage {
 
   Matrix::Matrix(Quaternion quat) : wrapped(glm::toMat4(quat.glm())) {
   }
-
 }

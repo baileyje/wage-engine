@@ -6,10 +6,10 @@
 namespace wage {
 
   GlTexture::~GlTexture() {
-      if (data) {
-        stbi_image_free(data);
-      }    
+    if (data) {
+      stbi_image_free(data);
     }
+  }
 
   void GlTexture::onLoad() {
     data = stbi_load_from_memory(buffer->data(), buffer->length(), &width, &height, &channels, 0);
@@ -17,16 +17,16 @@ namespace wage {
 
   void GlTexture::push() {
     GL_FAIL_CHECK(glGenTextures(1, &id));
-    GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, id));         
+    GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, id));
     GL_FAIL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
-    GL_FAIL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));    
+    GL_FAIL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
     pushed = true;
   }
 
-  void GlTexture::bind() {  
+  void GlTexture::bind() {
     if (!loaded()) {
       return;
-    } 
+    }
     if (!pushed) {
       push();
     }
@@ -36,5 +36,4 @@ namespace wage {
   void GlTexture::unbind() {
     GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
   }
-
 }

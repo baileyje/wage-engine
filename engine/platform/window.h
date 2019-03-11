@@ -6,8 +6,7 @@ namespace wage {
   class Window {
 
   public:
-
-    Window(void* wrapped, int width, int height) : wrapped(wrapped), _width(width), _height(height) {      
+    Window(void* wrapped, int width, int height) : wrapped(wrapped), _width(width), _height(height) {
     }
 
     virtual ~Window() {}
@@ -26,15 +25,12 @@ namespace wage {
     }
 
   private:
-  
     void* wrapped;
 
     int _width;
 
     int _height;
-
   };
-
 }
 
 #endif //PLATFORM_WINDOW_H

@@ -11,7 +11,6 @@ namespace wage {
   class VertexArray {
 
   public:
-    
     VertexArray();
 
     ~VertexArray();
@@ -23,12 +22,10 @@ namespace wage {
     void unbind() const;
 
   private:
-    
     unsigned int id;
 
     unsigned int index;
   };
-
 }
 
 #endif //RENDERER_VERTEX_ARRAY_H

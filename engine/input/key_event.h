@@ -9,13 +9,14 @@
 namespace wage {
 
   enum class KeyEventType {
-    press, release, repeat
+    press,
+    release,
+    repeat
   };
 
   class KeyEvent {
-  
-  public:
 
+  public:
     KeyEvent(Key key, KeyEventType type, int modifiers) : _key(key), _type(type), _modifiers(modifiers) {
     }
 
@@ -38,22 +39,19 @@ namespace wage {
 
     bool set(std::initializer_list<KeyModifier> mods) {
       bool all = true;
-      for(auto mod : mods) {
+      for (auto mod : mods) {
         all = all && set(mod);
       }
       return all;
     }
 
   private:
-    
     Key _key;
 
     KeyEventType _type;
 
     int _modifiers;
-
   };
-
 }
 
 #endif //INPUT_KEY_EVENT_H

@@ -11,17 +11,14 @@ namespace wage {
   class GlfwPlatform : public Platform {
 
   public:
+    GlfwPlatform() : Platform() {}
 
-    GlfwPlatform() : Platform() { }
-
-    virtual ~GlfwPlatform() { }
+    virtual ~GlfwPlatform() {}
 
     void start() override;
 
     void stop() override;
-    
   };
-
 }
 
 #endif //GLFW_PLATFORM_H

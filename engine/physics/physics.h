@@ -8,13 +8,11 @@
 
 #include "messaging/messaging.h"
 
-
 namespace wage {
 
   class Physics : public Service, MessageListener<AddEntityMessage>, MessageListener<DestroyEntityMessage> {
 
   public:
-    
     Physics();
 
     ~Physics();
@@ -26,11 +24,9 @@ namespace wage {
     virtual void remove(Entity entity) = 0;
 
     virtual void on(AddEntityMessage& message) override;
-    
-    virtual void on(DestroyEntityMessage& message) override ;
 
+    virtual void on(DestroyEntityMessage& message) override;
   };
-
 }
 
 #endif // PHYSICS_H

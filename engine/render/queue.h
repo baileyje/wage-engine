@@ -10,9 +10,8 @@
 namespace wage {
 
   class RenderQueue {
-  
-  public:
 
+  public:
     RenderQueue() {
       renderables.reserve(100);
     }
@@ -30,7 +29,7 @@ namespace wage {
     virtual void cull(RenderContext* context) {
       std::vector<Renderable*> valid;
       Frustum frustum = context->camera()->frustum(context->screenSize(), context->cameraEntity().get<Transform>().get());
-      for (auto renderable : renderables) {        
+      for (auto renderable : renderables) {
         if (frustum.contains(renderable->boundingSphere())) {
           valid.push_back(renderable);
         }
@@ -53,11 +52,8 @@ namespace wage {
     }
 
   private:
-
     std::vector<Renderable*> renderables;
-
   };
-
 }
 
 #endif //RENDERER_QUEUE_H

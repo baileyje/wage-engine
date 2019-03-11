@@ -11,7 +11,6 @@ namespace wage {
   class Quaternion {
 
   public:
-
     float x;
 
     float y;
@@ -26,10 +25,10 @@ namespace wage {
 
     Quaternion(Vector vector);
 
-    static Quaternion fromEulers(const Vector& vector);     
+    static Quaternion fromEulers(const Vector& vector);
 
     Vector eulerAngles() const;
-  
+
     Quaternion& operator*=(const Quaternion& rhs);
 
     friend Quaternion operator*(Quaternion lhs, const Quaternion& rhs) {
@@ -43,11 +42,9 @@ namespace wage {
     }
 
     Quaternion rotated(float angle, Vector axis) const;
-
   };
 
   Vector operator*(Quaternion quat, const Vector& vector);
-
 }
 
 #endif //MATH_QUATERNION_H

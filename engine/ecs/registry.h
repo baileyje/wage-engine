@@ -18,9 +18,8 @@ namespace wage {
   class Registry;
 
   class Entity {
-  
-  public:
 
+  public:
     Entity() : Entity(nullptr, Reference<EntityId, EntityId>()) {
     }
 
@@ -44,7 +43,7 @@ namespace wage {
     inline bool valid() {
       return registry != nullptr && wrapped.valid();
     }
-    
+
     // EntityId* operator->() {
     //   assert(wrapped.valid());
     //   return wrapped.operator->();
@@ -58,7 +57,7 @@ namespace wage {
     bool operator==(const Entity& other) const {
       return wrapped.operator==(other.wrapped);
     }
-    
+
     bool operator!=(const Entity& other) const {
       return wrapped.operator!=(other.wrapped);
     }
@@ -77,25 +76,21 @@ namespace wage {
     template <typename C>
     Reference<C, ComponentId> get();
 
-
   private:
-
     Reference<EntityId, EntityId> wrapped;
 
     Registry* registry;
-
   };
 
   class Registry {
-  
-  public:
 
+  public:
     inline Entity create() {
-      return { this, entities.create() };
+      return {this, entities.create()};
     }
 
     inline Entity get(EntityId id) {
-      return { this, entities.reference(id) };
+      return {this, entities.reference(id)};
     }
 
     template <typename C, typename... Args>
@@ -115,13 +110,12 @@ namespace wage {
 
     template <typename C>
     inline View<Entity, C> with() {
-      return { pool<C>(), [&](EntityId id) {
-        return get(id);
-      } };
+      return {pool<C>(), [&](EntityId id) {
+                return get(id);
+              }};
     }
-    
-  private:
 
+  private:
     template <typename C>
     inline ComponentPool<C>* pool() {
       auto& typeId = typeid(C);
@@ -134,7 +128,6 @@ namespace wage {
     ObjectPool<EntityId, EntityId> entities;
 
     std::unordered_map<std::type_index, BaseComponentPool*> componentPools;
-
   };
 
   template <typename C, typename... Args>
@@ -150,7 +143,6 @@ namespace wage {
   Reference<C, ComponentId> Entity::get() {
     return registry->get<C>(id());
   }
-
 }
 
 #endif // ECS_REGISTRY_H

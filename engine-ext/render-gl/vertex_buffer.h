@@ -4,12 +4,11 @@
 #include "render-gl/vertex_buffer_layout.h"
 
 namespace wage {
-  
+
   class VertexBuffer {
 
   public:
-    
-    VertexBuffer(const void* data,  const unsigned int size);
+    VertexBuffer(const void* data, const unsigned int size);
 
     ~VertexBuffer();
 
@@ -20,12 +19,10 @@ namespace wage {
     VertexBufferLayout* layout();
 
   private:
-
     unsigned int id;
 
     VertexBufferLayout _layout;
   };
-
 }
 
 #endif //RENDERER_VERTEX_BUFFER_H

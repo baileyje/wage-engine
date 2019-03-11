@@ -11,13 +11,14 @@
 namespace wage {
 
   enum class RigidBodyType {
-    dynamic, kinematic, immovable
+    dynamic,
+    kinematic,
+    immovable
   };
 
   class RigidBody {
 
   public:
-
     RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : _mass(mass), _affectedByGravity(true), _type(type), _shouldStop(false) {}
 
     ~RigidBody() {}
@@ -118,7 +119,6 @@ namespace wage {
     }
 
   private:
-
     float _mass;
 
     bool _affectedByGravity;
@@ -132,7 +132,7 @@ namespace wage {
     Vector _torqueImpulse;
 
     Vector _linearVelocity;
-    
+
     RigidBodyType _type;
 
     bool _shouldStop;
@@ -141,7 +141,6 @@ namespace wage {
 
     bool _shouldClearAngularVelocity;
   };
-
 }
 
 #endif //ENTITY_RIGID_BODY_H

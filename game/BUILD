@@ -1,4 +1,15 @@
 
+
+cc_library(
+	name = "wage_lib",
+	srcs = glob(["**/*.cpp"], exclude=["wage.cpp"]),
+	hdrs = glob(["**/*.h"]),
+	deps = [
+    "@engine",
+	],
+	visibility = ["//visibility:public"]
+)
+
 cc_binary(
   name = "wage",
   srcs = ["wage.cpp"],
@@ -7,7 +18,8 @@ cc_binary(
     "@engine_ext//platform-glfw",
     "@engine_ext//input-glfw",
     "@engine_ext//render-gl",
-    "@engine_ext//physics-bullet"
+    "@engine_ext//physics-bullet",
+    ":wage_lib"
   ],
   linkopts = ["-framework Cocoa -framework OpenGL"],
   visibility = ["//visibility:public"]

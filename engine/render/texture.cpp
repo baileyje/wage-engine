@@ -3,6 +3,5 @@
 
 namespace wage {
 
-  Texture* Texture::Default = make<Texture>("textures/default.png");
-
+  Texture Texture::Default = Texture("textures/default.png");
 }

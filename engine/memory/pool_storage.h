@@ -9,7 +9,6 @@ namespace wage {
   class PoolStorage {
 
   public:
-    
     virtual void clear() = 0;
 
     virtual T& get(IndexType index) = 0;
@@ -17,9 +16,7 @@ namespace wage {
     virtual T& operator[](IndexType index) {
       return get(index);
     }
-
   };
-
 }
 
 #endif //POOL_STORAGE_H

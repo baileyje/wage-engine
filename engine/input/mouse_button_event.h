@@ -11,9 +11,8 @@ namespace wage {
   };
 
   class MouseButtonEvent {
-  
-  public:
 
+  public:
     MouseButtonEvent(int button, MouseButtonEventType type, int modifiers) : _button(button), _type(type), _modifiers(modifiers) {
     }
 

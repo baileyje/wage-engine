@@ -10,20 +10,16 @@
 #include "core/service.h"
 
 namespace wage {
- 
+
   template <typename M>
   class MessageListener {
   public:
-    
     virtual void on(M& message) = 0;
-
   };
-
 
   class Messaging : public Service {
 
   public:
-
     Messaging() : Service("Messaging") {}
 
     ~Messaging() {}
@@ -41,15 +37,12 @@ namespace wage {
 
     template <typename M>
     void listen(MessageListener<M>* listener) {
-      listeners[typeid(M*)].push_back(listener);    
+      listeners[typeid(M*)].push_back(listener);
     }
 
   private:
-
     std::unordered_map<std::type_index, std::vector<void*>> listeners;
-
   };
-
-} 
+}
 
 #endif //MESSAGING_H

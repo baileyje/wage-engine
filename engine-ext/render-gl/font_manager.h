@@ -9,13 +9,11 @@
 
 #include "render-gl/font.h"
 
-
 namespace wage {
 
   class GlFontManager {
-  
-  public:
 
+  public:
     GlFont* load(Font& font) {
       GlFont* glFont = cache[font.path()];
       if (glFont == nullptr) {
@@ -31,13 +29,10 @@ namespace wage {
     }
 
   private:
-
     AssetManager* _assetManager;
 
     std::unordered_map<std::string, GlFont*> cache;
-
   };
-
 }
 
 #endif //RENDERER_FONT_MANAGER_H

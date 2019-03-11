@@ -5,7 +5,8 @@
 namespace wage {
 
   GlProgram* GlProgram::Default = make<GlProgram>("shaders/default.vs", "shaders/default.fs");
-  
+
   GlProgram* GlProgram::Font = make<GlProgram>("shaders/font.vs", "shaders/font.fs");
 
+  GlProgram* GlProgram::Sprite = make<GlProgram>("shaders/sprite.vs", "shaders/sprite.fs");
 }

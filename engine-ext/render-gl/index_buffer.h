@@ -6,7 +6,6 @@ namespace wage {
   class IndexBuffer {
 
   public:
-    
     IndexBuffer(const unsigned int* data, unsigned int count);
 
     ~IndexBuffer();
@@ -20,15 +19,12 @@ namespace wage {
     }
 
   private:
-
     // const unsigned int* data;
-    
+
     unsigned int _count;
 
     unsigned int id;
-
   };
-
 }
 
 #endif //RENDERER_INDEX_BUFFER_H

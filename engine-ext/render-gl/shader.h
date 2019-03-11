@@ -13,8 +13,7 @@ namespace wage {
   class GlShader : public Asset {
 
   public:
-
-    GlShader(std::string path, GLenum shaderType) : Asset(path), shaderType(shaderType) {      
+    GlShader(std::string path, GLenum shaderType) : Asset(path), shaderType(shaderType) {
     }
 
     virtual ~GlShader() {
@@ -30,12 +29,10 @@ namespace wage {
     void compile();
 
   private:
-
     unsigned int _id;
 
     GLenum shaderType;
   };
-
 }
 
 #endif //RENDERER_SHADER_H

@@ -5,15 +5,14 @@
 
 namespace wage {
 
-  class PerspectiveCamera : public Camera  {
+  class PerspectiveCamera : public Camera {
 
   public:
-
     PerspectiveCamera() : PerspectiveCamera(60, 0.2, 1000.0) {
     }
 
-    PerspectiveCamera(float fov, float nearClip, float farClip) 
-      : Camera(CameraType::Perspective), _fov(fov), _nearClip(nearClip), _farClip(farClip) {
+    PerspectiveCamera(float fov, float nearClip, float farClip)
+        : Camera(CameraType::perspective), _fov(fov), _nearClip(nearClip), _farClip(farClip) {
     }
 
     inline float fov() {
@@ -46,22 +45,18 @@ namespace wage {
 
     inline Frustum frustum(Vector2 screenSize, Transform* cameraTransform) {
       Frustum returnFrustum;
-      Matrix mvp =  screenProjection(screenSize) * viewProjection(cameraTransform);
+      Matrix mvp = screenProjection(screenSize) * viewProjection(cameraTransform);
       returnFrustum.extractPlanesFrom(mvp);
       return returnFrustum;
     }
 
-
   private:
-
     float _fov;
 
     float _nearClip;
 
     float _farClip;
-
   };
-
 }
 
 #endif //ENTITY_PERSPECTIVE_CAMERA_H

@@ -2,25 +2,22 @@
 #define MEMORY_REFERENCE_H
 
 #include <cstddef>
-#include <assert.h>  
+#include <assert.h>
 
 namespace wage {
-  
+
   template <typename T, typename IndexType = uint32_t>
   class Reference {
-  
+
   public:
+    class Source {
 
-    class Source {      
-
-    public:  
-      
+    public:
       virtual bool valid(Reference ref) = 0;
 
       virtual void destroy(Reference ref) = 0;
 
       virtual T* get(Reference ref) = 0;
-
     };
 
     static const IndexType OutOfBounds = static_cast<IndexType>(-1);
@@ -45,8 +42,8 @@ namespace wage {
       return _source->get(*this);
     }
 
-    operator bool() { 
-      return valid(); 
+    operator bool() {
+      return valid();
     }
 
     T* operator->() {
@@ -70,7 +67,7 @@ namespace wage {
     bool operator==(const Reference& other) const {
       return _source == other._source && _index == other._index;
     }
-    
+
     bool operator!=(const Reference& other) const {
       return !operator==(other);
     }
@@ -88,15 +85,12 @@ namespace wage {
     }
 
   private:
-    
     Source* _source;
-    
+
     IndexType _index;
 
     size_t _version;
-  
   };
-
 }
 
 #endif //MEMORY_REFERENCE_H

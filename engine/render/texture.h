@@ -9,8 +9,10 @@ namespace wage {
   class Texture {
 
   public:
+    static Texture Default;
 
-    static Texture* Default;
+    Texture() : _path("****INVALID****") {
+    }
 
     Texture(std::string path) : _path(path) {
     }
@@ -26,11 +28,8 @@ namespace wage {
     }
 
   private:
-
     std::string _path;
-
   };
-
 }
 
 #endif //ENTITY_TEXTURE_H

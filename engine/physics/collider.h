@@ -6,13 +6,17 @@ namespace wage {
   enum class ColliderType { box, sphere, mesh };
 
   class Collider {
-    
+
   public:
 
-    Collider() : Collider(ColliderType::box) {    
+    static Collider Box;
+
+    static Collider Sphere;
+
+    Collider() : Collider(ColliderType::box) {
     }
 
-    Collider(ColliderType type) : _type(type) {    
+    Collider(ColliderType type) : _type(type) {
     }
 
     ~Collider() {}
@@ -21,16 +25,9 @@ namespace wage {
       return _type;
     }
 
-    static Collider Box;
-
-    static Collider Sphere;
-
   private:
-
     ColliderType _type;
-
   };
-
 }
 
 #endif //ENTITY_COMPONENT_COLLIDER_H

@@ -5,27 +5,23 @@
 #include <string>
 
 namespace wage {
-  
+
   class Service {
 
   public:
+    Service(std::string name) : _name(name){};
 
-    Service(std::string name) : _name(name) {};
-    
-    virtual ~Service() {};
+    virtual ~Service(){};
 
-    virtual void start() {};
+    virtual void start(){};
 
-    virtual void stop() {};
+    virtual void stop(){};
 
-    virtual std::string name() const   { return _name; };
+    virtual std::string name() const { return _name; };
 
   private:
-
     std::string _name;
-
   };
-
 }
 
 #endif // CORE_SERVICE_H

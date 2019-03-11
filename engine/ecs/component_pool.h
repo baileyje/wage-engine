@@ -19,8 +19,7 @@ namespace wage {
 
   class BaseComponentPool {
 
-  protected:  
-  
+  protected:
     BaseComponentPool() {}
 
     inline void reserve(EntityId toId) {
@@ -28,18 +27,15 @@ namespace wage {
     }
 
     std::vector<ComponentId> sparseIds;
-
   };
 
   template <typename C>
   class ComponentPool : public BaseComponentPool, public Reference<C, ComponentId>::Source {
 
   public:
-
     class EntityComponentPair {
-    
-    public:
 
+    public:
       EntityComponentPair() {}
 
       template <typename... Args>
@@ -54,11 +50,9 @@ namespace wage {
       }
 
     private:
-
       EntityId _entityId;
 
       C _component;
-
     };
 
     typedef typename ObjectPool<typename ComponentPool<C>::EntityComponentPair, ComponentId>::Iterator Iterator;
@@ -89,7 +83,7 @@ namespace wage {
       return &pool.reference(id)->component();
     }
 
-     bool valid(Reference<C, ComponentId> ref) {
+    bool valid(Reference<C, ComponentId> ref) {
       return pool.reference(ref.index()).valid();
     }
 
@@ -110,11 +104,8 @@ namespace wage {
     }
 
   private:
-
     ObjectPool<EntityComponentPair, ComponentId> pool;
-
   };
-
 }
 
 #endif // ECS_COMP_POOL
