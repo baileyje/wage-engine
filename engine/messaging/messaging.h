@@ -14,7 +14,7 @@ namespace wage {
   template <typename M>
   class MessageListener {
   public:
-    virtual void on(M& message) = 0;
+    virtual bool on(const M& message) = 0;
   };
 
   class Messaging : public Service {
@@ -30,7 +30,9 @@ namespace wage {
       if (itr != listeners.end()) {
         for (auto listener : itr->second) {
           auto it = static_cast<MessageListener<M>*>(listener);
-          it->on(message);
+          if(it->on(message)) {
+            return;
+          }
         }
       }
     }

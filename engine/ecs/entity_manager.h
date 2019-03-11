@@ -23,7 +23,7 @@ namespace wage {
 
     virtual ~EntityMessage() {}
 
-    inline Entity entity() {
+    inline Entity entity() const {
       return _entity;
     }
 

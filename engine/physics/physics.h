@@ -23,9 +23,9 @@ namespace wage {
 
     virtual void remove(Entity entity) = 0;
 
-    virtual void on(AddEntityMessage& message) override;
+    virtual bool on(const AddEntityMessage& message) override;
 
-    virtual void on(DestroyEntityMessage& message) override;
+    virtual bool on(const DestroyEntityMessage& message) override;
   };
 }
 

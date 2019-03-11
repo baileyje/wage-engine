@@ -13,13 +13,16 @@ namespace wage {
   class UiButton : public UiComponent {
 
   public:
+
+    enum class State { released, hover, pressed };
+
     UiButton(UiFrame frame) : UiButton(frame, Color::Clear) {
     }
 
     UiButton(UiFrame frame, Color color) : UiButton(frame, color, Texture::Default) {
     }
 
-    UiButton(UiFrame frame, Texture texture) : UiButton(frame, Color::Clear, texture) {
+    UiButton(UiFrame frame, Texture texture) : UiButton(frame, Color::Clear, texture, texture) {
     }
 
     UiButton(Color color = Color::Clear) : UiButton(UiFrame(), color) {
@@ -28,7 +31,10 @@ namespace wage {
     UiButton(Texture texture) : UiButton(UiFrame(), texture) {
     }
 
-    UiButton(UiFrame frame, Color color, Texture texture) : UiComponent(frame), _color(color), _texture(texture) {
+    UiButton(UiFrame frame, Color color, Texture texture) : UiComponent(frame), _color(color), _texture(texture), _pressedTexture(texture) {
+    }
+
+    UiButton(UiFrame frame, Color color, Texture texture, Texture pressedTexture) : UiComponent(frame), _color(color), _texture(texture), _pressedTexture(pressedTexture) {
     }
 
     virtual ~UiButton() {
@@ -46,14 +52,34 @@ namespace wage {
       return _texture;
     }
 
+    inline Texture pressedTexture() const {
+      return _pressedTexture;
+    }
+
+    inline void pressedTexture(Texture pressedTexture) {
+      _pressedTexture = pressedTexture;
+    }
+
     inline void texture(Texture texture) {
       _texture = texture;
+    }
+
+    inline State state() const {
+      return _state;
+    }
+
+    inline void state(State state) {
+      _state = state;
     }
 
   private:
     Color _color;
 
     Texture _texture;
+
+    Texture _pressedTexture;
+
+    State _state = State::released;
   };
 }
 

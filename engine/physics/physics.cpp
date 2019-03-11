@@ -15,16 +15,18 @@ namespace wage {
     Core::Instance->get<Messaging>()->listen<DestroyEntityMessage>(this);
   }
 
-  void Physics::on(AddEntityMessage& message) {
+  bool Physics::on(const AddEntityMessage& message) {
     auto entity = message.entity();
     if (
         (entity.has<RigidBody>() && entity.get<RigidBody>().valid()) ||
         (entity.has<Collider>() && entity.get<Collider>().valid())) {
       add(entity);
     }
+    return false;
   }
 
-  void Physics::on(DestroyEntityMessage& message) {
+  bool Physics::on(const DestroyEntityMessage& message) {
     remove(message.entity());
+    return false;
   }
 }

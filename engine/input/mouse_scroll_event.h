@@ -3,20 +3,15 @@
 
 #include "math/vector.h"
 
+#include "mouse_event.h"
+
 namespace wage {
 
-  class MouseScrollEvent {
+  class MouseScrollEvent : public MouseEvent {
 
   public:
-    MouseScrollEvent(Vector2 position) : _position(position) {
+    MouseScrollEvent(Vector2 position) : MouseEvent(position) {
     }
-
-    inline Vector2 position() {
-      return _position;
-    }
-
-  private:
-    Vector2 _position;
   };
 }
 

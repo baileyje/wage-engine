@@ -15,7 +15,6 @@ public:
     double currentTime = context->time();
     frames++;
     if (currentTime - lastTime >= 1.0) {
-      std::cout << "FPS: " << frames << std::endl;
       std::ostringstream os;
       os << "FPS: " << frames;
       label->set(os.str());
@@ -60,7 +59,10 @@ void setupHud(EntityManager* entityManager, SystemManager* systemManager) {
   systemManager->create<PosDisplay>(posLabel);
 
   auto buttonEntity = entityManager->create();
-  buttonEntity.assign<UiButton>(UiFrame(Vector2(600, 0), Vector2(300, 100)), Color::Clear, Texture("textures/button.png"));
+  buttonEntity.assign<UiButton>(UiFrame(Vector2(600, 0), Vector2(300, 100)), Color::Clear, 
+    Texture("textures/button.png"),
+    Texture("textures/default.png")
+  );
 }
 
 #endif // HUD_H

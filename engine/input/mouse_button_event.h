@@ -2,29 +2,28 @@
 #define INPUT_MOUSE_BUTTON_EVENT_H
 
 #include <initializer_list>
-#include "input/key_modifier.h"
+#include "key_modifier.h"
+#include "mouse_event.h"
 
 namespace wage {
 
-  enum class MouseButtonEventType {
-    press, release
-  };
-
-  class MouseButtonEvent {
+  class MouseButtonEvent : public MouseEvent {
 
   public:
-    MouseButtonEvent(int button, MouseButtonEventType type, int modifiers) : _button(button), _type(type), _modifiers(modifiers) {
+    enum class Type { press, release };
+
+    MouseButtonEvent(int button, Type type, int modifiers, Vector2 position) : MouseEvent(position), _button(button), _type(type), _modifiers(modifiers) {
     }
 
-    inline int button() {
+    inline int button() const {
       return _button;
     }
 
-    inline MouseButtonEventType type() {
+    inline Type type() const {
       return _type;
     }
 
-    inline int modifiers() {
+    inline int modifiers() const {
       return _modifiers;
     }
 
@@ -35,22 +34,19 @@ namespace wage {
 
     bool set(std::initializer_list<KeyModifier> mods) {
       bool all = true;
-      for(auto mod : mods) {
+      for (auto mod : mods) {
         all = all && set(mod);
       }
       return all;
     }
 
   private:
-    
     int _button;
 
-    MouseButtonEventType _type;
+    Type _type;
 
     int _modifiers;
-
   };
-
 }
 
 #endif //INPUT_MOUSE_BUTTON_EVENT_H

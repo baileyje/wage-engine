@@ -50,8 +50,8 @@ namespace wage {
     });
     glfwSetMouseButtonCallback(glfwWindow, [](GLFWwindow* window, int button, int action, int mods) {
       auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
-      auto eventType = action == GLFW_RELEASE ? MouseButtonEventType::release : MouseButtonEventType::press;
-      MouseButtonEvent event(button, eventType, mods);
+      auto eventType = action == GLFW_RELEASE ? MouseButtonEvent::Type::release : MouseButtonEvent::Type::press;
+      MouseButtonEvent event(button, eventType, mods, input->mousePosition());
       input->messaging->send(event);
     });
     glfwSetCursorPosCallback(glfwWindow, [](GLFWwindow* window, double x, double y) {

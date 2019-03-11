@@ -22,7 +22,6 @@ public:
     auto bearing = player.get<Transform>()->rotation();
     auto reverseBearing = (bearing * Vector(0, 0, -1)).normalized();
     auto pos = player.get<Transform>()->position() + reverseBearing * followDistance;
-    printf("Cam Pos: %f:%f:%f\n", pos.x, pos.y, pos.z);
     camera.get<Transform>()->position(pos);
     camera.get<Transform>()->rotation(bearing);
   }

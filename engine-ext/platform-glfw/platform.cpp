@@ -22,8 +22,12 @@ namespace wage {
     GLFWwindow* glfWindow = glfwCreateWindow(1024, 768, "Wage is the Rage!", NULL, NULL);
     int screenWidth = 0;
     int screenHeight = 0;
-    glfwGetFramebufferSize(glfWindow, &screenWidth, &screenHeight);
-    _window = make<Window>(glfWindow, screenWidth, screenHeight);
+    glfwGetWindowSize(glfWindow, &screenWidth, &screenHeight);
+    int frameBufferWidth = 0;
+    int frameBufferHeight = 0;
+    glfwGetFramebufferSize(glfWindow, &frameBufferWidth, &frameBufferHeight);
+    float scale = (float)frameBufferWidth / (float)screenWidth;
+    _window = make<Window>(glfWindow, frameBufferWidth, frameBufferHeight, scale);
   }
 
   void GlfwPlatform::stop() {
