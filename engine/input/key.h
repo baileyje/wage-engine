@@ -3,7 +3,6 @@
 
 namespace wage {
 
-  // TODO: Lowercase these
   enum class Key {
     unknown,
     space,

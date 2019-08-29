@@ -3,7 +3,7 @@
 #include "physics/rigid_body.h"
 #include "physics/collider.h"
 #include "core/logger.h"
-#include "ecs/system_context.h"
+#include "new_ecs/system_context.h"
 
 namespace wage {
 

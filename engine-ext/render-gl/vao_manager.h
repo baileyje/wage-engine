@@ -14,7 +14,7 @@ namespace wage {
   class VaoManager {
 
   public:
-    VertexArray* load(Reference<Mesh> mesh) {
+    VertexArray* load(Mesh* mesh) {
       VertexArray* vao = cache[mesh->id()];
       if (vao == nullptr) {
         vao = make<VertexArray>();

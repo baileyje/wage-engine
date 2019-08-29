@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "core/service.h"
-#include "ecs/entity_manager.h"
+#include "new_ecs/entity_manager.h"
 
 #include "messaging/messaging.h"
 

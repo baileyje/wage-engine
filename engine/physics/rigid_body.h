@@ -23,7 +23,7 @@ namespace wage {
 
     ~RigidBody() {}
 
-    inline float mass() {
+    inline float mass() const {
       return _mass;
     }
 
@@ -31,7 +31,7 @@ namespace wage {
       _affectedByGravity = affected;
     }
 
-    inline bool isAffectedByGravity() {
+    inline bool isAffectedByGravity() const {
       return _affectedByGravity;
     }
 

@@ -18,7 +18,7 @@ namespace wage {
 
   btRigidBody* createRigidBody(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape);
 
-  btTransform fromTransform(Transform& transform);
+  btTransform fromTransform(Transform* transform);
 }
 
 #endif //PHYSICS_UTIL_H

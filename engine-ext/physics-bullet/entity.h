@@ -3,7 +3,8 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "ecs/registry.h"
+#include "new_ecs/registry.h"
+#include "new_ecs/entity.h"
 #include "physics/rigid_body.h"
 #include "physics/collider.h"
 
@@ -58,7 +59,7 @@ namespace wage {
   private:
     static btCollisionShape* shapeFor(Entity entity);
 
-    static btRigidBody* rigidBodyFor(Reference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape);
+    static btRigidBody* rigidBodyFor(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape);
 
     Entity _entity;
 

@@ -1,6 +1,6 @@
 
-#include "ecs/system.h"
-#include "ecs/entity_manager.h"
+#include "new_ecs/system.h"
+#include "new_ecs/entity_manager.h"
 #include "render/renderer.h"
 #include "ui.h"
 #include "input/mouse_button_event.h"
@@ -11,37 +11,42 @@ namespace wage {
   class UiSystem : public System, MessageListener<MouseButtonEvent> {
 
   public:
-    UiSystem() : System("UI") {}
+    UiSystem() : System() {}
 
-    void start(SystemContext* context) {
+    void start(const SystemContext& context) {
       Core::Instance->get<Messaging>()->listen<MouseButtonEvent>(this);
     }
 
-    void update(SystemContext* context) {
+    void update(const SystemContext& context) {
       EntityManager* manager = Core::Instance->get<EntityManager>();
-      for (auto entity : manager->registry()->with<UiLabel>()) {
-        render(entity.get<UiLabel>());
+      for (auto entity : manager->with<UiLabel>()) {
+        render(entity.get<UiLabel>().get());
       }
-      for (auto entity : manager->registry()->with<UiButton>()) {
-        render(entity.get<UiButton>());
+      for (auto entity : manager->with<UiButton>()) {
+        render(entity.get<UiButton>().get());
       }
     }
 
-    void render(Reference<UiLabel> label) {
+    void render(UiLabel* label) {
       Core::Instance->get<Renderer>()->renderText(
           label->frame().position(), label->text(), label->font(), label->color());
     }
 
-    void render(Reference<UiButton> button) {
+    void render(UiButton* button) {
       auto buttonTexture = button->state() == UiButton::State::pressed ? button->pressedTexture() : button->texture();
       Core::Instance->get<Renderer>()->renderSprite(
-          button->frame().position(), button->frame().size(), button->color(), buttonTexture);
+        button->frame().position(), button->frame().size(), button->color(), buttonTexture
+      );
     }
 
     bool on(const MouseButtonEvent& event) {
+      // Only check button one for ui buttons
+      if (event.button() != MouseButton::One) {
+        return false;
+      }
       EntityManager* manager = Core::Instance->get<EntityManager>();
       auto window = Core::Instance->get<Platform>()->window();
-      for (auto entity : manager->registry()->with<UiButton>()) {
+      for (auto entity : manager->with<UiButton>()) {
         auto button = entity.get<UiButton>();
         auto frame = button->frame();
         auto pos = Vector2(

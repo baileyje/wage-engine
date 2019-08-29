@@ -13,6 +13,7 @@
 
 #include "player.h"
 #include "enemy.h"
+#include "planet.h"
 #include "camera.h"
 #include "hud.h"
 
@@ -34,8 +35,10 @@ void setupServices(Core* core, std::string path) {
 void setupCoreSystems(SystemManager* systemManager) {
   systemManager->create<UiSystem>();
   systemManager->create<MeshRenderer>();
+  systemManager->create<EnemyLauncher>();
   systemManager->create<EnemyMovement>();
   systemManager->create<PlayerMovement>();
+  systemManager->create<PlanetLauncher>();
 }
 
 void setupScene(EntityManager* entityManager, SystemManager* systemManager) {
@@ -51,19 +54,17 @@ void setupScene(EntityManager* entityManager, SystemManager* systemManager) {
   bottomLight->diffuse(Color(0.7, 0.7, 0.9, 1));
   bottomLight->ambient(Color(0.4, 0.4, 0.4, 1));
 
-  auto player = addPlayer(entityManager, systemManager);
+  addPlayer(entityManager, systemManager);
 
-  auto cameraEntity = entityManager->create();
-  auto camTransform = cameraEntity.assign<Transform>();
-  camTransform->position(Vector(0, 30, -30));
-  camTransform->rotation(Vector(00, 0.0, 0));
-  cameraEntity.assign<PerspectiveCamera>();
-  systemManager->create<ThirdPersonCamera>(cameraEntity, player);
+  addCamera(entityManager, systemManager);
 
   setupHud(entityManager, systemManager);
 
   for (int i = 0; i < 200; i++) {
     addRandomEnemy(entityManager, systemManager);
+  }
+  for (int i = 0; i < 10; i++) {
+    addRandomPlanet(entityManager, systemManager);
   }
 }
 

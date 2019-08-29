@@ -11,43 +11,44 @@ class Player {
 class PlayerMovement : public System {
 
 public:
-  PlayerMovement() : System("PlayerMovement"), lastPos(Vector2()), mouseSpeed(0.0005) {
+  PlayerMovement() : System(), lastPos(Vector2()), mouseSpeed(0.0001) {
   }
 
-  void start(SystemContext* context) {
+  void start(const SystemContext& context) {
     lastPos = Core::Instance->get<Input>()->mousePosition();
   }
 
-  void fixedUpdate(SystemContext* context) {
-    auto player = *Core::Instance->get<EntityManager>()->registry()->with<Player>().begin();
+  void fixedUpdate(const SystemContext& context) {
+    auto player = *Core::Instance->get<EntityManager>()->with<Player>().begin();
     auto body = player.get<RigidBody>();
     auto mousePos = Core::Instance->get<Input>()->mousePosition();
     auto dx = lastPos.x - mousePos.x;
     auto dy = lastPos.y - mousePos.y;
-    auto torque = Vector3::Up * mouseSpeed * dx + Vector3::Right * mouseSpeed * -dy;
-    body->addTorqueImpulse(torque);
     auto bearing = player.get<Transform>()->rotation();
-    float force = 0.1;
+    auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
+    body->addTorqueImpulse(torque);
+    float force = 1.0;
     auto impulse = Vector3::Zero;
     if (Core::Instance->get<Input>()->isPressed(Key::w)) {
-      impulse += (bearing * Vector(0, 0, 1)).normalized() * force;
+      impulse += (bearing * Vector::Forward).normalized() * force;
     }
     if (Core::Instance->get<Input>()->isPressed(Key::s)) {
-      body->addImpulse((bearing * Vector(0, 0, -1)).normalized() * force);
+      body->addImpulse((bearing * Vector::Backward).normalized() * force);
     }
     if (Core::Instance->get<Input>()->isPressed(Key::a)) {
-      impulse += (bearing * Vector(1, 0, 0)).normalized() * force;
+      impulse += (bearing * Vector::Right).normalized() * force;
     }
     if (Core::Instance->get<Input>()->isPressed(Key::d)) {
-      impulse += (bearing * Vector(-1, 0, 0)).normalized() * force;
+      impulse += (bearing * Vector::Left).normalized() * force;
     }
     if (Core::Instance->get<Input>()->isPressed(Key::space)) {
-      impulse += (bearing * Vector(0, 1, 0)).normalized() * force;
+      impulse += (bearing * Vector::Up).normalized() * force;
     }
     if (Core::Instance->get<Input>()->isPressed(Key::leftShift)) {
-      impulse += (bearing * Vector(0, -1, 0)).normalized() * force;
+      impulse += (bearing * Vector::Down).normalized() * force;
     }
-    body->addImpulse(impulse);
+    //printf("I: %f:%f:%f -> %f\n", impulse.x, impulse.y, impulse.z, sqrt(impulse.x * impulse.x + impulse.y * impulse.y + impulse.z * impulse.z ));
+    body->addForce(impulse);
 
     if (Core::Instance->get<Input>()->isPressed(Key::f)) {
       body->shouldStop(true);
@@ -62,14 +63,16 @@ private:
 };
 
 Entity addPlayer(EntityManager* entityManager, SystemManager* systemManager) {
+  auto mesh = Mesh::load("resources/meshes/player.obj");
   auto player = entityManager->create();
-  auto transform = player.assign<Transform>();
-  transform->position(Vector(0, 20, 0));
-  transform->localScale(Vector(5, 5, 5));
+  auto transform = player.assign<Transform>(Vector(0, 0, 0), Vector(5, 5, 5), Vector(0, 5, 0));
+  // transform.position();
+  // transform.localScale();
+  // transform.rotation();
   player.assign<RigidBody>(0.01);
-  player.assign<Mesh>(Mesh::Sphere);
+  player.assign<Mesh>(mesh);
   player.assign<Collider>(ColliderType::sphere);
-  player.assign<Material>(Texture("textures/test_planet.png"));
+  player.assign<Material>(Texture("textures/default.png"));
   player.assign<Player>();
   return player;
 }

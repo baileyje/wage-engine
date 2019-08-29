@@ -116,6 +116,8 @@ namespace wage {
       return tmp.x + tmp.y + tmp.z;
     }
 
+    static Vector3 cross(const Vector3& left, const Vector3& right);
+
     static float distance(const Vector3& left, const Vector3& right) {
       return left.distanceTo(right);
     }

@@ -6,7 +6,7 @@
 
 #include "platform/platform.h"
 #include "core/logger.h"
-#include "ecs/system_context.h"
+#include "new_ecs/system_context.h"
 #include "render/context.h"
 #include "component/camera/perspective_camera.h"
 #include "component/camera/orthographic_camera.h"
@@ -41,10 +41,10 @@ namespace wage {
   }
 
   std::tuple<Entity, Camera*> cameraAndEntity(EntityManager* manager) {
-    for (auto entity : manager->registry()->with<PerspectiveCamera>()) {
+    for (auto entity : manager->with<PerspectiveCamera>()) {
       return {entity, entity.get<PerspectiveCamera>().get()};
     }
-    for (auto entity : manager->registry()->with<OrthographicCamera>()) {
+    for (auto entity : manager->with<OrthographicCamera>()) {
       return {entity, entity.get<OrthographicCamera>().get()};
     }
     return {Entity(), nullptr};
@@ -59,15 +59,15 @@ namespace wage {
       return;
     }
     std::vector<Entity> dirLights;
-    for (auto ent : manager->registry()->with<DirectionalLight>()) {
+    for (auto ent : manager->with<DirectionalLight>()) {
       dirLights.push_back(ent);
     }
     std::vector<Entity> pointLights;
-    for (auto ent : manager->registry()->with<PointLight>()) {
+    for (auto ent : manager->with<PointLight>()) {
       pointLights.push_back(ent);
     }
     std::vector<Entity> spotlights;
-    for (auto ent : manager->registry()->with<Spotlight>()) {
+    for (auto ent : manager->with<Spotlight>()) {
       spotlights.push_back(ent);
     }
     RenderContext renderContext(std::get<0>(camera), std::get<1>(camera), Vector2(window->width(), window->height()), dirLights, pointLights, spotlights);

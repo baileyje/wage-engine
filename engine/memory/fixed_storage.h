@@ -3,13 +3,13 @@
 
 #include <cassert>
 
-#include "memory/pool_storage.h"
+#include "memory/storage.h"
 #include "memory/allocator.h"
 
 namespace wage {
 
   template <typename T, typename IndexType = size_t>
-  class FixedStorage : public PoolStorage<T, IndexType> {
+  class FixedStorage : public Storage<T, IndexType> {
 
   public:
     FixedStorage(IndexType capacity) : _capacity(capacity) {

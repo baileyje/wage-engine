@@ -11,6 +11,8 @@ namespace wage {
 
   public:
 
+    Transform(Vector position, Vector scale, Vector rotation) : _parent(nullptr), _position(position), _scale(scale), _rotation(rotation) {}
+
     Transform() : _parent(nullptr), _position(Vector::Zero), _scale(Vector::One), _rotation(Vector::Zero) {}
 
     ~Transform() {}
@@ -58,7 +60,7 @@ namespace wage {
     inline Quaternion rotation() {
       if (_parent) {
         Quaternion parentQuat = _parent->rotation();
-        return parentQuat * _rotation;
+        return _rotation * parentQuat;
       }
       return localRotation();
     }

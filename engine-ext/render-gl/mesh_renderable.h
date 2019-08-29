@@ -24,7 +24,7 @@ namespace wage {
   class GlMeshRenderable : public Renderable {
 
   public:
-    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform transform, Reference<Mesh> mesh, Reference<Material> material)
+    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform* transform, Mesh* mesh, Material* material)
         : _vaoManager(vaoManager), _textureManager(textureManager), transform(transform), mesh(mesh), material(material) {}
 
     inline VaoManager* vaoManager() {
@@ -32,12 +32,12 @@ namespace wage {
     }
 
     virtual Vector position() {
-      return transform.position();
+      return transform->position();
     }
 
     virtual BoundingBox boundingBox() {
       Vector maxDims = mesh->maxDim();
-      Vector scale = transform.scale();
+      Vector scale = transform->scale();
       Vector scaledMaxHalfDim(
           maxDims.x * scale.x,
           maxDims.y * scale.y,
@@ -53,7 +53,7 @@ namespace wage {
 
     void setupMaterial(GlMaterial& glMaterial, RenderContext* context) {
       glMaterial.bind();
-      glMaterial.setMat4("model", transform.worldPorjection());
+      glMaterial.setMat4("model", transform->worldPorjection());
       glMaterial.setMat4("view", context->viewProjection());
       glMaterial.setMat4("projection", context->screenProjection());
       glMaterial.setVec3("viewPos", context->cameraPosition());
@@ -105,9 +105,10 @@ namespace wage {
         glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->outerCutOff())));
       }
       auto texture = Texture::Default;
-      if (material.valid()) {
+      // if (material.valid()) {
+        // TODO; Ref?
         texture = material->texture();
-      }
+      // }
       GlTexture* glTexture = _textureManager->load(texture);
       glTexture->bind();
       glMaterial.setInt("material.diffuse", 0);
@@ -135,11 +136,11 @@ namespace wage {
 
     GlTextureManager* _textureManager;
 
-    Transform transform;
+    Transform* transform;
 
-    Reference<Mesh> mesh;
+    Mesh* mesh;
 
-    Reference<Material> material;
+    Material* material;
   };
 }
 

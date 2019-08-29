@@ -16,7 +16,7 @@
       "externalConsole": false,
       "MIMode": "lldb",
       "preLaunchTask": "build-debug"
-    },,
+    },
     {
       "name": "(lldb) Launch",
       "type": "cppdbg",

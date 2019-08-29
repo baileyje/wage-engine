@@ -1,65 +1,41 @@
 #include <iostream>
 
-#include "ecs/registry.h"
-#include "ecs/system/func_system.h"
+#include "util/sparse_set.h"
+#include "memory/pool.h"
+
+#include "new_ecs/entity_manager.h"
+#include "new_ecs/system_manager.h"
+#include "engine.h"
 
 using namespace wage;
 
-class Comp {
-public:
-  static std::string name;
+#define ECS_ENT_ID_TYPE uint16
+#define ECS_ENT_VER_TYPE uint16
 
-  Comp() : Comp(-1) {}
-
-  Comp(int val) : val(val) {
-  }
-
-  void test() {
-    printf("Tested -> %d \n", val);
-  }
-
-  int val;
-};
-std::string Comp::name = "test";
-
-class Comp2 {
-public:
-  static std::string name;
-
-  void test() {
-    printf("Tested2!\n");
+class TestSystem: public System {
+  void update(const SystemContext& context) {
+    printf("Yeah Boi\n");
   }
 };
-std::string Comp2::name = "test2";
-
 
 int main(int argc, char* argv[]) {
 
-  // ObjectPool<Comp> pool;
-  // pool.create(3);
-  // // pool.create();
-  // for(auto it : pool) {
-  //   printf("Ok!\n");
-  //   it->test();
-  // }
+  Core::Instance->create<EntityManager>();
+  Core::Instance->create<SystemManager>();
+  Core::Instance->init();
 
-  Registry registry;
+  auto systemManager = Core::Instance->get<SystemManager>();
+  auto entityManager = Core::Instance->get<EntityManager>();
 
-  auto entity = registry.create();
-  entity.has<Comp>();
+  for (int i = 0; i < 10000; i++ ) {
+    auto entity = entityManager->create();
+    entity.assign<int>(10000 - i);
+  }
+  for (auto item : entityManager->with<int>()) {
+    std::cout << "ViewEnt:" << item.id() << ":" << item.get<int>() << std::endl;
+  }
 
-  // for (int i = 0; i < 100; ++i) {
-  //   auto entity = registry.create();
-  //   entity.assign<Comp>(i);
-  //   // entity.assign<Comp2>();
-  //   entity.get<Comp>()->test();
-  //   // entity.get<Comp2>()->test();
-  // }
+  SystemManager sm;
 
-  // for(auto it : registry.with<Comp>()) {
-  //   printf("ID: %d\n", it.id());
-  //   it.get<Comp>()->test();
-  // }
-
-  auto sys = FuncSystem();
-} 
+  sm.create<TestSystem>();
+}

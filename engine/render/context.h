@@ -10,7 +10,7 @@
 
 #include "math/transform.h"
 
-#include "ecs/registry.h"
+#include "new_ecs/registry.h"
 
 namespace wage {
 

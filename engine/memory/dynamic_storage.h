@@ -4,14 +4,13 @@
 #include <cassert>
 #include <vector>
 
-#include "memory/pool_storage.h"
-
+#include "memory/storage.h"
 #include "memory/allocator.h"
 
 namespace wage {
 
   template <typename T, typename IndexType = size_t>
-  class DynamicStorage : public PoolStorage<T, IndexType> {
+  class DynamicStorage : public Storage<T, IndexType> {
 
   public:
     DynamicStorage(int chunkSize = 100) : _chunkSize(chunkSize) { /* _currentSize(0)*/

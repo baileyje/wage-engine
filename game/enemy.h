@@ -5,18 +5,20 @@
 
 using namespace wage;
 
+void addRandomEnemy(EntityManager* entityManager, SystemManager* systemManager);
+
 class Enemy {
 };
 
 class EnemyMovement : public System {
 
 public:
-  EnemyMovement() : System("EnemyMovement"), chasing(false), running(false) {
+  EnemyMovement() : System(), chasing(false), running(false) {
   }
-  void fixedUpdate(SystemContext* context) {
+  void fixedUpdate(const SystemContext& context) {
     auto manager = Core::Instance->get<EntityManager>();
     if (Core::Instance->get<Input>()->isPressed(Key::c) && !chasing) {
-      for (auto entity : manager->registry()->with<Enemy>()) {
+      for (auto entity : manager->with<Enemy>()) {
         entity.get<RigidBody>()->shouldStop(true);
       }
       chasing = true;
@@ -24,18 +26,18 @@ public:
       return;
     }
     if (Core::Instance->get<Input>()->isPressed(Key::r) && !running) {
-      for (auto entity : manager->registry()->with<Enemy>()) {
+      for (auto entity : manager->with<Enemy>()) {
         entity.get<RigidBody>()->shouldStop(true);
       }
       running = true;
       chasing = false;
     }
 
-    auto target = *manager->registry()->with<Player>().begin();
+    auto target = *manager->with<Player>().begin();
     if (running || chasing) {
-      for (auto entity : manager->registry()->with<Enemy>()) {
+      for (auto entity : manager->with<Enemy>()) {
         if (!entity.valid()) {
-          return;
+          continue;
         }
         if (chasing && Vector::distance(target.get<Transform>()->position(), entity.get<Transform>()->position()) < 20) {
           entity.get<RigidBody>()->shouldStop(true);
@@ -57,6 +59,33 @@ private:
   bool running;
 };
 
+class EnemyLauncher : public System {
+
+public:
+  EnemyLauncher() : System() {
+  }
+
+  void start(const SystemContext& context) {
+    lastLaunch = context.time();
+  }
+
+  void update(const SystemContext& context) {
+    if (Core::Instance->get<Input>()->isPressed(Key::n) && context.time() - lastLaunch > launchThreshold) {
+      auto manager = Core::Instance->get<EntityManager>();
+      auto systemManager = Core::Instance->get<SystemManager>();
+      addRandomEnemy(manager, systemManager);
+      lastLaunch = context.time();
+    }
+  }
+
+private:
+
+  double lastLaunch = 0;
+
+  double launchThreshold = 0.001;
+
+};
+
 void addEnemy(EntityManager* entityManager, SystemManager* systemManager, Vector position, float scale) {
   Entity entity = entityManager->create();
   auto transform = entity.assign<Transform>();
@@ -70,11 +99,11 @@ void addEnemy(EntityManager* entityManager, SystemManager* systemManager, Vector
 }
 
 void addRandomEnemy(EntityManager* entityManager, SystemManager* systemManager) {
-  float x = rand() % 400 - 200;
-  float y = rand() % 400 - 200;
-  float z = rand() % 400 - 200;
-  float scale = (rand() % 100) / 30.0;
-  addEnemy(entityManager, systemManager, Vector(x, y, z) * 2, 1 /*scale*/);
+  float x = rand() % 5000 - 2500;
+  float y = rand() % 5000 - 2500;
+  float z = rand() % 5000 - 2500;
+  // float scale = (rand() % 100) / 30.0;
+  addEnemy(entityManager, systemManager, Vector(x, y, z) * 2, 5 /*scale*/);
 }
 
 #endif // ENEMY_H

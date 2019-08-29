@@ -4,7 +4,7 @@
 #include <chrono>
 #include <thread>
 
-#include "ecs/system.h"
+#include "new_ecs/system.h"
 #include "core/logger.h"
 #include "memory/allocator.h"
 

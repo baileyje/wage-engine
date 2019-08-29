@@ -16,7 +16,11 @@ namespace wage {
 
   Key keyFrom(int keyCode);
 
+  MouseButton buttonFrom(int code);
+
   int codeFrom(Key key);
+
+  int codeFrom(MouseButton button);
 
   void GlfwInput::start() {
     Input::start();
@@ -48,10 +52,10 @@ namespace wage {
         input->messaging->send(event);
       }
     });
-    glfwSetMouseButtonCallback(glfwWindow, [](GLFWwindow* window, int button, int action, int mods) {
+    glfwSetMouseButtonCallback(glfwWindow, [](GLFWwindow* window, int buttonCode, int action, int mods) {
       auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
       auto eventType = action == GLFW_RELEASE ? MouseButtonEvent::Type::release : MouseButtonEvent::Type::press;
-      MouseButtonEvent event(button, eventType, mods, input->mousePosition());
+      MouseButtonEvent event(buttonFrom(buttonCode), eventType, mods, input->mousePosition());
       input->messaging->send(event);
     });
     glfwSetCursorPosCallback(glfwWindow, [](GLFWwindow* window, double x, double y) {
@@ -64,7 +68,7 @@ namespace wage {
       MouseScrollEvent event(Vector2(x, y));
       input->messaging->send(event);
     });
-    // glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   }
 
   bool GlfwInput::isPressed(Key key) {
@@ -578,4 +582,48 @@ namespace wage {
     }
     return GLFW_KEY_UNKNOWN;
   }
+
+  MouseButton buttonFrom(int code) {
+    switch (code) {
+      case 0:
+        return MouseButton::One;
+      case 1:
+        return MouseButton::Two;
+      case 2:
+        return MouseButton::Three;
+      case 3:
+        return MouseButton::Four;
+      case 4:
+        return MouseButton::Five;
+      case 5:
+        return MouseButton::Six;
+      case 6:
+        return MouseButton::Seven;
+      default:
+        return MouseButton::Eight;
+    }
+  }
+
+  int codeFrom(MouseButton button) {
+    switch (button) {
+      case MouseButton::One:
+        return 0;
+      case MouseButton::Two:
+        return 1;
+      case MouseButton::Three:
+        return 2;
+      case MouseButton::Four:
+        return 3;
+      case MouseButton::Five:
+        return 4;
+      case MouseButton::Six:
+        return 5;
+      case MouseButton::Seven:
+        return 6;
+      default:
+        return 8;
+    }
+  }
 }
+
+

@@ -3,15 +3,15 @@
 
 #include "ChakraCore.h"
 
-#include "ecs/system.h"
+#include "new_ecs/system.h"
 #include "jsrt/js_object_wrapper.h"
 
 namespace wage {
 
   class JsSystem : public System {
-    
+
   public:
-    
+
     JsSystem(std::string name, JsValueRef objectRef);
 
     ~JsSystem();

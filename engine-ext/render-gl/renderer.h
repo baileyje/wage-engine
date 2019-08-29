@@ -20,7 +20,7 @@ namespace wage {
 
     void renderSprite(Vector2 position, Vector2 size, Color color, Texture texture);
 
-    void renderMesh(Reference<Transform> transform, Reference<Mesh> mesh, Reference<Material> material);
+    void renderMesh(Transform* transform, Mesh* mesh, Material* material);
 
     virtual void beginRender();
 

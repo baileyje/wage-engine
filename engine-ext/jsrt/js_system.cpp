@@ -1,6 +1,6 @@
 #include "jsrt/js_system.h"
 
-#include "ecs/system_context.h"
+#include "new_ecs/system_context.h"
 
 namespace wage {
 
@@ -10,42 +10,42 @@ namespace wage {
   JsSystem::~JsSystem() {
   }
 
-  void JsSystem::init(SystemContext* context) {
+  void JsSystem::init(const SystemContext& context) {
     // TODO: Ensure system has `init`
     object.invoke("init");
   }
 
-  void JsSystem::start(SystemContext* context) {
+  void JsSystem::start(const SystemContext& context) {
     // TODO: Ensure system has `start`
     object.invoke("start");
   }
 
-  void JsSystem::fixedUpdate(SystemContext* context) {
+  void JsSystem::fixedUpdate(const SystemContext& context) {
     // TODO: Ensure system has `fixedUpdate`
     JsObjectWrapper jsContext;
-    jsContext.set("time", context->time());
-    jsContext.set("deltaTime", context->deltaTime());
-    jsContext.set("timeStep", context->timeStep());
+    jsContext.set("time", context.time());
+    jsContext.set("deltaTime", context.deltaTime());
+    jsContext.set("timeStep", context.timeStep());
     JsValueRef args[] = { jsContext.get() };
     object.invoke("fixedUpdate", args, 1); 
   }
 
-  void JsSystem::update(SystemContext* context) {
+  void JsSystem::update(const SystemContext& context) {
     // TODO: Ensure system has `update`
     JsObjectWrapper jsContext;
-    jsContext.set("time", context->time());
-    jsContext.set("deltaTime", context->deltaTime());
-    jsContext.set("timeStep", context->timeStep());
+    jsContext.set("time", context.time());
+    jsContext.set("deltaTime", context.deltaTime());
+    jsContext.set("timeStep", context.timeStep());
     JsValueRef args[] = { jsContext.get() };
     object.invoke("update", args, 1); 
   }
 
-  void JsSystem::stop(SystemContext* context) {
+  void JsSystem::stop(const SystemContext& context) {
     // TODO: Ensure system has `stop`
     object.invoke("stop");
   }
 
-  void JsSystem::deinit(SystemContext* context) {
+  void JsSystem::deinit(const SystemContext& context) {
     // TODO: Ensure system has `deinit`
     object.invoke("deinit");
   }

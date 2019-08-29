@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include "key_modifier.h"
 #include "mouse_event.h"
+#include "mouse_button.h"
 
 namespace wage {
 
@@ -12,10 +13,10 @@ namespace wage {
   public:
     enum class Type { press, release };
 
-    MouseButtonEvent(int button, Type type, int modifiers, Vector2 position) : MouseEvent(position), _button(button), _type(type), _modifiers(modifiers) {
+    MouseButtonEvent(MouseButton button, Type type, int modifiers, Vector2 position) : MouseEvent(position), _button(button), _type(type), _modifiers(modifiers) {
     }
 
-    inline int button() const {
+    inline MouseButton button() const {
       return _button;
     }
 
@@ -41,7 +42,8 @@ namespace wage {
     }
 
   private:
-    int _button;
+
+    MouseButton _button;
 
     Type _type;
 

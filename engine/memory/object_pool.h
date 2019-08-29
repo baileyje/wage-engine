@@ -7,7 +7,7 @@
 #include "memory/allocator.h"
 #include "memory/reference.h"
 
-#include "memory/pool_storage.h"
+#include "memory/storage.h"
 #include "memory/fixed_storage.h"
 #include "memory/dynamic_storage.h"
 
@@ -173,6 +173,7 @@ namespace wage {
     }
 
   private:
+
     T* get(IndexType index) {
       return index < currentSize ? &storage[index].item : nullptr;
     }

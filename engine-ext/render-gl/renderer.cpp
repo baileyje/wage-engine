@@ -26,6 +26,7 @@ namespace wage {
     GL_FAIL_CHECK(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
     GL_FAIL_CHECK(glEnable(GL_BLEND));
     GL_FAIL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    glfwSwapInterval(0);
 
     const GLubyte* vendor = glGetString(GL_VENDOR);     // Returns the vendor
     const GLubyte* renderer = glGetString(GL_RENDERER); // Returns a hint to the model
@@ -57,9 +58,10 @@ namespace wage {
         &textureManager, position, size, color, texture));
   }
 
-  void GlRenderer::renderMesh(Reference<Transform> transform, Reference<Mesh> mesh, Reference<Material> material) {
+  void GlRenderer::renderMesh(Transform* transform, Mesh* mesh, Material* material) {
     meshQueue.add(makeTemp<GlMeshRenderable>(
-        &vaoManager, &textureManager, *transform, mesh, material));
+      &vaoManager, &textureManager, transform, mesh, material)
+    );
   }
 
   void GlRenderer::endRender() {

@@ -6,7 +6,7 @@
 #include "core/service.h"
 #include "platform/window.h"
 #include "assets/manager.h"
-#include "ecs/entity_manager.h"
+#include "new_ecs/entity_manager.h"
 
 #include "component/lighting/directional_light.h"
 #include "component/lighting/point_light.h"
@@ -34,7 +34,7 @@ namespace wage {
 
     virtual void renderSprite(Vector2 position, Vector2 size, Color color, Texture texture) = 0;
 
-    virtual void renderMesh(Reference<Transform> transform, Reference<Mesh, ComponentId> mesh, Reference<Material, ComponentId> material) = 0;
+    virtual void renderMesh(Transform* transform, Mesh* mesh, Material* material) = 0;
 
   protected:
     void renderMeshes(EntityManager* manager, RenderContext* renderContext);

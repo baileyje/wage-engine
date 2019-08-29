@@ -10,9 +10,9 @@
 
 #include "core/core.h"
 
-#include "ecs/registry.h"
-#include "ecs/system.h"
-#include "ecs/system_manager.h"
+#include "new_ecs/registry.h"
+#include "new_ecs/system.h"
+#include "new_ecs/system_manager.h"
 
 #include "platform/platform.h"
 #include "platform/window.h"

@@ -5,12 +5,11 @@
 namespace wage {
 
   btCollisionShape* PhysicsEntity::shapeFor(Entity entity) {
-    auto collider = entity.get<Collider>();
-    if (!collider.valid()) {
+    if (!entity.has<Collider>()) {
       return make<btEmptyShape>();
     }
-    Vector scale = entity.get<Transform>()->scale();
-    switch (collider->type()) {
+    auto scale = entity.get<Transform>()->scale();
+    switch (entity.get<Collider>()->type()) {
     // TODO: Support more shapes
     case ColliderType::box: {
       btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);
@@ -24,14 +23,15 @@ namespace wage {
     }
   }
 
-  btRigidBody* PhysicsEntity::rigidBodyFor(Reference<RigidBody> rigidBody, const btTransform& startTransform, btCollisionShape* shape) {
+  btRigidBody* PhysicsEntity::rigidBodyFor(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape) {
     btAssert((!shape || shape->getShapeType() != INVALID_SHAPE_PROXYTYPE));
     btVector3 localInertia(0, 0, 0);
-    if (rigidBody->mass() != 0.f) {
-      shape->calculateLocalInertia(rigidBody->mass(), localInertia);
+    auto mass = rigidBody->mass();
+    if (mass != 0.f) {
+      shape->calculateLocalInertia(mass, localInertia);
     }
     btDefaultMotionState* myMotionState = make<btDefaultMotionState>(startTransform);
-    btRigidBody::btRigidBodyConstructionInfo cInfo(rigidBody->mass(), myMotionState, shape, localInertia);
+    btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, localInertia);
     btRigidBody* body = make<btRigidBody>(cInfo);
     if (rigidBody->type() == RigidBodyType::kinematic) {
       body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
@@ -47,9 +47,9 @@ namespace wage {
     btCollisionShape* shape = shapeFor(entity);
     btRigidBody* body = nullptr;
     btCollisionObject* object = nullptr;
-    auto entityBody = entity.get<RigidBody>();
-    if (entityBody.valid()) {
-      body = rigidBodyFor(entityBody, fromTransform(*entity.get<Transform>()), shape);
+    if (entity.has<RigidBody>()) {
+      auto entityBody = entity.get<RigidBody>();
+      body = rigidBodyFor(entityBody.get(), fromTransform(entity.get<Transform>().get()), shape);
       dynamicsWorld->addRigidBody(body);
       // Must come after added to world.
       if (!entityBody->isAffectedByGravity()) {
@@ -75,11 +75,11 @@ namespace wage {
   }
 
   void PhysicsEntity::applyForces() {
-    if (!_rigidBody) {
+    if (!_rigidBody || !entity().has<RigidBody>()) {
       return;
     }
     auto entityBody = entity().get<RigidBody>();
-    if (!entityBody.valid() || entityBody->type() != RigidBodyType::dynamic) {
+    if (entityBody->type() != RigidBodyType::dynamic) {
       return;
     }
     btVector3 impulse = fromVector(entityBody->impulse());
@@ -136,7 +136,7 @@ namespace wage {
     if (entityBody->type() == RigidBodyType::dynamic) {
       return;
     }
-    btTransform transform = fromTransform(*entity().get<Transform>());
+    btTransform transform = fromTransform(entity().get<Transform>().get());
     // _rigidBody->getMotionState()->setWorldTransform(transform);
     _rigidBody->setCenterOfMassTransform(transform);
   }

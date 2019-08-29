@@ -24,4 +24,8 @@ namespace wage {
 
   Vector3::Vector3(const Vector2& vector) : Vector3(vector.x, vector.y, 0) {
   }
+
+  Vector3 Vector3::cross(const Vector3& left, const Vector3& right) {
+    return glm::cross(left.glm(), right.glm());
+  }
 }

@@ -200,6 +200,12 @@ namespace wage {
     generateSphere();
   }
 
+  static Vector calculateNormals(Vector vertex1, Vector vertex2, Vector vertex3) {
+    return Vector3::cross(
+      vertex3 - vertex1, vertex2 - vertex1
+    ).normalized();
+  }
+
   Mesh* Mesh::load(std::string path) {
     std::vector<Vector> vertices;
     std::vector<Vector> normals;
@@ -215,13 +221,20 @@ namespace wage {
     if (!err.empty()) {
       std::cerr << err << std::endl;
     }
-
     if (!warn.empty()) {
       std::cerr << warn << std::endl;
     }
     if (!ret) {
       std::cerr << "Failed to load .obj" << std::endl;
     }
+
+    float minX = attrib.vertices[0];
+    float maxX = attrib.vertices[0];
+    float minY = attrib.vertices[1];
+    float maxY = attrib.vertices[1];
+    float minZ = attrib.vertices[2];
+    float maxZ = attrib.vertices[2];
+
     unsigned int index = 0;
     // Loop over shapes
     for (size_t s = 0; s < 1; s++) {
@@ -234,36 +247,77 @@ namespace wage {
         for (size_t v = 0; v < fv; v++) {
           // access to vertex
           tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-          // tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
-          // tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
-          // tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
-          vertices.push_back(Vector(
-              attrib.vertices[3 * idx.vertex_index + 0],
-              attrib.vertices[3 * idx.vertex_index + 1],
-              attrib.vertices[3 * idx.vertex_index + 2]));
-          if (!attrib.texcoords.empty()) {
-            normals.push_back(Vector(
-                attrib.normals[3 * idx.normal_index + 0],
-                attrib.normals[3 * idx.normal_index + 1],
-                attrib.normals[3 * idx.normal_index + 2]));
+
+          float vertX = attrib.vertices[3 * idx.vertex_index + 0];
+          float vertY = attrib.vertices[3 * idx.vertex_index + 1];
+          float vertZ = attrib.vertices[3 * idx.vertex_index + 2];
+
+          if (vertX < minX) {
+            minX = vertX;
+          }
+          if (vertX > maxX) {
+            maxX = vertX;
+          }
+          if (vertY < minY) {
+            minY = vertY;
+          }
+          if (vertY > maxY) {
+            maxY = vertY;
+          }
+          if (vertZ < minZ ) {
+            minZ = vertZ;
+          }
+          if (vertZ > maxZ) {
+            maxZ = vertZ;
+          }
+          vertices.push_back({vertX, vertY, vertZ});
+          if (!attrib.normals.empty()) {
+            normals.push_back({
+              attrib.normals[3 * idx.normal_index + 0],
+              attrib.normals[3 * idx.normal_index + 1],
+              attrib.normals[3 * idx.normal_index + 2]
+            });
           } else {
-            normals.push_back(Vector());
+            normals.push_back(Vector3::Zero);
           }
           if (!attrib.texcoords.empty()) {
-            texts.push_back(Vector2(
-                attrib.texcoords[2 * idx.texcoord_index + 0],
-                attrib.texcoords[2 * idx.texcoord_index + 1]));
+            texts.push_back({
+              attrib.texcoords[2 * idx.texcoord_index + 0],
+              attrib.texcoords[2 * idx.texcoord_index + 1]
+            });
           } else {
             texts.push_back(Vector2(0.5, 0.5));
           }
           indices.push_back(index++);
         }
         index_offset += fv;
+        auto norm = calculateNormals(vertices[index - 3], vertices[index - 2], vertices[index - 1]);
+        normals[index - 3] = norm;
+        normals[index - 2] = norm;
+        normals[index - 1] = norm;
       }
+    }
+    // Determine object scale to force unit s
+    float offsetX = 0.5f * (minX + maxX);
+    float offsetY = 0.5f * (minY + maxY);
+    float offsetZ = 0.5f * (minZ + maxZ);
+    float scaleX = abs( minX - offsetX ) > abs( maxX - offsetX ) ? abs( minX - offsetX ) : abs( maxX - offsetX );
+    float scaleY = abs( minY - offsetY ) > abs( maxY - offsetY ) ? abs( minY - offsetY ) : abs( maxY - offsetY );
+    float scaleZ = abs( minZ - offsetZ ) > abs( maxZ - offsetZ ) ? abs( minZ - offsetZ ) : abs( maxZ - offsetZ );
+    float scale = scaleX > scaleY ? scaleX : scaleY;
+    scale = scaleZ > scale ? 1.0f / scaleZ : 1.0f / scale;
+
+    for (auto& vert : vertices) {
+      vert.x = scale * (vert.x - offsetX);
+      vert.y = scale * (vert.y - offsetY);
+      vert.z = scale * (vert.z - offsetZ);
     }
 
     // TODO: Some kind of id genner
-    // std::cout << indices[0] << std::endl;
+    std::cout << vertices.size() << std::endl;
+    std::cout << normals.size() << std::endl;
+    std::cout << texts.size() << std::endl;
+    std::cout << indices.size() << std::endl;
     return make<Mesh>("GennedMesh", vertices, normals, texts, indices);
   }
 }

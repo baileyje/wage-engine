@@ -20,13 +20,13 @@ namespace wage {
   static JsValueRef addSystemCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
   static void CHAKRA_CALLBACK promiseContinuationCallback(JsValueRef task, void *callbackState);
 
-  Jsrt::Jsrt() : System("JSRT") {
+  Jsrt::Jsrt() : System() {
   }
 
   Jsrt::~Jsrt() {
   }
     
-  void Jsrt::init(SystemContext* context) {
+  void Jsrt::init(const SystemContext& context) {
     this->context = context;
     
     moduleManager = make<ModuleManager>(Core::Instance->get<FileSystem>());
@@ -60,7 +60,7 @@ namespace wage {
     JsAddRef(jsRuntime, nullptr);  
   }
 
-  void Jsrt::deinit(SystemContext* context) {
+  void Jsrt::deinit(const SystemContext& context) {
       // FAIL_CHECK(JsSetCurrentContext(JS_INVALID_REFERENCE));
       // FAIL_CHECK(JsDisposeRuntime(jsRuntime));
   }
@@ -83,7 +83,7 @@ namespace wage {
     global.set("core", core);  
   }
 
-  void Jsrt::update(SystemContext* context) {
+  void Jsrt::update(const SystemContext& context) {
     // Callback work
     JsValueRef globalRef;
     FAIL_CHECK(JsGetGlobalObject(&globalRef));

@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#include "ecs/system.h"
+#include "new_ecs/system.h"
 #include "messaging/messaging.h"
 #include "physics/physics.h"
 
