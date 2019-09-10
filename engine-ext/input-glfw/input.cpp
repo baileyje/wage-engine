@@ -12,7 +12,7 @@
 #include "input/mouse_move_event.h"
 #include "input/mouse_scroll_event.h"
 
-namespace wage {
+namespace wage { namespace input {
 
   Key keyFrom(int keyCode);
 
@@ -30,7 +30,7 @@ namespace wage {
       auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
       if (keyCode == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
-        Core::Instance->stop();
+        core::Core::Instance->stop();
         return;
       } else if (action == GLFW_PRESS) {
         input->frameKeys.insert(keyCode);
@@ -60,12 +60,12 @@ namespace wage {
     });
     glfwSetCursorPosCallback(glfwWindow, [](GLFWwindow* window, double x, double y) {
       auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
-      MouseMoveEvent event(Vector2(x, y));
+      MouseMoveEvent event(math::Vector2(x, y));
       input->messaging->send(event);
     });
     glfwSetScrollCallback(glfwWindow, [](GLFWwindow* window, double x, double y) {
       auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
-      MouseScrollEvent event(Vector2(x, y));
+      MouseScrollEvent event(math::Vector2(x, y));
       input->messaging->send(event);
     });
     glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -78,13 +78,13 @@ namespace wage {
     return glfwGetKey(window->as<GLFWwindow>(), codeFrom(key)) == GLFW_PRESS;
   }
 
-  Vector2 GlfwInput::mousePosition() {
+  math::Vector2 GlfwInput::mousePosition() {
     if (!window) {
-      return Vector2();
+      return math::Vector2();
     }
     double x, y;
     glfwGetCursorPos(window->as<GLFWwindow>(), &x, &y);
-    return Vector2(x, y);
+    return math::Vector2(x, y);
   }
 
   Key keyFrom(int keyCode) {
@@ -624,6 +624,4 @@ namespace wage {
         return 8;
     }
   }
-}
-
-
+} }

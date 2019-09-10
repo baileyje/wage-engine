@@ -1,5 +1,4 @@
-#ifndef MATH_MATRIX_H
-#define MATH_MATRIX_H
+#pragma once
 
 #include <glm/glm.hpp>
 #include "glm/gtc/matrix_transform.hpp"
@@ -7,7 +6,7 @@
 #include "math/vector.h"
 #include "math/quaternion.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   class Matrix {
 
@@ -52,6 +51,5 @@ namespace wage {
 
     glm::mat4 wrapped;
   };
-}
 
-#endif //MATH_MATRIX_H
+} }

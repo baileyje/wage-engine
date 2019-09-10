@@ -4,7 +4,7 @@
 
 #include "render-gl/util.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) : _count(count) {
     GL_FAIL_CHECK(glGenBuffers(1, &id));
@@ -23,4 +23,5 @@ namespace wage {
   void IndexBuffer::unbind() const {
     GL_FAIL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
   }
-}
+
+} }

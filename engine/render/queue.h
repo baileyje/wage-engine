@@ -1,18 +1,19 @@
-#ifndef RENDERER_QUEUE_H
-#define RENDERER_QUEUE_H
+#pragma once
 
 #include <vector>
+#include <iostream>
 
+#include "memory/allocator.h"
 #include "render/renderable.h"
 #include "render/context.h"
 #include "render/queue.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class RenderQueue {
 
   public:
-    RenderQueue() {
+    RenderQueue(): allocator("RenderTemp1", 1024 * 1024 * 50) {
       renderables.reserve(100);
     }
 
@@ -22,13 +23,15 @@ namespace wage {
       }
     }
 
-    virtual void add(Renderable* renderable) {
-      renderables.push_back(renderable);
+    template <typename T, typename... Args>
+    void add(Args... args) {
+      auto intance = allocator.create<T>(args...);
+      renderables.push_back(intance);
     }
 
     virtual void cull(RenderContext* context) {
       std::vector<Renderable*> valid;
-      Frustum frustum = context->camera()->frustum(context->screenSize(), context->cameraEntity().get<Transform>().get());
+      math::Frustum frustum = context->camera()->frustum(context->screenSize(), context->cameraEntity().get<math::Transform>().get());
       for (auto renderable : renderables) {
         if (frustum.contains(renderable->boundingSphere())) {
           valid.push_back(renderable);
@@ -49,11 +52,13 @@ namespace wage {
 
     virtual void clear() {
       renderables.clear();
+      allocator.clear();
     }
 
   private:
     std::vector<Renderable*> renderables;
-  };
-}
 
-#endif //RENDERER_QUEUE_H
+    memory::Allocator allocator;
+  };
+
+} }

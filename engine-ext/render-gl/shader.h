@@ -1,5 +1,4 @@
-#ifndef RENDERER_SHADER_H
-#define RENDERER_SHADER_H
+#pragma once
 
 #include <string>
 #include <glad/glad.h>
@@ -8,9 +7,9 @@
 
 #include "render-gl/util.h"
 
-namespace wage {
+namespace wage { namespace render {
 
-  class GlShader : public Asset {
+  class GlShader : public assets::Asset {
 
   public:
     GlShader(std::string path, GLenum shaderType) : Asset(path), shaderType(shaderType) {
@@ -24,6 +23,10 @@ namespace wage {
       return _id;
     }
 
+    inline bool compiled() {
+      return _compiled;
+    }
+
     void onLoad();
 
     void compile();
@@ -32,7 +35,8 @@ namespace wage {
     unsigned int _id;
 
     GLenum shaderType;
-  };
-}
 
-#endif //RENDERER_SHADER_H
+    bool _compiled;
+  };
+
+} }

@@ -1,6 +1,6 @@
 #include "core/logger.h"
 
-namespace wage {
+namespace wage { namespace core {
 
   LogLevel LogLevel::debug = LogLevel(0, "DEBUG", 32);
 
@@ -11,4 +11,4 @@ namespace wage {
   LogLevel LogLevel::error = LogLevel(3, "ERROR", 31);
 
   LogLevel Logger::CurrentLevel = LogLevel::info;
-}
+} }

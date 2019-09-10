@@ -1,5 +1,4 @@
-#ifndef OBJECT_POOL_H
-#define OBJECT_POOL_H
+#pragma once
 
 #include <vector>
 #include <cassert>
@@ -11,7 +10,7 @@
 #include "memory/fixed_storage.h"
 #include "memory/dynamic_storage.h"
 
-namespace wage {
+namespace wage { namespace memory {
 
   template <typename T, typename IndexType = uint32_t>
   class ObjectPool : public Reference<T, IndexType>::Source {
@@ -217,6 +216,5 @@ namespace wage {
 
     Item freeTail;
   };
-}
 
-#endif //OBJECT_POOL_H
+} }

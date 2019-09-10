@@ -1,9 +1,8 @@
-#ifndef POOL_STORAGE_H
-#define POOL_STORAGE_H
+#pragma once
 
 #include <stddef.h>
 
-namespace wage {
+namespace wage { namespace memory {
 
   template <typename T, typename IndexType = size_t>
   class Storage {
@@ -17,6 +16,5 @@ namespace wage {
       return get(index);
     }
   };
-}
 
-#endif //POOL_STORAGE_H
+} }

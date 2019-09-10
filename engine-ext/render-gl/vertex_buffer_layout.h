@@ -1,10 +1,9 @@
-#ifndef RENDERER_VERTEX_BUFFER_LAYOUT_H
-#define RENDERER_VERTEX_BUFFER_LAYOUT_H
+#pragma once
 
 #include <glad/glad.h>
 #include <vector>
 
-namespace wage {
+namespace wage { namespace render {
 
   struct VertexBufferElement {
 
@@ -59,6 +58,5 @@ namespace wage {
 
     unsigned int _stride;
   };
-}
 
-#endif //RENDERER_VERTEX_BUFFER_LAYOUT_H
+} }

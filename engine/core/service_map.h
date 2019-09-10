@@ -1,5 +1,4 @@
-#ifndef CORE_SERVICE_MAP_H
-#define CORE_SERVICE_MAP_H
+#pragma once
 
 #include <typeindex>
 #include <typeinfo>
@@ -9,7 +8,7 @@
 #include "core/service.h"
 #include "util/map.h"
 
-namespace wage {
+namespace wage { namespace core {
 
   class ServiceMap {
 
@@ -47,6 +46,5 @@ namespace wage {
 
     std::vector<Service*> services;
   };
-}
 
-#endif // CORE_SERVICE_MAP_H
+} }

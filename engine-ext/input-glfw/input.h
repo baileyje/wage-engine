@@ -1,5 +1,4 @@
-#ifndef GLFW_INPUT_H
-#define GLFW_INPUT_H
+#pragma once
 
 #include <unordered_set>
 
@@ -11,7 +10,7 @@
 #include "input/key.h"
 #include "input/input.h"
 
-namespace wage {
+namespace wage { namespace input {
 
   class GlfwInput : public Input {
 
@@ -24,8 +23,6 @@ namespace wage {
 
     bool isPressed(Key key) override;
 
-    Vector2 mousePosition() override;
+    math::Vector2 mousePosition() override;
   };
-}
-
-#endif // GLFW_INPUT_H
+} }

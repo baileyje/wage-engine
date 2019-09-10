@@ -1,12 +1,11 @@
-#ifndef GLFW_PLATFORM_H
-#define GLFW_PLATFORM_H
+#pragma once
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #include "platform/platform.h"
 
-namespace wage {
+namespace wage { namespace platform {
 
   class GlfwPlatform : public Platform {
 
@@ -19,6 +18,5 @@ namespace wage {
 
     void stop() override;
   };
-}
 
-#endif //GLFW_PLATFORM_H
+} }

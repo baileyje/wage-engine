@@ -1,5 +1,4 @@
-#ifndef MESSAGING_H
-#define MESSAGING_H
+#pragma once
 
 #include <unordered_map>
 #include <vector>
@@ -9,7 +8,7 @@
 
 #include "core/service.h"
 
-namespace wage {
+namespace wage { namespace messaging {
 
   template <typename M>
   class MessageListener {
@@ -17,7 +16,7 @@ namespace wage {
     virtual bool on(const M& message) = 0;
   };
 
-  class Messaging : public Service {
+  class Messaging : public core::Service {
 
   public:
     Messaging() : Service("Messaging") {}
@@ -45,6 +44,5 @@ namespace wage {
   private:
     std::unordered_map<std::type_index, std::vector<void*>> listeners;
   };
-}
 
-#endif //MESSAGING_H
+} }

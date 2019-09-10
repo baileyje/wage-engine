@@ -3,11 +3,12 @@
 #include "core/core.h"
 #include "platform/platform.h"
 
-namespace wage {
+namespace wage { namespace input {
 
   void Input::start() {
-    messaging = Core::Instance->get<Messaging>();
-    auto platform = Core::Instance->get<Platform>();
+    messaging = core::Core::Instance->get<messaging::Messaging>();
+    auto platform = core::Core::Instance->get<platform::Platform>();
     window = platform->window();
   }
-}
+
+} }

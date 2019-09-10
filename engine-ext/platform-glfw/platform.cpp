@@ -3,16 +3,16 @@
 #include "core/logger.h"
 #include "memory/allocator.h"
 
-namespace wage {
+namespace wage { namespace platform {
 
   void errorCallback(int error, const char* description) {
-    Logger::error("GLFW Error: %s", description);
+    core::Logger::error("GLFW Error: %s", description);
   }
 
   void GlfwPlatform::start() {
     glfwSetErrorCallback(errorCallback);
     if (!glfwInit()) {
-      Logger::error("GLFW Init Failed.");
+      core::Logger::error("GLFW Init Failed.");
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -27,7 +27,7 @@ namespace wage {
     int frameBufferHeight = 0;
     glfwGetFramebufferSize(glfWindow, &frameBufferWidth, &frameBufferHeight);
     float scale = (float)frameBufferWidth / (float)screenWidth;
-    _window = make<Window>(glfWindow, frameBufferWidth, frameBufferHeight, scale);
+    _window = memory::make<Window>(glfWindow, frameBufferWidth, frameBufferHeight, scale);
   }
 
   void GlfwPlatform::stop() {
@@ -36,4 +36,5 @@ namespace wage {
     // TODO: Cleanup window
     // delete window;
   }
-}
+
+} }

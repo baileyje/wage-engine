@@ -1,50 +1,47 @@
-#ifndef COMPONENT_LIGHT_H
-#define COMPONENT_LIGHT_H
+#pragma once
 
 #include "math/color.h"
 
-namespace wage {
+namespace wage { namespace component {
 
   class Light {
 
   public:
-    Light(Color ambient, Color diffuse, Color specular)
+    Light(math::Color ambient, math::Color diffuse, math::Color specular)
         : _ambient(ambient), _diffuse(diffuse), _specular(specular) {
     }
 
     ~Light() {}
 
-    Color* ambient() {
+    math::Color* ambient() {
       return &_ambient;
     }
 
-    inline void ambient(Color ambient) {
+    inline void ambient(math::Color ambient) {
       _ambient = ambient;
     }
 
-    inline Color* diffuse() {
+    inline math::Color* diffuse() {
       return &_diffuse;
     }
 
-    inline void diffuse(Color diffuse) {
+    inline void diffuse(math::Color diffuse) {
       _diffuse = diffuse;
     }
 
-    inline Color* specular() {
+    inline math::Color* specular() {
       return &_specular;
     }
 
-    inline void specular(Color specular) {
+    inline void specular(math::Color specular) {
       _specular = specular;
     }
 
   protected:
-    Color _ambient;
+    math::Color _ambient;
 
-    Color _diffuse;
+    math::Color _diffuse;
 
-    Color _specular;
+    math::Color _specular;
   };
-}
-
-#endif //COMPONENT_LIGHT_H
+} }

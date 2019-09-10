@@ -1,11 +1,10 @@
-#ifndef MATH_PLANE_H
-#define MATH_PLANE_H
+#pragma once
 
 #include <iostream>
 
 #include "math/vector.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   class Plane {
 
@@ -21,6 +20,5 @@ namespace wage {
     float d;
 
   };
-}
 
-#endif //MATH_PLANE_H
+} }

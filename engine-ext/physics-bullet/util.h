@@ -1,24 +1,22 @@
-#ifndef PHYSICS_UTIL_H
-#define PHYSICS_UTIL_H
+#pragma once
 
 #include <btBulletDynamicsCommon.h>
 
 #include "physics/rigid_body.h"
 #include "math/transform.h"
 
-namespace wage {
+namespace wage { namespace physics {
 
-  inline btVector3 fromVector(Vector vector) {
+  inline btVector3 fromVector(math::Vector vector) {
     return btVector3(vector.x, vector.y, vector.z);
   }
 
-  inline Vector fromBTVector(btVector3 vector) {
-    return Vector(vector.x(), vector.y(), vector.z());
+  inline math::Vector fromBTVector(btVector3 vector) {
+    return math::Vector(vector.x(), vector.y(), vector.z());
   }
 
   btRigidBody* createRigidBody(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape);
 
-  btTransform fromTransform(Transform* transform);
-}
+  btTransform fromTransform(math::Transform* transform);
 
-#endif //PHYSICS_UTIL_H
+} }

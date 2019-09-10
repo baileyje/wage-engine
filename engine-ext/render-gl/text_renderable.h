@@ -1,5 +1,4 @@
-#ifndef TEXT_RENDERABLE_H
-#define TEXT_RENDERABLE_H
+#pragma once
 
 #include <string>
 
@@ -10,26 +9,26 @@
 #include "render-gl/font.h"
 #include "render-gl/font_manager.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlTextRenderable : public Renderable {
 
   public:
-    GlTextRenderable(GlFontManager* fontManager, Vector2 position, std::string text, Font font, Color color)
+    GlTextRenderable(GlFontManager* fontManager, math::Vector2 position, std::string text, Font font, math::Color color)
         : _fontManager(fontManager), _position(position), _text(text), _font(font), _color(color) {}
 
-    virtual Vector position() {
+    virtual math::Vector position() {
       return _position;
     }
 
-    virtual BoundingBox boundingBox() {
-      return BoundingBox(position(), Vector(1000, 1000, 1000));
+    virtual math::BoundingBox boundingBox() {
+      return math::BoundingBox(position(), math::Vector(1000, 1000, 1000));
     }
 
-    virtual BoundingSphere boundingSphere() {
+    virtual math::BoundingSphere boundingSphere() {
       auto box = boundingBox();
       float radius = sqrt(box.halfDim.x * box.halfDim.x + box.halfDim.y * box.halfDim.y + box.halfDim.z * box.halfDim.z);
-      return BoundingSphere(box.position, radius);
+      return math::BoundingSphere(box.position, radius);
     }
 
     virtual void render(RenderContext* context) {
@@ -38,7 +37,7 @@ namespace wage {
         return;
       }
 
-      Matrix projection = Matrix::orthographic(0.0f, context->screenSize().x, 0.0f, context->screenSize().y);
+      math::Matrix projection = math::Matrix::orthographic(0.0f, context->screenSize().x, 0.0f, context->screenSize().y);
 
       GLuint VAO, VBO;
       glGenVertexArrays(1, &VAO);
@@ -99,14 +98,13 @@ namespace wage {
   private:
     GlFontManager* _fontManager;
 
-    Vector2 _position;
+    math::Vector2 _position;
 
     std::string _text;
 
     Font _font;
 
-    Color _color;
+    math::Color _color;
   };
-}
 
-#endif //MESH_RENDERABLE_H
+} }

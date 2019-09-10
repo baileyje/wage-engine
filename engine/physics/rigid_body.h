@@ -1,5 +1,4 @@
-#ifndef ENTITY_RIGID_BODY_H
-#define ENTITY_RIGID_BODY_H
+#pragma once
 
 #include <vector>
 
@@ -8,7 +7,7 @@
 
 #include "math/vector.h"
 
-namespace wage {
+namespace wage { namespace physics {
 
   enum class RigidBodyType {
     dynamic,
@@ -35,22 +34,22 @@ namespace wage {
       return _affectedByGravity;
     }
 
-    inline void addForce(Vector force) {
+    inline void addForce(math::Vector force) {
       _force += force;
       _shouldClearLinearVelocity = false;
     }
 
-    inline void addImpulse(Vector impulse) {
+    inline void addImpulse(math::Vector impulse) {
       _impulse += impulse;
       _shouldClearLinearVelocity = false;
     }
 
-    inline void addTorque(Vector torque) {
+    inline void addTorque(math::Vector torque) {
       _torque += torque;
       _shouldClearAngularVelocity = false;
     }
 
-    inline void addTorqueImpulse(Vector impulse) {
+    inline void addTorqueImpulse(math::Vector impulse) {
       _torqueImpulse += impulse;
       _shouldClearAngularVelocity = false;
     }
@@ -59,27 +58,27 @@ namespace wage {
       return _type;
     }
 
-    inline Vector force() const {
+    inline math::Vector force() const {
       return _force;
     }
 
-    inline Vector impulse() const {
+    inline math::Vector impulse() const {
       return _impulse;
     }
 
-    inline Vector torque() const {
+    inline math::Vector torque() const {
       return _torque;
     }
 
-    inline Vector torqueImpulse() const {
+    inline math::Vector torqueImpulse() const {
       return _torqueImpulse;
     }
 
-    inline Vector linearVelocity() const {
+    inline math::Vector linearVelocity() const {
       return _linearVelocity;
     }
 
-    inline void linearVelocity(Vector linearVelocity) {
+    inline void linearVelocity(math::Vector linearVelocity) {
       _linearVelocity = linearVelocity;
     }
 
@@ -112,10 +111,10 @@ namespace wage {
     }
 
     inline void clearForces() {
-      _force = Vector3::Zero;
-      _impulse = Vector3::Zero;
-      _torque = Vector3::Zero;
-      _torqueImpulse = Vector3::Zero;
+      _force = math::Vector3::Zero;
+      _impulse = math::Vector3::Zero;
+      _torque = math::Vector3::Zero;
+      _torqueImpulse = math::Vector3::Zero;
     }
 
   private:
@@ -123,15 +122,15 @@ namespace wage {
 
     bool _affectedByGravity;
 
-    Vector _impulse;
+    math::Vector _impulse;
 
-    Vector _force;
+    math::Vector _force;
 
-    Vector _torque;
+    math::Vector _torque;
 
-    Vector _torqueImpulse;
+    math::Vector _torqueImpulse;
 
-    Vector _linearVelocity;
+    math::Vector _linearVelocity;
 
     RigidBodyType _type;
 
@@ -141,6 +140,5 @@ namespace wage {
 
     bool _shouldClearAngularVelocity;
   };
-}
 
-#endif //ENTITY_RIGID_BODY_H
+} }

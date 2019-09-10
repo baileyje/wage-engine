@@ -16,51 +16,51 @@ namespace wage {
 
     enum class State { released, hover, pressed };
 
-    UiButton(UiFrame frame) : UiButton(frame, Color::Clear) {
+    UiButton(UiFrame frame) : UiButton(frame, math::Color::Clear) {
     }
 
-    UiButton(UiFrame frame, Color color) : UiButton(frame, color, Texture::Default) {
+    UiButton(UiFrame frame, math::Color color) : UiButton(frame, color, render::Texture::Default) {
     }
 
-    UiButton(UiFrame frame, Texture texture) : UiButton(frame, Color::Clear, texture, texture) {
+    UiButton(UiFrame frame, render::Texture texture) : UiButton(frame, math::Color::Clear, texture, texture) {
     }
 
-    UiButton(Color color = Color::Clear) : UiButton(UiFrame(), color) {
+    UiButton(math::Color color = math::Color::Clear) : UiButton(UiFrame(), color) {
     }
 
-    UiButton(Texture texture) : UiButton(UiFrame(), texture) {
+    UiButton(render::Texture texture) : UiButton(UiFrame(), texture) {
     }
 
-    UiButton(UiFrame frame, Color color, Texture texture) : UiComponent(frame), _color(color), _texture(texture), _pressedTexture(texture) {
+    UiButton(UiFrame frame, math::Color color, render::Texture texture) : UiComponent(frame), _color(color), _texture(texture), _pressedTexture(texture) {
     }
 
-    UiButton(UiFrame frame, Color color, Texture texture, Texture pressedTexture) : UiComponent(frame), _color(color), _texture(texture), _pressedTexture(pressedTexture) {
+    UiButton(UiFrame frame, math::Color color, render::Texture texture, render::Texture pressedTexture) : UiComponent(frame), _color(color), _texture(texture), _pressedTexture(pressedTexture) {
     }
 
     virtual ~UiButton() {
     }
 
-    inline Color color() const {
+    inline math::Color color() const {
       return _color;
     }
 
-    inline void color(Color color) {
+    inline void color(math::Color color) {
       _color = color;
     }
 
-    inline Texture texture() const {
+    inline render::Texture texture() const {
       return _texture;
     }
 
-    inline Texture pressedTexture() const {
+    inline render::Texture pressedTexture() const {
       return _pressedTexture;
     }
 
-    inline void pressedTexture(Texture pressedTexture) {
+    inline void pressedTexture(render::Texture pressedTexture) {
       _pressedTexture = pressedTexture;
     }
 
-    inline void texture(Texture texture) {
+    inline void texture(render::Texture texture) {
       _texture = texture;
     }
 
@@ -73,11 +73,11 @@ namespace wage {
     }
 
   private:
-    Color _color;
+    math::Color _color;
 
-    Texture _texture;
+    render::Texture _texture;
 
-    Texture _pressedTexture;
+    render::Texture _pressedTexture;
 
     State _state = State::released;
   };

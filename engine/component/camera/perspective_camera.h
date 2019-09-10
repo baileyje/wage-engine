@@ -1,9 +1,8 @@
-#ifndef ENTITY_PERSPECTIVE_CAMERA_H
-#define ENTITY_PERSPECTIVE_CAMERA_H
+#pragma once
 
 #include "component/camera/camera.h"
 
-namespace wage {
+namespace wage { namespace component {
 
   class PerspectiveCamera : public Camera {
 
@@ -39,13 +38,13 @@ namespace wage {
       _farClip = farClip;
     }
 
-    inline Matrix screenProjection(Vector2 screenSize) {
-      return Matrix::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
+    inline math::Matrix screenProjection(math::Vector2 screenSize) {
+      return math::Matrix::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
     }
 
-    inline Frustum frustum(Vector2 screenSize, Transform* cameraTransform) {
-      Frustum returnFrustum;
-      Matrix mvp = screenProjection(screenSize) * viewProjection(cameraTransform);
+    inline math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) {
+      math::Frustum returnFrustum;
+      math::Matrix mvp = screenProjection(screenSize) * viewProjection(cameraTransform);
       returnFrustum.extractPlanesFrom(mvp);
       return returnFrustum;
     }
@@ -57,6 +56,5 @@ namespace wage {
 
     float _farClip;
   };
-}
 
-#endif //ENTITY_PERSPECTIVE_CAMERA_H
+} }

@@ -1,6 +1,4 @@
-
-#ifndef FILE_SYSTEM_H
-#define FILE_SYSTEM_H
+#pragma once
 
 #include <string>
 
@@ -10,9 +8,9 @@
 
 #include "fs/file.h"
 
-namespace wage {
+namespace wage { namespace fs {
 
-  class FileSystem : public Service {
+  class FileSystem : public core::Service, public File::ContentProvider {
 
   public:
     FileSystem() : Service("FileSystem") {
@@ -24,8 +22,7 @@ namespace wage {
       return File(path, this);
     }
 
-    virtual std::unique_ptr<Buffer> read(std::string path, Allocator* allocator) const = 0;
+    virtual std::unique_ptr<memory::Buffer> read(std::string path, memory::Allocator* allocator) const = 0;
   };
-}
 
-#endif //FILE_SYSTEM_H
+} }

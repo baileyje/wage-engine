@@ -1,19 +1,18 @@
-#ifndef INPUT_MOUSE_BUTTON_EVENT_H
-#define INPUT_MOUSE_BUTTON_EVENT_H
+#pragma once
 
 #include <initializer_list>
 #include "key_modifier.h"
 #include "mouse_event.h"
 #include "mouse_button.h"
 
-namespace wage {
+namespace wage { namespace input {
 
   class MouseButtonEvent : public MouseEvent {
 
   public:
     enum class Type { press, release };
 
-    MouseButtonEvent(MouseButton button, Type type, int modifiers, Vector2 position) : MouseEvent(position), _button(button), _type(type), _modifiers(modifiers) {
+    MouseButtonEvent(MouseButton button, Type type, int modifiers, math::Vector2 position) : MouseEvent(position), _button(button), _type(type), _modifiers(modifiers) {
     }
 
     inline MouseButton button() const {
@@ -49,6 +48,5 @@ namespace wage {
 
     int _modifiers;
   };
-}
 
-#endif //INPUT_MOUSE_BUTTON_EVENT_H
+} }

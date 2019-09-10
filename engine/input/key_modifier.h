@@ -1,7 +1,6 @@
-#ifndef INPUT_KEY_MOD_H
-#define INPUT_KEY_MOD_H
+#pragma once
 
-namespace wage {
+namespace wage { namespace input {
 
   enum class KeyModifier {
     shift = 0x01,
@@ -9,6 +8,5 @@ namespace wage {
     alt = 0x04,
     super = 0x08
   };
-}
 
-#endif //INPUT_KEY_MOD_H
+} }

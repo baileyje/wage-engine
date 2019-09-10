@@ -1,5 +1,4 @@
-#ifndef DYNAMIC_STORAGE_H
-#define DYNAMIC_STORAGE_H
+#pragma once
 
 #include <cassert>
 #include <vector>
@@ -7,7 +6,7 @@
 #include "memory/storage.h"
 #include "memory/allocator.h"
 
-namespace wage {
+namespace wage { namespace memory {
 
   template <typename T, typename IndexType = size_t>
   class DynamicStorage : public Storage<T, IndexType> {
@@ -60,6 +59,5 @@ namespace wage {
 
     std::vector<Chunk> chunks;
   };
-}
 
-#endif //DYNAMIC_STORAGE_H
+} }

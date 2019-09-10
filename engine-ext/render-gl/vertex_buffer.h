@@ -1,9 +1,8 @@
-#ifndef RENDERER_VERTEX_BUFFER_H
-#define RENDERER_VERTEX_BUFFER_H
+#pragma once
 
 #include "render-gl/vertex_buffer_layout.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class VertexBuffer {
 
@@ -23,6 +22,5 @@ namespace wage {
 
     VertexBufferLayout _layout;
   };
-}
 
-#endif //RENDERER_VERTEX_BUFFER_H
+} }

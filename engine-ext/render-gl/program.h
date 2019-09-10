@@ -1,5 +1,4 @@
-#ifndef RENDERER_PROGRAM_H
-#define RENDERER_PROGRAM_H
+#pragma once
 
 #include <vector>
 #include <glad/glad.h>
@@ -8,7 +7,7 @@
 
 #include "render-gl/shader.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlProgram {
 
@@ -26,7 +25,7 @@ namespace wage {
       GL_FAIL_CHECK(glDeleteProgram(_id));
     }
 
-    void load(AssetManager* assetManager) {
+    void load(assets::Manager* assetManager) {
       assetManager->load(&vertexShader);
       assetManager->load(&fragmentShader);
       _id = glCreateProgram();
@@ -49,7 +48,7 @@ namespace wage {
       if (infoLogLength > 0) {
         std::vector<char> errorMessage(infoLogLength + 1);
         GL_FAIL_CHECK(glGetProgramInfoLog(_id, infoLogLength, NULL, &errorMessage[0]));
-        Logger::error("Link error:", &errorMessage[0]);
+        core::Logger::error("Link error:", &errorMessage[0]);
       }
       _linked = true;
     }
@@ -58,6 +57,10 @@ namespace wage {
       if (!_linked) {
         if (!loaded()) {
           return;
+        }
+        if (!compiled()) {
+          vertexShader.compile();
+          fragmentShader.compile();
         }
         link();
       }
@@ -87,6 +90,10 @@ namespace wage {
       return _linked;
     }
 
+    inline bool compiled() {
+      return vertexShader.compiled() && fragmentShader.compiled();
+    }
+
   private:
     unsigned int _id;
 
@@ -98,6 +105,5 @@ namespace wage {
 
     bool _linked;
   };
-}
 
-#endif //RENDERER_PROGRAM_H
+} }

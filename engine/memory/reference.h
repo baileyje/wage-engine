@@ -1,10 +1,9 @@
-#ifndef MEMORY_REFERENCE_H
-#define MEMORY_REFERENCE_H
+#pragma once
 
 #include <cstddef>
 #include <assert.h>
 
-namespace wage {
+namespace wage { namespace memory {
 
   template <typename T, typename IndexType = uint32_t>
   class Reference {
@@ -91,6 +90,5 @@ namespace wage {
 
     size_t _version;
   };
-}
 
-#endif //MEMORY_REFERENCE_H
+} }

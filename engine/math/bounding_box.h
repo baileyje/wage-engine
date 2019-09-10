@@ -1,9 +1,8 @@
-#ifndef MATH_BOUNDING_BOX_H
-#define MATH_BOUNDING_BOX_H
+#pragma once
 
 #include "math/vector.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   class BoundingBox {
 
@@ -15,6 +14,5 @@ namespace wage {
 
     Vector halfDim;
   };
-}
 
-#endif //MATH_BOUNDING_BOX_H
+} }

@@ -1,10 +1,8 @@
-
-#ifndef CORE_SERVICE_H
-#define CORE_SERVICE_H
+#pragma once
 
 #include <string>
 
-namespace wage {
+namespace wage { namespace core {
 
   class Service {
 
@@ -22,6 +20,5 @@ namespace wage {
   private:
     std::string _name;
   };
-}
 
-#endif // CORE_SERVICE_H
+} }

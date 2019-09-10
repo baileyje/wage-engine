@@ -1,12 +1,11 @@
-#ifndef INPUT_KEY_EVENT_H
-#define INPUT_KEY_EVENT_H
+#pragma once
 
 #include <initializer_list>
 
 #include "input/key.h"
 #include "input/key_modifier.h"
 
-namespace wage {
+namespace wage { namespace input {
 
   enum class KeyEventType {
     press,
@@ -52,6 +51,5 @@ namespace wage {
 
     int _modifiers;
   };
-}
 
-#endif //INPUT_KEY_EVENT_H
+} }

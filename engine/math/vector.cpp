@@ -1,6 +1,6 @@
 #include "math/vector.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   Vector3 Vector3::Zero = {0, 0, 0};
 
@@ -28,4 +28,5 @@ namespace wage {
   Vector3 Vector3::cross(const Vector3& left, const Vector3& right) {
     return glm::cross(left.glm(), right.glm());
   }
-}
+
+} }

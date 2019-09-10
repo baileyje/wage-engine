@@ -10,30 +10,30 @@ namespace wage {
   public:
     UiFrame() {}
 
-    UiFrame(Vector2 position, Vector2 size) : _position(position), _size(size) {}
+    UiFrame(math::Vector2 position, math::Vector2 size) : _position(position), _size(size) {}
 
     virtual ~UiFrame() {}
 
-    inline Vector2 position() const {
+    inline math::Vector2 position() const {
       return _position;
     }
 
-    inline void position(Vector2 position) {
+    inline void position(math::Vector2 position) {
       _position = position;
     }
 
-    inline Vector2 size() const {
+    inline math::Vector2 size() const {
       return _size;
     }
 
-    inline void size(Vector2 size) {
+    inline void size(math::Vector2 size) {
       _size = size;
     }
 
   private:
-    Vector2 _position;
+    math::Vector2 _position;
 
-    Vector2 _size;
+    math::Vector2 _size;
   };
 }
 

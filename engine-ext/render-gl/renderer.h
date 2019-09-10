@@ -1,5 +1,4 @@
-#ifndef GL_RENDERER_H
-#define GL_RENDERER_H
+#pragma once
 
 #include "render/renderer.h"
 #include "render/queue.h"
@@ -9,18 +8,20 @@
 #include "render-gl/vao_manager.h"
 #include "render-gl/font_manager.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlRenderer : public Renderer {
 
   public:
     void start();
 
-    void renderText(Vector2 position, std::string text, Font font, Color color);
+    void initializeRenderer();
 
-    void renderSprite(Vector2 position, Vector2 size, Color color, Texture texture);
+    void renderText(math::Vector2 position, std::string text, Font font, math::Color color);
 
-    void renderMesh(Transform* transform, Mesh* mesh, Material* material);
+    void renderSprite(math::Vector2 position, math::Vector2 size, math::Color color, Texture texture);
+
+    void renderMesh(math::Transform transform, Mesh* mesh, Material* material);
 
     virtual void beginRender();
 
@@ -35,12 +36,11 @@ namespace wage {
 
     GlFontManager fontManager;
 
-    std::vector<DirectionalLight*> dirLights;
+    std::vector<component::DirectionalLight*> dirLights;
 
-    std::vector<PointLight*> pointLights;
+    std::vector<component::PointLight*> pointLights;
 
-    std::vector<Spotlight*> spotlights;
+    std::vector<component::Spotlight*> spotlights;
   };
-}
 
-#endif //GL_RENDERER_H
+} }

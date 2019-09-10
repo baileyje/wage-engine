@@ -1,7 +1,6 @@
-#ifndef INPUT_KEY_H
-#define INPUT_KEY_H
+#pragma once
 
-namespace wage {
+namespace wage { namespace input {
 
   enum class Key {
     unknown,
@@ -126,6 +125,5 @@ namespace wage {
     rightSuper,
     menu
   };
-}
 
-#endif //INPUT_KEY_H
+} }

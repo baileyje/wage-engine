@@ -1,14 +1,13 @@
-#ifndef RENDERER_TEXTURE_H
-#define RENDERER_TEXTURE_H
+#pragma once
 
 #include "render/texture.h"
 #include "assets/manager.h"
 
 #include "render-gl/util.h"
 
-namespace wage {
+namespace wage { namespace render {
 
-  class GlTexture : public Asset {
+  class GlTexture : public assets::Asset {
 
   public:
     GlTexture(Texture texture) : Asset(texture.path()), pushed(false), _texture(texture) {
@@ -16,11 +15,11 @@ namespace wage {
 
     ~GlTexture();
 
-    inline Texture texture() {
+    inline Texture texture() const {
       return _texture;
     }
 
-    void load(AssetManager* assetManager);
+    void load(assets::Manager* assetManager);
 
     void onLoad();
 
@@ -47,6 +46,5 @@ namespace wage {
 
     unsigned char* data;
   };
-}
 
-#endif //RENDERER_TEXTURE_H
+} }

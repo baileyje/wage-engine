@@ -1,16 +1,15 @@
-#ifndef PHYSICS_H
-#define PHYSICS_H
+#pragma once
 
 #include <vector>
 
 #include "core/service.h"
-#include "new_ecs/entity_manager.h"
+#include "ecs/entity_manager.h"
 
 #include "messaging/messaging.h"
 
-namespace wage {
+namespace wage { namespace physics {
 
-  class Physics : public Service, MessageListener<AddEntityMessage>, MessageListener<DestroyEntityMessage> {
+  class Physics : public core::Service, messaging::MessageListener<ecs::AddEntityMessage>, messaging::MessageListener<ecs::DestroyEntityMessage> {
 
   public:
     Physics();
@@ -23,10 +22,9 @@ namespace wage {
 
     virtual void remove(Entity entity) = 0;
 
-    virtual bool on(const AddEntityMessage& message) override;
+    virtual bool on(const ecs::AddEntityMessage& message) override;
 
-    virtual bool on(const DestroyEntityMessage& message) override;
+    virtual bool on(const ecs::DestroyEntityMessage& message) override;
   };
-}
 
-#endif // PHYSICS_H
+} }

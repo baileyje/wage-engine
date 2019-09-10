@@ -16,10 +16,10 @@ namespace wage {
     UiLabel() : UiComponent() {
     }
 
-    UiLabel(std::string text, Font font, Color color = Color::White) : UiLabel(UiFrame(), text, font, color) {
+    UiLabel(std::string text, render::Font font, math::Color color = math::Color::White) : UiLabel(UiFrame(), text, font, color) {
     }
 
-    UiLabel(UiFrame frame, std::string text, Font font, Color color) : UiComponent(frame), _text(text), _font(font), _color(color) {
+    UiLabel(UiFrame frame, std::string text, render::Font font, math::Color color) : UiComponent(frame), _text(text), _font(font), _color(color) {
     }
 
     virtual ~UiLabel() {
@@ -33,28 +33,28 @@ namespace wage {
       _text = text;
     }
 
-    inline Font font() const {
+    inline render::Font font() const {
       return _font;
     }
 
-    void font(Font font) {
+    void font(render::Font font) {
       _font = font;
     }
 
-    inline Color color() const {
+    inline math::Color color() const {
       return _color;
     }
 
-    inline void color(Color color) {
+    inline void color(math::Color color) {
       _color = color;
     }
 
   private:
     std::string _text;
 
-    Font _font;
+    render::Font _font;
 
-    Color _color;
+    math::Color _color;
   };
 }
 

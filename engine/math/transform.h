@@ -1,11 +1,10 @@
-#ifndef MATH_TRANSFORM_H
-#define MATH_TRANSFORM_H
+#pragma once
 
 #include "math/vector.h"
 #include "math/matrix.h"
 #include "math/quaternion.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   class Transform {
 
@@ -225,6 +224,4 @@ namespace wage {
     float _rotation; // Angle from X axis
   };
 
-}
-
-#endif //MATH_TRANSFORM_H
+} }

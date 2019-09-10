@@ -1,7 +1,6 @@
-#ifndef ENTITY_COMPONENT_COLLIDER_H
-#define ENTITY_COMPONENT_COLLIDER_H
+#pragma once
 
-namespace wage {
+namespace wage { namespace physics {
 
   enum class ColliderType { box, sphere, mesh };
 
@@ -28,6 +27,5 @@ namespace wage {
   private:
     ColliderType _type;
   };
-}
 
-#endif //ENTITY_COMPONENT_COLLIDER_H
+} }

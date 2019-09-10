@@ -1,5 +1,4 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#pragma once
 
 #include <string>
 #include <cstdio>
@@ -9,7 +8,7 @@
   template <typename... Args> \
   static void Level(std::string message, Args... args) { log(LogLevel::Level, message, args...); }
 
-namespace wage {
+namespace wage { namespace core {
 
   class LogLevel {
 
@@ -46,14 +45,14 @@ namespace wage {
 
     LeveledLog(debug)
 
-        LeveledLog(info)
+    LeveledLog(info)
 
-            LeveledLog(warn)
+    LeveledLog(warn)
 
-                LeveledLog(error)
+    LeveledLog(error)
 
-                    template <typename Arg>
-                    static void write(Arg arg) {
+    template <typename Arg>
+    static void write(Arg arg) {
       std::cout << arg;
     }
 
@@ -63,8 +62,8 @@ namespace wage {
       write(args...);
     }
 
-    static const char* nameForLevel(LogLevel level) {
-      return level.name().c_str();
+    static std::string nameForLevel(LogLevel level) {
+      return level.name();
     }
 
     static int colorForLevel(LogLevel level) {
@@ -74,12 +73,11 @@ namespace wage {
     template <typename... Args>
     static void log(LogLevel level, std::string& message, Args... args) {
       if (level.severity() >= CurrentLevel.severity()) {
-        std::cout << "\033[" << colorForLevel(level) << ";1m" << nameForLevel(level) << "\033[0m ";
+        std::cout << nameForLevel(level) << ": ";
         write(message, args...);
         std::cout << std::endl;
       }
     }
   };
-}
 
-#endif // LOGGER_H
+} }

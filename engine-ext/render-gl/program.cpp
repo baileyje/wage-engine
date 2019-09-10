@@ -2,11 +2,12 @@
 
 #include "memory/allocator.h"
 
-namespace wage {
+namespace wage { namespace render {
 
-  GlProgram* GlProgram::Default = make<GlProgram>("shaders/default.vs", "shaders/default.fs");
+  GlProgram* GlProgram::Default = memory::make<GlProgram>("shaders/default.vs", "shaders/default.fs");
 
-  GlProgram* GlProgram::Font = make<GlProgram>("shaders/font.vs", "shaders/font.fs");
+  GlProgram* GlProgram::Font = memory::make<GlProgram>("shaders/font.vs", "shaders/font.fs");
 
-  GlProgram* GlProgram::Sprite = make<GlProgram>("shaders/sprite.vs", "shaders/sprite.fs");
-}
+  GlProgram* GlProgram::Sprite = memory::make<GlProgram>("shaders/sprite.vs", "shaders/sprite.fs");
+
+} }

@@ -1,5 +1,4 @@
-#ifndef RENDERER_FONT_H
-#define RENDERER_FONT_H
+#pragma once
 
 #include <map>
 #include <iostream>
@@ -14,12 +13,12 @@
 
 #include "render-gl/util.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlCharacter {
 
   public:
-    GlCharacter(Vector2 size, Vector2 bearing, unsigned int advance) : textureId(0), size(size), bearing(bearing), advance(advance), bound(false), pushed(false) {}
+    GlCharacter(math::Vector2 size, math::Vector2 bearing, unsigned int advance) : textureId(0), size(size), bearing(bearing), advance(advance), bound(false), pushed(false) {}
 
     inline void bind() {
       if (bound) {
@@ -51,11 +50,11 @@ namespace wage {
 
     unsigned int textureId;
 
-    Buffer buffer;
+    memory::Buffer buffer;
 
-    Vector2 size;
+    math::Vector2 size;
 
-    Vector2 bearing;
+    math::Vector2 bearing;
 
     unsigned int advance;
 
@@ -64,7 +63,7 @@ namespace wage {
     bool pushed;
   };
 
-  class GlFont : public Asset {
+  class GlFont : public assets::Asset {
 
   public:
     GlFont(std::string path, int size = 48) : Asset(path), size(size) {
@@ -96,8 +95,8 @@ namespace wage {
         }
 
         GlCharacter character(
-            Vector2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-            Vector2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+            math::Vector2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+            math::Vector2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             face->glyph->advance.x);
         character.buffer.fill(face->glyph->bitmap.buffer, sizeof(GL_UNSIGNED_BYTE) * character.size.x * character.size.y);
         characters.insert(std::pair<char, GlCharacter>(c, character));
@@ -111,6 +110,5 @@ namespace wage {
 
     std::map<char, GlCharacter> characters;
   };
-}
 
-#endif //RENDERER_FONT_H
+} }

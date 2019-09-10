@@ -1,12 +1,11 @@
-#ifndef ENTITY_CAMERA_H
-#define ENTITY_CAMERA_H
+#pragma once
 
 #include "math/frustum.h"
 #include "math/matrix.h"
 #include "math/transform.h"
 #include "memory/reference.h"
 
-namespace wage {
+namespace wage { namespace component {
 
   enum class CameraType { perspective,
                           orthographic };
@@ -24,21 +23,20 @@ namespace wage {
       return _type;
     }
 
-    virtual Matrix screenProjection(Vector2 screenSize) = 0;
+    virtual math::Matrix screenProjection(math::Vector2 screenSize) = 0;
 
-    Matrix viewProjection(Transform* trans) {
-      Vector camPos = trans->position();
-      Quaternion rotation = trans->rotation();
-      Vector camFront = rotation * Vector::Forward;
-      Vector camUp = rotation * Vector::Up;
-      return Matrix::lookAt(camPos, camPos + camFront, camUp);
+    math::Matrix viewProjection(math::Transform* trans) {
+      math::Vector camPos = trans->position();
+      math::Quaternion rotation = trans->rotation();
+      math::Vector camFront = rotation * math::Vector::Forward;
+      math::Vector camUp = rotation * math::Vector::Up;
+      return math::Matrix::lookAt(camPos, camPos + camFront, camUp);
     }
 
-    virtual Frustum frustum(Vector2 screenSize, Transform* cameraTransform) = 0;
+    virtual math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) = 0;
 
   private:
     CameraType _type;
   };
-}
 
-#endif //ENTITY_CAMERA_H
+} }

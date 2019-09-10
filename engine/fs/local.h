@@ -1,23 +1,37 @@
-#ifndef LOCAL_FILE_SYSTEM_H
-#define LOCAL_FILE_SYSTEM_H
+#pragma once
+
+#include <fstream>
 
 #include "fs/file_system.h"
 
-namespace wage {
-  class LocalFileSystem : public FileSystem {
+namespace wage { namespace fs {
+
+  class Local : public FileSystem {
 
   public:
-    LocalFileSystem(std::string base);
+    Local(std::string base) : base(base) {}
 
-    ~LocalFileSystem();
+    ~Local() {}
 
-    std::unique_ptr<Buffer> read(std::string path, Allocator* allocator) const override;
+    std::unique_ptr<memory::Buffer> read(std::string path, memory::Allocator* allocator) const override {
+      auto buffer = memory::make<memory::Buffer>();
+      std::ifstream file(fullPath(path), std::ios::in | std::ios::binary);
+      file.seekg(0, std::ios::end);
+      size_t size = file.tellg();
+      core::Logger::debug("Loading: ", path.c_str(), " -> ", size);
+      file.seekg(0, std::ios::beg);
+      buffer->allocate(size, allocator);
+      file.read((char*)buffer->data(), size);
+      file.close();
+      return std::unique_ptr<memory::Buffer>(buffer);
+    }
 
   private:
-    std::string fullPath(std::string relative) const;
+    std::string fullPath(std::string relative) const {
+      return base + "/" + relative;
+    };
 
     std::string base;
   };
-}
 
-#endif //LOCAL_FILE_SYSTEM_H
+} }

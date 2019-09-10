@@ -1,12 +1,11 @@
-#ifndef FIXED_STORAGE_H
-#define FIXED_STORAGE_H
+#pragma once 
 
 #include <cassert>
 
 #include "memory/storage.h"
 #include "memory/allocator.h"
 
-namespace wage {
+namespace wage { namespace memory {
 
   template <typename T, typename IndexType = size_t>
   class FixedStorage : public Storage<T, IndexType> {
@@ -32,6 +31,5 @@ namespace wage {
 
     T* _storage;
   };
-}
 
-#endif //FIXED_STORAGE_H
+} }

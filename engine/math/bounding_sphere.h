@@ -1,9 +1,7 @@
-#ifndef MATH_BOUNDING_SPHERE_H
-#define MATH_BOUNDING_SPHERE_H
-
+#pragma once
 #include "math/vector.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   class BoundingSphere {
 
@@ -15,6 +13,5 @@ namespace wage {
 
     float radius;
   };
-}
 
-#endif //MATH_BOUNDING_SPHERE_H
+} }

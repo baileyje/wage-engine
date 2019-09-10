@@ -1,5 +1,4 @@
-#ifndef FS_ASSET_MANAGER_H
-#define FS_ASSET_MANAGER_H
+#pragma once
 
 #include <string>
 
@@ -7,19 +6,17 @@
 #include "assets/asset.h"
 #include "assets/manager.h"
 
-namespace wage {
+namespace wage { namespace assets {
 
-  class FsAssetManager : public AssetManager {
+  class FsManager : public Manager {
 
   public:
-    FsAssetManager(FileSystem* fileSystem) : AssetManager(), fileSystem(fileSystem) {
+    FsManager(fs::FileSystem* fileSystem) : Manager(), fileSystem(fileSystem) {
     }
 
     virtual void performLoad(Asset* asset);
 
   private:
-    FileSystem* fileSystem;
+    fs::FileSystem* fileSystem;
   };
-}
-
-#endif //FS_ASSET_MANAGER_H
+} }

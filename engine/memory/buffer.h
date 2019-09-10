@@ -1,9 +1,8 @@
-#ifndef MEMORY_BUFFER_H
-#define MEMORY_BUFFER_H
+#pragma once
 
 #include "memory/allocator.h"
 
-namespace wage {
+namespace wage { namespace memory {
 
   class Buffer {
 
@@ -41,6 +40,5 @@ namespace wage {
 
     size_t _length;
   };
-}
 
-#endif // MEMORY_BUFFER_H
+} }

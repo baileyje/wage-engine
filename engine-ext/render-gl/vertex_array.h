@@ -1,12 +1,11 @@
-#ifndef RENDERER_VERTEX_ARRAY_H
-#define RENDERER_VERTEX_ARRAY_H
+#pragma once
 
 #include <glad/glad.h>
 
 #include "render-gl/vertex_buffer.h"
 #include "render-gl/vertex_buffer_layout.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class VertexArray {
 
@@ -26,6 +25,5 @@ namespace wage {
 
     unsigned int index;
   };
-}
 
-#endif //RENDERER_VERTEX_ARRAY_H
+} }

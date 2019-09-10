@@ -1,6 +1,6 @@
 #include "memory/allocator.h"
 
-namespace wage {
+namespace wage { namespace memory {
 
   Allocator* Allocator::Permanent() {
     static auto instance = new Allocator("Permanent", 1024 * 1024 * 50);
@@ -16,4 +16,5 @@ namespace wage {
     static auto instance = new Allocator("Assets", 1024 * 1024 * 50);
     return instance;
   }
-}
+
+} }

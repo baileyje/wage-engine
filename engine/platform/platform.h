@@ -1,12 +1,11 @@
-#ifndef PLATFORM_H
-#define PLATFORM_H
+#pragma once
 
 #include "core/service.h"
 #include "platform/window.h"
 
-namespace wage {
+namespace wage { namespace platform {
 
-  class Platform : public Service {
+  class Platform : public core::Service {
 
   public:
     Platform() : Service("Platform") {}
@@ -20,6 +19,5 @@ namespace wage {
   protected:
     Window* _window;
   };
-}
 
-#endif //PLATFORM_H
+} }

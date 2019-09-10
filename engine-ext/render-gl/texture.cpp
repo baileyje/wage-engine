@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   GlTexture::~GlTexture() {
     if (data) {
@@ -36,4 +36,5 @@ namespace wage {
   void GlTexture::unbind() {
     GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
   }
-}
+
+} }

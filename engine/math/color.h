@@ -1,7 +1,6 @@
-#ifndef MATH_COLOR_H
-#define MATH_COLOR_H
+#pragma once
 
-namespace wage {
+namespace wage { namespace math {
 
   class Color {
 
@@ -47,6 +46,5 @@ namespace wage {
       return *this;
     }
   };
-}
 
-#endif //MATH_COLOR_H
+} }

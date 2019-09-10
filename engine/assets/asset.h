@@ -1,11 +1,10 @@
-#ifndef ASSET_H
-#define ASSET_H
+#pragma once
 
 #include <string>
 
 #include "memory/buffer.h"
 
-namespace wage {
+namespace wage { namespace assets {
 
   class Asset {
 
@@ -29,8 +28,7 @@ namespace wage {
       _loaded = loaded;
     }
 
-    virtual void set(std::shared_ptr<Buffer> buffer) {
-      printf("Set Called: %s\n", _key.c_str());
+    virtual void set(std::shared_ptr<memory::Buffer> buffer) {
       this->buffer = buffer;
     }
 
@@ -38,13 +36,11 @@ namespace wage {
     }
 
   protected:
-    std::shared_ptr<Buffer> buffer;
+    std::shared_ptr<memory::Buffer> buffer;
 
   private:
     Key _key;
 
     bool _loaded;
   };
-}
-
-#endif //ASSET_H
+} }

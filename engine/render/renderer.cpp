@@ -6,75 +6,86 @@
 
 #include "platform/platform.h"
 #include "core/logger.h"
-#include "new_ecs/system_context.h"
+#include "ecs/system_context.h"
 #include "render/context.h"
 #include "component/camera/perspective_camera.h"
 #include "component/camera/orthographic_camera.h"
 #include "render/material.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   Renderer::~Renderer() {
   }
 
   void Renderer::start() {
-    auto platform = Core::Instance->get<Platform>();
+    auto platform = core::Core::Instance->get<platform::Platform>();
     window = platform->window();
-    assetManager = Core::Instance->get<AssetManager>();
-    Core::Instance->onRender([&](const Frame& frame) {
+    assetManager = core::Core::Instance->get<assets::Manager>();
+    core::Core::Instance->onRender([&](const core::Frame& frame) {
       render();
     });
   }
 
-  void Renderer::renderMeshes(EntityManager* manager, RenderContext* renderContext) {
-    meshQueue.cull(renderContext);
-    meshQueue.sort(renderContext);
-    meshQueue.render(renderContext);
-    meshQueue.clear();
+  void Renderer::renderMeshes(ecs::EntityManager* manager, RenderContext* renderContext) {
+    meshQueues[currentConsumerQueue].cull(renderContext);
+    meshQueues[currentConsumerQueue].sort(renderContext);
+    meshQueues[currentConsumerQueue].render(renderContext);
+    meshQueues[currentConsumerQueue].clear();
   }
 
-  void Renderer::renderUi(EntityManager* manager, RenderContext* renderContext) {
-    // uiQueue.cull(renderContext);
-    uiQueue.sort(renderContext);
-    uiQueue.render(renderContext);
-    uiQueue.clear();
+  void Renderer::renderUi(ecs::EntityManager* manager, RenderContext* renderContext) {
+    uiQueues[currentConsumerQueue].sort(renderContext);
+    uiQueues[currentConsumerQueue].render(renderContext);
+    uiQueues[currentConsumerQueue].clear();
   }
 
-  std::tuple<Entity, Camera*> cameraAndEntity(EntityManager* manager) {
-    for (auto entity : manager->with<PerspectiveCamera>()) {
-      return {entity, entity.get<PerspectiveCamera>().get()};
+  std::tuple<Entity, component::Camera*> cameraAndEntity(ecs::EntityManager* manager) {
+    for (auto entity : manager->with<component::PerspectiveCamera>()) {
+      return {entity, entity.get<component::PerspectiveCamera>().get()};
     }
-    for (auto entity : manager->with<OrthographicCamera>()) {
-      return {entity, entity.get<OrthographicCamera>().get()};
+    for (auto entity : manager->with<component::OrthographicCamera>()) {
+      return {entity, entity.get<component::OrthographicCamera>().get()};
     }
     return {Entity(), nullptr};
   }
 
   void Renderer::render() {
     beginRender();
-    auto manager = Core::Instance->get<EntityManager>();
+    locks[currentConsumerQueue].lock();
+    auto manager = core::Core::Instance->get<ecs::EntityManager>();
     auto camera = cameraAndEntity(manager);
     if (!std::get<0>(camera).valid()) {
-      Logger::error("No Camera");
+      core::Logger::error("No Camera");
       return;
     }
     std::vector<Entity> dirLights;
-    for (auto ent : manager->with<DirectionalLight>()) {
-      dirLights.push_back(ent);
-    }
+    // for (auto ent : manager->with<DirectionalLight>()) {
+    //   dirLights.push_back(ent);
+    // }
     std::vector<Entity> pointLights;
-    for (auto ent : manager->with<PointLight>()) {
-      pointLights.push_back(ent);
-    }
+    // for (auto ent : manager->with<PointLight>()) {
+    //   pointLights.push_back(ent);
+    // }
     std::vector<Entity> spotlights;
-    for (auto ent : manager->with<Spotlight>()) {
-      spotlights.push_back(ent);
-    }
-    RenderContext renderContext(std::get<0>(camera), std::get<1>(camera), Vector2(window->width(), window->height()), dirLights, pointLights, spotlights);
+    // for (auto ent : manager->with<Spotlight>()) {
+    //   spotlights.push_back(ent);
+    // }
+    RenderContext renderContext(std::get<0>(camera), std::get<1>(camera), math::Vector2(window->width(), window->height()), dirLights, pointLights, spotlights);
 
     renderMeshes(manager, &renderContext);
     // TODO: Sprites
     renderUi(manager, &renderContext);
     endRender();
+    locks[currentConsumerQueue].unlock();
+    currentConsumerQueue = (currentConsumerQueue + 1) % 2;
+    // std::cout << "CCQ: " << currentConsumerQueue << std::endl;
   }
-}
+
+  void Renderer::awaitNextQueue() {
+    locks[currentProducerQueue].unlock();
+    currentProducerQueue = (currentProducerQueue + 1) % 2;
+    // std::cout << "CPQ: " << currentProducerQueue << std::endl;
+    locks[currentProducerQueue].lock();
+  }
+
+} }

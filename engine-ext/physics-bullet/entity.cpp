@@ -2,21 +2,21 @@
 
 #include "memory/allocator.h"
 
-namespace wage {
+namespace wage { namespace physics {
 
   btCollisionShape* PhysicsEntity::shapeFor(Entity entity) {
     if (!entity.has<Collider>()) {
-      return make<btEmptyShape>();
+      return memory::make<btEmptyShape>();
     }
-    auto scale = entity.get<Transform>()->scale();
+    auto scale = entity.get<math::Transform>()->scale();
     switch (entity.get<Collider>()->type()) {
     // TODO: Support more shapes
     case ColliderType::box: {
       btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);
-      return make<btBoxShape>(halfExtents);
+      return memory::make<btBoxShape>(halfExtents);
     }
     case ColliderType::sphere: {
-      return make<btSphereShape>(scale.x / 2.0);
+      return memory::make<btSphereShape>(scale.x / 2.0);
     }
     default:
       return nullptr;
@@ -30,9 +30,9 @@ namespace wage {
     if (mass != 0.f) {
       shape->calculateLocalInertia(mass, localInertia);
     }
-    btDefaultMotionState* myMotionState = make<btDefaultMotionState>(startTransform);
+    btDefaultMotionState* myMotionState = memory::make<btDefaultMotionState>(startTransform);
     btRigidBody::btRigidBodyConstructionInfo cInfo(mass, myMotionState, shape, localInertia);
-    btRigidBody* body = make<btRigidBody>(cInfo);
+    btRigidBody* body = memory::make<btRigidBody>(cInfo);
     if (rigidBody->type() == RigidBodyType::kinematic) {
       body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     } else if (rigidBody->type() == RigidBodyType::immovable) {
@@ -49,7 +49,7 @@ namespace wage {
     btCollisionObject* object = nullptr;
     if (entity.has<RigidBody>()) {
       auto entityBody = entity.get<RigidBody>();
-      body = rigidBodyFor(entityBody.get(), fromTransform(entity.get<Transform>().get()), shape);
+      body = rigidBodyFor(entityBody.get(), fromTransform(entity.get<math::Transform>().get()), shape);
       dynamicsWorld->addRigidBody(body);
       // Must come after added to world.
       if (!entityBody->isAffectedByGravity()) {
@@ -57,11 +57,11 @@ namespace wage {
       }
       object = body;
     } else {
-      object = make<btCollisionObject>();
+      object = memory::make<btCollisionObject>();
       object->setCollisionShape(shape);
       dynamicsWorld->addCollisionObject(object);
     }
-    return make<PhysicsEntity>(entity, shape, body, object);
+    return memory::make<PhysicsEntity>(entity, shape, body, object);
   }
 
   btTransform PhysicsEntity::transform() {
@@ -122,10 +122,10 @@ namespace wage {
       return;
     }
     btTransform trans = transform();
-    entity().get<Transform>()->position(fromBTVector(trans.getOrigin()));
+    entity().get<math::Transform>()->position(fromBTVector(trans.getOrigin()));
     btQuaternion rotation = trans.getRotation();
-    entity().get<Transform>()->rotation(
-        Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w()));
+    entity().get<math::Transform>()->rotation(
+        math::Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w()));
   }
 
   void PhysicsEntity::updateShapeTransform() {
@@ -136,8 +136,9 @@ namespace wage {
     if (entityBody->type() == RigidBodyType::dynamic) {
       return;
     }
-    btTransform transform = fromTransform(entity().get<Transform>().get());
+    btTransform transform = fromTransform(entity().get<math::Transform>().get());
     // _rigidBody->getMotionState()->setWorldTransform(transform);
     _rigidBody->setCenterOfMassTransform(transform);
   }
-}
+
+} }

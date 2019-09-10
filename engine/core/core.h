@@ -1,17 +1,17 @@
-#ifndef CORE_H
-#define CORE_H
+#pragma once
 
 #include <string>
 #include <vector>
 #include <functional>
+#include <thread>
 
 #include "core/service_map.h"
 #include "core/frame.h"
 #include "memory/allocator.h"
 
-namespace wage {
+namespace wage { namespace core {
 
-  typedef std::function<void(const Frame&)> UpdateListener;
+  typedef std::function<void(const core::Frame&)> UpdateListener;
 
   class Core {
 
@@ -35,14 +35,14 @@ namespace wage {
 
     template <typename T, typename... Args>
     T* create(Args... args) {
-      auto instance = make<T>(args...);
+      auto instance = memory::make<T>(args...);
       add<T>(instance);
       return instance;
     }
 
     template <typename T, typename I, typename... Args>
     I* create(Args... args) {
-      auto instance = make<I>(args...);
+      auto instance = memory::make<I>(args...);
       add<T>(instance);
       return instance;
     }
@@ -83,9 +83,13 @@ namespace wage {
 
     void deinit();
 
+    void startUpdateLoop();
+
+    void startRenderLoop();
+
     ServiceMap services;
 
-    bool running;
+    volatile bool running;
 
     Frame _frame;
 
@@ -96,6 +100,8 @@ namespace wage {
     std::vector<UpdateListener> fixedUpdateListeners;
 
     std::vector<UpdateListener> renderListeners;
+
+    std::thread updateThread;
   };
-}
-#endif // CORE_H
+
+} }

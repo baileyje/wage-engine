@@ -1,7 +1,6 @@
-#ifndef PLATFORM_WINDOW_H
-#define PLATFORM_WINDOW_H
+#pragma once
 
-namespace wage {
+namespace wage { namespace platform {
 
   class Window {
 
@@ -37,6 +36,5 @@ namespace wage {
 
     float _scale;
   };
-}
 
-#endif //PLATFORM_WINDOW_H
+} }

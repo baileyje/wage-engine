@@ -1,5 +1,4 @@
-#ifndef ENTITY_COMPONENT_MESH_H
-#define ENTITY_COMPONENT_MESH_H
+#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -7,9 +6,10 @@
 
 #include "math/vector.h"
 
-namespace wage {
-  typedef std::vector<Vector> VertexVector;
-  typedef std::vector<Vector2> Vertex2Vector;
+namespace wage { namespace render {
+
+  typedef std::vector<math::Vector> VertexVector;
+  typedef std::vector<math::Vector2> Vertex2Vector;
   typedef std::vector<unsigned int> IndexVector;
 
   class Mesh {
@@ -62,7 +62,7 @@ namespace wage {
       return _id;
     }
 
-    inline Vector maxDim() {
+    inline math::Vector maxDim() {
       return _maxDim;
     }
 
@@ -87,8 +87,7 @@ namespace wage {
 
     IndexVector _indices;
 
-    Vector _maxDim;
+    math::Vector _maxDim;
   };
-}
 
-#endif //ENTITY_COMPONENT_MESH_H
+} }

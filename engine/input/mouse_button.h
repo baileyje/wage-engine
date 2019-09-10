@@ -1,12 +1,10 @@
-#ifndef INPUT_MOUSE_BUTTON_H
-#define INPUT_MOUSE_BUTTON_H
+#pragma once
 
-namespace wage {
+namespace wage { namespace input {
 
   enum class MouseButton {
     One, Two, Three, Four, Five, Six, Seven, Eight
   };
-}
 
-#endif //INPUT_MOUSE_BUTTON_H
+} }
 

@@ -1,6 +1,6 @@
 #include "math/quaternion.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   glm::quat wrap(Quaternion quat) {
     return glm::quat(quat.w, quat.x, quat.y, quat.z);
@@ -45,4 +45,5 @@ namespace wage {
     return Vector(tmp.x, tmp.y, tmp.z);
     ;
   }
-}
+
+} }

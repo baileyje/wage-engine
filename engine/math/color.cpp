@@ -1,6 +1,6 @@
 #include "math/color.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   Color Color::White = Color(1, 1, 1);
 
@@ -13,4 +13,5 @@ namespace wage {
   Color Color::Blue = Color(0, 0, 1);
 
   Color Color::Clear = Color(1, 1, 1, 0);
-}
+
+} }

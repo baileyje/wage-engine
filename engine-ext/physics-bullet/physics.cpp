@@ -3,9 +3,9 @@
 #include "physics/rigid_body.h"
 #include "physics/collider.h"
 #include "core/logger.h"
-#include "new_ecs/system_context.h"
+#include "ecs/system_context.h"
 
-namespace wage {
+namespace wage { namespace physics {
 
   BulletPhysics::BulletPhysics() : Physics(),
                                    dispatcher(&collisionConfiguration),
@@ -17,12 +17,12 @@ namespace wage {
     Physics::start();
     // dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
     dynamicsWorld.setGravity(btVector3(0, 0, 0));
-    Core::Instance->onFixedUpdate([&](const Frame& frame) {
+    core::Core::Instance->onFixedUpdate([&](const core::Frame& frame) {
       fixedUpdate(frame);
     });
   }
 
-  void BulletPhysics::fixedUpdate(const Frame& frame) {
+  void BulletPhysics::fixedUpdate(const core::Frame& frame) {
     // Get Physics up to speed
     for (auto physicsEntity : entities) {
       if (!physicsEntity->entity().valid()) {
@@ -72,4 +72,5 @@ namespace wage {
       }
     }
   }
-}
+
+} }

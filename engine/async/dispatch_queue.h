@@ -1,3 +1,5 @@
+#pragma once
+
 #include <thread>
 #include <functional>
 #include <vector>
@@ -8,7 +10,7 @@
 #include <string>
 #include <condition_variable>
 
-namespace wage {
+namespace wage { namespace async {
 
   class DispatchQueue {
 
@@ -44,4 +46,4 @@ namespace wage {
 
     void threadHandler(void);
   };
-}
+} }

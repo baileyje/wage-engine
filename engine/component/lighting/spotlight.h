@@ -1,18 +1,17 @@
-#ifndef COMPONENT_SPOTLIGHT_H
-#define COMPONENT_SPOTLIGHT_H
+#pragma once
 
 #include "component/lighting/light.h"
 
-namespace wage {
+namespace wage { namespace component {
 
   class Spotlight : public Light {
 
   public:
     Spotlight()
-        : Spotlight(Color(0.0f, 0.0f, 0.0f, 1), Color::White, Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
+        : Spotlight(math::Color(0.0f, 0.0f, 0.0f, 1), math::Color::White, math::Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
     }
 
-    Spotlight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
+    Spotlight(math::Color ambient, math::Color diffuse, math::Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
         : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff) {
     }
 
@@ -69,6 +68,5 @@ namespace wage {
 
     float _outerCutOff;
   };
-}
 
-#endif //COMPONENT_SPOTLIGHT_H
+} }

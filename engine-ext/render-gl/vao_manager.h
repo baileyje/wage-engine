@@ -1,5 +1,4 @@
-#ifndef RENDERER_VAO_MANAGER_H
-#define RENDERER_VAO_MANAGER_H
+#pragma once
 
 #include <unordered_map>
 
@@ -9,7 +8,7 @@
 #include "render-gl/vertex_array.h"
 #include "render-gl/index_buffer.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class VaoManager {
 
@@ -17,22 +16,22 @@ namespace wage {
     VertexArray* load(Mesh* mesh) {
       VertexArray* vao = cache[mesh->id()];
       if (vao == nullptr) {
-        vao = make<VertexArray>();
+        vao = memory::make<VertexArray>();
         vao->bind();
         // Create Verts Buff
-        VertexBuffer* verts = make<VertexBuffer>(mesh->vertices().data(), mesh->vertices().size() * 3 * sizeof(float));
+        VertexBuffer* verts = memory::make<VertexBuffer>(mesh->vertices().data(), mesh->vertices().size() * 3 * sizeof(float));
         verts->layout()->pushFloat(3);
         vao->addBuffer(verts);
         // Create Norms Buff
-        VertexBuffer* norms = make<VertexBuffer>(mesh->normals().data(), mesh->normals().size() * 3 * sizeof(float));
+        VertexBuffer* norms = memory::make<VertexBuffer>(mesh->normals().data(), mesh->normals().size() * 3 * sizeof(float));
         norms->layout()->pushFloat(3);
         vao->addBuffer(norms);
         // Create Texture Buff
-        VertexBuffer* uvs = make<VertexBuffer>(mesh->uvs().data(), mesh->uvs().size() * 3 * sizeof(float));
+        VertexBuffer* uvs = memory::make<VertexBuffer>(mesh->uvs().data(), mesh->uvs().size() * 3 * sizeof(float));
         uvs->layout()->pushFloat(2);
         vao->addBuffer(uvs);
 
-        IndexBuffer* indices = make<IndexBuffer>((const unsigned int*)mesh->indices().data(), mesh->indices().size());
+        IndexBuffer* indices = memory::make<IndexBuffer>((const unsigned int*)mesh->indices().data(), mesh->indices().size());
         indices->bind();
 
         cache[mesh->id()] = vao;
@@ -43,6 +42,5 @@ namespace wage {
   private:
     std::unordered_map<std::string, VertexArray*> cache;
   };
-}
 
-#endif //RENDERER_VAO_MANAGER_H
+} }

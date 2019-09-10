@@ -1,5 +1,4 @@
-#ifndef RENDERER_SHADER_MANAGER_H
-#define RENDERER_SHADER_MANAGER_H
+#pragma once
 
 #include <unordered_map>
 
@@ -7,7 +6,7 @@
 
 #include "render-gl/shader.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlShaderManager {
 
@@ -23,15 +22,14 @@ namespace wage {
       return nullptr;
     }
 
-    inline void assetManager(AssetManager* assetManager) {
+    inline void assetManager(assets::Manager* assetManager) {
       _assetManager = assetManager;
     }
 
   private:
-    AssetManager* _assetManager;
+    assets::Manager* _assetManager;
 
     // std::unordered_map<std::string, GlTexture*> cache;
   };
-}
 
-#endif //RENDERER_SHADER_MANAGER_H
+} }

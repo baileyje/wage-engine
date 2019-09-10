@@ -2,7 +2,7 @@
 
 #include "render-gl/util.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   GlMaterial::GlMaterial(GlProgram* program) : _program(program) {
   }
@@ -17,4 +17,5 @@ namespace wage {
   void GlMaterial::unbind() const {
     _program->unbind();
   }
-}
+
+} }

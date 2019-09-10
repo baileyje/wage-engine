@@ -20,39 +20,39 @@
 using namespace wage;
 
 
-void setupServices(Core* core, std::string path) {
-  auto fileSystem = core->create<FileSystem, LocalFileSystem>(path);
-  core->create<AssetManager, FsAssetManager>(fileSystem);
-  core->create<Messaging>();
-  core->create<Platform, GlfwPlatform>();
-  core->create<Input, GlfwInput>();
-  core->create<EntityManager>();
-  core->create<SystemManager>();
-  core->create<Physics, BulletPhysics>();
-  core->create<Renderer, GlRenderer>();
+void setupServices(core::Core* core, std::string path) {
+  auto fileSystem = core->create<fs::FileSystem, fs::Local>(path);
+  core->create<assets::Manager, assets::FsManager>(fileSystem);
+  core->create<messaging::Messaging>();
+  core->create<platform::Platform, platform::GlfwPlatform>();
+  core->create<input::Input, input::GlfwInput>();
+  core->create<ecs::EntityManager>();
+  core->create<ecs::SystemManager>();
+  core->create<physics::Physics, physics::BulletPhysics>();
+  core->create<render::Renderer, render::GlRenderer>();
 }
 
-void setupCoreSystems(SystemManager* systemManager) {
+void setupCoreSystems(ecs::SystemManager* systemManager) {
   systemManager->create<UiSystem>();
-  systemManager->create<MeshRenderer>();
+  systemManager->create<render::MeshRenderer>();
   systemManager->create<EnemyLauncher>();
   systemManager->create<EnemyMovement>();
   systemManager->create<PlayerMovement>();
   systemManager->create<PlanetLauncher>();
 }
 
-void setupScene(EntityManager* entityManager, SystemManager* systemManager) {
+void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
   auto topLightEnt = entityManager->create();
-  topLightEnt.assign<Transform>()->rotation(Vector(-90, 0, 0));
-  auto topLight = topLightEnt.assign<DirectionalLight>();
-  topLight->diffuse(Color(0.7, 0.7, 0.7, 1));
-  topLight->ambient(Color(0.4, 0.4, 0.4, 1));
+  topLightEnt.assign<math::Transform>()->rotation(math::Vector(-90, 0, 0));
+  auto topLight = topLightEnt.assign<component::DirectionalLight>();
+  topLight->diffuse(math::Color(0.7, 0.7, 0.7, 1));
+  topLight->ambient(math::Color(0.4, 0.4, 0.4, 1));
 
   auto bottomLightEnt = entityManager->create();
-  bottomLightEnt.assign<Transform>()->rotation(Vector(90, 0, 0));
-  auto bottomLight = bottomLightEnt.assign<DirectionalLight>();
-  bottomLight->diffuse(Color(0.7, 0.7, 0.9, 1));
-  bottomLight->ambient(Color(0.4, 0.4, 0.4, 1));
+  bottomLightEnt.assign<math::Transform>()->rotation(math::Vector(90, 0, 0));
+  auto bottomLight = bottomLightEnt.assign<component::DirectionalLight>();
+  bottomLight->diffuse(math::Color(0.7, 0.7, 0.9, 1));
+  bottomLight->ambient(math::Color(0.4, 0.4, 0.4, 1));
 
   addPlayer(entityManager, systemManager);
 
@@ -73,18 +73,18 @@ int main(int argc, char* argv[]) {
   char buffer[255];
   std::string path = std::string(getcwd(buffer, sizeof(buffer)));
   signal(SIGINT, [](int _) {
-    Core::Instance->stop();
+    core::Core::Instance->stop();
   });
 
-  setupServices(Core::Instance, path);
-  auto systemManager = Core::Instance->get<SystemManager>();
-  auto entityManager = Core::Instance->get<EntityManager>();
+  setupServices(core::Core::Instance, path);
+  auto systemManager = core::Core::Instance->get<ecs::SystemManager>();
+  auto entityManager = core::Core::Instance->get<ecs::EntityManager>();
   setupCoreSystems(systemManager);
 
-  Mesh::generatePrimitives();
+  render::Mesh::generatePrimitives();
   setupScene(entityManager, systemManager);
-  Core::Instance->init();
-  Core::Instance->start();
+  core::Core::Instance->init();
+  core::Core::Instance->start();
 
   return 0;
 }

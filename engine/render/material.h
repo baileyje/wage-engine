@@ -1,30 +1,29 @@
-#ifndef ENTITY_COMPONENT_MATERIAL_H
-#define ENTITY_COMPONENT_MATERIAL_H
+#pragma once
 
 #include "math/color.h"
 #include "render/texture.h"
 
-namespace wage {
+namespace wage { namespace render {
   // TODO:  De-jank this
   class Material {
 
   public:
-    Material() : Material(Color(1, 0, 1, 1)) {
+    Material() : Material(math::Color(1, 0, 1, 1)) {
     }
 
-    Material(Color color) : _color(color) {
+    Material(math::Color color) : _color(color) {
     }
 
-    Material(Texture texture) : _color(Color(1, 0, 1, 1)), _texture(texture) {
+    Material(Texture texture) : _color(math::Color(1, 0, 1, 1)), _texture(texture) {
     }
 
     ~Material() {}
 
-    inline void color(Color color) {
+    inline void color(math::Color color) {
       _color = color;
     }
 
-    inline Color color() {
+    inline math::Color color() {
       return _color;
     }
 
@@ -33,10 +32,9 @@ namespace wage {
     }
 
   private:
-    Color _color;
+    math::Color _color;
 
     Texture _texture;
   };
-}
 
-#endif //ENTITY_COMPONENT_MATERIAL_H
+} }

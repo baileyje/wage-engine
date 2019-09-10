@@ -1,5 +1,4 @@
-#ifndef RENDERER_FONT_MANAGER_H
-#define RENDERER_FONT_MANAGER_H
+#pragma once
 
 #include <unordered_map>
 
@@ -9,7 +8,7 @@
 
 #include "render-gl/font.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlFontManager {
 
@@ -17,22 +16,21 @@ namespace wage {
     GlFont* load(Font& font) {
       GlFont* glFont = cache[font.path()];
       if (glFont == nullptr) {
-        glFont = make<GlFont>(font.path(), font.size());
+        glFont = memory::make<GlFont>(font.path(), font.size());
         cache[font.path()] = glFont;
         _assetManager->load(glFont);
       }
       return glFont;
     }
 
-    inline void assetManager(AssetManager* assetManager) {
+    inline void assetManager(assets::Manager* assetManager) {
       _assetManager = assetManager;
     }
 
   private:
-    AssetManager* _assetManager;
+    assets::Manager* _assetManager;
 
     std::unordered_map<std::string, GlFont*> cache;
   };
-}
 
-#endif //RENDERER_FONT_MANAGER_H
+} }

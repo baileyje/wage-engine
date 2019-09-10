@@ -14,7 +14,7 @@
 #include "render-gl/shader.h"
 #include "render-gl/util.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   void GlRenderer::start() {
     Renderer::start();
@@ -30,8 +30,8 @@ namespace wage {
 
     const GLubyte* vendor = glGetString(GL_VENDOR);     // Returns the vendor
     const GLubyte* renderer = glGetString(GL_RENDERER); // Returns a hint to the model
-    Logger::info("Graphics Vendor: ", vendor);
-    Logger::info("Graphics Renderer: ", renderer);
+    core::Logger::info("Graphics Vendor: ", vendor);
+    core::Logger::info("Graphics Renderer: ", renderer);
 
     // Intialize default render assets
     shaderManager.assetManager(assetManager);
@@ -49,18 +49,19 @@ namespace wage {
     GL_FAIL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
   }
 
-  void GlRenderer::renderText(Vector2 position, std::string text, Font font, Color color) {
-    uiQueue.add(makeTemp<GlTextRenderable>(&fontManager, position, text, font, color));
+  void GlRenderer::renderText(math::Vector2 position, std::string text, Font font, math::Color color) {
+    uiQueues[currentProducerQueue].add<GlTextRenderable>(
+      &fontManager, position, text, font, color);
   }
 
-  void GlRenderer::renderSprite(Vector2 position, Vector2 size, Color color, Texture texture) {
-    uiQueue.add(makeTemp<GlSpriteRenderable>(
-        &textureManager, position, size, color, texture));
+  void GlRenderer::renderSprite(math::Vector2 position, math::Vector2 size, math::Color color, Texture texture) {
+    uiQueues[currentProducerQueue].add<GlSpriteRenderable>(
+        &textureManager, position, size, color, texture);
   }
 
-  void GlRenderer::renderMesh(Transform* transform, Mesh* mesh, Material* material) {
-    meshQueue.add(makeTemp<GlMeshRenderable>(
-      &vaoManager, &textureManager, transform, mesh, material)
+  void GlRenderer::renderMesh(math::Transform transform, Mesh* mesh, Material* material) {
+    meshQueues[currentProducerQueue].add<GlMeshRenderable>(
+      &vaoManager, &textureManager, transform, mesh, material
     );
   }
 
@@ -68,4 +69,5 @@ namespace wage {
     GL_FAIL_CHECK(glfwSwapBuffers(window->as<GLFWwindow>()));
     GL_FAIL_CHECK(glfwPollEvents());
   }
-}
+
+} }

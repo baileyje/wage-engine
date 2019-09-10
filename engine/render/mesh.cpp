@@ -6,7 +6,7 @@
 #include "memory/allocator.h"
 #include "tiny_obj_loader.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   Mesh::~Mesh() {
   }
@@ -14,100 +14,100 @@ namespace wage {
   Mesh* Mesh::Cube = new Mesh("CubeMesh",
                               VertexVector{
                                   //front
-                                  Vector(-0.5, -0.5, 0.5),
-                                  Vector(0.5, -0.5, 0.5),
-                                  Vector(0.5, 0.5, 0.5),
-                                  Vector(-0.5, 0.5, 0.5),
+                                  math::Vector(-0.5, -0.5, 0.5),
+                                  math::Vector(0.5, -0.5, 0.5),
+                                  math::Vector(0.5, 0.5, 0.5),
+                                  math::Vector(-0.5, 0.5, 0.5),
                                   //right
-                                  Vector(0.5, 0.5, 0.5),
-                                  Vector(0.5, 0.5, -0.5),
-                                  Vector(0.5, -0.5, -0.5),
-                                  Vector(0.5, -0.5, 0.5),
+                                  math::Vector(0.5, 0.5, 0.5),
+                                  math::Vector(0.5, 0.5, -0.5),
+                                  math::Vector(0.5, -0.5, -0.5),
+                                  math::Vector(0.5, -0.5, 0.5),
                                   //back
-                                  Vector(-0.5, -0.5, -0.5),
-                                  Vector(0.5, -0.5, -0.5),
-                                  Vector(0.5, 0.5, -0.5),
-                                  Vector(-0.5, 0.5, -0.5),
+                                  math::Vector(-0.5, -0.5, -0.5),
+                                  math::Vector(0.5, -0.5, -0.5),
+                                  math::Vector(0.5, 0.5, -0.5),
+                                  math::Vector(-0.5, 0.5, -0.5),
                                   //left
-                                  Vector(-0.5, -0.5, -0.5),
-                                  Vector(-0.5, -0.5, 0.5),
-                                  Vector(-0.5, 0.5, 0.5),
-                                  Vector(-0.5, 0.5, -0.5),
+                                  math::Vector(-0.5, -0.5, -0.5),
+                                  math::Vector(-0.5, -0.5, 0.5),
+                                  math::Vector(-0.5, 0.5, 0.5),
+                                  math::Vector(-0.5, 0.5, -0.5),
                                   //upper
-                                  Vector(0.5, 0.5, 0.5),
-                                  Vector(-0.5, 0.5, 0.5),
-                                  Vector(-0.5, 0.5, -0.5),
-                                  Vector(0.5, 0.5, -0.5),
+                                  math::Vector(0.5, 0.5, 0.5),
+                                  math::Vector(-0.5, 0.5, 0.5),
+                                  math::Vector(-0.5, 0.5, -0.5),
+                                  math::Vector(0.5, 0.5, -0.5),
                                   //bottom
-                                  Vector(-0.5, -0.5, -0.5),
-                                  Vector(0.5, -0.5, -0.5),
-                                  Vector(0.5, -0.5, 0.5),
-                                  Vector(-0.5, -0.5, 0.5)},
+                                  math::Vector(-0.5, -0.5, -0.5),
+                                  math::Vector(0.5, -0.5, -0.5),
+                                  math::Vector(0.5, -0.5, 0.5),
+                                  math::Vector(-0.5, -0.5, 0.5)},
                               VertexVector{
                                   //front
-                                  Vector(0.0f, 0.0f, 1.0f),
-                                  Vector(0.0f, 0.0f, 1.0f),
-                                  Vector(0.0f, 0.0f, 1.0f),
-                                  Vector(0.0f, 0.0f, 1.0f),
+                                  math::Vector(0.0f, 0.0f, 1.0f),
+                                  math::Vector(0.0f, 0.0f, 1.0f),
+                                  math::Vector(0.0f, 0.0f, 1.0f),
+                                  math::Vector(0.0f, 0.0f, 1.0f),
                                   //right
-                                  Vector(1.0f, 0.0f, 0.0f),
-                                  Vector(1.0f, 0.0f, 0.0f),
-                                  Vector(1.0f, 0.0f, 0.0f),
-                                  Vector(1.0f, 0.0f, 0.0f),
+                                  math::Vector(1.0f, 0.0f, 0.0f),
+                                  math::Vector(1.0f, 0.0f, 0.0f),
+                                  math::Vector(1.0f, 0.0f, 0.0f),
+                                  math::Vector(1.0f, 0.0f, 0.0f),
                                   //back
-                                  Vector(0.0f, 0.0f, -1.0f),
-                                  Vector(0.0f, 0.0f, -1.0f),
-                                  Vector(0.0f, 0.0f, -1.0f),
-                                  Vector(0.0f, 0.0f, -1.0f),
+                                  math::Vector(0.0f, 0.0f, -1.0f),
+                                  math::Vector(0.0f, 0.0f, -1.0f),
+                                  math::Vector(0.0f, 0.0f, -1.0f),
+                                  math::Vector(0.0f, 0.0f, -1.0f),
                                   //left
-                                  Vector(-1.0f, 0.0f, 0.0f),
-                                  Vector(-1.0f, 0.0f, 0.0f),
-                                  Vector(-1.0f, 0.0f, 0.0f),
-                                  Vector(-1.0f, 0.0f, 0.0f),
+                                  math::Vector(-1.0f, 0.0f, 0.0f),
+                                  math::Vector(-1.0f, 0.0f, 0.0f),
+                                  math::Vector(-1.0f, 0.0f, 0.0f),
+                                  math::Vector(-1.0f, 0.0f, 0.0f),
                                   //upper
-                                  Vector(0.0f, 1.0f, 0.0f),
-                                  Vector(0.0f, 1.0f, 0.0f),
-                                  Vector(0.0f, 1.0f, 0.0f),
-                                  Vector(0.0f, 1.0f, 0.0f),
+                                  math::Vector(0.0f, 1.0f, 0.0f),
+                                  math::Vector(0.0f, 1.0f, 0.0f),
+                                  math::Vector(0.0f, 1.0f, 0.0f),
+                                  math::Vector(0.0f, 1.0f, 0.0f),
                                   //bottom
-                                  Vector(0.0f, -1.0f, 0.0f),
-                                  Vector(0.0f, -1.0f, 0.0f),
-                                  Vector(0.0f, -1.0f, 0.0f),
-                                  Vector(0.0f, -1.0f, 0.0f),
+                                  math::Vector(0.0f, -1.0f, 0.0f),
+                                  math::Vector(0.0f, -1.0f, 0.0f),
+                                  math::Vector(0.0f, -1.0f, 0.0f),
+                                  math::Vector(0.0f, -1.0f, 0.0f),
                               },
                               Vertex2Vector{
-                                  Vector2(0.0f, 1.0f), // bottom left
-                                  Vector2(1.0f, 1.0f), // bottom right
-                                  Vector2(1.0f, 0.0f), // top right
-                                  Vector2(0.0f, 0.0f), // top left
-                                  Vector2(0.0f, 1.0f), // bottom left
-                                  Vector2(1.0f, 1.0f), // bottom right
-                                  Vector2(1.0f, 0.0f), // top right
-                                  Vector2(0.0f, 0.0f), // top left
-                                  Vector2(0.0f, 1.0f), // bottom left
-                                  Vector2(1.0f, 1.0f), // bottom right
-                                  Vector2(1.0f, 0.0f), // top right
-                                  Vector2(0.0f, 0.0f), // top left
-                                  Vector2(0.0f, 1.0f), // bottom left
-                                  Vector2(1.0f, 1.0f), // bottom right
-                                  Vector2(1.0f, 0.0f), // top right
-                                  Vector2(0.0f, 0.0f), // top left
-                                  Vector2(0.0f, 1.0f), // bottom left
-                                  Vector2(1.0f, 1.0f), // bottom right
-                                  Vector2(1.0f, 0.0f), // top right
-                                  Vector2(0.0f, 0.0f), // top left
-                                  Vector2(0.0f, 1.0f), // bottom left
-                                  Vector2(1.0f, 1.0f), // bottom right
-                                  Vector2(1.0f, 0.0f), // top right
-                                  Vector2(0.0f, 0.0f), // top left
-                                  Vector2(0.0f, 1.0f), // bottom left
-                                  Vector2(1.0f, 1.0f), // bottom right
-                                  Vector2(1.0f, 0.0f), // top right
-                                  Vector2(0.0f, 0.0f), // top left
-                                  Vector2(0.0f, 1.0f), // bottom left
-                                  Vector2(1.0f, 1.0f), // bottom right
-                                  Vector2(1.0f, 0.0f), // top right
-                                  Vector2(0.0f, 0.0f), // top left
+                                  math::Vector2(0.0f, 1.0f), // bottom left
+                                  math::Vector2(1.0f, 1.0f), // bottom right
+                                  math::Vector2(1.0f, 0.0f), // top right
+                                  math::Vector2(0.0f, 0.0f), // top left
+                                  math::Vector2(0.0f, 1.0f), // bottom left
+                                  math::Vector2(1.0f, 1.0f), // bottom right
+                                  math::Vector2(1.0f, 0.0f), // top right
+                                  math::Vector2(0.0f, 0.0f), // top left
+                                  math::Vector2(0.0f, 1.0f), // bottom left
+                                  math::Vector2(1.0f, 1.0f), // bottom right
+                                  math::Vector2(1.0f, 0.0f), // top right
+                                  math::Vector2(0.0f, 0.0f), // top left
+                                  math::Vector2(0.0f, 1.0f), // bottom left
+                                  math::Vector2(1.0f, 1.0f), // bottom right
+                                  math::Vector2(1.0f, 0.0f), // top right
+                                  math::Vector2(0.0f, 0.0f), // top left
+                                  math::Vector2(0.0f, 1.0f), // bottom left
+                                  math::Vector2(1.0f, 1.0f), // bottom right
+                                  math::Vector2(1.0f, 0.0f), // top right
+                                  math::Vector2(0.0f, 0.0f), // top left
+                                  math::Vector2(0.0f, 1.0f), // bottom left
+                                  math::Vector2(1.0f, 1.0f), // bottom right
+                                  math::Vector2(1.0f, 0.0f), // top right
+                                  math::Vector2(0.0f, 0.0f), // top left
+                                  math::Vector2(0.0f, 1.0f), // bottom left
+                                  math::Vector2(1.0f, 1.0f), // bottom right
+                                  math::Vector2(1.0f, 0.0f), // top right
+                                  math::Vector2(0.0f, 0.0f), // top left
+                                  math::Vector2(0.0f, 1.0f), // bottom left
+                                  math::Vector2(1.0f, 1.0f), // bottom right
+                                  math::Vector2(1.0f, 0.0f), // top right
+                                  math::Vector2(0.0f, 0.0f), // top left
                               },
                               IndexVector{
                                   0, 1, 2, 0, 2, 3,       //front
@@ -121,22 +121,22 @@ namespace wage {
   Mesh* Mesh::Quad = new Mesh(
       "QuadMesh",
       VertexVector{
-          Vector(0.5, 0.5, 0.0f),     // top right
-          Vector(0.5f, -0.5f, 0.0f),  // bottom right
-          Vector(-0.5f, -0.5f, 0.0f), // bottom left
-          Vector(-0.5f, 0.5f, 0.0f)   // top left
+          math::Vector(0.5, 0.5, 0.0f),     // top right
+          math::Vector(0.5f, -0.5f, 0.0f),  // bottom right
+          math::Vector(-0.5f, -0.5f, 0.0f), // bottom left
+          math::Vector(-0.5f, 0.5f, 0.0f)   // top left
       },
       VertexVector{
-          Vector(0.0f, 0.0f, -1.0f), // top right
-          Vector(0.0f, 0.0f, -1.0f), // bottom right
-          Vector(0.0f, 0.0f, -1.0f), // bottom left
-          Vector(0.0f, 0.0f, -1.0f)  // top left
+          math::Vector(0.0f, 0.0f, -1.0f), // top right
+          math::Vector(0.0f, 0.0f, -1.0f), // bottom right
+          math::Vector(0.0f, 0.0f, -1.0f), // bottom left
+          math::Vector(0.0f, 0.0f, -1.0f)  // top left
       },
       Vertex2Vector{
-          Vector2(1.0f, 0.0f), // top right
-          Vector2(1.0f, 1.0f), // bottom right
-          Vector2(0.0f, 1.0f), // bottom left
-          Vector2(0.0f, 0.0f)  // top left
+          math::Vector2(1.0f, 0.0f), // top right
+          math::Vector2(1.0f, 1.0f), // bottom right
+          math::Vector2(0.0f, 1.0f), // bottom left
+          math::Vector2(0.0f, 0.0f)  // top left
       },
       IndexVector{
           0, 1, 3, // first Triangle
@@ -171,11 +171,11 @@ namespace wage {
         float const y = sin(-M_PI_2 + M_PI * r * R);
         float const x = cos(2 * M_PI * s * S) * sin(M_PI * r * R);
         float const z = sin(2 * M_PI * s * S) * sin(M_PI * r * R);
-        *t++ = Vector2(s * S, r * R);
+        *t++ = math::Vector2(s * S, r * R);
 
-        *v++ = Vector(x * radius, y * radius, z * radius);
+        *v++ = math::Vector(x * radius, y * radius, z * radius);
 
-        *n++ = Vector(x, y, z);
+        *n++ = math::Vector(x, y, z);
       }
 
     indices.resize(rings * sectors * 6);
@@ -200,16 +200,16 @@ namespace wage {
     generateSphere();
   }
 
-  static Vector calculateNormals(Vector vertex1, Vector vertex2, Vector vertex3) {
-    return Vector3::cross(
+  static math::Vector calculateNormals(math::Vector vertex1, math::Vector vertex2, math::Vector vertex3) {
+    return math::Vector3::cross(
       vertex3 - vertex1, vertex2 - vertex1
     ).normalized();
   }
 
   Mesh* Mesh::load(std::string path) {
-    std::vector<Vector> vertices;
-    std::vector<Vector> normals;
-    std::vector<Vector2> texts;
+    std::vector<math::Vector> vertices;
+    std::vector<math::Vector> normals;
+    std::vector<math::Vector2> texts;
     std::vector<unsigned int> indices;
 
     std::string err;
@@ -278,7 +278,7 @@ namespace wage {
               attrib.normals[3 * idx.normal_index + 2]
             });
           } else {
-            normals.push_back(Vector3::Zero);
+            normals.push_back(math::Vector3::Zero);
           }
           if (!attrib.texcoords.empty()) {
             texts.push_back({
@@ -286,7 +286,7 @@ namespace wage {
               attrib.texcoords[2 * idx.texcoord_index + 1]
             });
           } else {
-            texts.push_back(Vector2(0.5, 0.5));
+            texts.push_back(math::Vector2(0.5, 0.5));
           }
           indices.push_back(index++);
         }
@@ -314,10 +314,7 @@ namespace wage {
     }
 
     // TODO: Some kind of id genner
-    std::cout << vertices.size() << std::endl;
-    std::cout << normals.size() << std::endl;
-    std::cout << texts.size() << std::endl;
-    std::cout << indices.size() << std::endl;
-    return make<Mesh>("GennedMesh", vertices, normals, texts, indices);
+    return memory::make<Mesh>("GennedMesh", vertices, normals, texts, indices);
   }
-}
+
+} }

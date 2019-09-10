@@ -1,5 +1,4 @@
-#ifndef ASSET_MANAGER_H
-#define ASSET_MANAGER_H
+#pragma once
 
 #include <string>
 #include <mutex>
@@ -9,16 +8,16 @@
 #include "async/dispatch_queue.h"
 #include "assets/asset.h"
 
-namespace wage {
+namespace wage { namespace assets {
 
-  class AssetManager : public Service {
+  class Manager : public core::Service {
 
   public:
-    AssetManager() : Service("AssetManager"), queue("AssetLoad", 1) {
+    Manager() : Service("AssetManager"), queue("AssetLoad", 1) {
     }
 
     void start() {
-      Core::Instance->onUpdate([&](const Frame& frame) {
+      core::Core::Instance->onUpdate([&](const core::Frame& frame) {
         std::unique_lock<std::mutex> lock(mutex);
         for (auto asset : loaded) {
           asset->onLoad();
@@ -39,12 +38,10 @@ namespace wage {
     virtual void performLoad(Asset* asset) = 0;
 
   private:
-    DispatchQueue queue;
+    async::DispatchQueue queue;
 
     std::vector<Asset*> loaded;
 
     std::mutex mutex;
   };
-}
-
-#endif //ASSET_MANAGER_H
+} }

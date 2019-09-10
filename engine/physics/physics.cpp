@@ -4,18 +4,18 @@
 #include "physics/collider.h"
 #include "core/logger.h"
 
-namespace wage {
+namespace wage { namespace physics {
 
   Physics::Physics() : Service("Physics") {}
 
   Physics::~Physics() {}
 
   void Physics::start() {
-    Core::Instance->get<Messaging>()->listen<AddEntityMessage>(this);
-    Core::Instance->get<Messaging>()->listen<DestroyEntityMessage>(this);
+    core::Core::Instance->get<messaging::Messaging>()->listen<ecs::AddEntityMessage>(this);
+    core::Core::Instance->get<messaging::Messaging>()->listen<ecs::DestroyEntityMessage>(this);
   }
 
-  bool Physics::on(const AddEntityMessage& message) {
+  bool Physics::on(const ecs::AddEntityMessage& message) {
     auto entity = message.entity();
     if (
         (entity.has<RigidBody>()) || (entity.has<Collider>())) {
@@ -24,8 +24,9 @@ namespace wage {
     return false;
   }
 
-  bool Physics::on(const DestroyEntityMessage& message) {
+  bool Physics::on(const ecs::DestroyEntityMessage& message) {
     remove(message.entity());
     return false;
   }
-}
+
+} }

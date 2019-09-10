@@ -1,7 +1,6 @@
-#ifndef CORE_FRAME_H
-#define CORE_FRAME_H
+#pragma once
 
-namespace wage {
+namespace wage { namespace core {
 
   class Frame {
 
@@ -30,6 +29,5 @@ namespace wage {
 
     double _deltaTime;
   };
-}
 
-#endif // CORE_FRAME_H
+} }

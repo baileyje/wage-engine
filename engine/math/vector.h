@@ -1,12 +1,11 @@
-#ifndef MATH_VECTOR_H
-#define MATH_VECTOR_H
+#pragma once
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 
 #include "glm/ext.hpp"
 
-namespace wage {
+namespace wage { namespace math {
 
   class Vector2;
 
@@ -258,6 +257,5 @@ namespace wage {
   };
 
   typedef Vector3 Vector;
-}
 
-#endif //MATH_VECTOR_H
+} }

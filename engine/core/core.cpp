@@ -4,15 +4,16 @@
 #include <chrono>
 #include <thread>
 
-#include "new_ecs/system.h"
+#include "ecs/system.h"
 #include "core/logger.h"
 #include "memory/allocator.h"
+#include "render/renderer.h"
 
-namespace wage {
+namespace wage { namespace core {
 
   typedef std::chrono::high_resolution_clock::time_point TimePoint;
 
-  Core* Core::Instance = make<Core>();
+  Core* Core::Instance = memory::make<Core>();
 
   Core::Core() : running(false) {
     _frame._timeStep = 1.0 / 60.0;
@@ -25,6 +26,34 @@ namespace wage {
     // }
   }
 
+  void Core::startRenderLoop() {
+    while (running) {
+      render();
+    }
+  }
+
+  void Core::startUpdateLoop() {
+    updateThread = std::thread([&]() {
+      TimePoint lastTime = std::chrono::high_resolution_clock::now();
+      double accumulator = 0;
+      while (running) {
+        TimePoint currentTime = std::chrono::high_resolution_clock::now();
+        double delta = (std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime)).count();
+        _frame._time += delta;
+        lastTime = currentTime;
+        _frame._deltaTime = delta;
+        accumulator += delta;
+        update();
+        while (accumulator >= _frame.timeStep()) {
+          fixedUpdate();
+          accumulator -= _frame.timeStep();
+        }
+        get<render::Renderer>()->awaitNextQueue();
+        memory::Allocator::Temporary()->clear();
+      }
+    });
+  }
+
   void Core::start() {
     if (running) {
       return;
@@ -35,24 +64,8 @@ namespace wage {
       Logger::info("Starting ", service->name().c_str());
       service->start();
     }
-    TimePoint lastTime = std::chrono::high_resolution_clock::now();
-    double accumulator = 0;
-    while (running) {
-      TimePoint currentTime = std::chrono::high_resolution_clock::now();
-      double delta = (std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime)).count();
-      _frame._time += delta;
-      lastTime = currentTime;
-      _frame._deltaTime = delta;
-      accumulator += delta;
-      update();
-      while (accumulator >= _frame.timeStep()) {
-        fixedUpdate();
-        accumulator -= _frame.timeStep();
-      }
-      // Might need to sync/freeze game state here or something..
-      render();
-      Allocator::Temporary()->clear();
-    }
+    startUpdateLoop();
+    startRenderLoop();
   }
 
   void Core::processInput() {
@@ -100,4 +113,5 @@ namespace wage {
     Logger::info("Deinitializing WAGE Core.");
     // TODO: deinit Services
   }
-}
+
+} }

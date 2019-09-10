@@ -1,5 +1,4 @@
-#ifndef MEMORY_ALLOCATOR_H
-#define MEMORY_ALLOCATOR_H
+#pragma once
 
 #include <memory>
 #include <iostream>
@@ -7,7 +6,7 @@
 
 #include "core/logger.h"
 
-namespace wage {
+namespace wage { namespace memory {
 
   class Allocator {
 
@@ -19,7 +18,7 @@ namespace wage {
     static Allocator* Assets();
 
     Allocator(std::string name, size_t size) : name(name), size(size) {
-      Logger::debug("Acquiring ", size, " bytes of memory for allocator: ", name);
+      core::Logger::debug("Acquiring ", size, " bytes of memory for allocator: ", name);
       memory = malloc(size * sizeof(void*));
       base = memory;
       current = base;
@@ -36,11 +35,11 @@ namespace wage {
     }
 
     void* allocate(size_t size, size_t alignSize = 16) {
-      Logger::debug("Attempting to allocate ", size, " bytes of memory for allocator: ", name);
+      core::Logger::debug("Attempting to allocate ", size, " bytes of memory for allocator: ", name);
       if (std::align(alignSize, size, current, this->size)) {
         char* c = (char*)current; // Gross
         if (c + size > ((char*)base) + this->size) {
-          Logger::error("Failed to allocate. No free space.");
+          core::Logger::error("Failed to allocate. No free space.");
           return nullptr;
         }
         void* result = current;
@@ -75,6 +74,5 @@ namespace wage {
   T* makeTemp(Args... args) {
     return Allocator::Temporary()->create<T>(args...);
   }
-}
 
-#endif //MEMORY_ALLOCATOR_H
+} }

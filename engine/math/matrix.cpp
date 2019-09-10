@@ -1,6 +1,6 @@
 #include "math/matrix.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   Matrix Matrix::orthographic(float left, float right, float bottom, float top) {
     return Matrix(glm::ortho(left, right, bottom, top));
@@ -41,4 +41,5 @@ namespace wage {
 
   Matrix::Matrix(Quaternion quat) : wrapped(glm::toMat4(quat.glm())) {
   }
-}
+
+} }

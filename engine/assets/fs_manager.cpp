@@ -4,18 +4,14 @@
 
 #include "memory/allocator.h"
 
-namespace wage {
-
-  // void FsAssetManager::start(SystemContext* context)  {
-  //   // TODO: Pre-load/cache maybe??
-  // }
+namespace wage { namespace assets {
 
   std::string filePath(Asset::Key key) {
     return "/resources/" + key;
   }
 
-  void FsAssetManager::performLoad(Asset* asset) {
-    auto buffer = fileSystem->read(filePath(asset->key()), Allocator::Assets());
+  void FsManager::performLoad(Asset* asset) {
+    auto buffer = fileSystem->read(filePath(asset->key()), memory::Allocator::Assets());
     asset->set(std::move(buffer));
   }
-}
+} }

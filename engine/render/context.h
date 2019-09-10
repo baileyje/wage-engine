@@ -1,5 +1,4 @@
-#ifndef RENDER_CONTEXT_H
-#define RENDER_CONTEXT_H
+#pragma once
 
 #include <vector>
 
@@ -10,24 +9,24 @@
 
 #include "math/transform.h"
 
-#include "new_ecs/registry.h"
+#include "ecs/registry.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class RenderContext {
 
   public:
-    RenderContext(Entity cameraEntity, Camera* camera, Vector2 screenSize,
+    RenderContext(Entity cameraEntity, component::Camera* camera, math::Vector2 screenSize,
                   std::vector<Entity> dirLights, std::vector<Entity> pointLights, std::vector<Entity> spotlights)
         : _cameraEntity(cameraEntity), _camera(camera), _screenSize(screenSize),
           _dirLights(dirLights), _pointLights(pointLights), _spotlights(spotlights) {
-      auto camTransform = cameraEntity.get<Transform>();
+      auto camTransform = cameraEntity.get<math::Transform>();
       _screenProjection = camera->screenProjection(screenSize);
       _viewProjection = camera->viewProjection(camTransform.get());
       _cameraPosition = camTransform->position();
     }
 
-    inline Camera* camera() {
+    inline component::Camera* camera() {
       return _camera;
     }
 
@@ -35,19 +34,19 @@ namespace wage {
       return _cameraEntity;
     }
 
-    inline Vector2 screenSize() {
+    inline math::Vector2 screenSize() {
       return _screenSize;
     }
 
-    inline Matrix screenProjection() {
+    inline math::Matrix screenProjection() {
       return _screenProjection;
     }
 
-    inline Vector cameraPosition() {
+    inline math::Vector cameraPosition() {
       return _cameraPosition;
     }
 
-    inline Matrix viewProjection() {
+    inline math::Matrix viewProjection() {
       return _viewProjection;
     }
 
@@ -66,15 +65,15 @@ namespace wage {
   private:
     Entity _cameraEntity;
 
-    Camera* _camera;
+    component::Camera* _camera;
 
-    Vector2 _screenSize;
+    math::Vector2 _screenSize;
 
-    Matrix _screenProjection;
+    math::Matrix _screenProjection;
 
-    Vector _cameraPosition;
+    math::Vector _cameraPosition;
 
-    Matrix _viewProjection;
+    math::Matrix _viewProjection;
 
     std::vector<Entity> _dirLights;
 
@@ -82,6 +81,5 @@ namespace wage {
 
     std::vector<Entity> _spotlights;
   };
-}
 
-#endif //RENDER_CONTEXT_H
+} }

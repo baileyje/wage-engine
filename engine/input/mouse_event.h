@@ -1,23 +1,22 @@
-#ifndef INPUT_MOUSE_EVENT_H
-#define INPUT_MOUSE_EVENT_H
+#pragma once
 
 #include "math/vector.h"
 
-namespace wage {
+namespace wage { namespace input {
 
   class MouseEvent {
 
   public:
-    MouseEvent(Vector2 position) : _position(position) {
+    MouseEvent(math::Vector2 position) : _position(position) {
     }
 
-    inline Vector2 position() const {
+    inline math::Vector2 position() const {
       return _position;
     }
 
   protected:
-    Vector2 _position;
-  };
-}
+    math::Vector2 _position;
 
-#endif //INPUT_MOUSE_EVENT_H
+  };
+
+} }

@@ -1,5 +1,4 @@
-#ifndef RENDERER_TEXTURE_MANAGER_H
-#define RENDERER_TEXTURE_MANAGER_H
+#pragma once
 
 #include <unordered_map>
 
@@ -8,7 +7,7 @@
 
 #include "render-gl/texture.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlTextureManager {
 
@@ -16,22 +15,21 @@ namespace wage {
     GlTexture* load(Texture texture) {
       GlTexture* glTexture = cache[texture.id()];
       if (glTexture == nullptr) {
-        glTexture = make<GlTexture>(texture);
+        glTexture = memory::make<GlTexture>(texture);
         cache[texture.id()] = glTexture;
         _assetManager->load(glTexture);
       }
       return glTexture;
     }
 
-    inline void assetManager(AssetManager* assetManager) {
+    inline void assetManager(assets::Manager* assetManager) {
       _assetManager = assetManager;
     }
 
   private:
-    AssetManager* _assetManager;
+    assets::Manager* _assetManager;
 
     std::unordered_map<std::string, GlTexture*> cache;
   };
-}
 
-#endif //RENDERER_TEXTURE_MANAGER_H
+} }

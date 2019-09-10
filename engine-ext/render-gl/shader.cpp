@@ -4,7 +4,7 @@
 
 #include "core/logger.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   void GlShader::compile() {
     GL_FAIL_CHECK(_id = glCreateShader(shaderType));
@@ -20,11 +20,14 @@ namespace wage {
     if (infoLogLength > 0) {
       std::vector<char> errrorMessage(infoLogLength + 1);
       GL_FAIL_CHECK(glGetShaderInfoLog(_id, infoLogLength, NULL, &errrorMessage[0]));
-      Logger::error("Compile Error: ", &errrorMessage[0]);
+      core::Logger::error("Compile Error: ", &errrorMessage[0]);
     }
+    _compiled = true;
   }
 
   void GlShader::onLoad() {
-    compile();
+    // compile();
+    // TODO: Figure out compile..
   }
-}
+
+} }

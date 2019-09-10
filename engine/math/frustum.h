@@ -1,5 +1,4 @@
-#ifndef MATH_FRUSTRUM_H
-#define MATH_FRUSTRUM_H
+#pragma once
 
 #include "math/vector.h"
 #include "math/plane.h"
@@ -7,7 +6,7 @@
 #include "math/bounding_sphere.h"
 #include "math/matrix.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   class Frustum {
 
@@ -162,6 +161,5 @@ namespace wage {
 
     Plane planes[6];
   };
-}
 
-#endif //MATH_FRUSTRUM_H
+} }

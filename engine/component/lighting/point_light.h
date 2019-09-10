@@ -1,18 +1,17 @@
-#ifndef COMPONENT_POINT_LIGHT_H
-#define COMPONENT_POINT_LIGHT_H
+#pragma once
 
 #include "component/lighting/light.h"
 
-namespace wage {
+namespace wage { namespace component {
 
   class PointLight : public Light {
 
   public:
     PointLight()
-        : PointLight(Color(0.05f, 0.05f, 0.05f, 1), Color(0.8f, 0.8f, 0.8f, 1), Color::White, 1.0f, 0.09, 0.032) {
+        : PointLight(math::Color(0.05f, 0.05f, 0.05f, 1), math::Color(0.8f, 0.8f, 0.8f, 1), math::Color::White, 1.0f, 0.09, 0.032) {
     }
 
-    PointLight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic)
+    PointLight(math::Color ambient, math::Color diffuse, math::Color specular, float constant, float linear, float quadratic)
         : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic) {
     }
 
@@ -49,6 +48,5 @@ namespace wage {
 
     float _quadratic;
   };
-}
 
-#endif //COMPONENT_POINT_LIGHT_H
+} }

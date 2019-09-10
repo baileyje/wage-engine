@@ -1,11 +1,10 @@
-#ifndef RENDERABLE_H
-#define RENDERABLE_H
+#pragma once
 
 #include "math/vector.h"
 
 #include "render/context.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class Renderable {
 
@@ -16,12 +15,11 @@ namespace wage {
 
     virtual void render(RenderContext* context) = 0;
 
-    virtual Vector position() = 0;
+    virtual math::Vector position() = 0;
 
-    virtual BoundingBox boundingBox() = 0;
+    virtual math::BoundingBox boundingBox() = 0;
 
-    virtual BoundingSphere boundingSphere() = 0;
+    virtual math::BoundingSphere boundingSphere() = 0;
   };
-}
 
-#endif //RENDERABLE_H
+} }

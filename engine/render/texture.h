@@ -1,9 +1,8 @@
-#ifndef ENTITY_TEXTURE_H
-#define ENTITY_TEXTURE_H
+#pragma once
 
 #include <string>
 
-namespace wage {
+namespace wage { namespace render {
 
   // TODO:  De-jank this
   class Texture {
@@ -30,6 +29,5 @@ namespace wage {
   private:
     std::string _path;
   };
-}
 
-#endif //ENTITY_TEXTURE_H
+} }

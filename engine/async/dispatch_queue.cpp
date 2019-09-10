@@ -1,7 +1,7 @@
 
 #include "async/dispatch_queue.h"
 
-namespace wage {
+namespace wage { namespace async {
 
   DispatchQueue::DispatchQueue(std::string name, size_t threadCount) : _name(name), _threads(threadCount) {
     for (size_t i = 0; i < _threads.size(); i++) {
@@ -67,4 +67,4 @@ namespace wage {
       }
     } while (!_quit);
   }
-}
+} }

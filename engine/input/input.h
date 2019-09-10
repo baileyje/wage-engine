@@ -1,5 +1,4 @@
-#ifndef INPUT_H
-#define INPUT_H
+#pragma once
 
 #include <unordered_set>
 
@@ -10,9 +9,9 @@
 
 #include "input/key.h"
 
-namespace wage {
+namespace wage { namespace input {
 
-  class Input : public Service {
+  class Input : public core::Service {
 
   public:
     Input() : Service("Input"), window(nullptr), messaging(nullptr) {}
@@ -23,15 +22,14 @@ namespace wage {
 
     virtual bool isPressed(Key key) = 0;
 
-    virtual Vector2 mousePosition() = 0;
+    virtual math::Vector2 mousePosition() = 0;
 
   protected:
-    Window* window;
+    platform::Window* window;
 
     std::unordered_set<int> frameKeys;
 
-    Messaging* messaging;
+    messaging::Messaging* messaging;
   };
-}
 
-#endif //INPU T_H
+} }

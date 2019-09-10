@@ -1,17 +1,16 @@
-#ifndef PHYSICS_BULLET_H
-#define PHYSICS_BULLET_H
+#pragma once
 
 #include <btBulletDynamicsCommon.h>
 
 #include <vector>
 
-#include "new_ecs/system.h"
+#include "ecs/system.h"
 #include "messaging/messaging.h"
 #include "physics/physics.h"
 
 #include "physics-bullet/entity.h"
 
-namespace wage {
+namespace wage { namespace physics {
 
   class BulletPhysics : public Physics {
 
@@ -22,7 +21,7 @@ namespace wage {
 
     void start() override;
 
-    void fixedUpdate(const Frame& frame);
+    void fixedUpdate(const core::Frame& frame);
 
     void stop() override;
 
@@ -43,6 +42,5 @@ namespace wage {
 
     std::vector<PhysicsEntity*> entities;
   };
-}
 
-#endif // PHYSICS_BULLET_H
+} }

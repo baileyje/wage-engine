@@ -1,5 +1,4 @@
-#ifndef SPRITE_RENDERABLE_H
-#define SPRITE_RENDERABLE_H
+#pragma once
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -8,34 +7,34 @@
 
 #include "render-gl/material.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlSpriteRenderable : public Renderable {
 
   public:
-    GlSpriteRenderable(GlTextureManager* textureManager, Vector2 position, Vector2 size, Color color, Texture texture)
+    GlSpriteRenderable(GlTextureManager* textureManager, math::Vector2 position, math::Vector2 size, math::Color color, Texture texture)
         : _textureManager(textureManager), _position(position), _size(size), _color(color), _texture(texture) {}
 
-    virtual Vector position() {
+    virtual math::Vector position() {
       return _position;
     }
 
-    virtual Vector size() const {
+    virtual math::Vector size() const {
       return _size;
     }
 
-    virtual BoundingBox boundingBox() {
-      return BoundingBox(position(), Vector(1000, 1000, 1000));
+    virtual math::BoundingBox boundingBox() {
+      return math::BoundingBox(position(), math::Vector(1000, 1000, 1000));
     }
 
-    virtual BoundingSphere boundingSphere() {
+    virtual math::BoundingSphere boundingSphere() {
       auto box = boundingBox();
       float radius = sqrt(box.halfDim.x * box.halfDim.x + box.halfDim.y * box.halfDim.y + box.halfDim.z * box.halfDim.z);
-      return BoundingSphere(box.position, radius);
+      return math::BoundingSphere(box.position, radius);
     }
 
     virtual void render(RenderContext* context) {
-      Matrix projection = Matrix::orthographic(0.0f, context->screenSize().x, 0.0f, context->screenSize().y);
+      math::Matrix projection = math::Matrix::orthographic(0.0f, context->screenSize().x, 0.0f, context->screenSize().y);
 
       // Configure VAO/VBO
       GLuint VBO, VAO;
@@ -87,9 +86,9 @@ namespace wage {
       }
       program->bind();
 
-      Matrix translation = Matrix(1).translate(position());
-      Matrix scale = Matrix(1).scale(Vector(_size.x, _size.y, 1));
-      Matrix rotate = Matrix(1);
+      math::Matrix translation = math::Matrix(1).translate(position());
+      math::Matrix scale = math::Matrix(1).scale(math::Vector(_size.x, _size.y, 1));
+      math::Matrix rotate = math::Matrix(1);
       auto model = translation * rotate * scale;
 
       glUniformMatrix4fv(glGetUniformLocation(program->id(), "projection"), 1, GL_FALSE, glm::value_ptr(projection.glm()));
@@ -108,14 +107,13 @@ namespace wage {
   private:
     GlTextureManager* _textureManager;
 
-    Vector2 _position;
+    math::Vector2 _position;
 
-    Vector2 _size;
+    math::Vector2 _size;
 
-    Color _color;
+    math::Color _color;
 
     Texture _texture;
   };
-}
 
-#endif // SPRITE_RENDERABLE_H
+} }

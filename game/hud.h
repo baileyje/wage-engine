@@ -6,12 +6,12 @@
 using namespace wage;
 
 
-class FpsDisplay : public System {
+class FpsDisplay : public ecs::System {
 
 public:
   FpsDisplay(UiLabel* label) : System(), label(label), lastTime(0), frames(0) {}
 
-  void update(const SystemContext& context) {
+  void update(const ecs::SystemContext& context) {
     double currentTime = context.time();
     frames++;
     if (currentTime - lastTime >= 1.0) {
@@ -32,14 +32,14 @@ private:
   int frames;
 };
 
-class PosDisplay : public System {
+class PosDisplay : public ecs::System {
 
 public:
   PosDisplay(UiLabel* label) : System(), label(label) {}
 
-  void update(const SystemContext& context) {
-    auto player = *Core::Instance->get<EntityManager>()->with<Player>().begin();
-    auto pos = player.get<Transform>()->position();
+  void update(const ecs::SystemContext& context) {
+    auto player = *core::Core::Instance->get<ecs::EntityManager>()->with<Player>().begin();
+    auto pos = player.get<math::Transform>()->position();
     std::ostringstream os;
     os << "POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
     label->set(os.str());
@@ -49,18 +49,18 @@ private:
   UiLabel* label;
 };
 
-void setupHud(EntityManager* entityManager, SystemManager* systemManager) {
-  Font font("fonts/ARCADE.TTF", 30);
+void setupHud(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
+  render::Font font("fonts/ARCADE.TTF", 30);
   auto fpsLabelEntity = entityManager->create();
-  auto fpsLabel = fpsLabelEntity.assign<UiLabel>(UiFrame(Vector2(20, 0), Vector2(300, 100)), "FPS: ", font, Color::White);
+  auto fpsLabel = fpsLabelEntity.assign<UiLabel>(UiFrame(Vector2(20, 0), Vector2(300, 100)), "FPS: ", font, math::Color::White);
   systemManager->create<FpsDisplay>(fpsLabel.get());
 
   auto posLabelEntity = entityManager->create();
-  auto posLabel = posLabelEntity.assign<UiLabel>(UiFrame(Vector2(200, 0), Vector2(300, 100)), "POS: ", font, Color::White);
+  auto posLabel = posLabelEntity.assign<UiLabel>(UiFrame(Vector2(200, 0), Vector2(300, 100)), "POS: ", font, math::Color::White);
   systemManager->create<PosDisplay>(posLabel.get());
 
   // auto buttonEntity = entityManager->create();
-  // buttonEntity.assign<UiButton>(UiFrame(Vector2(600, 0), Vector2(300, 100)), Color::Clear, 
+  // buttonEntity.assign<UiButton>(UiFrame(Vector2(600, 0), Vector2(300, 100)), math::Color::Clear, 
   //   Texture("textures/button.png"),
   //   Texture("textures/default.png")
   // );

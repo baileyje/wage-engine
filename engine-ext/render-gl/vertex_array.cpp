@@ -2,7 +2,7 @@
 
 #include "render-gl/util.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   VertexArray::VertexArray() : index(0) {
     GL_FAIL_CHECK(glGenVertexArrays(1, &id));
@@ -33,4 +33,5 @@ namespace wage {
   void VertexArray::unbind() const {
     GL_FAIL_CHECK(glBindVertexArray(0));
   }
-}
+
+} }

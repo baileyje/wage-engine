@@ -1,9 +1,8 @@
-#ifndef COMPONENT_UI_FONT_H
-#define COMPONENT_UI_FONT_H
+#pragma once
 
 #include <string>
 
-namespace wage {
+namespace wage { namespace render {
 
   class Font {
 
@@ -26,6 +25,5 @@ namespace wage {
 
     int _size;
   };
-}
 
-#endif //COMPONENT_UI_FONT_H
+} }

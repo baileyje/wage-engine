@@ -1,16 +1,15 @@
-#ifndef PHYSICS_ENTITY_H
-#define PHYSICS_ENTITY_H
+#pragma once
 
 #include <btBulletDynamicsCommon.h>
 
-#include "new_ecs/registry.h"
-#include "new_ecs/entity.h"
+#include "ecs/registry.h"
+#include "ecs/entity.h"
 #include "physics/rigid_body.h"
 #include "physics/collider.h"
 
 #include "physics-bullet/util.h"
 
-namespace wage {
+namespace wage { namespace physics {
 
   class PhysicsEntity {
 
@@ -71,6 +70,5 @@ namespace wage {
 
     btCollisionObject* _object;
   };
-}
 
-#endif //PHYSICS_ENTITY_H
+} }

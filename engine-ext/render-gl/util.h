@@ -1,5 +1,4 @@
-#ifndef RENDER_UTIL_H
-#define RENDER_UTIL_H
+#pragma once
 
 #include <glad/glad.h>
 #include <iostream>
@@ -9,7 +8,7 @@
 #include "math/quaternion.h"
 #include "math/color.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   void checkGLError(const char* command);
 
@@ -19,18 +18,17 @@ namespace wage {
     checkGLError(#cmd);    \
   } while (0)
 
-  inline Vector vec3From(Color* color) {
-    return Vector(color->r, color->g, color->b);
+  inline math::Vector vec3From(math::Color* color) {
+    return math::Vector(color->r, color->g, color->b);
   }
 
-  inline Vector directionFromEulers(Vector vector) {
+  inline math::Vector directionFromEulers(math::Vector vector) {
     float yaw = vector.x;
     float pitch = vector.y;
-    return Vector(
+    return math::Vector(
         glm::cos(yaw) * glm::cos(pitch),
         glm::sin(yaw) * glm::cos(pitch),
         glm::sin(pitch));
   }
-}
 
-#endif //RENDER_UTIL_H
+} }

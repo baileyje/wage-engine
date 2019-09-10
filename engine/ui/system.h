@@ -1,6 +1,6 @@
 
-#include "new_ecs/system.h"
-#include "new_ecs/entity_manager.h"
+#include "ecs/system.h"
+#include "ecs/entity_manager.h"
 #include "render/renderer.h"
 #include "ui.h"
 #include "input/mouse_button_event.h"
@@ -8,17 +8,17 @@
 
 namespace wage {
 
-  class UiSystem : public System, MessageListener<MouseButtonEvent> {
+  class UiSystem : public ecs::System, messaging::MessageListener<input::MouseButtonEvent> {
 
   public:
     UiSystem() : System() {}
 
-    void start(const SystemContext& context) {
-      Core::Instance->get<Messaging>()->listen<MouseButtonEvent>(this);
+    void start(const ecs::SystemContext& context) {
+      core::Core::Instance->get<messaging::Messaging>()->listen<input::MouseButtonEvent>(this);
     }
 
-    void update(const SystemContext& context) {
-      EntityManager* manager = Core::Instance->get<EntityManager>();
+    void update(const ecs::SystemContext& context) {
+      auto manager = core::Core::Instance->get<ecs::EntityManager>();
       for (auto entity : manager->with<UiLabel>()) {
         render(entity.get<UiLabel>().get());
       }
@@ -28,28 +28,28 @@ namespace wage {
     }
 
     void render(UiLabel* label) {
-      Core::Instance->get<Renderer>()->renderText(
+      core::Core::Instance->get<render::Renderer>()->renderText(
           label->frame().position(), label->text(), label->font(), label->color());
     }
 
     void render(UiButton* button) {
       auto buttonTexture = button->state() == UiButton::State::pressed ? button->pressedTexture() : button->texture();
-      Core::Instance->get<Renderer>()->renderSprite(
+      core::Core::Instance->get<render::Renderer>()->renderSprite(
         button->frame().position(), button->frame().size(), button->color(), buttonTexture
       );
     }
 
-    bool on(const MouseButtonEvent& event) {
+    bool on(const input::MouseButtonEvent& event) {
       // Only check button one for ui buttons
-      if (event.button() != MouseButton::One) {
+      if (event.button() != input::MouseButton::One) {
         return false;
       }
-      EntityManager* manager = Core::Instance->get<EntityManager>();
-      auto window = Core::Instance->get<Platform>()->window();
+      auto manager = core::Core::Instance->get<ecs::EntityManager>();
+      auto window = core::Core::Instance->get<platform::Platform>()->window();
       for (auto entity : manager->with<UiButton>()) {
         auto button = entity.get<UiButton>();
         auto frame = button->frame();
-        auto pos = Vector2(
+        auto pos = math::Vector2(
           event.position().x * window->scale(),
           window->height() - event.position().y * window->scale()
         );
@@ -57,7 +57,7 @@ namespace wage {
             pos.x >= frame.position().x && pos.x <= frame.position().x + frame.size().x &&
             pos.y >= frame.position().y && pos.y <= frame.position().y + frame.size().y
         ) {
-          if (event.type() == MouseButtonEvent::Type::press) {
+          if (event.type() == input::MouseButtonEvent::Type::press) {
             button->state(UiButton::State::pressed);
           } else {
             button->state(UiButton::State::released);

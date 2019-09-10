@@ -1,7 +1,6 @@
-#ifndef RENDERER_INDEX_BUFFER_H
-#define RENDERER_INDEX_BUFFER_H
+#pragma once
 
-namespace wage {
+namespace wage { namespace render {
 
   class IndexBuffer {
 
@@ -25,6 +24,5 @@ namespace wage {
 
     unsigned int id;
   };
-}
 
-#endif //RENDERER_INDEX_BUFFER_H
+} }

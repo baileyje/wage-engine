@@ -1,12 +1,11 @@
-#ifndef MATH_QUATERNION_H
-#define MATH_QUATERNION_H
+#pragma once
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
 #include "math/vector.h"
 
-namespace wage {
+namespace wage { namespace math {
 
   class Quaternion {
 
@@ -45,6 +44,5 @@ namespace wage {
   };
 
   Vector operator*(Quaternion quat, const Vector& vector);
-}
 
-#endif //MATH_QUATERNION_H
+} }

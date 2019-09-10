@@ -1,5 +1,4 @@
-#ifndef MESH_RENDERABLE_H
-#define MESH_RENDERABLE_H
+#pragma once
 
 #include <sstream>
 #include <cmath>
@@ -19,41 +18,41 @@
 
 #include "render-gl/material.h"
 
-namespace wage {
+namespace wage { namespace render {
 
   class GlMeshRenderable : public Renderable {
 
   public:
-    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, Transform* transform, Mesh* mesh, Material* material)
+    GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, math::Transform transform, Mesh* mesh, Material* material)
         : _vaoManager(vaoManager), _textureManager(textureManager), transform(transform), mesh(mesh), material(material) {}
 
     inline VaoManager* vaoManager() {
       return _vaoManager;
     }
 
-    virtual Vector position() {
-      return transform->position();
+    virtual math::Vector position() {
+      return transform.position();
     }
 
-    virtual BoundingBox boundingBox() {
-      Vector maxDims = mesh->maxDim();
-      Vector scale = transform->scale();
-      Vector scaledMaxHalfDim(
+    virtual math::BoundingBox boundingBox() {
+      math::Vector maxDims = mesh->maxDim();
+      math::Vector scale = transform.scale();
+      math::Vector scaledMaxHalfDim(
           maxDims.x * scale.x,
           maxDims.y * scale.y,
           maxDims.z * scale.z);
-      return BoundingBox(position(), scaledMaxHalfDim);
+      return math::BoundingBox(position(), scaledMaxHalfDim);
     }
 
-    virtual BoundingSphere boundingSphere() {
+    virtual math::BoundingSphere boundingSphere() {
       auto box = boundingBox();
       float radius = sqrt(box.halfDim.x * box.halfDim.x + box.halfDim.y * box.halfDim.y + box.halfDim.z * box.halfDim.z);
-      return BoundingSphere(box.position, radius);
+      return math::BoundingSphere(box.position, radius);
     }
 
     void setupMaterial(GlMaterial& glMaterial, RenderContext* context) {
       glMaterial.bind();
-      glMaterial.setMat4("model", transform->worldPorjection());
+      glMaterial.setMat4("model", transform.worldPorjection());
       glMaterial.setMat4("view", context->viewProjection());
       glMaterial.setMat4("projection", context->screenProjection());
       glMaterial.setVec3("viewPos", context->cameraPosition());
@@ -61,23 +60,34 @@ namespace wage {
       glMaterial.setInt("numDirLights", context->dirLights().size());
       int idx = 0;
       for (auto lightEntity : context->dirLights()) {
-        auto light = lightEntity.get<DirectionalLight>();
+        auto light = lightEntity.get<component::DirectionalLight>();
         std::stringstream base;
         base << "dirLights[" << idx++ << "]";
-        Vector cameraEulers = lightEntity.get<Transform>()->rotation().eulerAngles();
+        auto cameraEulers = lightEntity.get<math::Transform>()->rotation().eulerAngles();
         glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
         glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
         glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
         glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
       }
+      // TEMP: Remove when ligting data is clean for render
+      glMaterial.setInt("numDirLights", 2);
+      glMaterial.setVec3("dirLights[0].direction", directionFromEulers(math::Vector(0, -1, 0)));
+      glMaterial.setVec3("dirLights[0].ambient", math::Vector(0.4, 0.4, 0.4));
+      glMaterial.setVec3("dirLights[0].diffuse", math::Vector(0.7, 0.7, 0.7));
+      glMaterial.setVec3("dirLights[0].specular", math::Vector(0.5f, 0.5f, 0.5f));
+
+      glMaterial.setVec3("dirLights[1].direction", directionFromEulers(math::Vector(0, 1, 0)));
+      glMaterial.setVec3("dirLights[1].ambient", math::Vector(0.4, 0.4, 0.4));
+      glMaterial.setVec3("dirLights[1].diffuse", math::Vector(0.7, 0.7, 0.9));
+      glMaterial.setVec3("dirLights[1].specular", math::Vector(0.5f, 0.5f, 0.5f));
 
       glMaterial.setInt("numPointLights", context->pointLights().size());
       idx = 0;
       for (auto lightEntity : context->pointLights()) {
-        auto light = lightEntity.get<PointLight>();
+        auto light = lightEntity.get<component::PointLight>();
         std::stringstream base;
         base << "pointLights[" << idx++ << "]";
-        glMaterial.setVec3(base.str() + ".position", lightEntity.get<Transform>()->position());
+        glMaterial.setVec3(base.str() + ".position", lightEntity.get<math::Transform>()->position());
         glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
         glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
         glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
@@ -89,11 +99,11 @@ namespace wage {
       glMaterial.setInt("numSpotLights", context->spotlights().size());
       idx = 0;
       for (auto lightEntity : context->spotlights()) {
-        auto light = lightEntity.get<Spotlight>();
+        auto light = lightEntity.get<component::Spotlight>();
         std::stringstream base;
         base << "spotLights[" << idx++ << "]";
-        glMaterial.setVec3(base.str() + ".position", lightEntity.get<Transform>()->position());
-        Vector cameraEulers = lightEntity.get<Transform>()->rotation().eulerAngles();
+        glMaterial.setVec3(base.str() + ".position", lightEntity.get<math::Transform>()->position());
+        auto cameraEulers = lightEntity.get<math::Transform>()->rotation().eulerAngles();
         glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
         glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
         glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
@@ -136,12 +146,11 @@ namespace wage {
 
     GlTextureManager* _textureManager;
 
-    Transform* transform;
+    math::Transform transform;
 
     Mesh* mesh;
 
     Material* material;
   };
-}
 
-#endif //MESH_RENDERABLE_H
+} }

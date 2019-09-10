@@ -1,9 +1,8 @@
-#ifndef ENTITY_ORTHOGRAPHIC_CAMERA_H
-#define ENTITY_ORTHOGRAPHIC_CAMERA_H
+#pragma once
 
 #include "component/camera/camera.h"
 
-namespace wage {
+namespace wage { namespace component {
 
   class OrthographicCamera : public Camera {
 
@@ -63,15 +62,15 @@ namespace wage {
       _farClip = farClip;
     }
 
-    inline Matrix screenProjection(Vector2 screenSize) {
-      return Matrix::orthographic(
+    inline math::Matrix screenProjection(math::Vector2 screenSize) {
+      return math::Matrix::orthographic(
           left(), right(),
           top(), bottom(),
           nearClip(), farClip());
     }
 
-    inline Frustum frustum(Vector2 screenSize, Transform* cameraTransform) {
-      Frustum returnFrustum;
+    inline math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) {
+      math::Frustum returnFrustum;
       return returnFrustum;
     }
 
@@ -88,6 +87,5 @@ namespace wage {
 
     float _farClip;
   };
-}
 
-#endif //ENTITY_ORTHOGRAPHIC_CAMERA_H
+} }
