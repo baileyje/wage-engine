@@ -1,3 +1,4 @@
+#pragma once
 
 #include "ecs/system.h"
 #include "ecs/entity_manager.h"
@@ -6,7 +7,7 @@
 #include "input/mouse_button_event.h"
 #include "platform/platform.h"
 
-namespace wage {
+namespace wage { namespace ui {
 
   class UiSystem : public ecs::System, messaging::MessageListener<input::MouseButtonEvent> {
 
@@ -69,4 +70,5 @@ namespace wage {
       return false;
     }
   };
-}
+
+} }

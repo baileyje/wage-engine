@@ -33,7 +33,7 @@ void setupServices(core::Core* core, std::string path) {
 }
 
 void setupCoreSystems(ecs::SystemManager* systemManager) {
-  systemManager->create<UiSystem>();
+  systemManager->create<ui::UiSystem>();
   systemManager->create<render::MeshRenderer>();
   systemManager->create<EnemyLauncher>();
   systemManager->create<EnemyMovement>();

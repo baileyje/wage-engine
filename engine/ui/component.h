@@ -1,9 +1,8 @@
-#ifndef UI_COMPONENT_H
-#define UI_COMPONENT_H
+#pragma once
 
 #include "ui/frame.h"
 
-namespace wage {
+namespace wage { namespace ui {
 
   class UiComponent {
 
@@ -26,6 +25,5 @@ namespace wage {
   private:
     UiFrame _frame;
   };
-}
 
-#endif // UI_COMPONENT_H
+} }

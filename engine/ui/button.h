@@ -1,5 +1,4 @@
-#ifndef UI_BUTTON_H
-#define UI_BUTTON_H
+#pragma once
 
 #include <string>
 
@@ -8,7 +7,7 @@
 #include "core/core.h"
 #include "render/renderer.h"
 
-namespace wage {
+namespace wage { namespace ui {
 
   class UiButton : public UiComponent {
 
@@ -81,6 +80,5 @@ namespace wage {
 
     State _state = State::released;
   };
-}
 
-#endif //UI_BUTTON_H
+} }

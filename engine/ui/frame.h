@@ -1,9 +1,8 @@
-#ifndef COMPONENT_UI_FRAME_H
-#define COMPONENT_UI_FRAME_H
+#pragma once
 
 #include "math/vector.h"
 
-namespace wage {
+namespace wage { namespace ui {
 
   class UiFrame {
 
@@ -35,6 +34,5 @@ namespace wage {
 
     math::Vector2 _size;
   };
-}
 
-#endif //COMPONENT_UI_FRAME_H
+} }

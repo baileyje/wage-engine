@@ -5,11 +5,10 @@
 
 using namespace wage;
 
-
 class FpsDisplay : public ecs::System {
 
 public:
-  FpsDisplay(UiLabel* label) : System(), label(label), lastTime(0), frames(0) {}
+  FpsDisplay(ui::UiLabel* label) : System(), label(label), lastTime(0), frames(0) {}
 
   void update(const ecs::SystemContext& context) {
     double currentTime = context.time();
@@ -25,17 +24,19 @@ public:
   }
 
 private:
-  UiLabel* label;
+
+  ui::UiLabel* label;
 
   double lastTime;
 
   int frames;
+
 };
 
 class PosDisplay : public ecs::System {
 
 public:
-  PosDisplay(UiLabel* label) : System(), label(label) {}
+  PosDisplay(ui::UiLabel* label) : System(), label(label) {}
 
   void update(const ecs::SystemContext& context) {
     auto player = *core::Core::Instance->get<ecs::EntityManager>()->with<Player>().begin();
@@ -46,17 +47,19 @@ public:
   }
 
 private:
-  UiLabel* label;
+
+  ui::UiLabel* label;
+
 };
 
 void setupHud(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
   render::Font font("fonts/ARCADE.TTF", 30);
   auto fpsLabelEntity = entityManager->create();
-  auto fpsLabel = fpsLabelEntity.assign<UiLabel>(UiFrame(Vector2(20, 0), Vector2(300, 100)), "FPS: ", font, math::Color::White);
+  auto fpsLabel = fpsLabelEntity.assign<ui::UiLabel>(ui::UiFrame(Vector2(20, 0), Vector2(300, 100)), "FPS: ", font, math::Color::White);
   systemManager->create<FpsDisplay>(fpsLabel.get());
 
   auto posLabelEntity = entityManager->create();
-  auto posLabel = posLabelEntity.assign<UiLabel>(UiFrame(Vector2(200, 0), Vector2(300, 100)), "POS: ", font, math::Color::White);
+  auto posLabel = posLabelEntity.assign<ui::UiLabel>(ui::UiFrame(Vector2(200, 0), Vector2(300, 100)), "POS: ", font, math::Color::White);
   systemManager->create<PosDisplay>(posLabel.get());
 
   // auto buttonEntity = entityManager->create();

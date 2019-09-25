@@ -11,9 +11,9 @@ namespace wage { namespace core {
 
     virtual ~Service(){};
 
-    virtual void start(){};
+    virtual void start() {};
 
-    virtual void stop(){};
+    virtual void stop() {};
 
     virtual std::string name() const { return _name; };
 

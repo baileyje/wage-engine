@@ -1,5 +1,4 @@
-#ifndef COMPONENT_UI_LABEL_H
-#define COMPONENT_UI_LABEL_H
+#pragma once
 
 #include <string>
 
@@ -8,7 +7,7 @@
 #include "core/core.h"
 #include "render/renderer.h"
 
-namespace wage {
+namespace wage { namespace ui {
 
   class UiLabel : public UiComponent {
 
@@ -56,6 +55,5 @@ namespace wage {
 
     math::Color _color;
   };
-}
 
-#endif //COMPONENT_UI_LABEL_H
+} }
