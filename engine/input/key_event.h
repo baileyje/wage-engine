@@ -19,15 +19,15 @@ namespace wage { namespace input {
     KeyEvent(Key key, KeyEventType type, int modifiers) : _key(key), _type(type), _modifiers(modifiers) {
     }
 
-    inline Key key() {
+    inline Key key() const {
       return _key;
     }
 
-    inline KeyEventType type() {
+    inline KeyEventType type() const {
       return _type;
     }
 
-    inline int modifiers() {
+    inline int modifiers() const {
       return _modifiers;
     }
 

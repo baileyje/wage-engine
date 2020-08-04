@@ -14,7 +14,7 @@ namespace wage { namespace component {
         : Camera(CameraType::orthographic), _left(left), _right(right), _top(top), _bottom(bottom), _nearClip(nearClip), _farClip(farClip) {
     }
 
-    inline float left() {
+    inline float left() const {
       return _left;
     }
 
@@ -22,7 +22,7 @@ namespace wage { namespace component {
       _left = left;
     }
 
-    inline float right() {
+    inline float right() const {
       return _right;
     }
 
@@ -30,7 +30,7 @@ namespace wage { namespace component {
       _right = right;
     }
 
-    inline float top() {
+    inline float top() const {
       return _top;
     }
 
@@ -38,7 +38,7 @@ namespace wage { namespace component {
       _top = top;
     }
 
-    inline float bottom() {
+    inline float bottom() const {
       return _bottom;
     }
 
@@ -46,7 +46,7 @@ namespace wage { namespace component {
       _bottom = bottom;
     }
 
-    inline float nearClip() {
+    inline float nearClip() const {
       return _nearClip;
     }
 
@@ -54,7 +54,7 @@ namespace wage { namespace component {
       _nearClip = nearClip;
     }
 
-    inline float farClip() {
+    inline float farClip() const {
       return _farClip;
     }
 
@@ -62,14 +62,14 @@ namespace wage { namespace component {
       _farClip = farClip;
     }
 
-    inline math::Matrix screenProjection(math::Vector2 screenSize) {
+    inline math::Matrix screenProjection(math::Vector2 screenSize) const {
       return math::Matrix::orthographic(
           left(), right(),
           top(), bottom(),
           nearClip(), farClip());
     }
 
-    inline math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) {
+    inline math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) const {
       math::Frustum returnFrustum;
       return returnFrustum;
     }

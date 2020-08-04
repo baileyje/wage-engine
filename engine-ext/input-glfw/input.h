@@ -21,8 +21,8 @@ namespace wage { namespace input {
 
     void start() override;
 
-    bool isPressed(Key key) override;
+    bool isPressed(Key key) const override;
 
-    math::Vector2 mousePosition() override;
+    math::Vector2 mousePosition() const override;
   };
 } }

@@ -18,8 +18,8 @@ namespace wage { namespace render {
     checkGLError(#cmd);    \
   } while (0)
 
-  inline math::Vector vec3From(math::Color* color) {
-    return math::Vector(color->r, color->g, color->b);
+  inline math::Vector vec3From(const math::Color& color) {
+    return math::Vector(color.r, color.g, color.b);
   }
 
   inline math::Vector directionFromEulers(math::Vector vector) {

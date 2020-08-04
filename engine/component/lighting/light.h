@@ -13,24 +13,24 @@ namespace wage { namespace component {
 
     ~Light() {}
 
-    math::Color* ambient() {
-      return &_ambient;
+    math::Color ambient() const {
+      return _ambient;
     }
 
     inline void ambient(math::Color ambient) {
       _ambient = ambient;
     }
 
-    inline math::Color* diffuse() {
-      return &_diffuse;
+    inline math::Color diffuse() const {
+      return _diffuse;
     }
 
     inline void diffuse(math::Color diffuse) {
       _diffuse = diffuse;
     }
 
-    inline math::Color* specular() {
-      return &_specular;
+    inline math::Color specular() const {
+      return _specular;
     }
 
     inline void specular(math::Color specular) {

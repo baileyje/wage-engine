@@ -23,9 +23,9 @@ namespace wage { namespace component {
       return _type;
     }
 
-    virtual math::Matrix screenProjection(math::Vector2 screenSize) = 0;
+    virtual math::Matrix screenProjection(math::Vector2 screenSize) const = 0;
 
-    math::Matrix viewProjection(math::Transform* trans) {
+    math::Matrix viewProjection(math::Transform* trans) const {
       math::Vector camPos = trans->position();
       math::Quaternion rotation = trans->rotation();
       math::Vector camFront = rotation * math::Vector::Forward;
@@ -33,7 +33,7 @@ namespace wage { namespace component {
       return math::Matrix::lookAt(camPos, camPos + camFront, camUp);
     }
 
-    virtual math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) = 0;
+    virtual math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) const = 0;
 
   private:
     CameraType _type;

@@ -24,11 +24,11 @@ namespace wage { namespace core {
     LogLevel(int severity, std::string name, int colorCode) : _severity(severity), _name(name), _colorCode(colorCode) {
     }
 
-    inline int severity() { return _severity; }
+    inline int severity() const { return _severity; }
 
-    inline std::string name() { return _name; }
+    inline std::string name() const { return _name; }
 
-    inline int colorCode() { return _colorCode; }
+    inline int colorCode() const { return _colorCode; }
 
   private:
     int _severity;

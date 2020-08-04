@@ -1,5 +1,15 @@
 
 
+toolchain(
+    name = "prebuilt_cmake_toolchain",
+    exec_compatible_with = [
+        "@bazel_tools//platforms:osx",
+        "@bazel_tools//platforms:x86_64",
+    ],
+    toolchain = "@rules_foreign_cc//tools/build_defs/native_tools:preinstalled_cmake",
+    toolchain_type = "@rules_foreign_cc//tools/build_defs:cmake_toolchain",
+)
+
 cc_library(
 	name = "wage_lib",
 	srcs = glob(["**/*.cpp"], exclude=["wage.cpp"]),
@@ -21,7 +31,7 @@ cc_binary(
     "@engine_ext//physics-bullet",
     ":wage_lib"
   ],
-  linkopts = ["-framework Cocoa -framework OpenGL"],
+  linkopts = ["-framework Cocoa -framework OpenGL -framework IOKit"],
   visibility = ["//visibility:public"]
 )
 
@@ -39,7 +49,7 @@ cc_binary(
   deps = [
     "@engine",
   ],
-  linkopts = ["-framework Cocoa -framework OpenGL"],
+  linkopts = ["-framework Cocoa -framework OpenGL -framework IOKit"],
   visibility = ["//visibility:public"]
 )
 

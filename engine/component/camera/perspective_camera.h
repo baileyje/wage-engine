@@ -14,7 +14,7 @@ namespace wage { namespace component {
         : Camera(CameraType::perspective), _fov(fov), _nearClip(nearClip), _farClip(farClip) {
     }
 
-    inline float fov() {
+    inline float fov() const {
       return _fov;
     }
 
@@ -22,7 +22,7 @@ namespace wage { namespace component {
       _fov = fov;
     }
 
-    inline float nearClip() {
+    inline float nearClip() const {
       return _nearClip;
     }
 
@@ -30,7 +30,7 @@ namespace wage { namespace component {
       _nearClip = nearClip;
     }
 
-    inline float farClip() {
+    inline float farClip() const {
       return _farClip;
     }
 
@@ -38,11 +38,11 @@ namespace wage { namespace component {
       _farClip = farClip;
     }
 
-    inline math::Matrix screenProjection(math::Vector2 screenSize) {
+    inline math::Matrix screenProjection(math::Vector2 screenSize) const {
       return math::Matrix::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
     }
 
-    inline math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) {
+    inline math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) const {
       math::Frustum returnFrustum;
       math::Matrix mvp = screenProjection(screenSize) * viewProjection(cameraTransform);
       returnFrustum.extractPlanesFrom(mvp);

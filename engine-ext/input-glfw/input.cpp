@@ -71,14 +71,14 @@ namespace wage { namespace input {
     glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   }
 
-  bool GlfwInput::isPressed(Key key) {
+  bool GlfwInput::isPressed(Key key) const {
     if (!window) {
       return false;
     }
     return glfwGetKey(window->as<GLFWwindow>(), codeFrom(key)) == GLFW_PRESS;
   }
 
-  math::Vector2 GlfwInput::mousePosition() {
+  math::Vector2 GlfwInput::mousePosition() const {
     if (!window) {
       return math::Vector2();
     }

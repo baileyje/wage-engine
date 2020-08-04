@@ -4,7 +4,7 @@ cc_library(
 	srcs = glob(["**/*.cpp"]),
 	hdrs = glob(["**/*.h"]),
 	deps = [
-		"@engine",		
+		"@engine",
 		"@glfw",
 	],
 	visibility = ["//visibility:public"]	

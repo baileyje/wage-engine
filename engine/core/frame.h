@@ -7,6 +7,7 @@ namespace wage { namespace core {
     friend class Core;
 
   public:
+
     Frame() : _timeStep(1.0 / 60.0), _time(0), _deltaTime(0) {
     }
 
@@ -23,6 +24,7 @@ namespace wage { namespace core {
     }
 
   private:
+
     double _timeStep;
 
     double _time;

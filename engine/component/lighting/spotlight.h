@@ -21,15 +21,15 @@ namespace wage { namespace component {
       _constant = constant;
     }
 
-    inline float constant() {
+    inline float constant() const {
       return _constant;
     }
 
-    inline void lLinear(float linear) {
+    inline void linear(float linear) {
       _linear = linear;
     }
 
-    inline float linear() {
+    inline float linear() const {
       return _linear;
     }
 
@@ -37,7 +37,7 @@ namespace wage { namespace component {
       _quadratic = quadratic;
     }
 
-    inline float quadratic() {
+    inline float quadratic() const {
       return _quadratic;
     }
 
@@ -45,7 +45,7 @@ namespace wage { namespace component {
       _cutOff = cutOff;
     }
 
-    inline float cutOff() {
+    inline float cutOff() const {
       return _cutOff;
     }
 
@@ -53,7 +53,7 @@ namespace wage { namespace component {
       _outerCutOff = cutOff;
     }
 
-    inline float outerCutOff() {
+    inline float outerCutOff() const {
       return _outerCutOff;
     }
 

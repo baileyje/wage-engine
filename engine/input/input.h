@@ -20,9 +20,9 @@ namespace wage { namespace input {
 
     void start();
 
-    virtual bool isPressed(Key key) = 0;
+    virtual bool isPressed(Key key) const = 0;
 
-    virtual math::Vector2 mousePosition() = 0;
+    virtual math::Vector2 mousePosition() const = 0;
 
   protected:
     platform::Window* window;
