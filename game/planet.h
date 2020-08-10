@@ -30,16 +30,13 @@ public:
   }
 
 private:
-
   double lastLaunch = 0;
 
   double launchThreshold = 0.001;
-
 };
 
 class PlanetRotation : public ecs::System {
 public:
-
   PlanetRotation() : System() {
   }
 

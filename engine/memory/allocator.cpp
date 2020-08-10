@@ -1,20 +1,25 @@
 #include "memory/allocator.h"
 
-namespace wage { namespace memory {
+namespace wage {
+  namespace memory {
 
-  Allocator* Allocator::Permanent() {
-    static auto instance = new Allocator("Permanent", 1024 * 1024 * 50);
-    return instance;
+    Allocator* Allocator::Permanent() {
+      // TODO: Makes these tunable...
+      static auto instance = new Allocator("Permanent", 1024 * 1024 * 500);
+      return instance;
+    }
+
+    Allocator* Allocator::Temporary() {
+      // TODO: Makes these tunable...
+      static auto instance = new Allocator("Temporary", 1024 * 1024 * 50);
+      return instance;
+    }
+
+    Allocator* Allocator::Assets() {
+      // TODO: Makes these tunable...
+      static auto instance = new Allocator("Assets", 1024 * 1024 * 50);
+      return instance;
+    }
+
   }
-
-  Allocator* Allocator::Temporary() {
-    static auto instance = new Allocator("Temporary", 1024 * 1024 * 50);
-    return instance;
-  }
-
-  Allocator* Allocator::Assets() {
-    static auto instance = new Allocator("Assets", 1024 * 1024 * 50);
-    return instance;
-  }
-
-} }
+}

@@ -75,6 +75,10 @@
         "__errc": "cpp",
         "__node_handle": "cpp",
         "complex": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "bit": "cpp",
+        "list": "cpp",
+        "stack": "cpp",
+        "memory_resource": "cpp"
     }
 }

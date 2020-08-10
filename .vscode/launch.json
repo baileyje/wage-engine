@@ -34,16 +34,14 @@
       "name": "(lldb) Test",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/game/bazel-bin/test",
+      "program": "${workspaceFolder}/test/bazel-bin/test",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/game",
+      "cwd": "${workspaceFolder}/test",
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
       "preLaunchTask": "build-test-debug"
-    },
-   
-  
+    }
   ]
 }

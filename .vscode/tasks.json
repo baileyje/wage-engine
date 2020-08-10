@@ -34,7 +34,20 @@
       "type": "shell",
       "command": "bazel build -c dbg --spawn_strategy=standalone :test && bazel build -c dbg --spawn_strategy=standalone :test_dsym",
       "options": {
-        "cwd": "${workspaceFolder}/game"
+        "cwd": "${workspaceFolder}/test"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "run-test",
+      "type": "shell",
+      "command": "bazel run :test",
+      "options": {
+        "cwd": "${workspaceFolder}/test"
       },
       "group": {
         "kind": "build",
