@@ -2,59 +2,63 @@
 
 #include "component/camera/camera.h"
 
-namespace wage { namespace component {
+#define PerspectiveCameraComponent 12
 
-  class PerspectiveCamera : public Camera {
+namespace wage {
+  namespace component {
 
-  public:
-    PerspectiveCamera() : PerspectiveCamera(60, 0.2, 10000.0) {
-    }
+    class PerspectiveCamera : public Camera {
 
-    PerspectiveCamera(float fov, float nearClip, float farClip)
-        : Camera(CameraType::perspective), _fov(fov), _nearClip(nearClip), _farClip(farClip) {
-    }
+    public:
+      PerspectiveCamera() : PerspectiveCamera(60, 0.2, 10000.0) {
+      }
 
-    inline float fov() const {
-      return _fov;
-    }
+      PerspectiveCamera(float fov, float nearClip, float farClip)
+          : Camera(CameraType::perspective), _fov(fov), _nearClip(nearClip), _farClip(farClip) {
+      }
 
-    inline void fov(float fov) {
-      _fov = fov;
-    }
+      inline float fov() const {
+        return _fov;
+      }
 
-    inline float nearClip() const {
-      return _nearClip;
-    }
+      inline void fov(float fov) {
+        _fov = fov;
+      }
 
-    inline void nearClip(float nearClip) {
-      _nearClip = nearClip;
-    }
+      inline float nearClip() const {
+        return _nearClip;
+      }
 
-    inline float farClip() const {
-      return _farClip;
-    }
+      inline void nearClip(float nearClip) {
+        _nearClip = nearClip;
+      }
 
-    inline void farClip(float farClip) {
-      _farClip = farClip;
-    }
+      inline float farClip() const {
+        return _farClip;
+      }
 
-    inline math::Matrix screenProjection(math::Vector2 screenSize) const {
-      return math::Matrix::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
-    }
+      inline void farClip(float farClip) {
+        _farClip = farClip;
+      }
 
-    inline math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) const {
-      math::Frustum returnFrustum;
-      math::Matrix mvp = screenProjection(screenSize) * viewProjection(cameraTransform);
-      returnFrustum.extractPlanesFrom(mvp);
-      return returnFrustum;
-    }
+      inline math::Matrix screenProjection(math::Vector2 screenSize) const {
+        return math::Matrix::perspective(glm::radians(fov()), screenSize.x / screenSize.y, nearClip(), farClip());
+      }
 
-  private:
-    float _fov;
+      inline math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) const {
+        math::Frustum returnFrustum;
+        math::Matrix mvp = screenProjection(screenSize) * viewProjection(cameraTransform);
+        returnFrustum.extractPlanesFrom(mvp);
+        return returnFrustum;
+      }
 
-    float _nearClip;
+    private:
+      float _fov;
 
-    float _farClip;
-  };
+      float _nearClip;
 
-} }
+      float _farClip;
+    };
+
+  }
+}

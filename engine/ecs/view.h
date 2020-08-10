@@ -1,89 +1,117 @@
 #pragma once
 
+#include <vector>
+
 #include "ecs/registry.h"
 #include "ecs/entity.h"
 
-// Give this some action with iterating actual entiies.
+// Give this some action with iterating actual entities.
 
-namespace wage { namespace ecs {
+namespace wage {
+  namespace ecs {
 
-  template <typename C>
-  class View {
-  public:
-
-    View(Entity::Source* source, ComponentPool<C>* pool): source(source), _pool(pool) {
-    }
-
-    class Iterator {
-
-      typedef typename ComponentPool<C>::Item Item;
-
-      typedef typename memory::ObjectPool<Item, ComponentId>::Iterator WrappedIterator;
-
+    /**
+         * Class used to iterate over entities that contain a set of componenent types. The view will only contain entities that have all the components requests.
+         */
+    template <typename EntitySource>
+    class View {
     public:
-      Iterator(Entity::Source* source, WrappedIterator wrapped) : source(source), wrapped(wrapped) {
+      /**
+             * Create a new view with an entity type and a base component pool to base the iteration on. The components types provided act as a filter for anything provided by the iterator.
+             */
+      View(EntitySource* source, ComponentPool* basePool, std::vector<ComponentType> componentTypes) : source(source), basePool(basePool), componentTypes(componentTypes) {
       }
 
-      ~Iterator() {}
+      class Iterator {
+        friend class View;
+        typedef typename ComponentPool::Iterator WrappedIterator;
 
-      bool operator==(const Iterator& other) const {
-        return source == other.source && wrapped == other.wrapped;
+      public:
+        Iterator(View* view, WrappedIterator wrapped) : view(view), wrapped(wrapped) {
+        }
+
+        ~Iterator() {}
+
+        bool operator==(const Iterator& other) const {
+          return view->source == other.view->source && wrapped == other.wrapped;
+        }
+
+        bool operator!=(const Iterator& other) const {
+          return !operator==(other);
+        }
+
+        Iterator& operator++() {
+          do {
+            ++wrapped;
+          } while (wrapped != view->basePool->end() && !hasAllComponents());
+          return (*this);
+        }
+
+        Iterator operator++(int) {
+          Iterator temp = *this;
+          ++(*this);
+          return temp;
+        }
+
+        Iterator& operator--() {
+          do {
+            --wrapped;
+          } while (wrapped != view->basePool->begin() && hasAllComponents());
+          return (*this);
+        }
+
+        Iterator operator--(int) {
+          Iterator temp = *this;
+          --(*this);
+          return temp;
+        }
+
+        Entity operator*() {
+          return currentEntity();
+        }
+
+        EntityId operator->() {
+          return currentEntity();
+        }
+
+      private:
+        EntityId currentEntityId() {
+          return (*wrapped).entityId();
+        }
+
+        Entity currentEntity() {
+          return view->source->getEntity(currentEntityId());
+        }
+
+        bool hasAllComponents() {
+          auto entity = currentEntity();
+          for (ComponentType type : view->componentTypes) {
+            if (!entity.has(type)) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        View* view;
+
+        WrappedIterator wrapped;
+      };
+
+      Iterator begin() {
+        return Iterator(this, basePool->begin());
       }
 
-      bool operator!=(const Iterator& other) const {
-        return !operator==(other);
-      }
-
-      Iterator& operator++() {
-        ++wrapped;
-        return (*this);
-      }
-
-      Iterator operator++(int) {
-        Iterator temp = *this;
-        ++(*this);
-        return temp;
-      }
-
-      Iterator& operator--() {
-        --wrapped;
-        return (*this);
-      }
-
-      Iterator operator--(int) {
-        Iterator temp = *this;
-        --(*this);
-        return temp;
-      }
-
-      Entity operator*() {
-        return source->get((*wrapped)->entityId());
-      }
-
-      EntityId operator->() {
-        return source->get((*wrapped)->entityId());
+      Iterator end() {
+        return Iterator(this, basePool->end());
       }
 
     private:
-      Entity::Source* source;
+      EntitySource* source;
 
-      WrappedIterator wrapped;
+      ComponentPool* basePool;
+
+      std::vector<ComponentType> componentTypes;
     };
-
-    Iterator begin() {
-      return Iterator(source, _pool->begin());
-    }
-
-    Iterator end() {
-      return Iterator(source, _pool->end());
-    }
-
-  private:
-
-    Entity::Source* source;
-
-    ComponentPool<C>* _pool;
-
-  };
-
-} }
+  }
+}

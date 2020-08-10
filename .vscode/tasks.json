@@ -4,9 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build",
+      "label": "build-game",
       "type": "shell",
-      "command": "bazel build",
+      "command": "bazel build :wage",
       "options": {
         "cwd": "${workspaceFolder}/game"
       },
@@ -17,7 +17,7 @@
       "problemMatcher": []
     },
     {
-      "label": "build-debug",
+      "label": "build-game-debug",
       "type": "shell",
       "command": "bazel build -c dbg --spawn_strategy=standalone :wage && bazel build -c dbg --spawn_strategy=standalone :wage_dsym",
       "options": {

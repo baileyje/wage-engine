@@ -1,8 +1,10 @@
-#include "new_ecs/entity.h"
-#include "new_ecs/registry.h"
+#include "ecs/entity.h"
+#include "ecs/registry.h"
 
 namespace wage {
   namespace ecs {
+
+    Entity Entity::Invalid = {nullptr, VersionedId<EntityId>(INVALID_ENTITY_ID, 0)};
 
     void* Entity::allocateComponent(ComponentType componentType) {
       return registry->allocateComponent(_id, componentType).storage();

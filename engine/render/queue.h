@@ -8,57 +8,59 @@
 #include "render/context.h"
 #include "render/queue.h"
 
-namespace wage { namespace render {
+namespace wage {
+  namespace render {
 
-  class RenderQueue {
+    class RenderQueue {
 
-  public:
-    RenderQueue(): allocator("RenderTemp1", 1024 * 1024 * 50) {
-      renderables.reserve(100);
-    }
-
-    virtual ~RenderQueue() {
-      for (auto renderable : renderables) {
-        delete renderable;
+    public:
+      RenderQueue() : allocator("RenderTemp1", 1024 * 1024 * 50) {
+        renderables.reserve(100);
       }
-    }
 
-    template <typename T, typename... Args>
-    void add(Args... args) {
-      auto intance = allocator.create<T>(args...);
-      renderables.push_back(intance);
-    }
-
-    virtual void cull(RenderContext* context) {
-      std::vector<Renderable*> valid;
-      math::Frustum frustum = context->camera()->frustum(context->screenSize(), context->cameraEntity().get<math::Transform>().get());
-      for (auto renderable : renderables) {
-        if (frustum.contains(renderable->boundingSphere())) {
-          valid.push_back(renderable);
+      virtual ~RenderQueue() {
+        for (auto renderable : renderables) {
+          delete renderable;
         }
       }
-      renderables = valid;
-    }
 
-    virtual void sort(RenderContext* context) {
-      // TODO: Something smart that makes the world a better place.
-    }
-
-    virtual void render(RenderContext* context) {
-      for (auto renderable : renderables) {
-        renderable->render(context);
+      template <typename T, typename... Args>
+      void add(Args... args) {
+        auto instance = allocator.create<T>(args...);
+        renderables.push_back(instance);
       }
-    }
 
-    virtual void clear() {
-      renderables.clear();
-      allocator.clear();
-    }
+      virtual void cull(RenderContext* context) {
+        std::vector<Renderable*> valid;
+        math::Frustum frustum = context->camera()->frustum(context->screenSize(), context->cameraEntity().get<math::Transform>(TransformComponent));
+        for (auto renderable : renderables) {
+          if (frustum.contains(renderable->boundingSphere())) {
+            valid.push_back(renderable);
+          }
+        }
+        renderables = valid;
+      }
 
-  private:
-    std::vector<Renderable*> renderables;
+      virtual void sort(RenderContext* context) {
+        // TODO: Something smart that makes the world a better place.
+      }
 
-    memory::Allocator allocator;
-  };
+      virtual void render(RenderContext* context) {
+        for (auto renderable : renderables) {
+          renderable->render(context);
+        }
+      }
 
-} }
+      virtual void clear() {
+        renderables.clear();
+        allocator.clear();
+      }
+
+    private:
+      std::vector<Renderable*> renderables;
+
+      memory::Allocator allocator;
+    };
+
+  }
+}

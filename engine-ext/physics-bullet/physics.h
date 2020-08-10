@@ -10,37 +10,39 @@
 
 #include "physics-bullet/entity.h"
 
-namespace wage { namespace physics {
+namespace wage {
+  namespace physics {
 
-  class BulletPhysics : public Physics {
+    class BulletPhysics : public Physics {
 
-  public:
-    BulletPhysics();
+    public:
+      BulletPhysics();
 
-    virtual ~BulletPhysics();
+      virtual ~BulletPhysics();
 
-    void start() override;
+      void start() override;
 
-    void fixedUpdate(const core::Frame& frame);
+      void fixedUpdate(const core::Frame& frame);
 
-    void stop() override;
+      void stop() override;
 
-    void add(Entity entity) override;
+      void add(ecs::Entity entity) override;
 
-    void remove(Entity entity) override;
+      void remove(ecs::Entity entity) override;
 
-  private:
-    btDefaultCollisionConfiguration collisionConfiguration;
+    private:
+      btDefaultCollisionConfiguration collisionConfiguration;
 
-    btCollisionDispatcher dispatcher;
+      btCollisionDispatcher dispatcher;
 
-    btDbvtBroadphase overlappingPairCache;
+      btDbvtBroadphase overlappingPairCache;
 
-    btSequentialImpulseConstraintSolver solver;
+      btSequentialImpulseConstraintSolver solver;
 
-    btDiscreteDynamicsWorld dynamicsWorld;
+      btDiscreteDynamicsWorld dynamicsWorld;
 
-    std::vector<PhysicsEntity*> entities;
-  };
+      std::vector<PhysicsEntity*> entities;
+    };
 
-} }
+  }
+}

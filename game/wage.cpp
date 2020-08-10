@@ -19,7 +19,6 @@
 
 using namespace wage;
 
-
 void setupServices(core::Core* core, std::string path) {
   auto fileSystem = core->create<fs::FileSystem, fs::Local>(path);
   core->create<assets::Manager, assets::FsManager>(fileSystem);
@@ -37,20 +36,53 @@ void setupCoreSystems(ecs::SystemManager* systemManager) {
   systemManager->create<render::MeshRenderer>();
   systemManager->create<EnemyLauncher>();
   systemManager->create<EnemyMovement>();
-  systemManager->create<PlayerMovement>();
+  // systemManager->create<PlayerBasicMovement>();
+  systemManager->create<PlayerPhysicsMovement>();
   systemManager->create<PlanetLauncher>();
+}
+
+void registerKnownComponents(ecs::EntityManager* entityManager) {
+  // TODO: Move engine provided components to the some engine bootstap function.
+
+  entityManager->registerComponent(TransformComponent, sizeof(math::Transform));
+  
+  // Camera
+  entityManager->registerComponent(CameraComponent, sizeof(component::Camera));
+  // entityManager->registerComponent(OrthographicCameraComponent, sizeof(component::OrthographicCamera));
+  entityManager->registerComponent(PerspectiveCameraComponent, sizeof(component::PerspectiveCamera));
+  
+  // Lights
+  entityManager->registerComponent(SpotlightComponent, sizeof(component::Spotlight));
+  entityManager->registerComponent(PointLightComponent, sizeof(component::PointLight));
+  entityManager->registerComponent(DirectionalLightComponent, sizeof(component::DirectionalLight));
+  
+  // Renderer
+  entityManager->registerComponent(MeshComponent, sizeof(render::Mesh));
+  entityManager->registerComponent(MaterialComponent, sizeof(render::Material));
+
+  // Physics
+  entityManager->registerComponent(ColliderComponent, sizeof(physics::Collider));
+  entityManager->registerComponent(RigidBodyComponent, sizeof(physics::RigidBody));
+
+  // UI
+  entityManager->registerComponent(UiLabelComponent, sizeof(ui::UiLabel));
+ 
+  // Game Junk
+  entityManager->registerComponent(PlayerComponent, sizeof(Player));
+  entityManager->registerComponent(EnemyComponent, sizeof(Enemy));
+  entityManager->registerComponent(PlanetComponent, sizeof(Planet));
 }
 
 void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
   auto topLightEnt = entityManager->create();
-  topLightEnt.assign<math::Transform>()->rotation(math::Vector(-90, 0, 0));
-  auto topLight = topLightEnt.assign<component::DirectionalLight>();
+  topLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(-90, 0, 0));
+  auto topLight = topLightEnt.assign<component::DirectionalLight>(DirectionalLightComponent);
   topLight->diffuse(math::Color(0.7, 0.7, 0.7, 1));
   topLight->ambient(math::Color(0.4, 0.4, 0.4, 1));
 
   auto bottomLightEnt = entityManager->create();
-  bottomLightEnt.assign<math::Transform>()->rotation(math::Vector(90, 0, 0));
-  auto bottomLight = bottomLightEnt.assign<component::DirectionalLight>();
+  bottomLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(90, 0, 0));
+  auto bottomLight = bottomLightEnt.assign<component::DirectionalLight>(DirectionalLightComponent);
   bottomLight->diffuse(math::Color(0.7, 0.7, 0.9, 1));
   bottomLight->ambient(math::Color(0.4, 0.4, 0.4, 1));
 
@@ -79,6 +111,8 @@ int main(int argc, char* argv[]) {
   setupServices(core::Core::Instance, path);
   auto systemManager = core::Core::Instance->get<ecs::SystemManager>();
   auto entityManager = core::Core::Instance->get<ecs::EntityManager>();
+  registerKnownComponents(entityManager);
+
   setupCoreSystems(systemManager);
 
   render::Mesh::generatePrimitives();

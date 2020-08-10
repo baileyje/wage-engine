@@ -2,51 +2,55 @@
 
 #include "component/lighting/light.h"
 
-namespace wage { namespace component {
+#define PointLightComponent 21
 
-  class PointLight : public Light {
+namespace wage {
+  namespace component {
 
-  public:
-    PointLight()
-        : PointLight(math::Color(0.05f, 0.05f, 0.05f, 1), math::Color(0.8f, 0.8f, 0.8f, 1), math::Color::White, 1.0f, 0.09, 0.032) {
-    }
+    class PointLight : public Light {
 
-    PointLight(math::Color ambient, math::Color diffuse, math::Color specular, float constant, float linear, float quadratic)
-        : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic) {
-    }
+    public:
+      PointLight()
+          : PointLight(math::Color(0.05f, 0.05f, 0.05f, 1), math::Color(0.8f, 0.8f, 0.8f, 1), math::Color::White, 1.0f, 0.09, 0.032) {
+      }
 
-    ~PointLight() {}
+      PointLight(math::Color ambient, math::Color diffuse, math::Color specular, float constant, float linear, float quadratic)
+          : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic) {
+      }
 
-    inline void constant(float constant) {
-      _constant = constant;
-    }
+      ~PointLight() {}
 
-    inline float constant() const {
-      return _constant;
-    }
+      inline void constant(float constant) {
+        _constant = constant;
+      }
 
-    inline void linear(float linear) {
-      _linear = linear;
-    }
+      inline float constant() const {
+        return _constant;
+      }
 
-    inline float linear() const {
-      return _linear;
-    }
+      inline void linear(float linear) {
+        _linear = linear;
+      }
 
-    inline void quadratic(float quadratic) {
-      _quadratic = quadratic;
-    }
+      inline float linear() const {
+        return _linear;
+      }
 
-    inline float quadratic() const {
-      return _quadratic;
-    }
+      inline void quadratic(float quadratic) {
+        _quadratic = quadratic;
+      }
 
-  private:
-    float _constant;
+      inline float quadratic() const {
+        return _quadratic;
+      }
 
-    float _linear;
+    private:
+      float _constant;
 
-    float _quadratic;
-  };
+      float _linear;
 
-} }
+      float _quadratic;
+    };
+
+  }
+}

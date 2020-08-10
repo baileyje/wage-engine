@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "(lldb) Launch",
+      "name": "(lldb) Game",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/game/bazel-bin/wage",
@@ -15,20 +15,7 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
-      "preLaunchTask": "build-debug"
-    },
-    {
-      "name": "(lldb) Launch",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/game/bazel-bin/wage",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}/game",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "lldb",
-      "preLaunchTask": "build-debug"
+      "preLaunchTask": "build-game-debug"
     },
     {
       "name": "(lldb) Test",

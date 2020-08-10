@@ -79,6 +79,7 @@
         "bit": "cpp",
         "list": "cpp",
         "stack": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "filesystem": "cpp"
     }
 }

@@ -1,31 +1,37 @@
 #pragma once
 
-namespace wage { namespace physics {
+// TODO: SCRUB THE SOURCE OF THESE
+#define ColliderComponent 50
 
-  enum class ColliderType { box, sphere, mesh };
+namespace wage {
+  namespace physics {
 
-  class Collider {
+    enum class ColliderType { box,
+                              sphere,
+                              mesh };
 
-  public:
+    class Collider {
 
-    static Collider Box;
+    public:
+      static Collider Box;
 
-    static Collider Sphere;
+      static Collider Sphere;
 
-    Collider() : Collider(ColliderType::box) {
-    }
+      Collider() : Collider(ColliderType::box) {
+      }
 
-    Collider(ColliderType type) : _type(type) {
-    }
+      Collider(ColliderType type) : _type(type) {
+      }
 
-    ~Collider() {}
+      ~Collider() {}
 
-    inline ColliderType type() const {
-      return _type;
-    }
+      inline ColliderType type() const {
+        return _type;
+      }
 
-  private:
-    ColliderType _type;
-  };
+    private:
+      ColliderType _type;
+    };
 
-} }
+  }
+}

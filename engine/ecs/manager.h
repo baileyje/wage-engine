@@ -10,10 +10,10 @@
 #include "core/service.h"
 #include "messaging/messaging.h"
 
-#include "new_ecs/registry.h"
-#include "new_ecs/entity.h"
-#include "new_ecs/view.h"
-#include "new_ecs/messages.h"
+#include "ecs/registry.h"
+#include "ecs/entity.h"
+#include "ecs/view.h"
+#include "ecs/messages.h"
 
 namespace wage {
   namespace ecs {

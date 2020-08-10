@@ -3,40 +3,43 @@
 #include "math/frustum.h"
 #include "math/matrix.h"
 #include "math/transform.h"
-#include "memory/reference.h"
 
-namespace wage { namespace component {
+#define CameraComponent 10
 
-  enum class CameraType { perspective,
-                          orthographic };
+namespace wage {
+  namespace component {
 
-  class Camera {
+    enum class CameraType { perspective,
+                            orthographic };
 
-  public:
-    Camera(CameraType type) : _type(type) {
-    }
+    class Camera {
 
-    ~Camera() {
-    }
+    public:
+      Camera(CameraType type) : _type(type) {
+      }
 
-    inline CameraType type() {
-      return _type;
-    }
+      ~Camera() {
+      }
 
-    virtual math::Matrix screenProjection(math::Vector2 screenSize) const = 0;
+      inline CameraType type() {
+        return _type;
+      }
 
-    math::Matrix viewProjection(math::Transform* trans) const {
-      math::Vector camPos = trans->position();
-      math::Quaternion rotation = trans->rotation();
-      math::Vector camFront = rotation * math::Vector::Forward;
-      math::Vector camUp = rotation * math::Vector::Up;
-      return math::Matrix::lookAt(camPos, camPos + camFront, camUp);
-    }
+      virtual math::Matrix screenProjection(math::Vector2 screenSize) const = 0;
 
-    virtual math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) const = 0;
+      math::Matrix viewProjection(math::Transform* trans) const {
+        math::Vector camPos = trans->position();
+        math::Quaternion rotation = trans->rotation();
+        math::Vector camFront = rotation * math::Vector::Forward;
+        math::Vector camUp = rotation * math::Vector::Up;
+        return math::Matrix::lookAt(camPos, camPos + camFront, camUp);
+      }
 
-  private:
-    CameraType _type;
-  };
+      virtual math::Frustum frustum(math::Vector2 screenSize, math::Transform* cameraTransform) const = 0;
 
-} }
+    private:
+      CameraType _type;
+    };
+
+  }
+}

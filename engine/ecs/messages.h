@@ -1,6 +1,6 @@
 #pragma once
 
-#include "new_ecs/entity.h"
+#include "ecs/entity.h"
 
 namespace wage {
   namespace ecs {

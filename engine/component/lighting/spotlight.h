@@ -2,71 +2,75 @@
 
 #include "component/lighting/light.h"
 
-namespace wage { namespace component {
+#define SpotlightComponent 20
 
-  class Spotlight : public Light {
+namespace wage {
+  namespace component {
 
-  public:
-    Spotlight()
-        : Spotlight(math::Color(0.0f, 0.0f, 0.0f, 1), math::Color::White, math::Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
-    }
+    class Spotlight : public Light {
 
-    Spotlight(math::Color ambient, math::Color diffuse, math::Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
-        : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff) {
-    }
+    public:
+      Spotlight()
+          : Spotlight(math::Color(0.0f, 0.0f, 0.0f, 1), math::Color::White, math::Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
+      }
 
-    ~Spotlight() {}
+      Spotlight(math::Color ambient, math::Color diffuse, math::Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
+          : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff) {
+      }
 
-    inline void constant(float constant) {
-      _constant = constant;
-    }
+      ~Spotlight() {}
 
-    inline float constant() const {
-      return _constant;
-    }
+      inline void constant(float constant) {
+        _constant = constant;
+      }
 
-    inline void linear(float linear) {
-      _linear = linear;
-    }
+      inline float constant() const {
+        return _constant;
+      }
 
-    inline float linear() const {
-      return _linear;
-    }
+      inline void linear(float linear) {
+        _linear = linear;
+      }
 
-    inline void quadratic(float quadratic) {
-      _quadratic = quadratic;
-    }
+      inline float linear() const {
+        return _linear;
+      }
 
-    inline float quadratic() const {
-      return _quadratic;
-    }
+      inline void quadratic(float quadratic) {
+        _quadratic = quadratic;
+      }
 
-    inline void cutOff(float cutOff) {
-      _cutOff = cutOff;
-    }
+      inline float quadratic() const {
+        return _quadratic;
+      }
 
-    inline float cutOff() const {
-      return _cutOff;
-    }
+      inline void cutOff(float cutOff) {
+        _cutOff = cutOff;
+      }
 
-    inline void outerCutOff(float cutOff) {
-      _outerCutOff = cutOff;
-    }
+      inline float cutOff() const {
+        return _cutOff;
+      }
 
-    inline float outerCutOff() const {
-      return _outerCutOff;
-    }
+      inline void outerCutOff(float cutOff) {
+        _outerCutOff = cutOff;
+      }
 
-  private:
-    float _constant;
+      inline float outerCutOff() const {
+        return _outerCutOff;
+      }
 
-    float _linear;
+    private:
+      float _constant;
 
-    float _quadratic;
+      float _linear;
 
-    float _cutOff;
+      float _quadratic;
 
-    float _outerCutOff;
-  };
+      float _cutOff;
 
-} }
+      float _outerCutOff;
+    };
+
+  }
+}

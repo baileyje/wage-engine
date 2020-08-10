@@ -5,6 +5,8 @@
 
 using namespace wage;
 
+#define PlanetComponent 2002
+
 void addRandomPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager);
 
 class Planet {
@@ -42,25 +44,25 @@ public:
 
   void fixedUpdate(const ecs::SystemContext& context) {
     auto manager = core::Core::Instance->get<ecs::EntityManager>();
-    for (auto entity : manager->with<Planet>()) {
-      if (!entity.valid()) {
+    for (auto planent : manager->with({PlanetComponent})) {
+      if (!planent.valid()) {
         continue;
       }
-      entity.get<math::Transform>()->rotation().rotated(4, math::Vector3::Up);
+      planent.get<math::Transform>(TransformComponent)->rotation().rotated(4, math::Vector3::Up);
     }
   }
 };
 
 void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager, math::Vector position, float scale) {
-  Entity entity = entityManager->create();
-  auto transform = entity.assign<math::Transform>();
+  auto entity = entityManager->create();
+  auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(math::Vector(scale, scale, scale));
-  entity.assign<physics::RigidBody>(0.01, physics::RigidBodyType::immovable);
-  entity.assign<render::Mesh>(render::Mesh::Sphere);
-  entity.assign<physics::Collider>(physics::ColliderType::sphere);
-  entity.assign<render::Material>(render::Texture("textures/earthlike_planet.png"));
-  entity.assign<Planet>();
+  entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::immovable);
+  entity.assign<render::Mesh>(MeshComponent, render::Mesh::Sphere);
+  entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
+  entity.assign<render::Material>(MaterialComponent, render::Texture("textures/earthlike_planet.png"));
+  entity.assign<Planet>(PlanetComponent);
 }
 
 void addRandomPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {

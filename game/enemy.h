@@ -5,6 +5,8 @@
 
 using namespace wage;
 
+#define EnemyComponent 2001
+
 void addRandomEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager);
 
 class Enemy {
@@ -19,37 +21,39 @@ public:
     auto manager = core::Core::Instance->get<ecs::EntityManager>();
     auto input = core::Core::Instance->get<input::Input>();
     if (input->isPressed(input::Key::c) && !chasing) {
-      for (auto entity : manager->with<Enemy>()) {
-        entity.get<physics::RigidBody>()->shouldStop(true);
+      for (auto entity : manager->with({EnemyComponent})) {
+        entity.get<physics::RigidBody>(RigidBodyComponent)->shouldStop(true);
       }
       chasing = true;
       running = false;
       return;
     }
     if (input->isPressed(input::Key::r) && !running) {
-      for (auto entity : manager->with<Enemy>()) {
-        entity.get<physics::RigidBody>()->shouldStop(true);
+      for (auto entity : manager->with({EnemyComponent})) {
+        entity.get<physics::RigidBody>(RigidBodyComponent)->shouldStop(true);
       }
       running = true;
       chasing = false;
     }
 
-    auto target = *manager->with<Player>().begin();
+    auto target = *manager->with({PlayerComponent}).begin();
     if (running || chasing) {
-      for (auto entity : manager->with<Enemy>()) {
-        if (!entity.valid()) {
+      for (auto enemy : manager->with({EnemyComponent})) {
+        if (!enemy.valid()) {
           continue;
         }
-        if (chasing && Vector::distance(target.get<math::Transform>()->position(), entity.get<math::Transform>()->position()) < 20) {
-          entity.get<physics::RigidBody>()->shouldStop(true);
+        auto enemyPosition = enemy.get<math::Transform>(TransformComponent)->position();
+        auto targetPosition = target.get<math::Transform>(TransformComponent)->position();
+        if (chasing && Vector::distance(targetPosition, enemyPosition) < 20) {
+          enemy.get<physics::RigidBody>(RigidBodyComponent)->shouldStop(true);
           continue;
         }
-        auto dir = target.get<math::Transform>()->position() - entity.get<Transform>()->position();
+        auto dir = targetPosition - enemyPosition;
         auto impulse = dir.normalized() * 0.1;
         if (running) {
           impulse *= -1;
         }
-        entity.get<physics::RigidBody>()->addImpulse(impulse);
+        enemy.get<physics::RigidBody>(RigidBodyComponent)->addImpulse(impulse);
       }
     }
   }
@@ -80,23 +84,21 @@ public:
   }
 
 private:
-
   double lastLaunch = 0;
 
   double launchThreshold = 0.001;
-
 };
 
 void addEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager, Vector position, float scale) {
-  Entity entity = entityManager->create();
-  auto transform = entity.assign<math::Transform>();
+  auto entity = entityManager->create();
+  auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(Vector(scale, scale, scale));
-  entity.assign<physics::RigidBody>(0.001);
-  entity.assign<render::Mesh>(render::Mesh::Cube);
-  entity.assign<physics::Collider>(physics::ColliderType::box);
-  entity.assign<render::Material>(render::Texture("textures/odd_space_2.png"));
-  entity.assign<Enemy>();
+  entity.assign<physics::RigidBody>(RigidBodyComponent, 0.001);
+  entity.assign<render::Mesh>(MeshComponent, render::Mesh::Cube);
+  entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
+  entity.assign<render::Material>(MaterialComponent, render::Texture("textures/odd_space_2.png"));
+  entity.assign<Enemy>(EnemyComponent);
 }
 
 void addRandomEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {

@@ -7,53 +7,57 @@
 #include "core/core.h"
 #include "render/renderer.h"
 
-namespace wage { namespace ui {
+#define UiLabelComponent 500
 
-  class UiLabel : public UiComponent {
+namespace wage {
+  namespace ui {
 
-  public:
-    UiLabel() : UiComponent() {
-    }
+    class UiLabel : public UiComponent {
 
-    UiLabel(std::string text, render::Font font, math::Color color = math::Color::White) : UiLabel(UiFrame(), text, font, color) {
-    }
+    public:
+      UiLabel() : UiComponent() {
+      }
 
-    UiLabel(UiFrame frame, std::string text, render::Font font, math::Color color) : UiComponent(frame), _text(text), _font(font), _color(color) {
-    }
+      UiLabel(std::string text, render::Font font, math::Color color = math::Color::White) : UiLabel(UiFrame(), text, font, color) {
+      }
 
-    virtual ~UiLabel() {
-    }
+      UiLabel(UiFrame frame, std::string text, render::Font font, math::Color color) : UiComponent(frame), _text(text), _font(font), _color(color) {
+      }
 
-    inline std::string text() const {
-      return _text;
-    }
+      virtual ~UiLabel() {
+      }
 
-    inline void set(std::string text) {
-      _text = text;
-    }
+      inline std::string text() const {
+        return _text;
+      }
 
-    inline render::Font font() const {
-      return _font;
-    }
+      inline void set(std::string text) {
+        _text = text;
+      }
 
-    void font(render::Font font) {
-      _font = font;
-    }
+      inline render::Font font() const {
+        return _font;
+      }
 
-    inline math::Color color() const {
-      return _color;
-    }
+      void font(render::Font font) {
+        _font = font;
+      }
 
-    inline void color(math::Color color) {
-      _color = color;
-    }
+      inline math::Color color() const {
+        return _color;
+      }
 
-  private:
-    std::string _text;
+      inline void color(math::Color color) {
+        _color = color;
+      }
 
-    render::Font _font;
+    private:
+      std::string _text;
 
-    math::Color _color;
-  };
+      render::Font _font;
 
-} }
+      math::Color _color;
+    };
+
+  }
+}

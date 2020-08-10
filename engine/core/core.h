@@ -9,100 +9,103 @@
 #include "core/frame.h"
 #include "memory/allocator.h"
 
-namespace wage { namespace core {
+namespace wage {
+  namespace core {
 
-  typedef std::function<void(const core::Frame&)> UpdateListener;
+    typedef std::function<void(const core::Frame&)> UpdateListener;
 
-  class Core {
+    class Core {
 
-  public:
+    public:
+      static Core* Instance;
 
-    static Core* Instance;
+      Core();
 
-    Core();
+      ~Core();
 
-    ~Core();
+      void init();
 
-    void init();
+      void start();
 
-    void start();
+      void stop();
 
-    void stop();
+      template <typename T>
+      void add(T* service) {
+        services.add<T>(service);
+      }
 
-    template <typename T>
-    void add(T* service) {
-      services.add<T>(service);
-    }
+      template <typename T, typename... Args>
+      T* create(Args... args) {
+        auto instance = memory::make<T>(args...);
+        add<T>(instance);
+        return instance;
+      }
 
-    template <typename T, typename... Args>
-    T* create(Args... args) {
-      auto instance = memory::make<T>(args...);
-      add<T>(instance);
-      return instance;
-    }
+      template <typename T, typename I, typename... Args>
+      I* create(Args... args) {
+        auto instance = memory::make<I>(args...);
+        add<T>(instance);
+        return instance;
+      }
 
-    template <typename T, typename I, typename... Args>
-    I* create(Args... args) {
-      auto instance = memory::make<I>(args...);
-      add<T>(instance);
-      return instance;
-    }
+      template <typename T>
+      inline T* get() {
+        return services.get<T>();
+      }
 
-    template <typename T>
-    inline T* get() {
-      return services.get<T>();
-    }
+      const Frame& frame() const {
+        return _frame;
+      }
 
-    const Frame& frame() const {
-      return _frame;
-    }
+      inline void onInput(UpdateListener listener) {
+        inputListeners.push_back(listener);
+      }
 
-    inline void onInput(UpdateListener listener) {
-      inputListeners.push_back(listener);
-    }
+      inline void onUpdate(UpdateListener listener) {
+        updateListeners.push_back(listener);
+      }
 
-    inline void onUpdate(UpdateListener listener) {
-      updateListeners.push_back(listener);
-    }
+      void onFixedUpdate(UpdateListener listener) {
+        fixedUpdateListeners.push_back(listener);
+      }
 
-    void onFixedUpdate(UpdateListener listener) {
-      fixedUpdateListeners.push_back(listener);
-    }
+      inline void onRender(UpdateListener listener) {
+        renderListeners.push_back(listener);
+      }
 
-    inline void onRender(UpdateListener listener) {
-      renderListeners.push_back(listener);
-    }
+    private:
+      void processInput();
 
-  private:
-    void processInput();
+      void update();
 
-    void update();
+      void fixedUpdate();
 
-    void fixedUpdate();
+      void render();
 
-    void render();
+      void deinit();
 
-    void deinit();
+      void startUpdateLoop();
 
-    void startUpdateLoop();
+      void startRenderLoop();
 
-    void startRenderLoop();
+      ServiceMap services;
 
-    ServiceMap services;
+      volatile bool running;
 
-    volatile bool running;
+      Frame _frame;
 
-    Frame _frame;
+      double renderStep;
 
-    std::vector<UpdateListener> inputListeners;
+      std::vector<UpdateListener> inputListeners;
 
-    std::vector<UpdateListener> updateListeners;
+      std::vector<UpdateListener> updateListeners;
 
-    std::vector<UpdateListener> fixedUpdateListeners;
+      std::vector<UpdateListener> fixedUpdateListeners;
 
-    std::vector<UpdateListener> renderListeners;
+      std::vector<UpdateListener> renderListeners;
 
-    std::thread updateThread;
-  };
+      std::thread updateThread;
+    };
 
-} }
+  }
+}

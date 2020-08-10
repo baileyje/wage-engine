@@ -2,6 +2,8 @@
 
 #include "component/camera/camera.h"
 
+#define OrthographicCameraComponent 11
+
 namespace wage { namespace component {
 
   class OrthographicCamera : public Camera {

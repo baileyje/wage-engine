@@ -8,39 +8,41 @@
 #include "render-gl/vao_manager.h"
 #include "render-gl/font_manager.h"
 
-namespace wage { namespace render {
+namespace wage {
+  namespace render {
 
-  class GlRenderer : public Renderer {
+    class GlRenderer : public Renderer {
 
-  public:
-    void start();
+    public:
+      void start();
 
-    void initializeRenderer();
+      void initializeRenderer();
 
-    void renderText(math::Vector2 position, std::string text, Font font, math::Color color);
+      void renderText(math::Vector2 position, std::string text, Font font, math::Color color);
 
-    void renderSprite(math::Vector2 position, math::Vector2 size, math::Color color, Texture texture);
+      void renderSprite(math::Vector2 position, math::Vector2 size, math::Color color, Texture texture);
 
-    void renderMesh(math::Transform transform, Mesh* mesh, Material* material);
+      void renderMesh(math::Transform transform, Mesh* mesh, Material* material);
 
-    virtual void beginRender();
+      virtual void beginRender();
 
-    virtual void endRender();
+      virtual void endRender();
 
-  private:
-    VaoManager vaoManager;
+    private:
+      VaoManager vaoManager;
 
-    GlTextureManager textureManager;
+      GlTextureManager textureManager;
 
-    GlShaderManager shaderManager;
+      GlShaderManager shaderManager;
 
-    GlFontManager fontManager;
+      GlFontManager fontManager;
 
-    std::vector<component::DirectionalLight*> dirLights;
+      std::vector<component::DirectionalLight*> dirLights;
 
-    std::vector<component::PointLight*> pointLights;
+      std::vector<component::PointLight*> pointLights;
 
-    std::vector<component::Spotlight*> spotlights;
-  };
+      std::vector<component::Spotlight*> spotlights;
+    };
 
-} }
+  }
+}

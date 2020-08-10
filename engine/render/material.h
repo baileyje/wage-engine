@@ -3,6 +3,8 @@
 #include "math/color.h"
 #include "render/texture.h"
 
+#define MaterialComponent 31
+
 namespace wage { namespace render {
   // TODO:  De-jank this
   class Material {

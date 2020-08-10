@@ -2,32 +2,34 @@
 
 #include <string>
 
-namespace wage { namespace render {
+namespace wage {
+  namespace render {
 
-  // TODO:  De-jank this
-  class Texture {
+    // TODO:  De-jank this
+    class Texture {
 
-  public:
-    static Texture Default;
+    public:
+      static Texture Default;
 
-    Texture() : _path("****INVALID****") {
-    }
+      Texture() : _path("****INVALID****") {
+      }
 
-    Texture(std::string path) : _path(path) {
-    }
+      Texture(std::string path) : _path(path) {
+      }
 
-    ~Texture() {}
+      ~Texture() {}
 
-    inline std::string path() {
-      return _path;
-    }
+      inline std::string path() {
+        return _path;
+      }
 
-    inline std::string id() {
-      return path();
-    }
+      inline std::string id() {
+        return path();
+      }
 
-  private:
-    std::string _path;
-  };
+    private:
+      std::string _path;
+    };
 
-} }
+  }
+}

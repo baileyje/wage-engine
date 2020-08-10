@@ -4,48 +4,71 @@
 
 #include "util/types.h"
 
-namespace wage { namespace ecs {
+namespace wage {
+  namespace ecs {
 
-  typedef uint16 EntityId;
+    /**
+     * Handle to a specific entity.
+     */
+    typedef uint16 EntityId;
 
-  #define MAX_ENTITY_ID std::numeric_limits<EntityId>::max() - 1
+    /**
+     * The current version of an issued entity ID. Support distinguishing between the current and an out of date reference.
+     */
+    typedef uint16 EntityVersion;
 
-  #define INVALID_ENTITY_ID std::numeric_limits<EntityId>::max()
+    /**
+     * The maximum entity id allowed.
+     */
+#define MAX_ENTITY_ID std::numeric_limits<EntityId>::max() / 2 - 1
 
-  typedef uint16 EntityVersion;
+    /**
+     * Reserve the maximum value to represent an invalid handle.
+     */
+#define INVALID_ENTITY_ID std::numeric_limits<EntityId>::max()
 
-  typedef uint16 ComponentId;
+    /**
+     * Handle for a component type.
+     */
+    typedef uint16 ComponentType;
 
-  template <typename IdType, typename VersionType>
-  class VersionedId {
-  public:
+    /**
+     * The maximum component id allowed.
+     */
+#define MAX_COMPONENT_TYPE std::numeric_limits<ComponentType>::max() / 2 - 1
 
-    VersionedId(IdType id, VersionType version): _id(id), _version(version) {
-    }
+    /**
+     * Reserve the maximum value to represent an invalid handle.
+     */
+#define INVALID_COMPONENT_TYPE std::numeric_limits<ComponentType>::max()
 
-    IdType id() const {
-      return _id;
-    }
+    template <typename IdType, typename VersionType = uint16>
+    class VersionedId {
+    public:
+      VersionedId(IdType id, VersionType version) : _id(id), _version(version) {
+      }
 
-    VersionType version() const {
-      return _version;
-    }
+      IdType id() const {
+        return _id;
+      }
 
-    bool operator==(const VersionedId& other) const {
-      return _id == other._id && _version == other._version;
-    }
+      VersionType version() const {
+        return _version;
+      }
 
-    bool operator!=(const VersionedId& other) const {
-      return !this->operator==(other);
-    }
+      bool operator==(const VersionedId& other) const {
+        return _id == other._id && _version == other._version;
+      }
 
-  private:
+      bool operator!=(const VersionedId& other) const {
+        return !this->operator==(other);
+      }
 
-    IdType _id;
+    private:
+      IdType _id;
 
-    VersionType _version;
-  };
+      VersionType _version;
+    };
 
-  typedef VersionedId<EntityId, EntityVersion> VersionedEntityId;
-
-} }
+  }
+}

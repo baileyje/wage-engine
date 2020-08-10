@@ -6,6 +6,8 @@
 
 #include "math/vector.h"
 
+#define MeshComponent 30
+
 namespace wage { namespace render {
 
   typedef std::vector<math::Vector> VertexVector;

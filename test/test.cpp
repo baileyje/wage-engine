@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "new_ecs/common.h"
-#include "new_ecs/component_pool.h"
-#include "new_ecs/registry.h"
-#include "new_ecs/manager.h"
+#include "ecs/common.h"
+#include "ecs/component_pool.h"
+#include "ecs/registry.h"
+#include "ecs/manager.h"
 #include "memory/indexed_storage.h"
 #include "memory/pool.h"
 
@@ -38,7 +38,6 @@ int main(int argc, char* argv[]) {
   player.set<Position>(PositionComponent, {0, 0, 0});
   player.set<Player>(PlayerComponent, {"Frank the Tank.."});
 
-
   auto player2 = manager.create();
   printf("%hu\n", player2.id().id());
   // player2.set<Position>(PositionComponent, {0, 0, 0});
@@ -61,7 +60,7 @@ int main(int argc, char* argv[]) {
   // for (auto item : *posPool) {
   //   printf("Pos Item: %i\n", item.entityId());
   // }
-  
+
   // auto withPlayer = manager.with({PlayerComponent});
   // for (auto entity : withPlayer) {
   //   printf("With Player: %i\n", entity.id().id());

@@ -2,6 +2,8 @@
 
 #include "component/lighting/light.h"
 
+#define DirectionalLightComponent 22
+
 namespace wage { namespace component {
 
   class DirectionalLight : public Light {
