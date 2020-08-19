@@ -50,7 +50,6 @@ namespace wage {
 
       Chunk* allocateBlock() {
         size_t blockSize = chunksPerBlock * chunkSize;
-        std::cout << "Allocating block... " << blockSize << std::endl;
         Chunk* blockBegin = reinterpret_cast<Chunk*>(allocator->allocate(blockSize));
         Chunk* chunk = blockBegin;
         for (int i = 0; i < chunksPerBlock - 1; ++i) {

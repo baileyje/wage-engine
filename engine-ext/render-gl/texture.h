@@ -5,46 +5,48 @@
 
 #include "render-gl/util.h"
 
-namespace wage { namespace render {
+namespace wage {
+  namespace render {
 
-  class GlTexture : public assets::Asset {
+    class GlTexture : public assets::Asset {
 
-  public:
-    GlTexture(Texture texture) : Asset(texture.path()), pushed(false), _texture(texture) {
-    }
+    public:
+      GlTexture(Texture texture) : Asset("texture", texture.path()), pushed(false), _texture(texture) {
+      }
 
-    ~GlTexture();
+      ~GlTexture();
 
-    inline Texture texture() const {
-      return _texture;
-    }
+      inline Texture texture() const {
+        return _texture;
+      }
 
-    void load(assets::Manager* assetManager);
+      void load(assets::Manager* assetManager);
 
-    void onLoad();
+      void onLoad();
 
-    void bind();
+      void bind();
 
-    void unbind();
+      void unbind();
 
-  private:
-    void push();
+    private:
+      void push();
 
-    unsigned int id;
+      unsigned int id;
 
-    bool pushed;
+      bool pushed;
 
-    Texture _texture;
+      Texture _texture;
 
-    std::unique_ptr<Asset> vertexSource;
+      std::unique_ptr<Asset> vertexSource;
 
-    int width;
+      int width;
 
-    int height;
+      int height;
 
-    int channels;
+      int channels;
 
-    unsigned char* data;
-  };
+      unsigned char* data;
+    };
 
-} }
+  }
+}

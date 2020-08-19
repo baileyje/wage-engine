@@ -7,36 +7,38 @@
 
 #include "render-gl/util.h"
 
-namespace wage { namespace render {
+namespace wage {
+  namespace render {
 
-  class GlShader : public assets::Asset {
+    class GlShader : public assets::Asset {
 
-  public:
-    GlShader(std::string path, GLenum shaderType) : Asset(path), shaderType(shaderType) {
-    }
+    public:
+      GlShader(std::string path, GLenum shaderType) : Asset("shader", path), shaderType(shaderType) {
+      }
 
-    virtual ~GlShader() {
-      GL_FAIL_CHECK(glDeleteShader(_id));
-    }
+      virtual ~GlShader() {
+        GL_FAIL_CHECK(glDeleteShader(_id));
+      }
 
-    inline unsigned int id() {
-      return _id;
-    }
+      inline unsigned int id() {
+        return _id;
+      }
 
-    inline bool compiled() {
-      return _compiled;
-    }
+      inline bool compiled() {
+        return _compiled;
+      }
 
-    void onLoad();
+      void onLoad();
 
-    void compile();
+      void compile();
 
-  private:
-    unsigned int _id;
+    private:
+      unsigned int _id;
 
-    GLenum shaderType;
+      GLenum shaderType;
 
-    bool _compiled;
-  };
+      bool _compiled;
+    };
 
-} }
+  }
+}

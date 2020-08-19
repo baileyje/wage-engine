@@ -1,95 +1,48 @@
 #pragma once
 
-#include <vector>
-#include <algorithm>
-#include <cmath>
-
-#include "math/vector.h"
+#include <string>
 
 #define MeshComponent 30
 
-namespace wage { namespace render {
+namespace wage {
+  namespace render {
 
-  typedef std::vector<math::Vector> VertexVector;
-  typedef std::vector<math::Vector2> Vertex2Vector;
-  typedef std::vector<unsigned int> IndexVector;
+    enum class MeshType { cube,
+                          sphere,
+                          quad,
+                          custom };
 
-  class Mesh {
+    class Mesh {
 
-  public:
-    Mesh() {
-    }
+    public:
+      Mesh() {}
 
-    Mesh(std::string id, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices)
-        : _id(id), _vertices(vertices), _normals(normals), _uvs(uvs), _indices(indices), _maxDim(0) {
-      for (auto vertex : _vertices) {
-        _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
-        _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
-        _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
+      Mesh(std::string key, MeshType type) : _key(key), _type(type) {
       }
-    }
 
-    Mesh(Mesh* templateMesh)
-        : _id(templateMesh->_id), _vertices(templateMesh->_vertices), _normals(templateMesh->_normals), _uvs(templateMesh->_uvs), _indices(templateMesh->_indices), _maxDim(0) {
-      for (auto vertex : _vertices) {
-        _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
-        _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
-        _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
+      Mesh(Mesh* templateMesh) : _key(templateMesh->key()), _type(templateMesh->type()) {}
+
+      virtual ~Mesh() {
       }
-    }
 
-    virtual ~Mesh();
+      inline MeshType type() {
+        return _type;
+      }
 
-    inline unsigned int elementCount() {
-      return _indices.size();
-    }
+      inline std::string key() const {
+        return _key;
+      }
 
-    inline VertexVector& vertices() {
-      return _vertices;
-    }
+      static Mesh* Cube;
 
-    inline VertexVector& normals() {
-      return _normals;
-    }
+      static Mesh* Sphere;
 
-    inline Vertex2Vector& uvs() {
-      return _uvs;
-    }
+      static Mesh* Quad;
 
-    inline IndexVector& indices() {
-      return _indices;
-    }
+    protected:
+      std::string _key;
 
-    inline std::string id() const {
-      return _id;
-    }
-
-    inline math::Vector maxDim() {
-      return _maxDim;
-    }
-
-    static void generatePrimitives();
-
-    static Mesh* load(std::string path);
-
-    static Mesh* Cube;
-
-    static Mesh* Sphere;
-
-    static Mesh* Quad;
-
-  protected:
-    std::string _id;
-
-    VertexVector _vertices;
-
-    VertexVector _normals;
-
-    Vertex2Vector _uvs;
-
-    IndexVector _indices;
-
-    math::Vector _maxDim;
-  };
-
-} }
+      MeshType _type = MeshType::cube;
+    };
+  }
+}

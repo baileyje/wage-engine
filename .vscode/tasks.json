@@ -17,6 +17,20 @@
       "problemMatcher": []
     },
     {
+      "label": "run-game",
+      "type": "shell",
+      "command": "./bazel-bin/wage",
+      "options": {
+        "cwd": "${workspaceFolder}/game"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "dependsOn": ["build-game"]
+    },
+    {
       "label": "build-game-debug",
       "type": "shell",
       "command": "bazel build -c dbg --spawn_strategy=standalone :wage && bazel build -c dbg --spawn_strategy=standalone :wage_dsym",

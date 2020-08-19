@@ -8,21 +8,40 @@
 
 #include "fs/file.h"
 
-namespace wage { namespace fs {
+namespace wage {
+  namespace fs {
 
-  class FileSystem : public core::Service, public File::ContentProvider {
+#if defined(WIN32) || defined(_WIN32)
+#define PATH_SEPARATOR "\\"
+#else
+#define PATH_SEPARATOR "/"
+#endif
 
-  public:
-    FileSystem() : Service("FileSystem") {
-    }
+    class FileSystem : public core::Service, public File::ContentProvider {
 
-    ~FileSystem() {}
+    public:
+      FileSystem() : Service("FileSystem") {
+      }
 
-    inline File get(std::string path) const {
-      return File(path, this);
-    }
+      ~FileSystem() {}
 
-    virtual std::unique_ptr<memory::Buffer> read(std::string path, memory::Allocator* allocator) const = 0;
-  };
+      inline File get(std::string path) const {
+        return File(path, this);
+      }
 
-} }
+      inline std::string path(const std::initializer_list<std::string> parts) {
+        std::string result = "";
+        for (auto iter = parts.begin(); iter != parts.end(); ++iter) {
+          result += *iter;
+          if (iter != parts.end() - 1) {
+            result += PATH_SEPARATOR;
+          }
+        }
+        return result;
+      }
+
+      virtual memory::Buffer* read(std::string path, memory::Allocator* allocator) const = 0;
+    };
+
+  }
+}

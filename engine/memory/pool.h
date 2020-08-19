@@ -38,41 +38,41 @@ namespace wage {
         ~Iterator() {}
 
         bool operator==(const Iterator& other) const {
-            return pool == other.pool && current == other.current;
+          return pool == other.pool && current == other.current;
         }
 
         bool operator!=(const Iterator& other) const {
-            return !operator==(other);
+          return !operator==(other);
         }
 
         Iterator& operator++() {
-            current = pool->footer(current)->next;
-            return (*this);
+          current = pool->footer(current)->next;
+          return (*this);
         }
 
         Iterator operator++(int) {
-            Iterator temp = *this;
-            ++(*this);
-            return temp;
+          Iterator temp = *this;
+          ++(*this);
+          return temp;
         }
 
         Iterator& operator--() {
-            current = pool->footer(current)->prev;
-            return (*this);
+          current = pool->footer(current)->prev;
+          return (*this);
         }
 
         Iterator operator--(int) {
-            Iterator temp = *this;
-            --(*this);
-            return temp;
+          Iterator temp = *this;
+          --(*this);
+          return temp;
         }
 
         Item operator*() {
-            return current;
+          return current;
         }
 
         Item operator->() {
-            return current;
+          return current;
         }
 
       private:
@@ -102,7 +102,7 @@ namespace wage {
         newFooter->prev = allocedTail;
         newFooter->next = nullptr;
         if (allocedTail != nullptr) {
-            footer(allocedTail)->next = freeItem;
+          footer(allocedTail)->next = freeItem;
         }
         allocedTail = freeItem;
         // Return the free item.
@@ -162,28 +162,27 @@ namespace wage {
       size_t _currentSize = 0;
 
       Item allocateBlock() {
-          size_t itemAndFooterSize = _itemSize + sizeof(Footer);
-          size_t blockSize = itemsPerBlock * itemAndFooterSize;
-          std::cout << "Allocating block... " << blockSize << std::endl;
-          void* blockBegin = allocator->allocate(blockSize);
-          Item item = blockBegin;
-          for (int i = 0; i < itemsPerBlock - 1; ++i) {
-              Footer* footer = reinterpret_cast<Footer*>(reinterpret_cast<char*>(item) + _itemSize);
-              footer->next = reinterpret_cast<Footer*>(reinterpret_cast<char*>(item) + itemAndFooterSize);
-              item = footer->next;
-          }
-          footer(item)->next = nullptr;
-          if (allocedHead == nullptr) {
-              allocedHead = blockBegin;
-          }
-          return blockBegin;
+        size_t itemAndFooterSize = _itemSize + sizeof(Footer);
+        size_t blockSize = itemsPerBlock * itemAndFooterSize;
+        void* blockBegin = allocator->allocate(blockSize);
+        Item item = blockBegin;
+        for (int i = 0; i < itemsPerBlock - 1; ++i) {
+          Footer* footer = reinterpret_cast<Footer*>(reinterpret_cast<char*>(item) + _itemSize);
+          footer->next = reinterpret_cast<Footer*>(reinterpret_cast<char*>(item) + itemAndFooterSize);
+          item = footer->next;
+        }
+        footer(item)->next = nullptr;
+        if (allocedHead == nullptr) {
+          allocedHead = blockBegin;
+        }
+        return blockBegin;
       }
 
       /**
        * Helper to jump to the footer.
        */
       Footer* footer(Item item) {
-          return reinterpret_cast<Footer*>(reinterpret_cast<char*>(item) + _itemSize);
+        return reinterpret_cast<Footer*>(reinterpret_cast<char*>(item) + _itemSize);
       }
     };
   }

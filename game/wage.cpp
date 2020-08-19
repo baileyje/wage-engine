@@ -45,17 +45,17 @@ void registerKnownComponents(ecs::EntityManager* entityManager) {
   // TODO: Move engine provided components to the some engine bootstap function.
 
   entityManager->registerComponent(TransformComponent, sizeof(math::Transform));
-  
+
   // Camera
   entityManager->registerComponent(CameraComponent, sizeof(component::Camera));
   // entityManager->registerComponent(OrthographicCameraComponent, sizeof(component::OrthographicCamera));
   entityManager->registerComponent(PerspectiveCameraComponent, sizeof(component::PerspectiveCamera));
-  
+
   // Lights
   entityManager->registerComponent(SpotlightComponent, sizeof(component::Spotlight));
   entityManager->registerComponent(PointLightComponent, sizeof(component::PointLight));
   entityManager->registerComponent(DirectionalLightComponent, sizeof(component::DirectionalLight));
-  
+
   // Renderer
   entityManager->registerComponent(MeshComponent, sizeof(render::Mesh));
   entityManager->registerComponent(MaterialComponent, sizeof(render::Material));
@@ -66,7 +66,7 @@ void registerKnownComponents(ecs::EntityManager* entityManager) {
 
   // UI
   entityManager->registerComponent(UiLabelComponent, sizeof(ui::UiLabel));
- 
+
   // Game Junk
   entityManager->registerComponent(PlayerComponent, sizeof(Player));
   entityManager->registerComponent(EnemyComponent, sizeof(Enemy));
@@ -92,10 +92,10 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
 
   setupHud(entityManager, systemManager);
 
-  for (int i = 0; i < 200; i++) {
+  for (int i = 0; i < 100; i++) {
     addRandomEnemy(entityManager, systemManager);
   }
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 0; i++) {
     addRandomPlanet(entityManager, systemManager);
   }
 }
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
 
   setupCoreSystems(systemManager);
 
-  render::Mesh::generatePrimitives();
+  // render::Mesh::generatePrimitives();
   setupScene(entityManager, systemManager);
   core::Core::Instance->init();
   core::Core::Instance->start();

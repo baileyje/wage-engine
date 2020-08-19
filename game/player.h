@@ -87,7 +87,7 @@ public:
     auto dx = lastPos.x - mousePos.x;
     auto dy = lastPos.y - mousePos.y;
     auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
-    auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
+    // auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
 
     // body->addTorqueImpulse(torque);
     float force = 10.0;
@@ -128,16 +128,12 @@ private:
 };
 
 ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  auto mesh = render::Mesh::load("resources/meshes/player.obj");
   auto player = entityManager->create();
   player.assign<math::Transform>(TransformComponent, Vector(0, 0, 0), Vector(5, 5, 5), Vector(0, 5, 0));
-  // transform.position();
-  // transform.localScale();
-  // transform.rotation();
   player.assign<physics::RigidBody>(RigidBodyComponent, 0.01);
-  player.assign<render::Mesh>(MeshComponent, mesh);
+  player.assign<render::Mesh>(MeshComponent, "player.obj", render::MeshType::custom);
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
-  player.assign<render::Material>(MaterialComponent, render::Texture("textures/default.png"));
+  player.assign<render::Material>(MaterialComponent, render::Texture("odd_space.png"));
   player.assign<Player>(PlayerComponent);
   return player;
 }

@@ -61,7 +61,8 @@ void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemMana
   entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::immovable);
   entity.assign<render::Mesh>(MeshComponent, render::Mesh::Sphere);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
-  entity.assign<render::Material>(MaterialComponent, render::Texture("textures/earthlike_planet.png"));
+  entity.assign<render::Material>(MaterialComponent, render::Texture("earthlike_planet.png"));
+  // entity.assign<render::Material>(MaterialComponent, render::Texture("default.png"));
   entity.assign<Planet>(PlanetComponent);
 }
 

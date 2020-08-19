@@ -4,43 +4,53 @@
 
 #include "memory/buffer.h"
 
-namespace wage { namespace assets {
+namespace wage {
+  namespace assets {
 
-  class Asset {
+    class Asset {
 
-  public:
-    typedef std::string Key;
+    public:
+      typedef std::string Key;
 
-    Asset(Key key) : _key(key), _loaded(false) {
-    }
+      typedef std::string Type;
 
-    virtual ~Asset() {}
+      Asset(Type type, Key key) : _loaded(false), _type(type), _key(key) {
+      }
 
-    virtual Key key() const {
-      return _key;
-    }
+      virtual ~Asset() {}
 
-    virtual bool loaded() const {
-      return _loaded;
-    }
+      virtual Type type() const {
+        return _type;
+      }
 
-    virtual void loaded(bool loaded) {
-      _loaded = loaded;
-    }
+      virtual Key key() const {
+        return _key;
+      }
 
-    virtual void set(std::shared_ptr<memory::Buffer> buffer) {
-      this->buffer = buffer;
-    }
+      virtual bool loaded() const {
+        return _loaded;
+      }
 
-    virtual void onLoad() {
-    }
+      virtual void loaded(bool loaded) {
+        _loaded = loaded;
+      }
 
-  protected:
-    std::shared_ptr<memory::Buffer> buffer;
+      virtual void set(memory::Buffer* buffer) {
+        this->buffer = buffer;
+      }
 
-  private:
-    Key _key;
+      virtual void onLoad() {
+      }
 
-    bool _loaded;
-  };
-} }
+    protected:
+      memory::Buffer* buffer;
+
+      bool _loaded;
+
+    private:
+      Type _type;
+
+      Key _key;
+    };
+  }
+}

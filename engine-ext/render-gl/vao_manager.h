@@ -4,43 +4,56 @@
 
 #include "memory/allocator.h"
 #include "render/mesh.h"
+#include "render/mesh_manager.h"
+#include "assets/manager.h"
 
 #include "render-gl/vertex_array.h"
 #include "render-gl/index_buffer.h"
 
-namespace wage { namespace render {
+namespace wage {
 
-  class VaoManager {
+  namespace render {
 
-  public:
-    VertexArray* load(Mesh* mesh) {
-      VertexArray* vao = cache[mesh->id()];
-      if (vao == nullptr) {
-        vao = memory::make<VertexArray>();
-        vao->bind();
-        // Create Verts Buff
-        VertexBuffer* verts = memory::make<VertexBuffer>(mesh->vertices().data(), mesh->vertices().size() * 3 * sizeof(float));
-        verts->layout()->pushFloat(3);
-        vao->addBuffer(verts);
-        // Create Norms Buff
-        VertexBuffer* norms = memory::make<VertexBuffer>(mesh->normals().data(), mesh->normals().size() * 3 * sizeof(float));
-        norms->layout()->pushFloat(3);
-        vao->addBuffer(norms);
-        // Create Texture Buff
-        VertexBuffer* uvs = memory::make<VertexBuffer>(mesh->uvs().data(), mesh->uvs().size() * 3 * sizeof(float));
-        uvs->layout()->pushFloat(2);
-        vao->addBuffer(uvs);
+    class VaoManager {
 
-        IndexBuffer* indices = memory::make<IndexBuffer>((const unsigned int*)mesh->indices().data(), mesh->indices().size());
-        indices->bind();
+    public:
+      VertexArray* load(MeshData* meshData) {
+        if (!meshData->loaded()) {
+          return nullptr;
+        }
+        auto vao = cache[meshData->key()];
+        // Only make a single cache item
+        if (vao == nullptr) {
+          vao = memory::make<VertexArray>();
+          cache[meshData->key()] = vao;
+          vao->bind();
+          // Create Verts Buff
+          VertexBuffer* verts = memory::make<VertexBuffer>(meshData->vertices().data(), meshData->vertices().size() * 3 * sizeof(float));
+          verts->layout()->pushFloat(3);
+          vao->addBuffer(verts);
+          // Create Norms Buff
+          VertexBuffer* norms = memory::make<VertexBuffer>(meshData->normals().data(), meshData->normals().size() * 3 * sizeof(float));
+          norms->layout()->pushFloat(3);
+          vao->addBuffer(norms);
+          // Create Texture Buff
+          VertexBuffer* uvs = memory::make<VertexBuffer>(meshData->uvs().data(), meshData->uvs().size() * 3 * sizeof(float));
+          uvs->layout()->pushFloat(2);
+          vao->addBuffer(uvs);
 
-        cache[mesh->id()] = vao;
+          IndexBuffer* indices = memory::make<IndexBuffer>((const unsigned int*)meshData->indices().data(), meshData->indices().size());
+          indices->bind();
+        }
+        return vao;
       }
-      return vao;
-    }
 
-  private:
-    std::unordered_map<std::string, VertexArray*> cache;
-  };
+      inline void meshManager(MeshManager* meshManager) {
+        _meshManager = meshManager;
+      }
 
-} }
+    private:
+      MeshManager* _meshManager;
+
+      std::unordered_map<std::string, VertexArray*> cache;
+    };
+  }
+}

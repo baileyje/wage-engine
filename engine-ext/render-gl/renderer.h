@@ -2,6 +2,7 @@
 
 #include "render/renderer.h"
 #include "render/queue.h"
+#include "render/mesh_manager.h"
 
 #include "render-gl/texture_manager.h"
 #include "render-gl/shader_manager.h"
@@ -29,6 +30,8 @@ namespace wage {
       virtual void endRender();
 
     private:
+      MeshManager meshManager;
+
       VaoManager vaoManager;
 
       GlTextureManager textureManager;

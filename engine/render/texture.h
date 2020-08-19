@@ -5,6 +5,9 @@
 namespace wage {
   namespace render {
 
+    /**
+     * Simple texture with basically no options other than providing an image path to load.
+     */
     // TODO:  De-jank this
     class Texture {
 
@@ -30,6 +33,5 @@ namespace wage {
     private:
       std::string _path;
     };
-
   }
 }

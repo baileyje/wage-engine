@@ -24,8 +24,8 @@ namespace wage {
     class GlMeshRenderable : public Renderable {
 
     public:
-      GlMeshRenderable(VaoManager* vaoManager, GlTextureManager* textureManager, math::Transform transform, Mesh* mesh, Material* material)
-          : _vaoManager(vaoManager), _textureManager(textureManager), transform(transform), mesh(mesh), material(material) {}
+      GlMeshRenderable(MeshManager* meshManager, VaoManager* vaoManager, GlTextureManager* textureManager, math::Transform transform, Mesh* mesh, Material* material)
+          : _meshManager(meshManager), _vaoManager(vaoManager), _textureManager(textureManager), transform(transform), mesh(mesh), material(material) {}
 
       inline VaoManager* vaoManager() {
         return _vaoManager;
@@ -36,7 +36,11 @@ namespace wage {
       }
 
       virtual math::BoundingBox boundingBox() {
-        math::Vector maxDims = mesh->maxDim();
+        auto meshData = _meshManager->load(mesh);
+        if (!meshData->loaded()) {
+          return math::BoundingBox(position(), {0, 0, 0});
+        }
+        math::Vector maxDims = meshData->maxDim();
         math::Vector scale = transform.scale();
         math::Vector scaledMaxHalfDim(
             maxDims.x * scale.x,
@@ -71,7 +75,7 @@ namespace wage {
           glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
           glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
         }
-        // TEMP: Remove when ligting data is clean for render
+        // TEMP: Remove when lighting data is clean for render
         glMaterial.setInt("numDirLights", 2);
         glMaterial.setVec3("dirLights[0].direction", directionFromEulers(math::Vector(0, -1, 0)));
         glMaterial.setVec3("dirLights[0].ambient", math::Vector(0.4, 0.4, 0.4));
@@ -130,7 +134,14 @@ namespace wage {
       }
 
       virtual void render(RenderContext* context) {
-        VertexArray* vao = vaoManager()->load(mesh);
+        auto meshData = _meshManager->load(mesh);
+        if (!meshData->loaded()) {
+          return;
+        }
+        auto vao = vaoManager()->load(meshData);
+        if (vao == nullptr) {
+          return;
+        }
         vao->bind();
         auto program = GlProgram::Default;
         if (!program->loaded()) {
@@ -139,13 +150,15 @@ namespace wage {
         GlMaterial material(program);
         setupMaterial(material, context);
         material.bind();
-        GL_FAIL_CHECK(glDrawElements(GL_TRIANGLES, mesh->elementCount(), GL_UNSIGNED_INT, 0));
+        GL_FAIL_CHECK(glDrawElements(GL_TRIANGLES, meshData->elementCount(), GL_UNSIGNED_INT, 0));
         vao->unbind();
         // glTexture->unbind();  TODO: How do we get this thing..
         material.unbind();
       }
 
     private:
+      MeshManager* _meshManager;
+
       VaoManager* _vaoManager;
 
       GlTextureManager* _textureManager;

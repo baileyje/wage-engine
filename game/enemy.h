@@ -17,6 +17,7 @@ class EnemyMovement : public ecs::System {
 public:
   EnemyMovement() : System(), chasing(false), running(false) {
   }
+
   void fixedUpdate(const ecs::SystemContext& context) {
     auto manager = core::Core::Instance->get<ecs::EntityManager>();
     auto input = core::Core::Instance->get<input::Input>();
@@ -49,7 +50,7 @@ public:
           continue;
         }
         auto dir = targetPosition - enemyPosition;
-        auto impulse = dir.normalized() * 0.1;
+        auto impulse = dir.normalized() * 1.0;
         if (running) {
           impulse *= -1;
         }
@@ -94,17 +95,17 @@ void addEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManag
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(Vector(scale, scale, scale));
-  entity.assign<physics::RigidBody>(RigidBodyComponent, 0.001);
+  entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01);
   entity.assign<render::Mesh>(MeshComponent, render::Mesh::Cube);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
-  entity.assign<render::Material>(MaterialComponent, render::Texture("textures/odd_space_2.png"));
+  entity.assign<render::Material>(MaterialComponent, render::Texture("odd_space_2.png"));
   entity.assign<Enemy>(EnemyComponent);
 }
 
 void addRandomEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  float x = rand() % 5000 - 2500;
-  float y = rand() % 5000 - 2500;
-  float z = rand() % 5000 - 2500;
+  float x = rand() % 1000 - 500;
+  float y = rand() % 1000 - 500;
+  float z = rand() % 1000 - 500;
   // float scale = (rand() % 100) / 30.0;
   addEnemy(entityManager, systemManager, Vector(x, y, z) * 2, 5 /*scale*/);
 }

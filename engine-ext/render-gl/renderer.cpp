@@ -34,15 +34,20 @@ namespace wage {
       core::Logger::info("Graphics Vendor: ", vendor);
       core::Logger::info("Graphics Renderer: ", renderer);
 
-      // Intialize default render assets
+      // Initialize default render assets
+      meshManager.assetManager(assetManager);
       shaderManager.assetManager(assetManager);
       // GlShader::Default->load(assetManager);
-      GlProgram::Default->load(assetManager);
-      GlProgram::Font->load(assetManager);
-      GlProgram::Sprite->load(assetManager);
       textureManager.assetManager(assetManager);
       fontManager.assetManager(assetManager);
       // GlTexture::Default->load(assetManager);
+      vaoManager.meshManager(&meshManager);
+
+      GlProgram::Default->load(assetManager);
+      GlProgram::Font->load(assetManager);
+      GlProgram::Sprite->load(assetManager);
+
+      meshManager.generatePrimitives();
     }
 
     void GlRenderer::beginRender() {
@@ -62,7 +67,7 @@ namespace wage {
 
     void GlRenderer::renderMesh(math::Transform transform, Mesh* mesh, Material* material) {
       meshQueues[currentProducerQueue].add<GlMeshRenderable>(
-          &vaoManager, &textureManager, transform, mesh, material);
+          &meshManager, &vaoManager, &textureManager, transform, mesh, material);
     }
 
     void GlRenderer::endRender() {
