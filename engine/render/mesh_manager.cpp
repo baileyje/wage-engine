@@ -112,7 +112,8 @@ namespace wage {
                                    16, 17, 18, 16, 18, 19, //upper
                                    20, 21, 22, 20, 22, 23  // bottom
                                });
-      _loaded[cube->key()] = cube;
+      primitives[cube->spec().key()] = cube;
+
       auto quad = new MeshData(
           "QuadMesh",
           VertexVector{
@@ -138,7 +139,7 @@ namespace wage {
               1, 2, 3  // second Triangle
           });
 
-      _loaded[quad->key()] = quad;
+      primitives[quad->spec().key()] = quad;
 
       VertexVector vertices;
       VertexVector normals;
@@ -188,7 +189,7 @@ namespace wage {
           *i++ = curRow + nextS;
         }
       auto sphere = new MeshData("SphereMesh", vertices, normals, texts, indices);
-      _loaded[sphere->key()] = sphere;
+      primitives[sphere->spec().key()] = sphere;
     }
 
   }

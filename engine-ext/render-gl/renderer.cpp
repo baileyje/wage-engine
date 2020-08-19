@@ -36,11 +36,6 @@ namespace wage {
 
       // Initialize default render assets
       meshManager.assetManager(assetManager);
-      shaderManager.assetManager(assetManager);
-      // GlShader::Default->load(assetManager);
-      textureManager.assetManager(assetManager);
-      fontManager.assetManager(assetManager);
-      // GlTexture::Default->load(assetManager);
       vaoManager.meshManager(&meshManager);
 
       GlProgram::Default->load(assetManager);
@@ -57,17 +52,17 @@ namespace wage {
 
     void GlRenderer::renderText(math::Vector2 position, std::string text, Font font, math::Color color) {
       uiQueues[currentProducerQueue].add<GlTextRenderable>(
-          &fontManager, position, text, font, color);
+          assetManager, position, text, font, color);
     }
 
     void GlRenderer::renderSprite(math::Vector2 position, math::Vector2 size, math::Color color, Texture texture) {
       uiQueues[currentProducerQueue].add<GlSpriteRenderable>(
-          &textureManager, position, size, color, texture);
+          assetManager, position, size, color, texture);
     }
 
     void GlRenderer::renderMesh(math::Transform transform, Mesh* mesh, Material* material) {
       meshQueues[currentProducerQueue].add<GlMeshRenderable>(
-          &meshManager, &vaoManager, &textureManager, transform, mesh, material);
+          assetManager, &meshManager, &vaoManager, transform, mesh, material);
     }
 
     void GlRenderer::endRender() {

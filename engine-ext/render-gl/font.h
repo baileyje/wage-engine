@@ -67,7 +67,7 @@ namespace wage {
     class GlFont : public assets::Asset {
 
     public:
-      GlFont(std::string path, int size = 48) : Asset("font", path), size(size) {}
+      GlFont(Font font) : Asset(font), size(font.size()) {}
 
       inline GlCharacter* characterFor(char c) {
         auto found = characters.find(c);
@@ -77,12 +77,12 @@ namespace wage {
         return nullptr;
       }
 
-      void onLoad() {
+      void onLoad(memory::Buffer buffer) {
         FT_Library freeType;
         if (FT_Init_FreeType(&freeType))
           std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
         FT_Face face;
-        if (FT_New_Memory_Face(freeType, buffer->data(), buffer->length(), 0, &face))
+        if (FT_New_Memory_Face(freeType, buffer.data(), buffer.length(), 0, &face))
           std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
         FT_Set_Pixel_Sizes(face, 0, size);
         for (GLubyte c = 0; c < 128; c++) {

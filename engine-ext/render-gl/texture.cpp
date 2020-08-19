@@ -12,8 +12,8 @@ namespace wage {
       }
     }
 
-    void GlTexture::onLoad() {
-      data = stbi_load_from_memory(buffer->data(), buffer->length(), &width, &height, &channels, 0);
+    void GlTexture::onLoad(memory::Buffer buffer) {
+      data = stbi_load_from_memory(buffer.data(), buffer.length(), &width, &height, &channels, 0);
     }
 
     void GlTexture::push() {

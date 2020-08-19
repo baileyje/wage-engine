@@ -40,7 +40,7 @@ namespace wage {
         return result;
       }
 
-      virtual memory::Buffer* read(std::string path, memory::Allocator* allocator) const = 0;
+      virtual memory::Buffer read(std::string path, memory::Allocator* allocator) const = 0;
     };
 
   }

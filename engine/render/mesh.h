@@ -2,35 +2,35 @@
 
 #include <string>
 
+#include "assets/asset_spec.h"
+
 #define MeshComponent 30
 
 namespace wage {
   namespace render {
 
-    enum class MeshType { cube,
-                          sphere,
-                          quad,
-                          custom };
+    enum class MeshType {
+      cube,
+      sphere,
+      quad,
+      custom
+    };
 
-    class Mesh {
+    class Mesh : public assets::AssetSpec {
 
     public:
-      Mesh() {}
+      Mesh() : Mesh("*****INVALID*****", MeshType::cube) {}
 
-      Mesh(std::string key, MeshType type) : _key(key), _type(type) {
+      Mesh(std::string key, MeshType type) : assets::AssetSpec("mesh", key), _meshType(type) {
       }
 
-      Mesh(Mesh* templateMesh) : _key(templateMesh->key()), _type(templateMesh->type()) {}
+      Mesh(Mesh* templateMesh) : assets::AssetSpec("mesh", templateMesh->key()), _meshType(templateMesh->meshType()) {}
 
       virtual ~Mesh() {
       }
 
-      inline MeshType type() {
-        return _type;
-      }
-
-      inline std::string key() const {
-        return _key;
+      inline MeshType meshType() {
+        return _meshType;
       }
 
       static Mesh* Cube;
@@ -40,9 +40,7 @@ namespace wage {
       static Mesh* Quad;
 
     protected:
-      std::string _key;
-
-      MeshType _type = MeshType::cube;
+      MeshType _meshType = MeshType::cube;
     };
   }
 }

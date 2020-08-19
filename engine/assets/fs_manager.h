@@ -20,14 +20,14 @@ namespace wage {
       /**
        * Perform an asset load by reading the asset content from the filesystem into a memory buffer.
        */
-      void performLoad(Asset* asset) {
-        auto buffer = fileSystem->read(filePath(asset), memory::Allocator::Assets());
-        asset->set(buffer);
+      memory::Buffer performLoad(Asset* asset) {
+        std::cout << "FS PATH: " << filePath(asset->spec()) << "\n";
+        return fileSystem->read(filePath(asset->spec()), memory::Allocator::Assets());
       }
 
     private:
-      std::string filePath(Asset* asset) {
-        return fileSystem->path({"resources", asset->type(), asset->key()});
+      std::string filePath(AssetSpec assetSpec) {
+        return fileSystem->path({"resources", assetSpec.type(), assetSpec.key()});
       }
 
       fs::FileSystem* fileSystem;

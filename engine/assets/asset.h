@@ -2,55 +2,75 @@
 
 #include <string>
 
+#include "assets/asset_spec.h"
 #include "memory/buffer.h"
 
 namespace wage {
   namespace assets {
 
+    /**
+     * A data backed engine asset like a texture or mesh. Assets have a specific load process
+     * and are assumed to need their data loaded from some media format like a filesystem or remote
+     * server.
+     * 
+     * Assets have a specific state transition not loaded to loaded once they are made available. Eventually 
+     * the engine may unload them if they are not used after some timeframe.
+     */
     class Asset {
 
     public:
-      typedef std::string Key;
+      enum class AssetState {
+        // Asset is being tracked, but has not fully loaded
+        created,
+        // Asset is currently being loaded
+        loading,
+        // Asset is fully loaded and ready for action
+        loaded,
+        // The asset data has been clear from memory and will need to be loaded again.
+        cleared
+      };
 
-      typedef std::string Type;
-
-      Asset(Type type, Key key) : _loaded(false), _type(type), _key(key) {
+      /**
+       * Create a asset with a specific type and key. The assumption is these two pieces of information
+       * should be enough for a manger to retrieve the underlying data from the storage media.
+       */
+      Asset(AssetSpec spec) : _state(AssetState::created), _spec(spec) {
       }
 
       virtual ~Asset() {}
 
-      virtual Type type() const {
-        return _type;
+      /**
+       * Get the asset spec.
+       */
+      virtual AssetSpec spec() const {
+        return _spec;
       }
 
-      virtual Key key() const {
-        return _key;
-      }
-
+      /**
+       * Determine if this asset is fully loaded.
+       */
       virtual bool loaded() const {
-        return _loaded;
+        return _state == AssetState::loaded;
       }
 
-      virtual void loaded(bool loaded) {
-        _loaded = loaded;
+      /**
+       * Set the asset state.
+       */
+      virtual void state(AssetState state) {
+        _state = state;
       }
 
-      virtual void set(memory::Buffer* buffer) {
-        this->buffer = buffer;
-      }
-
-      virtual void onLoad() {
+      /**
+       * Virtual method called when the data buffer is available from the storage media.
+       */
+      virtual void onLoad(memory::Buffer buffer) {
       }
 
     protected:
-      memory::Buffer* buffer;
-
-      bool _loaded;
+      AssetState _state;
 
     private:
-      Type _type;
-
-      Key _key;
+      AssetSpec _spec;
     };
   }
 }

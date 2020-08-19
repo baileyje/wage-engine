@@ -53,7 +53,7 @@ public:
   }
 };
 
-void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager, math::Vector position, float scale) {
+void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager, math::Vector position, float scale, int texture) {
   auto entity = entityManager->create();
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
@@ -61,8 +61,12 @@ void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemMana
   entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::immovable);
   entity.assign<render::Mesh>(MeshComponent, render::Mesh::Sphere);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
-  entity.assign<render::Material>(MaterialComponent, render::Texture("earthlike_planet.png"));
-  // entity.assign<render::Material>(MaterialComponent, render::Texture("default.png"));
+  if (texture == 0) {
+    entity.assign<render::Material>(MaterialComponent, render::Texture("earthlike_planet.png"));
+  } else {
+    entity.assign<render::Material>(MaterialComponent, render::Texture("test_planet.png"));
+  }
+
   entity.assign<Planet>(PlanetComponent);
 }
 
@@ -71,7 +75,8 @@ void addRandomPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* syst
   float y = rand() % 5000 - 2500;
   float z = rand() % 5000 - 2500;
   // float scale = (rand() % 100) / 30.0;
-  addPlanet(entityManager, systemManager, math::Vector(x, y, z) * 2, 100);
+  int texture = rand() % 2;
+  addPlanet(entityManager, systemManager, math::Vector(x, y, z) * 2, 500, texture);
 }
 
 #endif // PLANET_H

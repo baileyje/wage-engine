@@ -14,16 +14,16 @@ namespace wage {
 
       ~Local() {}
 
-      memory::Buffer* read(std::string path, memory::Allocator* allocator) const override {
+      memory::Buffer read(std::string path, memory::Allocator* allocator) const override {
         // How is this cleaned up.
-        auto buffer = allocator->create<memory::Buffer>();
+        memory::Buffer buffer;
         std::ifstream file(fullPath(path), std::ios::in | std::ios::binary);
         file.seekg(0, std::ios::end);
         size_t size = file.tellg();
         core::Logger::debug("Loading: ", path.c_str(), " -> ", size);
         file.seekg(0, std::ios::beg);
-        buffer->allocate(size, allocator);
-        file.read((char*)buffer->data(), size);
+        buffer.allocate(size, allocator);
+        file.read((char*)buffer.data(), size);
         file.close();
         return buffer;
       }

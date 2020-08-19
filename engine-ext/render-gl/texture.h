@@ -11,7 +11,7 @@ namespace wage {
     class GlTexture : public assets::Asset {
 
     public:
-      GlTexture(Texture texture) : Asset("texture", texture.path()), pushed(false), _texture(texture) {
+      GlTexture(Texture texture) : Asset(texture), pushed(false), _texture(texture) {
       }
 
       ~GlTexture();
@@ -22,7 +22,7 @@ namespace wage {
 
       void load(assets::Manager* assetManager);
 
-      void onLoad();
+      void onLoad(memory::Buffer buffer);
 
       void bind();
 

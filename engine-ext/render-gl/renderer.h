@@ -4,10 +4,8 @@
 #include "render/queue.h"
 #include "render/mesh_manager.h"
 
-#include "render-gl/texture_manager.h"
-#include "render-gl/shader_manager.h"
+#include "render-gl/texture.h"
 #include "render-gl/vao_manager.h"
-#include "render-gl/font_manager.h"
 
 namespace wage {
   namespace render {
@@ -33,12 +31,6 @@ namespace wage {
       MeshManager meshManager;
 
       VaoManager vaoManager;
-
-      GlTextureManager textureManager;
-
-      GlShaderManager shaderManager;
-
-      GlFontManager fontManager;
 
       std::vector<component::DirectionalLight*> dirLights;
 

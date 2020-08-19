@@ -11,13 +11,13 @@ namespace wage {
           .normalized();
     }
 
-    void MeshData::onLoad() {
+    void MeshData::onLoad(memory::Buffer buffer) {
       std::string err;
       std::string warn;
       tinyobj::attrib_t attrib;
       std::vector<tinyobj::shape_t> shapes;
       std::vector<tinyobj::material_t> materials;
-      std::istream stream(buffer);
+      std::istream stream(&buffer);
       bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, &stream);
       if (!err.empty()) {
         std::cerr << err << std::endl;

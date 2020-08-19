@@ -12,7 +12,7 @@ namespace wage {
     public:
       class ContentProvider {
       public:
-        virtual memory::Buffer* read(std::string path, memory::Allocator* allocator) const = 0;
+        virtual memory::Buffer read(std::string path, memory::Allocator* allocator) const = 0;
       };
 
       File(std::string path, const ContentProvider* provider) : _path(path), provider(provider) {
@@ -22,7 +22,7 @@ namespace wage {
         return _path;
       }
 
-      memory::Buffer* read(memory::Allocator* allocator) const {
+      memory::Buffer read(memory::Allocator* allocator) const {
         return provider->read(_path, allocator);
       }
 

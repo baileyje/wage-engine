@@ -95,7 +95,7 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
   for (int i = 0; i < 100; i++) {
     addRandomEnemy(entityManager, systemManager);
   }
-  for (int i = 0; i < 0; i++) {
+  for (int i = 0; i < 20; i++) {
     addRandomPlanet(entityManager, systemManager);
   }
 }

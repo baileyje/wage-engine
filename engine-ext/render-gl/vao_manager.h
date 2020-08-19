@@ -21,11 +21,11 @@ namespace wage {
         if (!meshData->loaded()) {
           return nullptr;
         }
-        auto vao = cache[meshData->key()];
+        auto vao = cache[meshData->spec().key()];
         // Only make a single cache item
         if (vao == nullptr) {
           vao = memory::make<VertexArray>();
-          cache[meshData->key()] = vao;
+          cache[meshData->spec().key()] = vao;
           vao->bind();
           // Create Verts Buff
           VertexBuffer* verts = memory::make<VertexBuffer>(meshData->vertices().data(), meshData->vertices().size() * 3 * sizeof(float));

@@ -6,6 +6,7 @@
 
 #include "math/vector.h"
 #include "assets/asset.h"
+#include "render/mesh.h"
 
 namespace wage {
   namespace render {
@@ -17,31 +18,18 @@ namespace wage {
     class MeshData : public assets::Asset {
 
     public:
-      MeshData() : Asset("mesh", "INVALID") {
-      }
-
-      MeshData(std::string key) : assets::Asset("mesh", key) {
+      MeshData(Mesh mesh) : assets::Asset(mesh) {
       }
 
       MeshData(std::string key, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices)
-          : Asset("mesh", key), _vertices(vertices), _normals(normals), _uvs(uvs), _indices(indices), _maxDim(0) {
+          : Asset({"mesh", key}), _vertices(vertices), _normals(normals), _uvs(uvs), _indices(indices), _maxDim(0) {
         for (auto vertex : _vertices) {
           _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
           _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
           _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
         }
-        loaded(true);
+        state(AssetState::loaded);
       }
-
-      // MeshData(MeshData* templateMesh)
-      //     : assets::Asset("mesh", "INVALID"), _id(templateMesh->_id), _vertices(templateMesh->_vertices), _normals(templateMesh->_normals), _uvs(templateMesh->_uvs), _indices(templateMesh->_indices), _maxDim(0) {
-      //   for (auto vertex : _vertices) {
-      //     _maxDim.x = std::max(_maxDim.x, std::abs(vertex.x));
-      //     _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
-      //     _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
-      //   }
-      //   loaded(true);
-      // }
 
       virtual ~MeshData() {}
 
@@ -69,7 +57,7 @@ namespace wage {
         return _maxDim;
       }
 
-      void onLoad();
+      void onLoad(memory::Buffer buffer);
 
     protected:
       VertexVector _vertices;

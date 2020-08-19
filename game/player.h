@@ -73,7 +73,7 @@ private:
 class PlayerBasicMovement : public ecs::System {
 
 public:
-  PlayerBasicMovement() : System(), lastPos(Vector2()), mouseSpeed(0.0001) {
+  PlayerBasicMovement() : System(), lastPos(Vector2()) {
   }
 
   void start(const ecs::SystemContext& context) {
@@ -84,8 +84,8 @@ public:
     auto player = *core::Core::Instance->get<ecs::EntityManager>()->with({PlayerComponent, TransformComponent}).begin();
     auto input = core::Core::Instance->get<input::Input>();
     auto mousePos = input->mousePosition();
-    auto dx = lastPos.x - mousePos.x;
-    auto dy = lastPos.y - mousePos.y;
+    // auto dx = lastPos.x - mousePos.x;
+    // auto dy = lastPos.y - mousePos.y;
     auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
     // auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
 
@@ -124,7 +124,7 @@ public:
 private:
   Vector2 lastPos;
 
-  float mouseSpeed;
+  // float mouseSpeed;
 };
 
 ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
@@ -133,7 +133,7 @@ ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* sys
   player.assign<physics::RigidBody>(RigidBodyComponent, 0.01);
   player.assign<render::Mesh>(MeshComponent, "player.obj", render::MeshType::custom);
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
-  player.assign<render::Material>(MaterialComponent, render::Texture("odd_space.png"));
+  player.assign<render::Material>(MaterialComponent, render::Texture("default.png"));
   player.assign<Player>(PlayerComponent);
   return player;
 }

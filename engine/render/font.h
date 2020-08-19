@@ -2,28 +2,26 @@
 
 #include <string>
 
-namespace wage { namespace render {
+#include "assets/asset_spec.h"
 
-  class Font {
+namespace wage {
+  namespace render {
 
-  public:
-    Font(std::string path, int size) : _path(path), _size(size) {}
+    class Font : public assets::AssetSpec {
 
-    Font() {
-    }
+    public:
+      Font(std::string key, int size = 48) : AssetSpec("font", key), _size(size) {}
 
-    inline std::string path() {
-      return _path;
-    }
+      Font() : Font("*****INVALID*****", 0) {
+      }
 
-    inline int size() {
-      return _size;
-    }
+      inline int size() {
+        return _size;
+      }
 
-  private:
-    std::string _path;
+    private:
+      int _size;
+    };
 
-    int _size;
-  };
-
-} }
+  }
+}

@@ -14,14 +14,12 @@ namespace wage {
     class MeshManager {
 
     public:
-      MeshData* load(Mesh* mesh) {
-        auto data = _loaded[mesh->key()];
-        if (data == nullptr) {
-          data = memory::make<MeshData>(mesh->key());
-          _loaded[mesh->key()] = data;
-          _assetManager->load(data);
+      MeshData* load(Mesh mesh) {
+        auto primitive = primitives[mesh.key()];
+        if (primitive != nullptr) {
+          return primitive;
         }
-        return data;
+        return _assetManager->load<MeshData>(mesh);
       }
 
       inline void assetManager(assets::Manager* assetManager) {
@@ -33,7 +31,7 @@ namespace wage {
     private:
       assets::Manager* _assetManager;
 
-      std::unordered_map<std::string, MeshData*> _loaded;
+      std::unordered_map<std::string, MeshData*> primitives;
     };
 
   }

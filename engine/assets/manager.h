@@ -28,7 +28,7 @@ namespace wage {
         core::Core::Instance->onUpdate([&](const core::Frame& frame) {
           std::unique_lock<std::mutex> lock(mutex);
           for (auto asset : loaded) {
-            asset->loaded(true);
+            asset->state(Asset::AssetState::loaded);
           }
           loaded.clear();
         });
@@ -37,26 +37,40 @@ namespace wage {
       /**
        * Load an indavidual asset by dispatching the work onto the work queue.
        */
-      virtual void load(Asset* asset) {
-        queue.dispatch([this, asset] {
-          performLoad(asset);
-          asset->onLoad();
-          std::unique_lock<std::mutex> lock(mutex);
-          loaded.push_back(asset);
-        });
+      template <typename A = Asset, typename AS = AssetSpec>
+      A* load(AS spec) {
+        auto key = cacheKey(spec);
+        auto asset = (A*)cache[key];
+        if (asset == nullptr) {
+          asset = memory::make<A>(spec);
+          cache[key] = asset;
+          queue.dispatch([this, asset] {
+            auto buffer = performLoad(asset);
+            asset->onLoad(buffer);
+            std::unique_lock<std::mutex> lock(mutex);
+            loaded.push_back(asset);
+          });
+        }
+        return asset;        
       }
 
       /**
        * Virtual method to perform implementation specific load logic.
        */
-      virtual void performLoad(Asset* asset) = 0;
+      virtual memory::Buffer performLoad(Asset* asset) = 0;
 
     private:
+      inline std::string cacheKey(AssetSpec spec) {
+        return spec.type() + "-" + spec.key();
+      }
+
       async::DispatchQueue queue;
 
       std::vector<Asset*> loaded;
 
       std::mutex mutex;
+
+      std::unordered_map<std::string, Asset*> cache;
     };
   }
 }

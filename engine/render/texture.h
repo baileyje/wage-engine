@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "assets/asset_spec.h"
+
 namespace wage {
   namespace render {
 
@@ -9,29 +11,18 @@ namespace wage {
      * Simple texture with basically no options other than providing an image path to load.
      */
     // TODO:  De-jank this
-    class Texture {
+    class Texture : public assets::AssetSpec {
 
     public:
       static Texture Default;
 
-      Texture() : _path("****INVALID****") {
+      Texture() : Texture("default.png") {
       }
 
-      Texture(std::string path) : _path(path) {
+      Texture(std::string key) : AssetSpec("texture", key) {
       }
 
       ~Texture() {}
-
-      inline std::string path() {
-        return _path;
-      }
-
-      inline std::string id() {
-        return path();
-      }
-
-    private:
-      std::string _path;
     };
   }
 }

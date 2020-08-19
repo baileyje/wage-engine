@@ -6,6 +6,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext.hpp"
 
+#include "assets/manager.h"
 #include "math/matrix.h"
 #include "memory/allocator.h"
 #include "render/renderable.h"
@@ -24,8 +25,8 @@ namespace wage {
     class GlMeshRenderable : public Renderable {
 
     public:
-      GlMeshRenderable(MeshManager* meshManager, VaoManager* vaoManager, GlTextureManager* textureManager, math::Transform transform, Mesh* mesh, Material* material)
-          : _meshManager(meshManager), _vaoManager(vaoManager), _textureManager(textureManager), transform(transform), mesh(mesh), material(material) {}
+      GlMeshRenderable(assets::Manager* assetManager, MeshManager* meshManager, VaoManager* vaoManager, math::Transform transform, Mesh* mesh, Material* material)
+          : _assetManager(assetManager), _meshManager(meshManager), _vaoManager(vaoManager), transform(transform), mesh(mesh), material(material) {}
 
       inline VaoManager* vaoManager() {
         return _vaoManager;
@@ -122,12 +123,7 @@ namespace wage {
           glMaterial.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->cutOff())));
           glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->outerCutOff())));
         }
-        auto texture = Texture::Default;
-        // if (material.valid()) {
-        // TODO; Ref?
-        texture = material->texture();
-        // }
-        GlTexture* glTexture = _textureManager->load(texture);
+        GlTexture* glTexture = _assetManager->load<GlTexture>(material->texture());
         glTexture->bind();
         glMaterial.setInt("material.diffuse", 0);
         glMaterial.setFloat("material.shininess", 32.0f);
@@ -157,11 +153,13 @@ namespace wage {
       }
 
     private:
+      assets::Manager* _assetManager;
+
       MeshManager* _meshManager;
 
       VaoManager* _vaoManager;
 
-      GlTextureManager* _textureManager;
+      // GlTextureManager* _textureManager;
 
       math::Transform transform;
 
