@@ -110,11 +110,6 @@ namespace wage {
         destroyRequests.push_back(entity);
       }
 
-      // TODO: Remove after debugging.
-      inline Registry& registry() {
-        return _registry;
-      }
-
     private:
       Registry _registry;
 

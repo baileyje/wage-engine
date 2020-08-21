@@ -4,6 +4,7 @@
 
 #include "core/service.h"
 #include "memory/buffer.h"
+#include "memory/input_stream.h"
 #include "memory/allocator.h"
 
 #include "fs/file.h"
@@ -11,36 +12,46 @@
 namespace wage {
   namespace fs {
 
-#if defined(WIN32) || defined(_WIN32)
-#define PATH_SEPARATOR "\\"
-#else
-#define PATH_SEPARATOR "/"
-#endif
-
+    /**
+     * Generic filesystem interface that encapsulates reading files from some media source not 
+     * necessarily a true file system.
+     */
     class FileSystem : public core::Service, public File::ContentProvider {
 
     public:
-      FileSystem() : Service("FileSystem") {
-      }
+      FileSystem() : Service("FileSystem") {}
 
       ~FileSystem() {}
 
-      inline File get(std::string path) const {
+      /**
+       * Get a file handle for a specified path.
+       */
+      inline File get(File::Path path) const {
         return File(path, this);
       }
 
-      inline std::string path(const std::initializer_list<std::string> parts) {
-        std::string result = "";
-        for (auto iter = parts.begin(); iter != parts.end(); ++iter) {
-          result += *iter;
-          if (iter != parts.end() - 1) {
-            result += PATH_SEPARATOR;
-          }
-        }
-        return result;
+      /**
+       * Get a file handle for specified path segments.
+       */
+      inline File get(std::vector<std::string> pathSegments) const {
+        return File({pathSegments}, this);
       }
 
-      virtual memory::Buffer read(std::string path, memory::Allocator* allocator) const = 0;
+      /**
+       * Read the contents of a file path into a memory buffer intialized using the provided allocator.
+       */
+      inline memory::Buffer read(File::Path path, memory::Allocator* allocator) const {
+        core::Logger::debug("Loading: ", path.string());
+        auto stream = readStream(path);
+        auto buffer = stream->read(allocator);
+        delete stream;
+        return buffer;
+      }
+
+      /**
+       * Get the read stream for a specific path.
+       */
+      virtual memory::InputStream* readStream(File::Path path) const = 0;
     };
 
   }

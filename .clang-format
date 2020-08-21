@@ -1,7 +1,7 @@
 BasedOnStyle: LLVM
 
 AccessModifierOffset: -2
-AllowShortIfStatementsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: true
 BreakBeforeBraces: Attach
 ColumnLimit: 0
 IndentCaseLabels: false

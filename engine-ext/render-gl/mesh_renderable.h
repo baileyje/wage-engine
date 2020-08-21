@@ -159,8 +159,6 @@ namespace wage {
 
       VaoManager* _vaoManager;
 
-      // GlTextureManager* _textureManager;
-
       math::Transform transform;
 
       Mesh* mesh;

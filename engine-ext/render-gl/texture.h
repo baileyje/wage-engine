@@ -22,7 +22,7 @@ namespace wage {
 
       void load(assets::Manager* assetManager);
 
-      void onLoad(memory::Buffer buffer);
+      void onLoad(memory::InputStream* stream);
 
       void bind();
 

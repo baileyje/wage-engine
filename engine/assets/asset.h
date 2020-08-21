@@ -3,7 +3,7 @@
 #include <string>
 
 #include "assets/asset_spec.h"
-#include "memory/buffer.h"
+#include "memory/input_stream.h"
 
 namespace wage {
   namespace assets {
@@ -61,9 +61,9 @@ namespace wage {
       }
 
       /**
-       * Virtual method called when the data buffer is available from the storage media.
+       * Virtual method called when the asset stream available from the storage media.
        */
-      virtual void onLoad(memory::Buffer buffer) {
+      virtual void onLoad(memory::InputStream* stream) {
       }
 
     protected:

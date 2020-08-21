@@ -1,6 +1,7 @@
 #pragma once
 
 #include "memory/allocator.h"
+#include "memory/common.h"
 
 namespace wage {
   namespace memory {
@@ -8,8 +9,6 @@ namespace wage {
     class Buffer : public std::basic_streambuf<char> {
 
     public:
-      typedef uint8_t Byte;
-
       Buffer() : _data(nullptr), _length(0) {}
 
       inline Byte* data() { return _data; }

@@ -17,17 +17,13 @@ namespace wage {
     public:
       FsManager(fs::FileSystem* fileSystem) : Manager(), fileSystem(fileSystem) {}
 
-      /**
-       * Perform an asset load by reading the asset content from the filesystem into a memory buffer.
-       */
-      memory::Buffer performLoad(Asset* asset) {
-        std::cout << "FS PATH: " << filePath(asset->spec()) << "\n";
-        return fileSystem->read(filePath(asset->spec()), memory::Allocator::Assets());
+      inline memory::InputStream* assetStream(Asset* asset) {
+        return fileSystem->readStream(filePath(asset->spec()));
       }
 
     private:
-      std::string filePath(AssetSpec assetSpec) {
-        return fileSystem->path({"resources", assetSpec.type(), assetSpec.key()});
+      fs::File::Path filePath(AssetSpec assetSpec) {
+        return {{"resources", assetSpec.type(), assetSpec.key()}};
       }
 
       fs::FileSystem* fileSystem;

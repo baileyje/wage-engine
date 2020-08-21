@@ -28,19 +28,18 @@ namespace wage {
           cache[meshData->spec().key()] = vao;
           vao->bind();
           // Create Verts Buff
-          VertexBuffer* verts = memory::make<VertexBuffer>(meshData->vertices().data(), meshData->vertices().size() * 3 * sizeof(float));
+          auto verts = memory::make<VertexBuffer>(meshData->vertices().data(), meshData->vertices().size() * 3 * sizeof(float));
           verts->layout()->pushFloat(3);
           vao->addBuffer(verts);
           // Create Norms Buff
-          VertexBuffer* norms = memory::make<VertexBuffer>(meshData->normals().data(), meshData->normals().size() * 3 * sizeof(float));
+          auto norms = memory::make<VertexBuffer>(meshData->normals().data(), meshData->normals().size() * 3 * sizeof(float));
           norms->layout()->pushFloat(3);
           vao->addBuffer(norms);
           // Create Texture Buff
-          VertexBuffer* uvs = memory::make<VertexBuffer>(meshData->uvs().data(), meshData->uvs().size() * 3 * sizeof(float));
+          auto uvs = memory::make<VertexBuffer>(meshData->uvs().data(), meshData->uvs().size() * 3 * sizeof(float));
           uvs->layout()->pushFloat(2);
           vao->addBuffer(uvs);
-
-          IndexBuffer* indices = memory::make<IndexBuffer>((const unsigned int*)meshData->indices().data(), meshData->indices().size());
+          auto indices = memory::make<IndexBuffer>((const unsigned int*)meshData->indices().data(), meshData->indices().size());
           indices->bind();
         }
         return vao;

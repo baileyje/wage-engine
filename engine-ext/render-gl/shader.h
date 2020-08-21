@@ -9,14 +9,13 @@
 
 namespace wage {
   namespace render {
-    
+
     class GlShaderSpec : public assets::AssetSpec {
     public:
       GlShaderSpec(std::string key, GLenum shaderType) : assets::AssetSpec({"shader", key}), shaderType(shaderType) {
       }
 
       GLenum shaderType;
-
     };
 
     class GlShader : public assets::Asset {
@@ -37,15 +36,28 @@ namespace wage {
         return _compiled;
       }
 
-      void onLoad(memory::Buffer buffer) {
-        shaderLength = buffer.length();
-
-        // TODO: Check allocator usage. This seems error prone..
+      void onLoad(memory::InputStream* stream) {
+        shaderLength = stream->size();
         shaderText = (char*)memory::Allocator::Permanent()->allocate(shaderLength);
-        memcpy(shaderText, buffer.data(), shaderLength);
+        stream->read((memory::Byte*)shaderText, shaderLength);
       }
 
-      void compile();
+      void compile() {
+        GL_FAIL_CHECK(_id = glCreateShader(shaderType));
+        GL_FAIL_CHECK(glShaderSource(_id, 1, &shaderText, &shaderLength));
+        GL_FAIL_CHECK(glCompileShader(_id));
+
+        GLint result = GL_FALSE;
+        int infoLogLength;
+        GL_FAIL_CHECK(glGetShaderiv(_id, GL_COMPILE_STATUS, &result));
+        GL_FAIL_CHECK(glGetShaderiv(_id, GL_INFO_LOG_LENGTH, &infoLogLength));
+        if (infoLogLength > 0) {
+          std::vector<char> errorMessage(infoLogLength + 1);
+          GL_FAIL_CHECK(glGetShaderInfoLog(_id, infoLogLength, NULL, &errorMessage[0]));
+          core::Logger::error("Compile Error: ", &errorMessage[0]);
+        }
+        _compiled = true;
+      }
 
     private:
       unsigned int _id;

@@ -3,6 +3,7 @@
 #include <string>
 #include <mutex>
 
+#include "memory/input_stream.h"
 #include "core/core.h"
 #include "core/service.h"
 #include "async/dispatch_queue.h"
@@ -42,22 +43,23 @@ namespace wage {
         auto key = cacheKey(spec);
         auto asset = (A*)cache[key];
         if (asset == nullptr) {
-          asset = memory::make<A>(spec);
+          asset = memory::Allocator::Assets()->create<A>(spec);
           cache[key] = asset;
           queue.dispatch([this, asset] {
-            auto buffer = performLoad(asset);
-            asset->onLoad(buffer);
+            auto assetStream = this->assetStream(asset);
+            asset->onLoad(assetStream);
+            delete assetStream;
             std::unique_lock<std::mutex> lock(mutex);
             loaded.push_back(asset);
           });
         }
-        return asset;        
+        return asset;
       }
 
       /**
-       * Virtual method to perform implementation specific load logic.
+       * Virtual method setup the input stream for an asset.
        */
-      virtual memory::Buffer performLoad(Asset* asset) = 0;
+      virtual memory::InputStream* assetStream(Asset* asset) = 0;
 
     private:
       inline std::string cacheKey(AssetSpec spec) {

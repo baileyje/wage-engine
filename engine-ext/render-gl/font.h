@@ -69,31 +69,35 @@ namespace wage {
     public:
       GlFont(Font font) : Asset(font), size(font.size()) {}
 
-      inline GlCharacter* characterFor(char c) {
+      inline GlCharacter *characterFor(char c) {
         auto found = characters.find(c);
-        if (found != characters.end()) {
+        if (found != characters.end())
+        {
           return &found->second;
         }
         return nullptr;
       }
 
-      void onLoad(memory::Buffer buffer) {
+      void onLoad(memory::InputStream *stream) {
         FT_Library freeType;
         if (FT_Init_FreeType(&freeType))
           std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
         FT_Face face;
-        if (FT_New_Memory_Face(freeType, buffer.data(), buffer.length(), 0, &face))
+        auto bufferSize = stream->size();
+        auto buffer = (memory::Byte*)malloc(bufferSize);
+        stream->read(buffer, bufferSize);
+        if (FT_New_Memory_Face(freeType, buffer, bufferSize, 0, &face))
           std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+        free(buffer);
+
         FT_Set_Pixel_Sizes(face, 0, size);
         for (GLubyte c = 0; c < 128; c++) {
-          // Load character glyph
           FT_Error error = FT_Load_Char(face, c, FT_LOAD_RENDER);
           if (error) {
             printf("Error: %d\n", error);
             std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
             continue;
           }
-
           GlCharacter character(
               math::Vector2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
               math::Vector2(face->glyph->bitmap_left, face->glyph->bitmap_top),
