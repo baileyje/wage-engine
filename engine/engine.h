@@ -46,4 +46,6 @@
 #include "ui/ui.h"
 #include "ui/system.h"
 
+#include "audio/audio.h"
+
 #endif //ENGINE_H

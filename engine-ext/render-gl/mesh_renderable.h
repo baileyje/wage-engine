@@ -25,8 +25,8 @@ namespace wage {
     class GlMeshRenderable : public Renderable {
 
     public:
-      GlMeshRenderable(assets::Manager* assetManager, MeshManager* meshManager, VaoManager* vaoManager, math::Transform transform, Mesh* mesh, Material* material)
-          : _assetManager(assetManager), _meshManager(meshManager), _vaoManager(vaoManager), transform(transform), mesh(mesh), material(material) {}
+      GlMeshRenderable(assets::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, MeshData* meshData, Material* material)
+          : _assetManager(assetManager), _vaoManager(vaoManager), transform(transform), meshData(meshData), material(material) {}
 
       inline VaoManager* vaoManager() {
         return _vaoManager;
@@ -37,7 +37,6 @@ namespace wage {
       }
 
       virtual math::BoundingBox boundingBox() {
-        auto meshData = _meshManager->load(mesh);
         if (!meshData->loaded()) {
           return math::BoundingBox(position(), {0, 0, 0});
         }
@@ -130,7 +129,6 @@ namespace wage {
       }
 
       virtual void render(RenderContext* context) {
-        auto meshData = _meshManager->load(mesh);
         if (!meshData->loaded()) {
           return;
         }
@@ -155,13 +153,11 @@ namespace wage {
     private:
       assets::Manager* _assetManager;
 
-      MeshManager* _meshManager;
-
       VaoManager* _vaoManager;
 
       math::Transform transform;
 
-      Mesh* mesh;
+      MeshData* meshData;
 
       Material* material;
     };

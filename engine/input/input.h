@@ -6,30 +6,38 @@
 #include "messaging/messaging.h"
 #include "platform/window.h"
 #include "math/vector.h"
+#include "core/core.h"
+#include "platform/platform.h"
 
 #include "input/key.h"
 
-namespace wage { namespace input {
+namespace wage {
+  namespace input {
 
-  class Input : public core::Service {
+    class Input : public core::Service {
 
-  public:
-    Input() : Service("Input"), window(nullptr), messaging(nullptr) {}
+    public:
+      Input() : Service("Input"), window(nullptr), messaging(nullptr) {}
 
-    ~Input() {}
+      ~Input() {}
 
-    void start();
+      void start() {
+        messaging = core::Core::Instance->get<messaging::Messaging>();
+        auto platform = core::Core::Instance->get<platform::Platform>();
+        window = platform->window();
+      }
 
-    virtual bool isPressed(Key key) const = 0;
+      virtual bool isPressed(Key key) const = 0;
 
-    virtual math::Vector2 mousePosition() const = 0;
+      virtual math::Vector2 mousePosition() const = 0;
 
-  protected:
-    platform::Window* window;
+    protected:
+      platform::Window* window;
 
-    std::unordered_set<int> frameKeys;
+      std::unordered_set<int> frameKeys;
 
-    messaging::Messaging* messaging;
-  };
+      messaging::Messaging* messaging;
+    };
 
-} }
+  }
+}

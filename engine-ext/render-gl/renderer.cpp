@@ -37,11 +37,9 @@ namespace wage {
       // Initialize default render assets
       meshManager.assetManager(assetManager);
       vaoManager.meshManager(&meshManager);
-
       GlProgram::Default->load(assetManager);
       GlProgram::Font->load(assetManager);
       GlProgram::Sprite->load(assetManager);
-
       meshManager.generatePrimitives();
     }
 
@@ -61,8 +59,8 @@ namespace wage {
     }
 
     void GlRenderer::renderMesh(math::Transform transform, Mesh* mesh, Material* material) {
-      meshQueues[currentProducerQueue].add<GlMeshRenderable>(
-          assetManager, &meshManager, &vaoManager, transform, mesh, material);
+      auto meshData = meshManager.load(*mesh);
+      meshQueues[currentProducerQueue].add<GlMeshRenderable>(assetManager, &vaoManager, transform, meshData, material);
     }
 
     void GlRenderer::endRender() {

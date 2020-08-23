@@ -29,19 +29,6 @@ namespace wage {
     }
 
     void Core::startRenderLoop() {
-      // TimePoint lastTime = std::chrono::high_resolution_clock::now();
-      // double accumulator = 0;
-      // while (running) {
-      //   TimePoint currentTime = std::chrono::high_resolution_clock::now();
-      //   double delta = (std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime)).count();
-      //   lastTime = currentTime;
-      //   accumulator += delta;
-      //   while (running && accumulator >= renderStep) {
-      //     printf("Acc: %f - %f\n", accumulator, renderStep);
-      //     render();
-      //     accumulator -= renderStep;
-      //   }
-      // }
       while (running) {
         render();
       }
@@ -63,6 +50,7 @@ namespace wage {
             fixedUpdate();
             accumulator -= _frame.timeStep();
           }
+          // Signal to the render that we need the next render queue to fill.
           get<render::Renderer>()->awaitNextQueue();
           memory::Allocator::Temporary()->clear();
         }

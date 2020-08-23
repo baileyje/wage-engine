@@ -3,21 +3,26 @@
 #include "core/service.h"
 #include "platform/window.h"
 
-namespace wage { namespace platform {
+namespace wage {
+  namespace platform {
 
-  class Platform : public core::Service {
+    /**
+     * Platform represents the service for managing platform specific functionality. Mostly
+     * just access to the window.
+     */
+    class Platform : public core::Service {
 
-  public:
-    Platform() : Service("Platform") {}
+    public:
+      Platform() : Service("Platform") {}
 
-    virtual ~Platform() {}
+      virtual ~Platform() {}
 
-    Window* window() {
-      return _window;
-    }
+      Window* window() {
+        return _window;
+      }
 
-  protected:
-    Window* _window;
-  };
-
-} }
+    protected:
+      Window* _window;
+    };
+  }
+}

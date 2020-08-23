@@ -94,8 +94,6 @@ namespace wage {
 
       Frame _frame;
 
-      double renderStep;
-
       std::vector<UpdateListener> inputListeners;
 
       std::vector<UpdateListener> updateListeners;

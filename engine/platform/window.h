@@ -1,40 +1,61 @@
 #pragma once
 
-namespace wage { namespace platform {
+namespace wage {
+  namespace platform {
 
-  class Window {
+    /**
+     * Window represents the actual visual window. It is created with generic properties, but primarily
+     * wraps a platform specific window instance. 
+     */
+    class Window {
 
-  public:
-    Window(void* wrapped, int width, int height, float scale = 1) : wrapped(wrapped), _width(width), _height(height), _scale(scale) {
-    }
+    public:
+      /**
+       * Construct a new window wrapper with platform specific window and attributes.
+       */
+      Window(void* wrapped, int width, int height, float scale = 1) : wrapped(wrapped), _width(width), _height(height), _scale(scale) {
+      }
 
-    virtual ~Window() {}
+      virtual ~Window() {}
 
-    template <typename T>
-    T* as() {
-      return reinterpret_cast<T*>(wrapped);
-    }
+      /**
+       * Get access to the platform specific window with a concrete template.
+       */
+      template <typename T>
+      T* as() {
+        return reinterpret_cast<T*>(wrapped);
+      }
 
-    inline int width() const {
-      return _width;
-    }
+      /**
+       * Get the current window with.
+       */
+      inline int width() const {
+        return _width;
+      }
 
-    inline int height() const {
-      return _height;
-    }
+      /**
+       * Get the current window height.
+       */
+      inline int height() const {
+        return _height;
+      }
 
-    inline int scale() const {
-      return _scale;
-    }
+      /**
+       * Get the current window scale.
+       */
+      inline int scale() const {
+        return _scale;
+      }
 
-  private:
-    void* wrapped;
+    private:
+      void* wrapped;
 
-    int _width;
+      int _width;
 
-    int _height;
+      int _height;
 
-    float _scale;
-  };
+      float _scale;
+    };
 
-} }
+  }
+}

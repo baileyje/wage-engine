@@ -66,7 +66,7 @@ private:
 };
 
 void setupHud(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  render::Font font("ARCADE.TTF", 30);
+  render::Font font("ARCADE.TTF", 20);
   auto fpsLabelEntity = entityManager->create();
   auto fpsLabel = fpsLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(20, 0), Vector2(300, 100)), "FPS: ", font, math::Color::White);
   systemManager->create<FpsDisplay>(fpsLabel);

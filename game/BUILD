@@ -18,6 +18,7 @@ cc_binary(
     "@engine_ext//input-glfw",
     "@engine_ext//render-gl",
     "@engine_ext//physics-bullet",
+    "@engine_ext//audio-al",
     ":wage_lib"
   ],
   linkopts = ["-framework Cocoa -framework OpenGL -framework IOKit"],

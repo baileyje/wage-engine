@@ -1,9 +1,11 @@
 #pragma once
 
+#include "util/types.h"
+
 namespace wage {
   namespace memory {
 
-    typedef uint8_t Byte;
+    typedef uint8 Byte;
 
   }
 }

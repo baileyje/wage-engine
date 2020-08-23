@@ -5,6 +5,7 @@ cc_binary(
   srcs = ["test.cpp"],
   deps = [
     "@engine",
+    "@engine_ext//audio-al"
   ],
   linkopts = ["-framework Cocoa -framework OpenGL -framework IOKit"],
   visibility = ["//visibility:public"]

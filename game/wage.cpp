@@ -10,12 +10,15 @@
 #include "render-gl/renderer.h"
 #include "platform-glfw/platform.h"
 #include "input-glfw/input.h"
+#include "audio-al/audio.h"
 
 #include "player.h"
 #include "enemy.h"
 #include "planet.h"
+#include "dock.h"
 #include "camera.h"
 #include "hud.h"
+#include "music.h"
 
 using namespace wage;
 
@@ -25,6 +28,7 @@ void setupServices(core::Core* core, std::string path) {
   core->create<messaging::Messaging>();
   core->create<platform::Platform, platform::GlfwPlatform>();
   core->create<input::Input, input::GlfwInput>();
+  core->create<audio::Audio, audio::AlAudio>();
   core->create<ecs::EntityManager>();
   core->create<ecs::SystemManager>();
   core->create<physics::Physics, physics::BulletPhysics>();
@@ -39,6 +43,7 @@ void setupCoreSystems(ecs::SystemManager* systemManager) {
   // systemManager->create<PlayerBasicMovement>();
   systemManager->create<PlayerPhysicsMovement>();
   systemManager->create<PlanetLauncher>();
+  systemManager->create<DumbMusicSystem>();
 }
 
 void registerKnownComponents(ecs::EntityManager* entityManager) {
@@ -98,6 +103,9 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
   for (int i = 0; i < 20; i++) {
     addRandomPlanet(entityManager, systemManager);
   }
+  for (int i = 0; i < 20; i++) {
+    addRandomDock(entityManager, systemManager);
+  }
 }
 
 int main(int argc, char* argv[]) {
@@ -112,13 +120,11 @@ int main(int argc, char* argv[]) {
   auto systemManager = core::Core::Instance->get<ecs::SystemManager>();
   auto entityManager = core::Core::Instance->get<ecs::EntityManager>();
   registerKnownComponents(entityManager);
-
   setupCoreSystems(systemManager);
 
   // render::Mesh::generatePrimitives();
   setupScene(entityManager, systemManager);
   core::Core::Instance->init();
   core::Core::Instance->start();
-
   return 0;
 }

@@ -56,6 +56,10 @@ namespace wage {
         allocator.clear();
       }
 
+      inline size_t count() {
+        return renderables.size();
+      }
+
     private:
       std::vector<Renderable*> renderables;
 
