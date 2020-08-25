@@ -48,7 +48,7 @@ namespace wage {
           queue.dispatch([this, asset] {
             auto assetStream = this->assetStream(asset);
             asset->onLoad(assetStream);
-            delete assetStream;
+            delete assetStream; // Note: What if we do want the stream cleaned up..... Like audio.
             std::unique_lock<std::mutex> lock(mutex);
             loaded.push_back(asset);
           });

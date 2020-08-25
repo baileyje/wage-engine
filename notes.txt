@@ -1,3 +1,15 @@
-Asset Management:
+Audio Streaming:
 
-Asset Def -> Asset Manager -> Asset (Data)
+ X - Integrate sound clips as assets
+ - Stream audio file instead of all in mem
+ - Looping support
+ - Spacial Sound
+ - Audio adjustments - pitch
+ - Consider dedicated audio thread
+
+
+Asset 
+  - input stream 
+  - load strategy 
+  - load state
+

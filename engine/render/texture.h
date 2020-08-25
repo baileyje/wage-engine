@@ -10,7 +10,6 @@ namespace wage {
     /**
      * Simple texture with basically no options other than providing an image path to load.
      */
-    // TODO:  De-jank this
     class Texture : public assets::AssetSpec {
 
     public:

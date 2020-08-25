@@ -2,6 +2,7 @@
 
 #include "core/service.h"
 #include "memory/input_stream.h"
+#include "audio/clip_spec.h"
 
 namespace wage {
   namespace audio {
@@ -16,7 +17,7 @@ namespace wage {
       void start() {
       }
 
-      virtual void play(memory::InputStream* input) = 0;
+      virtual void play(ClipSpec clip) = 0;
     };
   }
 }
