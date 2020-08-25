@@ -12,12 +12,13 @@ namespace wage {
       }
     }
 
-    void GlTexture::onLoad(memory::InputStream* stream) {
+    bool GlTexture::onLoad(memory::InputStream* stream) {
       auto bufferSize = stream->size();
       auto buffer = (memory::Byte*)malloc(bufferSize);
       stream->read(buffer, bufferSize);
       data = stbi_load_from_memory(buffer, bufferSize, &width, &height, &channels, 0);
       free(buffer);
+      return true;
     }
 
     void GlTexture::push() {

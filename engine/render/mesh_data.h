@@ -61,7 +61,7 @@ namespace wage {
         return _maxDim;
       }
 
-      void onLoad(memory::InputStream* stream) {
+      bool onLoad(memory::InputStream* stream) {
         std::string err;
         std::string warn;
         tinyobj::attrib_t attrib;
@@ -163,6 +163,7 @@ namespace wage {
           vert.y = scale * (vert.y - offsetY);
           vert.z = scale * (vert.z - offsetZ);
         }
+        return true;
       }
 
     protected:

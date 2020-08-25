@@ -69,16 +69,15 @@ namespace wage {
     public:
       GlFont(Font font) : Asset(font), size(font.size()) {}
 
-      inline GlCharacter *characterFor(char c) {
+      inline GlCharacter* characterFor(char c) {
         auto found = characters.find(c);
-        if (found != characters.end())
-        {
+        if (found != characters.end()) {
           return &found->second;
         }
         return nullptr;
       }
 
-      void onLoad(memory::InputStream *stream) {
+      bool onLoad(memory::InputStream* stream) {
         FT_Library freeType;
         if (FT_Init_FreeType(&freeType))
           std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
@@ -107,6 +106,7 @@ namespace wage {
         }
         FT_Done_Face(face);
         FT_Done_FreeType(freeType);
+        return true;
       }
 
     private:

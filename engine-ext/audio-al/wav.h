@@ -111,9 +111,7 @@ namespace wage {
         return {};
       }
       auto size = convertToInt(buffer, 4);
-      auto data = new char[size];
-      input->read((memory::Byte*)data, size);
-      return {channels, sampleRate, bitsPerSample, size, data};
+      return {channels, sampleRate, bitsPerSample, size, input, input->tell()};
     }
   }
 }

@@ -62,8 +62,14 @@ namespace wage {
 
       /**
        * Virtual method called when the asset stream available from the storage media.
+       * 
+       * Implemantations should set the return value is set to `true` if the loading is complete and 
+       * the manager can clean up the input stream and any underlying media resources. On the other 
+       * implemantations can return `false` if they plan to use the input stream for an extended period of time.
+       * In this case its the asset must be cleaned up by the requestor (or whatever seems cool).
        */
-      virtual void onLoad(memory::InputStream* stream) {
+      virtual bool onLoad(memory::InputStream* stream) {
+        return true;
       }
 
     protected:

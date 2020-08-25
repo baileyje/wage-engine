@@ -12,11 +12,15 @@
 
 #include "core/logger.h"
 
+#define NUM_BUFFERS 4
+#define BUFFER_SIZE 65536
+
 namespace wage {
   namespace audio {
 
     struct PlayingAudio {
-      ALuint buffer;
+      Clip* clip;
+      ALuint buffers[NUM_BUFFERS];
       ALuint source;
     };
 
@@ -34,8 +38,9 @@ namespace wage {
         core::Core::Instance->onUpdate([&](const core::Frame& frame) {
           auto loadingIt = loading.begin();
           while (loadingIt != loading.end()) {
-            if (loadingIt->clip->loaded()) {
-              startPlaying(loadingIt->clip);
+            auto clip = loadingIt->clip;
+            if (clip->loaded()) {
+              startPlaying(clip);
               loadingIt = loading.erase(loadingIt);
             } else {
               ++loadingIt;
@@ -45,12 +50,15 @@ namespace wage {
           auto playingIt = playing.begin();
           while (playingIt != playing.end()) {
             ALint state = AL_PLAYING;
+            auto clip = playingIt->clip;
             alGetSourcei(playingIt->source, AL_SOURCE_STATE, &state);
             if (state == AL_STOPPED) {
               alDeleteSources(1, &playingIt->source);
-              alDeleteBuffers(1, &playingIt->buffer);
+              alDeleteBuffers(NUM_BUFFERS, &playingIt->buffers[0]);
+              clip->data().input()->seek(clip->data().datStartPosition());
               playingIt = playing.erase(playingIt);
             } else {
+              ensureBuffers(&(*playingIt));
               ++playingIt;
             }
           }
@@ -58,7 +66,7 @@ namespace wage {
       }
 
       void play(ClipSpec spec) {
-        loading.push_back({assetManager->load<Clip>(spec)});
+        loading.push_back({assetManager->load<Clip>(spec, false)});
       }
 
     private:
@@ -87,12 +95,35 @@ namespace wage {
       void startPlaying(Clip* clip) {
         auto audio = clip->data();
         PlayingAudio playing;
-        alGenBuffers(1, &playing.buffer);
-        alBufferData(playing.buffer, audio.format(), audio.data(), audio.size(), audio.sampleRate());
+        playing.clip = clip;
+        alGenBuffers(NUM_BUFFERS, &playing.buffers[0]);
+        for (size_t i = 0; i < NUM_BUFFERS; ++i) {
+          char buffer[BUFFER_SIZE];
+          auto read = audio.input()->read((memory::Byte*)&buffer[0], BUFFER_SIZE);
+          alBufferData(playing.buffers[i], audio.format(), &buffer[0], read, audio.sampleRate());
+        }
         alGenSources(1, &playing.source);
-        alSourcei(playing.source, AL_BUFFER, (ALint)playing.buffer);
+        alSourceQueueBuffers(playing.source, NUM_BUFFERS, &playing.buffers[0]);
         alSourcePlay(playing.source);
         this->playing.push_back(playing);
+      }
+
+      void ensureBuffers(PlayingAudio* playing) {
+        ALint buffersProcessed = 0;
+        alGetSourcei(playing->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
+        if (buffersProcessed <= 0)
+          return;
+        auto clip = playing->clip;
+        auto audioData = clip->data();
+        auto input = audioData.input();
+        while (buffersProcessed--) {
+          ALuint buffer;
+          alSourceUnqueueBuffers(playing->source, 1, &buffer);
+          char data[BUFFER_SIZE];
+          auto read = input->read((memory::Byte*)&data[0], BUFFER_SIZE);
+          alBufferData(buffer, audioData.format(), data, read, audioData.sampleRate());
+          alSourceQueueBuffers(playing->source, 1, &buffer);
+        }
       }
 
       assets::Manager* assetManager;

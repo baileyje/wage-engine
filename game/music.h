@@ -22,13 +22,13 @@ public:
 
   void update(const ecs::SystemContext& context) {
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::m)) {
-      // char buffer[255];
-      // std::string path = std::string(getcwd(buffer, sizeof(buffer)));
-      // std::cout << path + "/resources/audio/sample.wav"
-      //           << "\n";
-      // wage::fs::LocalFileInputStream wav(path + "/../game/resources/audio/sample.wav");
-      audio::ClipSpec spec("sample.wav");
+      if (running) return;
+      running = true;
+      audio::ClipSpec spec("2mb.wav");
       core::Core::Instance->get<audio::Audio>()->play(spec);
     }
   }
+
+private:
+  bool running;
 };

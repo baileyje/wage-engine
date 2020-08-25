@@ -2,7 +2,7 @@
 
 #include "al.h"
 #include "util/types.h"
-
+#include "memory/input_stream.h"
 #include "core/logger.h"
 
 namespace wage {
@@ -10,11 +10,11 @@ namespace wage {
 
     class AudioData {
     public:
-      AudioData() : AudioData(0, 0, 0, 0, nullptr) {
+      AudioData() : AudioData(0, 0, 0, 0, nullptr, 0) {
       }
 
-      AudioData(Int8 channels, Int32 sampleRate, Int8 bitsPerSample, ALsizei size, char* data)
-          : _channels(channels), _sampleRate(sampleRate), _bitsPerSample(bitsPerSample), _size(size), _data(data) {
+      AudioData(Int8 channels, Int32 sampleRate, Int8 bitsPerSample, ALsizei size, memory::InputStream* input, size_t datStartPosition)
+          : _channels(channels), _sampleRate(sampleRate), _bitsPerSample(bitsPerSample), _size(size), _input(input), _datStartPosition(datStartPosition) {
       }
 
       inline Int8 channels() {
@@ -33,8 +33,12 @@ namespace wage {
         return _size;
       }
 
-      inline char* data() {
-        return _data;
+      inline memory::InputStream* input() {
+        return _input;
+      }
+
+      inline size_t datStartPosition() {
+        return _datStartPosition;
       }
 
       ALenum format() {
@@ -57,7 +61,8 @@ namespace wage {
       Int32 _sampleRate;
       Int8 _bitsPerSample;
       ALsizei _size;
-      char* _data;
+      memory::InputStream* _input;
+      size_t _datStartPosition;
     };
 
   }

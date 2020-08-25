@@ -39,19 +39,15 @@ namespace wage {
        * Load an indavidual asset by dispatching the work onto the work queue.
        */
       template <typename A = Asset, typename AS = AssetSpec>
-      A* load(AS spec) {
+      A* load(AS spec, bool useCache = true) {
+        if (!useCache) {
+          return performLoad<A>(spec);
+        }
         auto key = cacheKey(spec);
         auto asset = (A*)cache[key];
         if (asset == nullptr) {
-          asset = memory::Allocator::Assets()->create<A>(spec);
+          asset = performLoad<A>(spec);
           cache[key] = asset;
-          queue.dispatch([this, asset] {
-            auto assetStream = this->assetStream(asset);
-            asset->onLoad(assetStream);
-            delete assetStream; // Note: What if we do want the stream cleaned up..... Like audio.
-            std::unique_lock<std::mutex> lock(mutex);
-            loaded.push_back(asset);
-          });
         }
         return asset;
       }
@@ -62,6 +58,20 @@ namespace wage {
       virtual memory::InputStream* assetStream(Asset* asset) = 0;
 
     private:
+      template <typename A = Asset, typename AS = AssetSpec>
+      inline A* performLoad(AS spec) {
+        auto asset = memory::Allocator::Assets()->create<A>(spec);
+        queue.dispatch([this, asset] {
+          auto assetStream = this->assetStream(asset);
+          if (asset->onLoad(assetStream)) {
+            delete assetStream;
+          }
+          std::unique_lock<std::mutex> lock(mutex);
+          loaded.push_back(asset);
+        });
+        return asset;
+      }
+
       inline std::string cacheKey(AssetSpec spec) {
         return spec.type() + "-" + spec.key();
       }
@@ -74,5 +84,5 @@ namespace wage {
 
       std::unordered_map<std::string, Asset*> cache;
     };
-  }
-}
+  } // namespace assets
+} // namespace wage

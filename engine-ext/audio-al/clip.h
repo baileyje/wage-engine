@@ -14,9 +14,11 @@ namespace wage {
       Clip(ClipSpec spec) : Asset(spec) {
       }
 
-      void onLoad(memory::InputStream* stream) {
+      bool onLoad(memory::InputStream* stream) {
         std::cout << "Loading Wave\n";
         _data = loadWav(stream);
+
+        return false;
       }
 
       AudioData data() {
