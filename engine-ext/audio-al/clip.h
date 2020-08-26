@@ -33,6 +33,13 @@ namespace wage {
       }
 
       /**
+       * Set the effective volume for the clip.
+       */
+      inline void volume(float_t volume) {
+        _volume = volume;
+      }
+
+      /**
        * Get the effective pitch for the clip.
        */
       inline float_t pitch() {
@@ -40,10 +47,24 @@ namespace wage {
       }
 
       /**
+       * Set the effective pitch for the clip.
+       */
+      inline void pitch(float_t pitch) {
+        _pitch = pitch;
+      }
+
+      /**
        * Determine whether this clip should loop.
        */
       inline bool loop() {
         return _loop;
+      }
+
+      /**
+       * Set the clip to loop.
+       */
+      inline void loop(bool loop) {
+        _loop = loop;
       }
 
     private:

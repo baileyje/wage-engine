@@ -7,26 +7,13 @@
 #include "audio/audio.h"
 #include "audio-al/clip.h"
 #include "audio-al/util.h"
-#include "audio-al/wav.h"
 #include "audio-al/data.h"
+#include "audio-al/playing_audio.h"
 
 #include "core/logger.h"
 
-#define NUM_BUFFERS 4
-#define BUFFER_SIZE 65536
-
 namespace wage {
   namespace audio {
-
-    struct PlayingAudio {
-      Clip* clip;
-      ALuint buffers[NUM_BUFFERS];
-      ALuint source;
-    };
-
-    struct LoadingAudio {
-      Clip* clip;
-    };
 
     class AlAudio : public Audio {
 
@@ -38,9 +25,11 @@ namespace wage {
         core::Core::Instance->onUpdate([&](const core::Frame& frame) {
           auto loadingIt = loading.begin();
           while (loadingIt != loading.end()) {
-            auto clip = loadingIt->clip;
+            auto loadingItem = *loadingIt;
+            auto clip = loadingItem->clip;
             if (clip->loaded()) {
-              startPlaying(clip);
+              loadingItem->start();
+              this->playing.push_back(loadingItem);
               loadingIt = loading.erase(loadingIt);
             } else {
               ++loadingIt;
@@ -49,24 +38,28 @@ namespace wage {
 
           auto playingIt = playing.begin();
           while (playingIt != playing.end()) {
+            auto playingItem = *playingIt;
             ALint state = AL_PLAYING;
-            auto clip = playingIt->clip;
-            alGetSourcei(playingIt->source, AL_SOURCE_STATE, &state);
+            auto clip = playingItem->clip;
+            alGetSourcei(playingItem->source, AL_SOURCE_STATE, &state);
             if (state == AL_STOPPED) {
-              alDeleteSources(1, &playingIt->source);
-              alDeleteBuffers(NUM_BUFFERS, &playingIt->buffers[0]);
-              clip->data().input()->seek(clip->data().dataStartPosition());
+              playingItem->cleanup();
               playingIt = playing.erase(playingIt);
             } else {
-              ensureBuffers(&(*playingIt));
+              alSourcef(playingItem->source, AL_PITCH, (ALfloat)clip->pitch());
+              alSourcef(playingItem->source, AL_GAIN, (ALfloat)clip->volume());
+              playingItem->ensureBuffers();
               ++playingIt;
             }
           }
         });
       }
 
-      void play(ClipSpec spec) {
-        loading.push_back({assetManager->load<Clip>(spec, false)});
+      ClipHandle* play(ClipSpec spec) {
+        auto clip = assetManager->load<Clip>(spec, false);
+        auto playing = new PlayingAudio(clip);
+        loading.push_back(playing);
+        return playing;
       }
 
     private:
@@ -92,47 +85,9 @@ namespace wage {
         core::Logger::info("Opened Audio Device ", name);
       }
 
-      void startPlaying(Clip* clip) {
-        auto audio = clip->data();
-        PlayingAudio playing;
-        playing.clip = clip;
-        alGenBuffers(NUM_BUFFERS, &playing.buffers[0]);
-        for (size_t i = 0; i < NUM_BUFFERS; ++i) {
-          char buffer[BUFFER_SIZE];
-          auto read = audio.input()->read((memory::Byte*)&buffer[0], BUFFER_SIZE);
-          alBufferData(playing.buffers[i], audio.format(), &buffer[0], read, audio.sampleRate());
-        }
-        alGenSources(1, &playing.source);
-        alSourcef(playing.source, AL_PITCH, (ALfloat)clip->pitch());
-        alSourcef(playing.source, AL_GAIN, (ALfloat)clip->volume());
-        alSourceQueueBuffers(playing.source, NUM_BUFFERS, &playing.buffers[0]);
-        alSourcePlay(playing.source);
-        this->playing.push_back(playing);
-      }
-
-      void ensureBuffers(PlayingAudio* playing) {
-        ALint buffersProcessed = 0;
-        alGetSourcei(playing->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
-        if (buffersProcessed <= 0)
-          return;
-        auto clip = playing->clip;
-        auto audioData = clip->data();
-        auto input = audioData.input();
-        while (buffersProcessed--) {
-          ALuint buffer;
-          alSourceUnqueueBuffers(playing->source, 1, &buffer);
-          char data[BUFFER_SIZE];
-          auto read = input->read((memory::Byte*)&data[0], BUFFER_SIZE);
-          if (clip->loop() && read < BUFFER_SIZE) {
-            clip->data().input()->seek(clip->data().dataStartPosition());
-          }
-          alBufferData(buffer, audioData.format(), data, read, audioData.sampleRate());
-          alSourceQueueBuffers(playing->source, 1, &buffer);
-        }
-      }
       assets::Manager* assetManager;
-      std::vector<LoadingAudio> loading;
-      std::vector<PlayingAudio> playing;
+      std::vector<PlayingAudio*> loading;
+      std::vector<PlayingAudio*> playing;
     };
   } // namespace audio
 } // namespace wage

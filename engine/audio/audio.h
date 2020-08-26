@@ -7,6 +7,16 @@
 namespace wage {
   namespace audio {
 
+    class ClipHandle {
+    public:
+      virtual void play() = 0;
+      virtual void pause() = 0;
+      virtual void volume(float volume) = 0;
+      virtual void pitch(float pitch) = 0;
+      virtual void loop(bool loop) = 0;
+      // TODO: Current runtime state...
+    };
+
     class Audio : public core::Service {
 
     public:
@@ -17,7 +27,7 @@ namespace wage {
       void start() {
       }
 
-      virtual void play(ClipSpec clip) = 0;
+      virtual ClipHandle* play(ClipSpec clip) = 0;
     };
   }
 }
