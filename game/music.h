@@ -24,9 +24,13 @@ public:
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::m)) {
       if (running) return;
       running = true;
-      audio::ClipSpec spec("2mb.wav");
+      // audio::ClipSpec spec("2mb.wav", true);
+      // audio::ClipSpec spec("sample.wav", true);
+      audio::ClipSpec spec("GameBack.wav", 1, 1.5, true);
       core::Core::Instance->get<audio::Audio>()->play(spec);
     }
+    // if (running && core::Core::Instance->get<input::Input>()->isPressed(input::Key::pageUp)) {
+    // }
   }
 
 private:

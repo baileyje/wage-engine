@@ -13,8 +13,8 @@ namespace wage {
       AudioData() : AudioData(0, 0, 0, 0, nullptr, 0) {
       }
 
-      AudioData(Int8 channels, Int32 sampleRate, Int8 bitsPerSample, ALsizei size, memory::InputStream* input, size_t datStartPosition)
-          : _channels(channels), _sampleRate(sampleRate), _bitsPerSample(bitsPerSample), _size(size), _input(input), _datStartPosition(datStartPosition) {
+      AudioData(Int8 channels, Int32 sampleRate, Int8 bitsPerSample, ALsizei size, memory::InputStream* input, size_t dataStartPosition)
+          : _channels(channels), _sampleRate(sampleRate), _bitsPerSample(bitsPerSample), _size(size), _input(input), _dataStartPosition(dataStartPosition) {
       }
 
       inline Int8 channels() {
@@ -37,8 +37,8 @@ namespace wage {
         return _input;
       }
 
-      inline size_t datStartPosition() {
-        return _datStartPosition;
+      inline size_t dataStartPosition() {
+        return _dataStartPosition;
       }
 
       ALenum format() {
@@ -62,7 +62,7 @@ namespace wage {
       Int8 _bitsPerSample;
       ALsizei _size;
       memory::InputStream* _input;
-      size_t _datStartPosition;
+      size_t _dataStartPosition;
     };
 
   }

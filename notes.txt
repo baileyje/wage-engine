@@ -2,10 +2,10 @@ Audio Streaming:
 
  X - Integrate sound clips as assets
  X - Stream audio file instead of all in mem
- - Looping support
+ X - Looping support
+ - Audio adjustments - volume, pitch, etc
  - Sound status handle/callback system
- - Spacial Sound
- - Audio adjustments - pitch, etc
+ - Spacial Sound 
  - Consider dedicated audio thread
 
 

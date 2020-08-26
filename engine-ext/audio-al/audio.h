@@ -55,7 +55,7 @@ namespace wage {
             if (state == AL_STOPPED) {
               alDeleteSources(1, &playingIt->source);
               alDeleteBuffers(NUM_BUFFERS, &playingIt->buffers[0]);
-              clip->data().input()->seek(clip->data().datStartPosition());
+              clip->data().input()->seek(clip->data().dataStartPosition());
               playingIt = playing.erase(playingIt);
             } else {
               ensureBuffers(&(*playingIt));
@@ -103,6 +103,8 @@ namespace wage {
           alBufferData(playing.buffers[i], audio.format(), &buffer[0], read, audio.sampleRate());
         }
         alGenSources(1, &playing.source);
+        alSourcef(playing.source, AL_PITCH, (ALfloat)clip->pitch());
+        alSourcef(playing.source, AL_GAIN, (ALfloat)clip->volume());
         alSourceQueueBuffers(playing.source, NUM_BUFFERS, &playing.buffers[0]);
         alSourcePlay(playing.source);
         this->playing.push_back(playing);
@@ -121,11 +123,13 @@ namespace wage {
           alSourceUnqueueBuffers(playing->source, 1, &buffer);
           char data[BUFFER_SIZE];
           auto read = input->read((memory::Byte*)&data[0], BUFFER_SIZE);
+          if (clip->loop() && read < BUFFER_SIZE) {
+            clip->data().input()->seek(clip->data().dataStartPosition());
+          }
           alBufferData(buffer, audioData.format(), data, read, audioData.sampleRate());
           alSourceQueueBuffers(playing->source, 1, &buffer);
         }
       }
-
       assets::Manager* assetManager;
       std::vector<LoadingAudio> loading;
       std::vector<PlayingAudio> playing;
