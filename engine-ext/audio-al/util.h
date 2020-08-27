@@ -9,11 +9,11 @@
 namespace wage {
   namespace audio {
 
-#define AL_FAIL_CHECK(cmd) checkAlErrors(__FILE__, __LINE__, #cmd, cmd);
+    #define AL_FAIL_CHECK(cmd) cmd; checkAlErrors(__FILE__, __LINE__, #cmd);
 
-#define ALC_FAIL_CHECK(device, cmd) checkAlCErrors(__FILE__, __LINE__, #cmd, device, cmd);
+    // #define ALC_FAIL_CHECK(device, cmd) checkAlCErrors(__FILE__, __LINE__, #cmd, device, cmd);
 
-    ALboolean checkAlErrors(const std::string& filename, const std::uint_fast32_t line, const char* command, ALboolean result) {
+    void checkAlErrors(const std::string& filename, const std::uint_fast32_t line, const char* command) {
       ALCenum error = alGetError();
       if (error != AL_NO_ERROR) {
         std::cerr << "***ERROR*** (" << filename << ": " << line << " - " << command << ")\n";
@@ -38,13 +38,12 @@ namespace wage {
         }
         std::cerr << std::endl;
       }
-      return result;
     }
 
-    ALCboolean checkAlcErrors(const std::string& filename, const std::uint_fast32_t line, ALCdevice* device, const char* command, ALCboolean result) {
+    ALCboolean checkAlcErrors(ALCdevice* device /*const std::string& filename, const std::uint_fast32_t line, ALCdevice* device, const char* command, ALCboolean result*/) {
       ALCenum error = alcGetError(device);
       if (error != ALC_NO_ERROR) {
-        std::cerr << "***ERROR*** (" << filename << ": " << line << " - " << command << ")\n";
+        // std::cerr << "***ERROR*** (" << filename << ": " << line << " - " << command << ")\n";
         switch (error) {
         case ALC_INVALID_VALUE:
           std::cerr << "ALC_INVALID_VALUE: an invalid value was passed to an OpenAL function";
@@ -66,7 +65,7 @@ namespace wage {
         }
         std::cerr << std::endl;
       }
-      return result;
+      return true; // result;
     }
   }
 }

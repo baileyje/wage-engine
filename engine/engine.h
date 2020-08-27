@@ -48,4 +48,6 @@
 
 #include "audio/audio.h"
 
+#include "util/random.h"
+
 #endif //ENGINE_H

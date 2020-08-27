@@ -9,6 +9,7 @@
 #include "audio-al/util.h"
 #include "audio-al/data.h"
 #include "audio-al/playing_audio.h"
+#include "ecs/manager.h"
 
 #include "core/logger.h"
 
@@ -23,6 +24,21 @@ namespace wage {
         initAl();
 
         core::Core::Instance->onUpdate([&](const core::Frame& frame) {
+          auto camTransform = cameraTransform();
+          auto camPosition = camTransform.position();
+          AL_FAIL_CHECK(alListener3f(AL_POSITION, camPosition.x, camPosition.y, camPosition.z));
+          auto eulers = camTransform.rotation().eulerAngles();
+          auto up = math::Vector3::Up;
+          float direction[6];
+          direction[0] = eulers.x;
+          direction[1] = eulers.y;
+          direction[2] = eulers.z;
+          direction[3] = up.x;
+          direction[4] = up.y;
+          direction[5] = up.z;
+          alListenerfv(AL_ORIENTATION, direction);
+          // checkAlErrors();
+
           auto loadingIt = loading.begin();
           while (loadingIt != loading.end()) {
             auto loadingItem = *loadingIt;
@@ -40,14 +56,11 @@ namespace wage {
           while (playingIt != playing.end()) {
             auto playingItem = *playingIt;
             ALint state = AL_PLAYING;
-            auto clip = playingItem->clip;
             alGetSourcei(playingItem->source, AL_SOURCE_STATE, &state);
             if (state == AL_STOPPED) {
               playingItem->cleanup();
               playingIt = playing.erase(playingIt);
-            } else {
-              alSourcef(playingItem->source, AL_PITCH, (ALfloat)clip->pitch());
-              alSourcef(playingItem->source, AL_GAIN, (ALfloat)clip->volume());
+            } else {              
               playingItem->ensureBuffers();
               ++playingIt;
             }
@@ -56,8 +69,12 @@ namespace wage {
       }
 
       ClipHandle* play(ClipSpec spec) {
+        return play(spec, math::Vector3::Invalid);
+      }
+
+      virtual ClipHandle* play(ClipSpec spec, math::Vector3 position) {
         auto clip = assetManager->load<Clip>(spec, false);
-        auto playing = new PlayingAudio(clip);
+        auto playing = new PlayingAudio(clip, position);
         loading.push_back(playing);
         return playing;
       }
@@ -83,6 +100,14 @@ namespace wage {
         if (!name || alcGetError(device) != AL_NO_ERROR)
           name = alcGetString(device, ALC_DEVICE_SPECIFIER);
         core::Logger::info("Opened Audio Device ", name);
+      }
+
+      math::Transform cameraTransform() {
+        auto manager = core::Core::Instance->get<ecs::EntityManager>();
+        for (auto entity : manager->with({PerspectiveCameraComponent, TransformComponent})) {
+          return *entity.get<math::Transform>(TransformComponent);
+        }
+        return math::Transform();
       }
 
       assets::Manager* assetManager;

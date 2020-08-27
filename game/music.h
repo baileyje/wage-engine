@@ -29,7 +29,9 @@ public:
       // audio::ClipSpec spec("2mb.wav", true);
       // audio::ClipSpec spec("sample.wav", true);
       audio::ClipSpec spec("GameBack.wav", 1, currentPitch, true);
-      musicHandle = core::Core::Instance->get<audio::Audio>()->play(spec);
+      // audio::ClipSpec spec("bounce.wav", true);
+      // audio::ClipSpec spec("tone.wav", true);
+      musicHandle = core::Core::Instance->get<audio::Audio>()->play(spec, {28, 0, 30});
     }
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::end)) {
       musicHandle->pause();

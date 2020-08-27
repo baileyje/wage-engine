@@ -26,12 +26,8 @@ public:
     // Adjust camera position base on player
     auto manager = core::Core::Instance->get<ecs::EntityManager>();
     auto player = *manager->with({PlayerComponent}).begin();
-    auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
-    // auto reverseBearing = (staringBearing * bearing * Vector(0, 0, -1)).normalized();
-    // auto pos = player.get<Transform>()->position() + reverseBearing * followDistance;
-    // camera.get<Transform>()->position(pos);
-    // camera.get<Transform>()->rotation(staringBearing * bearing);
-    camera.get<math::Transform>(TransformComponent)->position(player.get<math::Transform>(TransformComponent)->position() + bearing * staringOffset);
+    auto bearing = player.get<math::Transform>(TransformComponent)->rotation();    
+    camera.get<math::Transform>(TransformComponent)->position(player.get<math::Transform>(TransformComponent)->position() + bearing * staringOffset);    
     camera.get<math::Transform>(TransformComponent)->rotation(bearing * staringRotation);
   }
 

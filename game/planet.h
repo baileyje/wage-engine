@@ -71,12 +71,12 @@ void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemMana
 }
 
 void addRandomPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  float x = rand() % 5000 - 2500;
-  float y = rand() % 5000 - 2500;
-  float z = rand() % 5000 - 2500;
-  // float scale = (rand() % 100) / 30.0;
+  float x = randomBetween(-20000, 20000);
+  float y = randomBetween(-20000, 20000);
+  float z = randomBetween(-20000, 20000);
+  float scale = randomBetween(800, 1600);
   int texture = rand() % 2;
-  addPlanet(entityManager, systemManager, math::Vector(x, y, z) * 2, 500, texture);
+  addPlanet(entityManager, systemManager, math::Vector(x, y, z), scale, texture);
 }
 
 #endif // PLANET_H

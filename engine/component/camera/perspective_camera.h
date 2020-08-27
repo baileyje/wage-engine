@@ -10,7 +10,7 @@ namespace wage {
     class PerspectiveCamera : public Camera {
 
     public:
-      PerspectiveCamera() : PerspectiveCamera(60, 0.2, 10000.0) {
+      PerspectiveCamera() : PerspectiveCamera(60, 0.2, 100000.0) {
       }
 
       PerspectiveCamera(float fov, float nearClip, float farClip)

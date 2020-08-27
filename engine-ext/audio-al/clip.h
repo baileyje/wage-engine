@@ -15,7 +15,6 @@ namespace wage {
       }
 
       bool onLoad(memory::InputStream* stream) {
-        std::cout << "Loading Wave\n";
         _data = loadWav(stream);
 
         return false;
