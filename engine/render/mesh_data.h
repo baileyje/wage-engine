@@ -8,7 +8,7 @@
 
 #include "math/vector.h"
 #include "assets/asset.h"
-#include "render/mesh.h"
+#include "render/components/mesh.h"
 #include "memory/input_stream.h"
 #include "memory/buffer_stream.h"
 
@@ -22,7 +22,7 @@ namespace wage {
     class MeshData : public assets::Asset {
 
     public:
-      MeshData(Mesh mesh) : assets::Asset(mesh) {
+      MeshData(MeshSpec mesh) : assets::Asset(mesh) {
       }
 
       MeshData(std::string key, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices)

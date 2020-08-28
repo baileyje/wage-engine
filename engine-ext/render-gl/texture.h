@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/texture.h"
+#include "render/components/texture.h"
 #include "assets/manager.h"
 
 #include "render-gl/util.h"
@@ -11,12 +11,12 @@ namespace wage {
     class GlTexture : public assets::Asset {
 
     public:
-      GlTexture(Texture texture) : Asset(texture), pushed(false), _texture(texture) {
+      GlTexture(TextureSpec texture) : Asset(texture), pushed(false), _texture(texture) {
       }
 
       ~GlTexture();
 
-      inline Texture texture() const {
+      inline TextureSpec texture() const {
         return _texture;
       }
 
@@ -35,7 +35,7 @@ namespace wage {
 
       bool pushed;
 
-      Texture _texture;
+      TextureSpec _texture;
 
       std::unique_ptr<Asset> vertexSource;
 

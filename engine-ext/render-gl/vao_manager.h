@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include "memory/allocator.h"
-#include "render/mesh.h"
+#include "render/components/mesh.h"
 #include "render/mesh_manager.h"
 #include "assets/manager.h"
 

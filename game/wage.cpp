@@ -62,8 +62,8 @@ void registerKnownComponents(ecs::EntityManager* entityManager) {
   entityManager->registerComponent(DirectionalLightComponent, sizeof(component::DirectionalLight));
 
   // Renderer
-  entityManager->registerComponent(MeshComponent, sizeof(render::Mesh));
-  entityManager->registerComponent(MaterialComponent, sizeof(render::Material));
+  entityManager->registerComponent(MeshComponent, sizeof(render::MeshSpec));
+  entityManager->registerComponent(MaterialComponent, sizeof(render::MaterialSpec));
 
   // Physics
   entityManager->registerComponent(ColliderComponent, sizeof(physics::Collider));
@@ -82,14 +82,14 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
   auto topLightEnt = entityManager->create();
   topLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(-90, 0, 0));
   auto topLight = topLightEnt.assign<component::DirectionalLight>(DirectionalLightComponent);
-  topLight->diffuse(math::Color(0.7, 0.7, 0.7, 1));
-  topLight->ambient(math::Color(0.4, 0.4, 0.4, 1));
+  topLight->diffuse(component::Color(0.7, 0.7, 0.7, 1));
+  topLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
 
   auto bottomLightEnt = entityManager->create();
   bottomLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(90, 0, 0));
   auto bottomLight = bottomLightEnt.assign<component::DirectionalLight>(DirectionalLightComponent);
-  bottomLight->diffuse(math::Color(0.7, 0.7, 0.9, 1));
-  bottomLight->ambient(math::Color(0.4, 0.4, 0.4, 1));
+  bottomLight->diffuse(component::Color(0.7, 0.7, 0.9, 1));
+  bottomLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
 
   addPlayer(entityManager, systemManager);
 
@@ -122,7 +122,6 @@ int main(int argc, char* argv[]) {
   registerKnownComponents(entityManager);
   setupCoreSystems(systemManager);
 
-  // render::Mesh::generatePrimitives();
   setupScene(entityManager, systemManager);
   core::Core::Instance->init();
   core::Core::Instance->start();

@@ -16,8 +16,8 @@ void addDock(ecs::EntityManager* entityManager, ecs::SystemManager* systemManage
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(Vector(scale, scale, scale));
-  entity.assign<render::Mesh>(MeshComponent, "dock.obj", render::MeshType::custom);
-  entity.assign<render::Material>(MaterialComponent, render::Texture("odd_space_2.png"));
+  entity.assign<render::MeshSpec>(MeshComponent, "dock.obj");
+  entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
   entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::immovable);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
   entity.assign<Enemy>(EnemyComponent);

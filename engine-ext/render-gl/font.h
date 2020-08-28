@@ -67,7 +67,7 @@ namespace wage {
     class GlFont : public assets::Asset {
 
     public:
-      GlFont(Font font) : Asset(font), size(font.size()) {}
+      GlFont(FontSpec font) : Asset(font), size(font.size()) {}
 
       inline GlCharacter* characterFor(char c) {
         auto found = characters.find(c);

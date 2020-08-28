@@ -6,7 +6,7 @@ namespace wage {
   namespace render {
 
     void MeshManager::generatePrimitives() {
-      auto cube = new MeshData("CubeMesh",
+      auto cube = new MeshData(MeshSpec::Cube,
                                VertexVector{
                                    //front
                                    math::Vector(-0.5, -0.5, 0.5),
@@ -115,7 +115,7 @@ namespace wage {
       primitives[cube->spec().key()] = cube;
 
       auto quad = new MeshData(
-          "QuadMesh",
+          MeshSpec::Quad,
           VertexVector{
               math::Vector(0.5, 0.5, 0.0f),     // top right
               math::Vector(0.5f, -0.5f, 0.0f),  // bottom right
@@ -188,7 +188,7 @@ namespace wage {
           *i++ = nextRow + nextS;
           *i++ = curRow + nextS;
         }
-      auto sphere = new MeshData("SphereMesh", vertices, normals, texts, indices);
+      auto sphere = new MeshData(MeshSpec::Sphere, vertices, normals, texts, indices);
       primitives[sphere->spec().key()] = sphere;
     }
 

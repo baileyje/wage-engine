@@ -14,9 +14,9 @@
 #include "component/lighting/spotlight.h"
 #include "component/camera/perspective_camera.h"
 #include "component/camera/orthographic_camera.h"
-#include "render/material.h"
-#include "render/mesh.h"
-#include "render/font.h"
+#include "render/components/material.h"
+#include "render/components/mesh.h"
+#include "render/components/font.h"
 #include "render/renderable.h"
 #include "render/queue.h"
 
@@ -73,11 +73,11 @@ namespace wage {
         // std::cout << "CCQ: " << currentConsumerQueue << std::endl;
       }
 
-      virtual void renderText(math::Vector2 position, std::string text, Font font, math::Color color) = 0;
+      virtual void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) = 0;
 
-      virtual void renderSprite(math::Vector2 position, math::Vector2 size, math::Color color, Texture texture) = 0;
+      virtual void renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture) = 0;
 
-      virtual void renderMesh(math::Transform transform, Mesh* mesh, Material* material) = 0;
+      virtual void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material) = 0;
 
       inline void awaitNextQueue() {
         locks[currentProducerQueue].unlock();

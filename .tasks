@@ -1,81 +1,38 @@
 Core:
-✔ Work on parent/world based coordinates @done (11/1/2018, 8:32:11 PM)
-  ✔ Initial add of world @done (10/30/2018, 7:48:08 PM)
-  ✔ Move from getPosition/getWorldPosition -> getLocalPosition/getPosition @done (11/1/2018, 8:32:06 PM)
-✔ Scene @done (10/27/2018, 8:18:52 AM)
-✔ Logging @done (10/31/2018, 9:13:31 PM)
-✔ Entity Referencing @done (11/18/2018, 8:15:15 AM)
-✔ Service Referencing @done (3/3/2019, 10:49:47 PM)
-✔ Message systems @done (11/18/2018, 8:15:19 AM)
-✔ Add/Remove Entity messages @done (11/18/2018, 8:15:23 AM)
-☐ Add Start/Stop to components
-☐ Memory allocator
-    ✔ Permanent Arena @done (12/29/2018, 10:29:07 AM)
-    ✔ Frame Arena @done (12/29/2018, 10:29:08 AM)
-    ☐ Evaluate Permanent usage
-    ☐ Allow pool expansion
-    ✔ General reference strategy @done (1/1/2019, 8:45:24 PM)
-☐ Better virtual filesystem support
-✔ Better project structure @done (1/5/2019, 9:17:21 PM)
-✔ Change to smart pointers @done (3/3/2019, 10:49:56 PM)
 
 Entity:
 
-☐ More primitive shapes
-  ✔ Sphere @done (12/4/2018, 9:29:07 PM)
-  ☐ Cone
-✔ Rotation stored at Quat @done (10/29/2018, 9:32:35 PM)
-✔ ßMove components to sparse sets. Ref: https://www.geeksforgeeks.org/sparse-set/ @done (3/3/2019, 10:50:04 PM)
-
 
 Renderer:
-✔ Split out OpenGL @done (12/19/2018, 8:58:02 PM)
-☐ Sprite Rendering
-☐ Add some kind of reusable entity renderable
-  ✔ Mesh renderable @done (12/15/2018, 10:38:44 AM)
-  ☐ Sprite Renderable
-  ☐ Renderable caching
+☐ Mega cleanup
+☐ Create a render frame structure
+  - A camera
+  - A render queue
 ☐ Render queue
-  ✔ Mesh Queue @done (12/15/2018, 10:34:18 AM)
-  ☐ Sprite Queue
   ☐ Z-Order Sort  
-  ☐ Culling
-    ✔ Frustum culling @done (12/15/2018, 10:28:41 AM)
-    ☐ Occlusion culling
-  ✔ UI Queue @done (3/3/2019, 10:50:16 PM)
-☐ .obj loading
-✔ Texture cache @done (12/9/2018, 9:15:33 PM)
-✔ Mesh cache @done (12/9/2018, 9:15:41 PM)
+  ☐ Occlusion culling    
 ☐ Not the worst material ever...
   ☐ Maybe support cloning a common one
-✔ Font support @done (1/1/2019, 8:45:42 PM)
+☐ Sprite Rendering
 
 Asset Manager:
-✔ Async loading @done (12/19/2018, 8:58:20 PM)
-☐ Caching
-☐ Cache removal
+☐ Cache removal/management
 
 Input:
-✔ Key press @done (1/4/2019, 4:28:33 PM)
-✔ Mouse position @done (1/4/2019, 4:28:34 PM)
-✔ Mouse Press @done (1/4/2019, 10:09:15 PM)
-✔ Key press callback @done (1/4/2019, 10:09:16 PM)
-✔ Mouse Positon callback @done (1/4/2019, 10:09:17 PM)
-✔ Mouse Press callback @done (1/4/2019, 10:09:18 PM)
-✔ Mouse scroll callback @done (1/5/2019, 5:34:21 PM)
 
 Sound:
-☐ Literally anything
 
 Physics:
-✔ Split out bullet @done (12/22/2018, 7:56:19 PM)
 ☐ More collider types
 ☐ Compound shapes
 ☐ Joints?
+☐ Collision Callbacks
 
 Game:
 ☐ Some strategy for restarting scene
+☐ Some way to load and store scenes
 
 Script:
 ☐ Add Lua script interface
+
 

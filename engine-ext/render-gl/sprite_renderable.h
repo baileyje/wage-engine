@@ -14,7 +14,7 @@ namespace wage {
     class GlSpriteRenderable : public Renderable {
 
     public:
-      GlSpriteRenderable(assets::Manager* assetManager, math::Vector2 position, math::Vector2 size, math::Color color, Texture texture)
+      GlSpriteRenderable(assets::Manager* assetManager, math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture)
           : _assetManager(assetManager), _position(position), _size(size), _color(color), _texture(texture) {}
 
       virtual math::Vector position() {
@@ -113,9 +113,9 @@ namespace wage {
 
       math::Vector2 _size;
 
-      math::Color _color;
+      component::Color _color;
 
-      Texture _texture;
+      TextureSpec _texture;
     };
 
   }

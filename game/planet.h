@@ -59,12 +59,12 @@ void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemMana
   transform->position(position);
   transform->localScale(math::Vector(scale, scale, scale));
   entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::immovable);
-  entity.assign<render::Mesh>(MeshComponent, render::Mesh::Sphere);
+  entity.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Sphere);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
   if (texture == 0) {
-    entity.assign<render::Material>(MaterialComponent, render::Texture("earthlike_planet.png"));
+    entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("earthlike_planet.png"));
   } else {
-    entity.assign<render::Material>(MaterialComponent, render::Texture("test_planet.png"));
+    entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("test_planet.png"));
   }
 
   entity.assign<Planet>(PlanetComponent);

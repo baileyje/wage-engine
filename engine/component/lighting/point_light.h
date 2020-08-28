@@ -11,10 +11,10 @@ namespace wage {
 
     public:
       PointLight()
-          : PointLight(math::Color(0.05f, 0.05f, 0.05f, 1), math::Color(0.8f, 0.8f, 0.8f, 1), math::Color::White, 1.0f, 0.09, 0.032) {
+          : PointLight(Color(0.05f, 0.05f, 0.05f, 1), Color(0.8f, 0.8f, 0.8f, 1), Color::White, 1.0f, 0.09, 0.032) {
       }
 
-      PointLight(math::Color ambient, math::Color diffuse, math::Color specular, float constant, float linear, float quadratic)
+      PointLight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic)
           : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic) {
       }
 

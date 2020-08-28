@@ -35,8 +35,8 @@
 
 #include "render/renderer.h"
 #include "render/mesh_renderer.h"
-#include "render/mesh.h"
-#include "render/material.h"
+#include "render/components/mesh.h"
+#include "render/components/material.h"
 
 #include "component/camera/perspective_camera.h"
 #include "component/lighting/directional_light.h"

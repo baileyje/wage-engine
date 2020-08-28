@@ -1,47 +1,49 @@
 #pragma once
 
-#include "math/color.h"
+#include "component/color.h"
 
-namespace wage { namespace component {
+namespace wage {
+  namespace component {
 
-  class Light {
+    class Light {
 
-  public:
-    Light(math::Color ambient, math::Color diffuse, math::Color specular)
-        : _ambient(ambient), _diffuse(diffuse), _specular(specular) {
-    }
+    public:
+      Light(component::Color ambient, component::Color diffuse, component::Color specular)
+          : _ambient(ambient), _diffuse(diffuse), _specular(specular) {
+      }
 
-    ~Light() {}
+      ~Light() {}
 
-    math::Color ambient() const {
-      return _ambient;
-    }
+      component::Color ambient() const {
+        return _ambient;
+      }
 
-    inline void ambient(math::Color ambient) {
-      _ambient = ambient;
-    }
+      inline void ambient(component::Color ambient) {
+        _ambient = ambient;
+      }
 
-    inline math::Color diffuse() const {
-      return _diffuse;
-    }
+      inline component::Color diffuse() const {
+        return _diffuse;
+      }
 
-    inline void diffuse(math::Color diffuse) {
-      _diffuse = diffuse;
-    }
+      inline void diffuse(component::Color diffuse) {
+        _diffuse = diffuse;
+      }
 
-    inline math::Color specular() const {
-      return _specular;
-    }
+      inline component::Color specular() const {
+        return _specular;
+      }
 
-    inline void specular(math::Color specular) {
-      _specular = specular;
-    }
+      inline void specular(component::Color specular) {
+        _specular = specular;
+      }
 
-  protected:
-    math::Color _ambient;
+    protected:
+      component::Color _ambient;
 
-    math::Color _diffuse;
+      component::Color _diffuse;
 
-    math::Color _specular;
-  };
-} }
+      component::Color _specular;
+    };
+  }
+}

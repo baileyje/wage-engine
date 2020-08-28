@@ -17,11 +17,11 @@ namespace wage {
 
       void initializeRenderer();
 
-      void renderText(math::Vector2 position, std::string text, Font font, math::Color color);
+      void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color);
 
-      void renderSprite(math::Vector2 position, math::Vector2 size, math::Color color, Texture texture);
+      void renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture);
 
-      void renderMesh(math::Transform transform, Mesh* mesh, Material* material);
+      void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material);
 
       virtual void beginRender();
 

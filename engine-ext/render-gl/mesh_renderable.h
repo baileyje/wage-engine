@@ -11,8 +11,8 @@
 #include "memory/allocator.h"
 #include "render/renderable.h"
 #include "render/context.h"
-#include "render/mesh.h"
-#include "render/material.h"
+#include "render/components/mesh.h"
+#include "render/components/material.h"
 #include "component/lighting/directional_light.h"
 #include "component/lighting/point_light.h"
 #include "component/lighting/spotlight.h"
@@ -25,7 +25,7 @@ namespace wage {
     class GlMeshRenderable : public Renderable {
 
     public:
-      GlMeshRenderable(assets::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, MeshData* meshData, Material* material)
+      GlMeshRenderable(assets::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, MeshData* meshData, MaterialSpec* material)
           : _assetManager(assetManager), _vaoManager(vaoManager), transform(transform), meshData(meshData), material(material) {}
 
       inline VaoManager* vaoManager() {
@@ -159,7 +159,7 @@ namespace wage {
 
       MeshData* meshData;
 
-      Material* material;
+      MaterialSpec* material;
     };
 
   }

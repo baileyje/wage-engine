@@ -131,9 +131,9 @@ ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* sys
   auto player = entityManager->create();
   player.assign<math::Transform>(TransformComponent, Vector(0, 0, 0), Vector(5, 5, 5), Vector(0, 5, 0));
   player.assign<physics::RigidBody>(RigidBodyComponent, 0.01);
-  player.assign<render::Mesh>(MeshComponent, "player.obj", render::MeshType::custom);
+  player.assign<render::MeshSpec>(MeshComponent, "player.obj");
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
-  player.assign<render::Material>(MaterialComponent, render::Texture("default.png"));
+  player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec());
   player.assign<Player>(PlayerComponent);
   return player;
 }

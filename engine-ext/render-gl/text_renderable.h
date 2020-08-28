@@ -15,7 +15,7 @@ namespace wage {
     class GlTextRenderable : public Renderable {
 
     public:
-      GlTextRenderable(assets::Manager* assetManager, math::Vector2 position, std::string text, Font font, math::Color color)
+      GlTextRenderable(assets::Manager* assetManager, math::Vector2 position, std::string text, FontSpec font, component::Color color)
           : _assetManager(assetManager), _position(position), _text(text), _font(font), _color(color) {}
 
       virtual math::Vector position() {
@@ -103,9 +103,9 @@ namespace wage {
 
       std::string _text;
 
-      Font _font;
+      FontSpec _font;
 
-      math::Color _color;
+      component::Color _color;
     };
 
   }

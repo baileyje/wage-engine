@@ -5,7 +5,7 @@
 #include "memory/allocator.h"
 #include "assets/manager.h"
 
-#include "render/mesh.h"
+#include "render/components/mesh.h"
 #include "render/mesh_data.h"
 
 namespace wage {
@@ -14,7 +14,7 @@ namespace wage {
     class MeshManager {
 
     public:
-      MeshData* load(Mesh mesh) {
+      MeshData* load(MeshSpec mesh) {
         auto primitive = primitives[mesh.key()];
         if (primitive != nullptr) {
           return primitive;

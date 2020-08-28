@@ -11,10 +11,10 @@ namespace wage {
 
     public:
       Spotlight()
-          : Spotlight(math::Color(0.0f, 0.0f, 0.0f, 1), math::Color::White, math::Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
+          : Spotlight(Color(0.0f, 0.0f, 0.0f, 1), Color::White, Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
       }
 
-      Spotlight(math::Color ambient, math::Color diffuse, math::Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
+      Spotlight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
           : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff) {
       }
 

@@ -66,21 +66,21 @@ private:
 };
 
 void setupHud(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  render::Font font("ARCADE.TTF", 20);
+  render::FontSpec font("ARCADE.TTF", 20);
   auto fpsLabelEntity = entityManager->create();
-  auto fpsLabel = fpsLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(20, 0), Vector2(300, 100)), "FPS: ", font, math::Color::White);
+  auto fpsLabel = fpsLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(20, 0), Vector2(300, 100)), "FPS: ", font, component::Color::White);
   systemManager->create<FpsDisplay>(fpsLabel);
 
   auto posLabelEntity = entityManager->create();
-  auto posLabel = posLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(200, 0), Vector2(300, 100)), "Player POS: ", font, math::Color::White);
+  auto posLabel = posLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(200, 0), Vector2(300, 100)), "Player POS: ", font, component::Color::White);
   systemManager->create<PosDisplay>(posLabel);
 
   auto camPosLabelEntity = entityManager->create();
-  auto camPosLabel = camPosLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(600, 0), Vector2(300, 100)), "Cam POS: ", font, math::Color::White);
+  auto camPosLabel = camPosLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(600, 0), Vector2(300, 100)), "Cam POS: ", font, component::Color::White);
   systemManager->create<CamPosDisplay>(camPosLabel);
 
   // auto buttonEntity = entityManager->create();
-  // buttonEntity.assign<UiButton>(UiFrame(Vector2(600, 0), Vector2(300, 100)), math::Color::Clear,
+  // buttonEntity.assign<UiButton>(UiFrame(Vector2(600, 0), Vector2(300, 100)), component::Color::Clear,
   //   Texture("textures/button.png"),
   //   Texture("textures/default.png")
   // );
