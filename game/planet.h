@@ -70,11 +70,18 @@ void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemMana
   entity.assign<Planet>(PlanetComponent);
 }
 
+float randomComp() {
+  auto comp = randomBetween(-200000, 200000);
+  if (comp > 0) comp += 5000;
+  if (comp < 0) comp -= 5000;
+  return comp;
+}
+
 void addRandomPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  float x = randomBetween(-20000, 20000);
-  float y = randomBetween(-20000, 20000);
-  float z = randomBetween(-20000, 20000);
-  float scale = randomBetween(800, 1600);
+  float x = randomComp();
+  float y = randomComp();
+  float z = randomComp();
+  float scale = randomBetween(20000, 28000);
   int texture = rand() % 2;
   addPlanet(entityManager, systemManager, math::Vector(x, y, z), scale, texture);
 }

@@ -52,14 +52,14 @@ void registerKnownComponents(ecs::EntityManager* entityManager) {
   entityManager->registerComponent(TransformComponent, sizeof(math::Transform));
 
   // Camera
-  entityManager->registerComponent(CameraComponent, sizeof(component::Camera));
-  // entityManager->registerComponent(OrthographicCameraComponent, sizeof(component::OrthographicCamera));
-  entityManager->registerComponent(PerspectiveCameraComponent, sizeof(component::PerspectiveCamera));
+  entityManager->registerComponent(CameraComponent, sizeof(render::Camera));
+  // entityManager->registerComponent(OrthographicCameraComponent, sizeof(render::OrthographicCamera));
+  entityManager->registerComponent(PerspectiveCameraComponent, sizeof(render::PerspectiveCamera));
 
   // Lights
-  entityManager->registerComponent(SpotlightComponent, sizeof(component::Spotlight));
-  entityManager->registerComponent(PointLightComponent, sizeof(component::PointLight));
-  entityManager->registerComponent(DirectionalLightComponent, sizeof(component::DirectionalLight));
+  entityManager->registerComponent(SpotlightComponent, sizeof(render::Spotlight));
+  entityManager->registerComponent(PointLightComponent, sizeof(render::PointLight));
+  entityManager->registerComponent(DirectionalLightComponent, sizeof(render::DirectionalLight));
 
   // Renderer
   entityManager->registerComponent(MeshComponent, sizeof(render::MeshSpec));
@@ -81,13 +81,13 @@ void registerKnownComponents(ecs::EntityManager* entityManager) {
 void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
   auto topLightEnt = entityManager->create();
   topLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(-90, 0, 0));
-  auto topLight = topLightEnt.assign<component::DirectionalLight>(DirectionalLightComponent);
+  auto topLight = topLightEnt.assign<render::DirectionalLight>(DirectionalLightComponent);
   topLight->diffuse(component::Color(0.7, 0.7, 0.7, 1));
   topLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
 
   auto bottomLightEnt = entityManager->create();
   bottomLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(90, 0, 0));
-  auto bottomLight = bottomLightEnt.assign<component::DirectionalLight>(DirectionalLightComponent);
+  auto bottomLight = bottomLightEnt.assign<render::DirectionalLight>(DirectionalLightComponent);
   bottomLight->diffuse(component::Color(0.7, 0.7, 0.9, 1));
   bottomLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
 

@@ -1,16 +1,16 @@
 #pragma once
 
-#include "component/camera/camera.h"
+#include "render/components/camera/camera.h"
 
 #define PerspectiveCameraComponent 12
 
 namespace wage {
-  namespace component {
+  namespace render {
 
     class PerspectiveCamera : public Camera {
 
     public:
-      PerspectiveCamera() : PerspectiveCamera(60, 0.2, 100000.0) {
+      PerspectiveCamera() : PerspectiveCamera(60, 0.2, 1000000.0) {
       }
 
       PerspectiveCamera(float fov, float nearClip, float farClip)

@@ -7,7 +7,7 @@
 #define CameraComponent 10
 
 namespace wage {
-  namespace component {
+  namespace render {
 
     enum class CameraType {
       perspective,

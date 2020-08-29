@@ -32,11 +32,11 @@ namespace wage {
 
       VaoManager vaoManager;
 
-      std::vector<component::DirectionalLight*> dirLights;
+      std::vector<DirectionalLight*> dirLights;
 
-      std::vector<component::PointLight*> pointLights;
+      std::vector<PointLight*> pointLights;
 
-      std::vector<component::Spotlight*> spotlights;
+      std::vector<Spotlight*> spotlights;
     };
 
   }

@@ -1,20 +1,20 @@
 #pragma once
 
-#include "component/lighting/light.h"
+#include "render/components/lighting/light.h"
 
 #define SpotlightComponent 20
 
 namespace wage {
-  namespace component {
+  namespace render {
 
     class Spotlight : public Light {
 
     public:
       Spotlight()
-          : Spotlight(Color(0.0f, 0.0f, 0.0f, 1), Color::White, Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
+          : Spotlight(component::Color(0.0f, 0.0f, 0.0f, 1), component::Color::White, component::Color::White, 1.0f, 0.99, 0.032, 12.5, 15.0) {
       }
 
-      Spotlight(Color ambient, Color diffuse, Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
+      Spotlight(component::Color ambient, component::Color diffuse, component::Color specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
           : Light(ambient, diffuse, specular), _constant(constant), _linear(linear), _quadratic(quadratic), _cutOff(cutOff), _outerCutOff(outerCutOff) {
       }
 

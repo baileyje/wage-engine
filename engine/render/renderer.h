@@ -10,11 +10,11 @@
 #include "ecs/manager.h"
 #include "platform/platform.h"
 
-#include "component/lighting/directional_light.h"
-#include "component/lighting/point_light.h"
-#include "component/lighting/spotlight.h"
-#include "component/camera/perspective_camera.h"
-#include "component/camera/orthographic_camera.h"
+#include "render/components/lighting/directional_light.h"
+#include "render/components/lighting/point_light.h"
+#include "render/components/lighting/spotlight.h"
+#include "render/components/camera/perspective_camera.h"
+#include "render/components/camera/orthographic_camera.h"
 #include "render/components/material.h"
 #include "render/components/mesh.h"
 #include "render/components/font.h"
@@ -123,12 +123,12 @@ namespace wage {
         return _renderFrame.load();
       }
 
-      std::tuple<ecs::Entity, component::Camera*> cameraAndEntity(ecs::EntityManager* manager) {
+      std::tuple<ecs::Entity, Camera*> cameraAndEntity(ecs::EntityManager* manager) {
         for (auto entity : manager->with({PerspectiveCameraComponent})) {
-          return {entity, entity.get<component::PerspectiveCamera>(PerspectiveCameraComponent)};
+          return {entity, entity.get<PerspectiveCamera>(PerspectiveCameraComponent)};
         }
         for (auto entity : manager->with({OrthographicCameraComponent})) {
-          return {entity, entity.get<component::OrthographicCamera>(OrthographicCameraComponent)};
+          return {entity, entity.get<OrthographicCamera>(OrthographicCameraComponent)};
         }
         return {ecs::Entity::Invalid, nullptr};
       }

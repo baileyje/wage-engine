@@ -38,10 +38,10 @@
 #include "render/components/mesh.h"
 #include "render/components/material.h"
 
-#include "component/camera/perspective_camera.h"
-#include "component/lighting/directional_light.h"
-#include "component/lighting/point_light.h"
-#include "component/lighting/spotlight.h"
+#include "render/components/camera/perspective_camera.h"
+#include "render/components/lighting/directional_light.h"
+#include "render/components/lighting/point_light.h"
+#include "render/components/lighting/spotlight.h"
 
 #include "ui/ui.h"
 #include "ui/system.h"

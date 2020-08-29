@@ -13,9 +13,9 @@
 #include "render/context.h"
 #include "render/components/mesh.h"
 #include "render/components/material.h"
-#include "component/lighting/directional_light.h"
-#include "component/lighting/point_light.h"
-#include "component/lighting/spotlight.h"
+#include "render/components/lighting/directional_light.h"
+#include "render/components/lighting/point_light.h"
+#include "render/components/lighting/spotlight.h"
 
 #include "render-gl/material.h"
 
@@ -65,7 +65,7 @@ namespace wage {
         glMaterial.setInt("numDirLights", context->dirLights().size());
         int idx = 0;
         for (auto lightEntity : context->dirLights()) {
-          auto light = lightEntity.get<component::DirectionalLight>(DirectionalLightComponent);
+          auto light = lightEntity.get<DirectionalLight>(DirectionalLightComponent);
           std::stringstream base;
           base << "dirLights[" << idx++ << "]";
           auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);
@@ -90,7 +90,7 @@ namespace wage {
         glMaterial.setInt("numPointLights", context->pointLights().size());
         idx = 0;
         for (auto lightEntity : context->pointLights()) {
-          auto light = lightEntity.get<component::PointLight>(PointLightComponent);
+          auto light = lightEntity.get<PointLight>(PointLightComponent);
           std::stringstream base;
           base << "pointLights[" << idx++ << "]";
           auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);
@@ -106,7 +106,7 @@ namespace wage {
         glMaterial.setInt("numSpotLights", context->spotlights().size());
         idx = 0;
         for (auto lightEntity : context->spotlights()) {
-          auto light = lightEntity.get<component::Spotlight>(SpotlightComponent);
+          auto light = lightEntity.get<Spotlight>(SpotlightComponent);
           std::stringstream base;
           base << "spotLights[" << idx++ << "]";
           auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);

@@ -2,10 +2,10 @@
 
 #include <vector>
 
-#include "component/lighting/directional_light.h"
-#include "component/lighting/point_light.h"
-#include "component/lighting/spotlight.h"
-#include "component/camera/camera.h"
+#include "render/components/lighting/directional_light.h"
+#include "render/components/lighting/point_light.h"
+#include "render/components/lighting/spotlight.h"
+#include "render/components/camera/camera.h"
 
 #include "math/transform.h"
 #include "math/frustum.h"
@@ -15,13 +15,15 @@
 namespace wage {
   namespace render {
 
+    /**
+     * Contextual data used to render a frame to the screen. This information is a snap shot of data extracted from the game update state and should not be referenced
+     * outside the renderer during the frame rendering.
+     */
     class RenderContext {
 
     public:
-      RenderContext(ecs::Entity cameraEntity, component::Camera* camera, math::Vector2 screenSize,
-                    std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights)
-          : _screenSize(screenSize),
-            _dirLights(dirLights), _pointLights(pointLights), _spotlights(spotlights) {
+      RenderContext(ecs::Entity cameraEntity, Camera* camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights)
+          : _screenSize(screenSize), _dirLights(dirLights), _pointLights(pointLights), _spotlights(spotlights) {
         auto camTransform = cameraEntity.get<math::Transform>(TransformComponent);
         _screenProjection = camera->screenProjection(screenSize);
         _viewProjection = camera->viewProjection(camTransform);
@@ -29,34 +31,58 @@ namespace wage {
         _cameraFrustum = camera->frustum(screenSize, camTransform);
       }
 
+      /**
+       * The current screensize to render to.
+       */
       inline math::Vector2 screenSize() {
         return _screenSize;
       }
 
+      /**
+       * The current screen projection with respect to the camera.
+       */
       inline math::Matrix screenProjection() {
         return _screenProjection;
       }
 
+      /**
+       * The position of the camera within the world.
+       */
       inline math::Vector cameraPosition() {
         return _cameraPosition;
       }
 
+      /**
+       * The current cameral look projection.
+       */
       inline math::Matrix viewProjection() {
         return _viewProjection;
       }
 
+      /**
+       * The relevent directional lights for the rendering.
+       */
       inline std::vector<ecs::Entity> dirLights() {
         return _dirLights;
       }
 
+      /**
+       * The relevent point lights for the rendering.
+       */
       inline std::vector<ecs::Entity> pointLights() {
         return _pointLights;
       }
 
+      /**
+       * The relevent spot lights for the rendering.
+       */
       inline std::vector<ecs::Entity> spotlights() {
         return _spotlights;
       }
 
+      /**
+       * The cameras frustum used for culling the scene.
+       */
       inline math::Frustum cameraFrustum() {
         return _cameraFrustum;
       }

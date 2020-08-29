@@ -7,7 +7,7 @@ using namespace wage;
 class FpsDisplay : public ecs::System {
 
 public:
-  FpsDisplay(ui::UiLabel* label) : System(), label(label), lastTime(0), frames(0) {}
+  FpsDisplay(ui::UiLabel* label) : System(), label(label) {}
 
   void update(const ecs::SystemContext& context) {
     auto frameTime = core::Core::Instance->get<render::Renderer>()->averageFrameTime();
@@ -19,10 +19,6 @@ public:
 
 private:
   ui::UiLabel* label;
-
-  double lastTime;
-
-  int frames;
 };
 
 class PosDisplay : public ecs::System {

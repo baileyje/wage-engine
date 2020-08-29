@@ -90,7 +90,7 @@ public:
     // auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
 
     // body->addTorqueImpulse(torque);
-    float force = 180.0;
+    float force = 1000.0;
     auto impulse = Vector3::Zero;
     if (input->isPressed(input::Key::w)) {
       impulse += (bearing * Vector::Forward).normalized() * force;
@@ -130,7 +130,7 @@ private:
 ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
   auto player = entityManager->create();
   player.assign<math::Transform>(TransformComponent, Vector(0, 0, 0), Vector(5, 5, 5), Vector(0, 5, 0));
-  player.assign<physics::RigidBody>(RigidBodyComponent, 0.01);
+  player.assign<physics::RigidBody>(RigidBodyComponent, 10);
   player.assign<render::MeshSpec>(MeshComponent, "player.obj");
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
   player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec());

@@ -26,8 +26,8 @@ public:
     // Adjust camera position base on player
     auto manager = core::Core::Instance->get<ecs::EntityManager>();
     auto player = *manager->with({PlayerComponent}).begin();
-    auto bearing = player.get<math::Transform>(TransformComponent)->rotation();    
-    camera.get<math::Transform>(TransformComponent)->position(player.get<math::Transform>(TransformComponent)->position() + bearing * staringOffset);    
+    auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
+    camera.get<math::Transform>(TransformComponent)->position(player.get<math::Transform>(TransformComponent)->position() + bearing * staringOffset);
     camera.get<math::Transform>(TransformComponent)->rotation(bearing * staringRotation);
   }
 
@@ -46,7 +46,7 @@ void addCamera(ecs::EntityManager* entityManager, ecs::SystemManager* systemMana
   auto camTransform = cameraEntity.assign<math::Transform>(TransformComponent);
   camTransform->position({0, 20, -30});
   camTransform->rotation({20, 0, 0});
-  cameraEntity.assign<component::PerspectiveCamera>(PerspectiveCameraComponent);
+  cameraEntity.assign<render::PerspectiveCamera>(PerspectiveCameraComponent);
   systemManager->create<ThirdPersonCamera>(cameraEntity);
 }
 

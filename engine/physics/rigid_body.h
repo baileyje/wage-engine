@@ -14,7 +14,7 @@
 namespace wage {
   namespace physics {
 
-        enum class RigidBodyType {
+    enum class RigidBodyType {
       dynamic,
       kinematic,
       immovable

@@ -3,7 +3,7 @@
 #include "component/color.h"
 
 namespace wage {
-  namespace component {
+  namespace render {
 
     class Light {
 
