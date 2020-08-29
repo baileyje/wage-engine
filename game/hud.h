@@ -1,5 +1,4 @@
-#ifndef HUD_H
-#define HUD_H
+#pragma once
 
 #include "engine.h"
 
@@ -11,16 +10,11 @@ public:
   FpsDisplay(ui::UiLabel* label) : System(), label(label), lastTime(0), frames(0) {}
 
   void update(const ecs::SystemContext& context) {
-    double currentTime = context.time();
-    frames++;
-    if (currentTime - lastTime >= 1.0) {
-      std::ostringstream os;
-      os << "FPS: " << frames;
-      // std::cout << "FPS: " << frames << std::endl;
-      label->set(os.str());
-      frames = 0;
-      lastTime = currentTime;
-    }
+    auto frameTime = core::Core::Instance->get<render::Renderer>()->averageFrameTime();
+    std::ostringstream os;
+    // os.precision(2);
+    os << "Frame Time: " << frameTime << "ms";
+    label->set(os.str());
   }
 
 private:
@@ -59,6 +53,13 @@ public:
     std::ostringstream os;
     os << "Cam POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
     label->set(os.str());
+
+    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::p)) {
+      core::Core::Instance->pause();
+    }
+    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::u)) {
+      core::Core::Instance->unpause();
+    }
   }
 
 private:
@@ -85,5 +86,3 @@ void setupHud(ecs::EntityManager* entityManager, ecs::SystemManager* systemManag
   //   Texture("textures/default.png")
   // );
 }
-
-#endif // HUD_H

@@ -18,21 +18,25 @@ public:
   }
 
   void start(const ecs::SystemContext& context) {
+    audio::ClipSpec spec("GameBack.wav", 1, currentPitch, true);
+    // audio::ClipSpec spec("bounce.wav", true);
+    // audio::ClipSpec spec("tone.wav", true);
+    musicHandle = core::Core::Instance->get<audio::Audio>()->play(spec, {28, 0, 30});
   }
 
   void update(const ecs::SystemContext& context) {
-    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::m)) {
-      if (running) {
-        return;
-      }
-      running = true;
-      // audio::ClipSpec spec("2mb.wav", true);
-      // audio::ClipSpec spec("sample.wav", true);
-      audio::ClipSpec spec("GameBack.wav", 1, currentPitch, true);
-      // audio::ClipSpec spec("bounce.wav", true);
-      // audio::ClipSpec spec("tone.wav", true);
-      musicHandle = core::Core::Instance->get<audio::Audio>()->play(spec, {28, 0, 30});
-    }
+    // if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::m)) {
+    //   if (running) {
+    //     return;
+    //   }
+    //   running = true;
+    //   // audio::ClipSpec spec("2mb.wav", true);
+    //   // audio::ClipSpec spec("sample.wav", true);
+    //   audio::ClipSpec spec("GameBack.wav", 1, currentPitch, true);
+    //   // audio::ClipSpec spec("bounce.wav", true);
+    //   // audio::ClipSpec spec("tone.wav", true);
+    //   musicHandle = core::Core::Instance->get<audio::Audio>()->play(spec, {28, 0, 30});
+    // }
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::end)) {
       musicHandle->pause();
     }

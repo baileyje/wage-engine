@@ -90,7 +90,7 @@ public:
     // auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
 
     // body->addTorqueImpulse(torque);
-    float force = 10.0;
+    float force = 180.0;
     auto impulse = Vector3::Zero;
     if (input->isPressed(input::Key::w)) {
       impulse += (bearing * Vector::Forward).normalized() * force;

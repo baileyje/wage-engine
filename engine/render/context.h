@@ -8,6 +8,7 @@
 #include "component/camera/camera.h"
 
 #include "math/transform.h"
+#include "math/frustum.h"
 
 #include "ecs/registry.h"
 
@@ -19,20 +20,13 @@ namespace wage {
     public:
       RenderContext(ecs::Entity cameraEntity, component::Camera* camera, math::Vector2 screenSize,
                     std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights)
-          : _cameraEntity(cameraEntity), _camera(camera), _screenSize(screenSize),
+          : _screenSize(screenSize),
             _dirLights(dirLights), _pointLights(pointLights), _spotlights(spotlights) {
         auto camTransform = cameraEntity.get<math::Transform>(TransformComponent);
         _screenProjection = camera->screenProjection(screenSize);
         _viewProjection = camera->viewProjection(camTransform);
         _cameraPosition = camTransform->position();
-      }
-
-      inline component::Camera* camera() {
-        return _camera;
-      }
-
-      inline ecs::Entity cameraEntity() {
-        return _cameraEntity;
+        _cameraFrustum = camera->frustum(screenSize, camTransform);
       }
 
       inline math::Vector2 screenSize() {
@@ -63,16 +57,18 @@ namespace wage {
         return _spotlights;
       }
 
+      inline math::Frustum cameraFrustum() {
+        return _cameraFrustum;
+      }
+
     private:
-      ecs::Entity _cameraEntity;
-
-      component::Camera* _camera;
-
       math::Vector2 _screenSize;
 
       math::Matrix _screenProjection;
 
-      math::Vector _cameraPosition;
+      math::Vector3 _cameraPosition;
+
+      math::Frustum _cameraFrustum;
 
       math::Matrix _viewProjection;
 

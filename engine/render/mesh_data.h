@@ -19,12 +19,20 @@ namespace wage {
     typedef std::vector<math::Vector2> Vertex2Vector;
     typedef std::vector<unsigned int> IndexVector;
 
+    /**
+     * Mesh data storage container.
+     */
     class MeshData : public assets::Asset {
 
     public:
-      MeshData(MeshSpec mesh) : assets::Asset(mesh) {
-      }
+      /**
+       * Create a mesh data object with a mesh spec.
+       */
+      MeshData(MeshSpec mesh) : assets::Asset(mesh) {}
 
+      /**
+       * Create a mesh data object with the pre-produced mesh data.
+       */
       MeshData(std::string key, VertexVector vertices, VertexVector normals, Vertex2Vector uvs, IndexVector indices)
           : Asset({"mesh", key}), _vertices(vertices), _normals(normals), _uvs(uvs), _indices(indices), _maxDim(0) {
         for (auto vertex : _vertices) {
@@ -37,30 +45,51 @@ namespace wage {
 
       virtual ~MeshData() {}
 
+      /**
+       * Get the number of elements in the mesh.
+       */
       inline unsigned int elementCount() {
         return _indices.size();
       }
 
+      /**
+       * Get the vector of vertices for this mesh.
+       */
       inline VertexVector& vertices() {
         return _vertices;
       }
 
+      /**
+       * Get the vector of normals for this mesh.
+       */
       inline VertexVector& normals() {
         return _normals;
       }
 
+      /**
+       * Get the vector of uv coords for this mesh.
+       */
       inline Vertex2Vector& uvs() {
         return _uvs;
       }
 
+      /**
+       * Get the vector of indices for this mesh.
+       */
       inline IndexVector& indices() {
         return _indices;
       }
 
+      /**
+       * Get the max dimensions for this mesh.
+       */
       inline math::Vector maxDim() {
         return _maxDim;
       }
 
+      /**
+       * Called by the asset manager when the input stream is made availble. This will load mesh data from the input stream provided.
+       */
       bool onLoad(memory::InputStream* stream) {
         std::string err;
         std::string warn;
@@ -82,14 +111,12 @@ namespace wage {
         if (!ret) {
           std::cerr << "Failed to load .obj" << std::endl;
         }
-
         float minX = attrib.vertices[0];
         float maxX = attrib.vertices[0];
         float minY = attrib.vertices[1];
         float maxY = attrib.vertices[1];
         float minZ = attrib.vertices[2];
         float maxZ = attrib.vertices[2];
-
         unsigned int index = 0;
         // Loop over shapes
         for (size_t s = 0; s < 1; s++) {
@@ -162,6 +189,10 @@ namespace wage {
           vert.x = scale * (vert.x - offsetX);
           vert.y = scale * (vert.y - offsetY);
           vert.z = scale * (vert.z - offsetZ);
+
+          _maxDim.x = std::max(_maxDim.x, std::abs(vert.x));
+          _maxDim.y = std::max(_maxDim.y, std::abs(vert.y));
+          _maxDim.z = std::max(_maxDim.z, std::abs(vert.z));
         }
         return true;
       }

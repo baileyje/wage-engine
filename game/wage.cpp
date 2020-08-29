@@ -97,13 +97,13 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
 
   setupHud(entityManager, systemManager);
 
-  for (int i = 0; i < 100; i++) {
+  for (int i = 0; i < 200; i++) {
     addRandomEnemy(entityManager, systemManager);
   }
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 10; i++) {
     addRandomPlanet(entityManager, systemManager);
   }
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 5; i++) {
     addRandomDock(entityManager, systemManager);
   }
 }

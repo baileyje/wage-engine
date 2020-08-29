@@ -73,6 +73,14 @@ namespace wage {
         renderListeners.push_back(listener);
       }
 
+      inline void pause() {
+        paused = true;
+      }
+
+      inline void unpause() {
+        paused = false;
+      }
+
     private:
       void processInput();
 
@@ -91,6 +99,8 @@ namespace wage {
       ServiceMap services;
 
       volatile bool running;
+
+      volatile bool paused;
 
       Frame _frame;
 

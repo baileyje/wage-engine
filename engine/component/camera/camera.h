@@ -9,8 +9,10 @@
 namespace wage {
   namespace component {
 
-    enum class CameraType { perspective,
-                            orthographic };
+    enum class CameraType {
+      perspective,
+      orthographic
+    };
 
     class Camera {
 

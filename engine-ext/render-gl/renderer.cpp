@@ -49,18 +49,18 @@ namespace wage {
     }
 
     void GlRenderer::renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) {
-      uiQueues[currentProducerQueue].add<GlTextRenderable>(
+      loadingFrame()->uiQueue().add<GlTextRenderable>(
           assetManager, position, text, font, color);
     }
 
     void GlRenderer::renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture) {
-      uiQueues[currentProducerQueue].add<GlSpriteRenderable>(
+      loadingFrame()->uiQueue().add<GlSpriteRenderable>(
           assetManager, position, size, color, texture);
     }
 
     void GlRenderer::renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material) {
       auto meshData = meshManager.load(*mesh);
-      meshQueues[currentProducerQueue].add<GlMeshRenderable>(assetManager, &vaoManager, transform, meshData, material);
+      loadingFrame()->meshQueue().add<GlMeshRenderable>(assetManager, &vaoManager, transform, meshData, material);
     }
 
     void GlRenderer::endRender() {

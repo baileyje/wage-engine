@@ -53,7 +53,7 @@ namespace wage {
         AL_FAIL_CHECK(alSourcef(source, AL_PITCH, (ALfloat)clip->pitch()));
         AL_FAIL_CHECK(alSourcef(source, AL_GAIN, (ALfloat)clip->volume()));
         if (_position != math::Vector3::Invalid) {
-          AL_FAIL_CHECK(alSource3f(source, AL_POSITION, (ALfloat)_position.x, (ALfloat)_position.y, (ALfloat)_position.z));          
+          AL_FAIL_CHECK(alSource3f(source, AL_POSITION, (ALfloat)_position.x, (ALfloat)_position.y, (ALfloat)_position.z));
         }
         AL_FAIL_CHECK(alSourceQueueBuffers(source, NUM_BUFFERS, &buffers[0]));
         play();
@@ -80,7 +80,6 @@ namespace wage {
           if (clip->loop() && read < BUFFER_SIZE) {
             clip->data().input()->seek(clip->data().dataStartPosition());
           }
-          std::cout << "Read: " << read << "\n";
           AL_FAIL_CHECK(alBufferData(buffer, audioData.format(), data, read, audioData.sampleRate()));
           AL_FAIL_CHECK(alSourceQueueBuffers(source, 1, &buffer));
         }

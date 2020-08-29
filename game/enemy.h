@@ -50,7 +50,7 @@ public:
           continue;
         }
         auto dir = targetPosition - enemyPosition;
-        auto impulse = dir.normalized() * 1.0;
+        auto impulse = dir.normalized() * 100.0;
         if (running) {
           impulse *= -1;
         }
@@ -103,10 +103,9 @@ void addEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManag
 }
 
 void addRandomEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  float x = rand() % 2000 - 1000;
-  float y = rand() % 2000 - 1000;
-  float z = rand() % 2000 - 1000;
-  // float scale = (rand() % 100) / 30.0;
+  float x = randomBetween(-20000, 20000);
+  float y = randomBetween(-20000, 20000);
+  float z = randomBetween(-20000, 20000);
   addEnemy(entityManager, systemManager, Vector(x, y, z) * 2, 5 /*scale*/);
 }
 

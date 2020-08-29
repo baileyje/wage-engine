@@ -24,9 +24,9 @@ void addDock(ecs::EntityManager* entityManager, ecs::SystemManager* systemManage
 }
 
 void addRandomDock(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  float x = rand() % 2000 - 1000;
-  float y = rand() % 2000 - 1000;
-  float z = rand() % 2000 - 1000;
+  float x = randomBetween(-20000, 20000);
+  float y = randomBetween(-20000, 20000);
+  float z = randomBetween(-20000, 20000);
   // float scale = (rand() % 100) / 30.0;
   addDock(entityManager, systemManager, Vector(x, y, z) * 2, 50 /*scale*/);
 }

@@ -5,11 +5,16 @@ namespace wage {
 
 #include "ecs/system.h"
 
+    /**
+     * System that finds any entities that have a mesh component and automatically submits them to the renderer.
+     */
     class MeshRenderer : public ecs::System {
     public:
-      MeshRenderer() : System() {
-      }
+      MeshRenderer() : System() {}
 
+      /**
+       * On each game update, resubmit all renderable mesh components to the renderer.
+       */
       void update(const ecs::SystemContext& context) {
         auto manager = core::Core::Instance->get<ecs::EntityManager>();
         for (auto entity : manager->with({MeshComponent, TransformComponent, MaterialComponent})) {

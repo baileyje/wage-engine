@@ -23,7 +23,7 @@ public:
   }
 
   void update(const ecs::SystemContext& context) {
-    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::p) && context.time() - lastLaunch > launchThreshold) {
+    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::l) && context.time() - lastLaunch > launchThreshold) {
       auto manager = core::Core::Instance->get<ecs::EntityManager>();
       auto systemManager = core::Core::Instance->get<ecs::SystemManager>();
       addRandomPlanet(manager, systemManager);

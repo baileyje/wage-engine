@@ -39,6 +39,7 @@ namespace wage {
         TimePoint lastTime = std::chrono::high_resolution_clock::now();
         double accumulator = 0;
         while (running) {
+          if (paused) continue;
           TimePoint currentTime = std::chrono::high_resolution_clock::now();
           double delta = (std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime)).count();
           _frame._time += delta;
@@ -51,7 +52,7 @@ namespace wage {
             accumulator -= _frame.timeStep();
           }
           // Signal to the render that we need the next render queue to fill.
-          get<render::Renderer>()->awaitNextQueue();
+          get<render::Renderer>()->swapFrames();
           memory::Allocator::Temporary()->clear();
         }
       });
