@@ -91,6 +91,13 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
   bottomLight->diffuse(component::Color(0.7, 0.7, 0.9, 1));
   bottomLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
 
+  auto launchPadEnt = entityManager->create();
+  launchPadEnt.assign<math::Transform>(TransformComponent, Vector(0, -15, 75), Vector(200, 15, 800), Vector(0, 0, 0));
+  launchPadEnt.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Cube);
+  launchPadEnt.assign<physics::RigidBody>(RigidBodyComponent, 1, physics::RigidBodyType::immovable);
+  launchPadEnt.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
+  launchPadEnt.assign<render::MaterialSpec>(MaterialComponent, component::Color::White);
+
   addPlayer(entityManager, systemManager);
 
   addCamera(entityManager, systemManager);

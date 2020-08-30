@@ -30,8 +30,8 @@
 
 #include "assets/fs_manager.h"
 
-#include "physics/rigid_body.h"
-#include "physics/collider.h"
+#include "physics/components/rigid_body.h"
+#include "physics/components/collider.h"
 
 #include "render/renderer.h"
 #include "render/mesh_renderer.h"

@@ -1,5 +1,4 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#pragma once
 
 #include "engine.h"
 
@@ -22,9 +21,9 @@ public:
     auto manager = core::Core::Instance->get<ecs::EntityManager>();
     auto input = core::Core::Instance->get<input::Input>();
     if (input->isPressed(input::Key::c) && !chasing) {
-      for (auto entity : manager->with({EnemyComponent})) {
-        entity.get<physics::RigidBody>(RigidBodyComponent)->shouldStop(true);
-      }
+      // for (auto entity : manager->with({EnemyComponent})) {
+      //   entity.get<physics::RigidBody>(RigidBodyComponent)->shouldStop(true);
+      // }
       chasing = true;
       running = false;
       return;
@@ -50,11 +49,11 @@ public:
           continue;
         }
         auto dir = targetPosition - enemyPosition;
-        auto impulse = dir.normalized() * 100.0;
+        auto impulse = dir.normalized() * 200.0;
         if (running) {
           impulse *= -1;
         }
-        enemy.get<physics::RigidBody>(RigidBodyComponent)->addImpulse(impulse);
+        enemy.get<physics::RigidBody>(RigidBodyComponent)->addForce(impulse);
       }
     }
   }
@@ -97,7 +96,7 @@ void addEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManag
   transform->localScale(Vector(scale, scale, scale));
   entity.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Cube);
   entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
-  entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01);
+  entity.assign<physics::RigidBody>(RigidBodyComponent, 5);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
   entity.assign<Enemy>(EnemyComponent);
 }
@@ -108,5 +107,3 @@ void addRandomEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* syste
   float z = randomBetween(-20000, 20000);
   addEnemy(entityManager, systemManager, Vector(x, y, z) * 2, 5 /*scale*/);
 }
-
-#endif // ENEMY_H

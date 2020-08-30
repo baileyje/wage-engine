@@ -14,7 +14,7 @@ class Player {
 class PlayerPhysicsMovement : public ecs::System {
 
 public:
-  PlayerPhysicsMovement() : System(), lastPos(Vector2()), mouseSpeed(0.0001) {
+  PlayerPhysicsMovement() : System(), lastPos(Vector2()), mouseSpeed(0.01) {
   }
 
   void start(const ecs::SystemContext& context) {
@@ -30,8 +30,16 @@ public:
     auto dy = lastPos.y - mousePos.y;
     auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
     auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
+
+    if (input->isPressed(input::Key::q)) {
+      torque += bearing * Vector3::Forward * Vector3(0, 0, -0.1); //bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
+    }
+    if (input->isPressed(input::Key::e)) {
+      torque += bearing * Vector3::Forward * Vector3(0, 0, 0.1);
+    }
     body->addTorqueImpulse(torque);
-    float force = 2.0;
+
+    float force = 200.0;
     auto impulse = Vector3::Zero;
     if (input->isPressed(input::Key::w)) {
       impulse += (bearing * Vector::Forward).normalized() * force;
@@ -56,11 +64,11 @@ public:
     if (input->isPressed(input::Key::f)) {
       body->shouldStop(true);
     }
-    // if (input->isPressed(input::Key::zero)) {
-    //   body->shouldStop(true);
-    //   player.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::kinematic);
-    //   player.get<math::Transform>(TransformComponent)->position({0, 0, 0});
-    // }
+    if (input->isPressed(input::Key::zero)) {
+      body->shouldStop(true);
+      // player.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::kinematic);
+      player.get<math::Transform>(TransformComponent)->position({0, 0, 0});
+    }
     lastPos = mousePos;
   }
 
@@ -90,7 +98,7 @@ public:
     // auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
 
     // body->addTorqueImpulse(torque);
-    float force = 1000.0;
+    float force = 1.0;
     auto impulse = Vector3::Zero;
     if (input->isPressed(input::Key::w)) {
       impulse += (bearing * Vector::Forward).normalized() * force;
@@ -129,11 +137,11 @@ private:
 
 ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
   auto player = entityManager->create();
-  player.assign<math::Transform>(TransformComponent, Vector(0, 0, 0), Vector(5, 5, 5), Vector(0, 5, 0));
-  player.assign<physics::RigidBody>(RigidBodyComponent, 10);
+  player.assign<math::Transform>(TransformComponent, Vector(0, 0, 0), Vector(5, 5, 5), Vector(0, 0, 0));
+  player.assign<physics::RigidBody>(RigidBodyComponent, 1);
   player.assign<render::MeshSpec>(MeshComponent, "player.obj");
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
-  player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec());
+  player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space.png"));
   player.assign<Player>(PlayerComponent);
   return player;
 }

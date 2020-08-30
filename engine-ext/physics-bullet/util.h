@@ -2,7 +2,7 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "physics/rigid_body.h"
+#include "physics/components/rigid_body.h"
 #include "math/transform.h"
 
 namespace wage {
@@ -16,9 +16,15 @@ namespace wage {
       return math::Vector(vector.x(), vector.y(), vector.z());
     }
 
-    btRigidBody* createRigidBody(RigidBody* rigidBody, const btTransform& startTransform, btCollisionShape* shape);
-
-    btTransform fromTransform(math::Transform* transform);
+    inline btTransform fromTransform(math::Transform* transform) {
+      btTransform btTransform;
+      btTransform.setIdentity();
+      btTransform.setOrigin(fromVector(transform->position()));
+      math::Quaternion transformRotation = transform->rotation();
+      btQuaternion rotation(transformRotation.x, transformRotation.y, transformRotation.z, transformRotation.w);
+      btTransform.setRotation(rotation);
+      return btTransform;
+    }
 
   }
 }

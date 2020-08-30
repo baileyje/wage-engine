@@ -8,7 +8,7 @@
 #include "messaging/messaging.h"
 #include "physics/physics.h"
 
-#include "physics-bullet/entity.h"
+#include "physics-bullet/phys_entity.h"
 
 namespace wage {
   namespace physics {
@@ -16,19 +16,60 @@ namespace wage {
     class BulletPhysics : public Physics {
 
     public:
-      BulletPhysics();
+      BulletPhysics() : Physics(),
+                        dispatcher(&collisionConfiguration),
+                        dynamicsWorld(&dispatcher, &overlappingPairCache, &solver, &collisionConfiguration) {}
 
-      virtual ~BulletPhysics();
+      virtual ~BulletPhysics() {}
 
-      void start() override;
+      void start() override {
+        Physics::start();
+        // dynamicsWorld.setGravity(btVector3(0, -9.8, 0));
+        dynamicsWorld.setGravity(btVector3(0, 0, 0));
+        core::Core::Instance->onFixedUpdate([&](const core::Frame& frame) {
+          fixedUpdate(frame);
+        });
+      }
 
-      void fixedUpdate(const core::Frame& frame);
+      void fixedUpdate(const core::Frame& frame) {
+        // Get Physics up to speed
+        for (auto physicsEntity : entities) {
+          if (!physicsEntity->entity().valid()) {
+            continue;
+          }
+          physicsEntity->updateShapeTransform();
+          physicsEntity->applyForces();
+        }
+        // Run the Simulation
+        dynamicsWorld.stepSimulation(frame.timeStep(), 3);
+        // dynamicsWorld.performDiscreteCollisionDetection();
+      }
 
-      void stop() override;
+      inline void stop() override {
+        // TODO: Evaluate memory free, etc.
+      }
 
-      void add(ecs::Entity entity) override;
+      inline void add(ecs::Entity entity) override {
+        entities.push_back(PhysicsEntity::from(entity, &dynamicsWorld));
+      }
 
-      void remove(ecs::Entity entity) override;
+      inline void remove(ecs::Entity entity) override {
+        for (auto ent = entities.begin(); ent != entities.end(); ++ent) {
+          // TODO: Remove entity stuff from world
+          //      - rigidBody
+          //      - collisionObject
+
+          if ((*ent)->entity() == entity) {
+            if ((*ent)->rigidBody()) {
+              dynamicsWorld.removeRigidBody((*ent)->rigidBody());
+            } else {
+              dynamicsWorld.removeCollisionObject((*ent)->object());
+            }
+            entities.erase(ent);
+            return;
+          }
+        }
+      }
 
     private:
       btDefaultCollisionConfiguration collisionConfiguration;
