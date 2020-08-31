@@ -12,7 +12,8 @@
 #include "input-glfw/input.h"
 #include "audio-al/audio.h"
 
-#include "player.h"
+#include "player/player.h"
+#include "player/cannon.h"
 #include "enemy.h"
 #include "planet.h"
 #include "dock.h"
@@ -42,6 +43,7 @@ void setupCoreSystems(ecs::SystemManager* systemManager) {
   systemManager->create<EnemyMovement>();
   // systemManager->create<PlayerBasicMovement>();
   systemManager->create<PlayerPhysicsMovement>();
+  systemManager->create<CannonControl>();
   systemManager->create<PlanetLauncher>();
   systemManager->create<DumbMusicSystem>();
 }
@@ -76,6 +78,8 @@ void registerKnownComponents(ecs::EntityManager* entityManager) {
   entityManager->registerComponent(PlayerComponent, sizeof(Player));
   entityManager->registerComponent(EnemyComponent, sizeof(Enemy));
   entityManager->registerComponent(PlanetComponent, sizeof(Planet));
+  entityManager->registerComponent(DockComponent, sizeof(Dock));
+  entityManager->registerComponent(CannonComponent, sizeof(Cannon));
 }
 
 void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
@@ -91,14 +95,16 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
   bottomLight->diffuse(component::Color(0.7, 0.7, 0.9, 1));
   bottomLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
 
-  auto launchPadEnt = entityManager->create();
-  launchPadEnt.assign<math::Transform>(TransformComponent, Vector(0, -15, 75), Vector(200, 15, 800), Vector(0, 0, 0));
-  launchPadEnt.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Cube);
-  launchPadEnt.assign<physics::RigidBody>(RigidBodyComponent, 1, physics::RigidBodyType::immovable);
-  launchPadEnt.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
-  launchPadEnt.assign<render::MaterialSpec>(MaterialComponent, component::Color::White);
+  // auto launchPadEnt = entityManager->create();
+  // launchPadEnt.assign<math::Transform>(TransformComponent, Vector(0, -15, 75), Vector(200, 15, 800), Vector(0, 0, 0));
+  // launchPadEnt.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Cube);
+  // launchPadEnt.assign<physics::RigidBody>(RigidBodyComponent, 1, physics::RigidBodyType::immovable);
+  // launchPadEnt.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
+  // launchPadEnt.assign<render::MaterialSpec>(MaterialComponent, component::Color::White);
 
   addPlayer(entityManager, systemManager);
+
+  addEnemy(entityManager, systemManager, {0, 0, 20}, 5 /*scale*/);
 
   addCamera(entityManager, systemManager);
 

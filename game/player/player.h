@@ -1,7 +1,7 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
 #include "engine.h"
+#include "cannon.h"
 
 using namespace wage;
 using namespace wage::math;
@@ -39,7 +39,7 @@ public:
     }
     body->addTorqueImpulse(torque);
 
-    float force = 200.0;
+    float force = 100.0;
     auto impulse = Vector3::Zero;
     if (input->isPressed(input::Key::w)) {
       impulse += (bearing * Vector::Forward).normalized() * force;
@@ -137,13 +137,12 @@ private:
 
 ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
   auto player = entityManager->create();
-  player.assign<math::Transform>(TransformComponent, Vector(0, 0, 0), Vector(5, 5, 5), Vector(0, 0, 0));
+  player.assign<math::Transform>(TransformComponent, Vector(0, 5, 0), Vector(5, 5, 5), Vector(0, 0, 0));
   player.assign<physics::RigidBody>(RigidBodyComponent, 1);
   player.assign<render::MeshSpec>(MeshComponent, "player.obj");
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
   player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space.png"));
   player.assign<Player>(PlayerComponent);
+  addCannonTo(player, systemManager);
   return player;
 }
-
-#endif //PLAYER_H

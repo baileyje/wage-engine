@@ -18,7 +18,7 @@ namespace wage {
 
     Core::Core() : running(false) {
       _frame._timeStep = 1.0 / 60.0;
-      // renderStep = 1 / 60.0;
+      renderStep = 1 / 60.0;
     }
 
     Core::~Core() {

@@ -4,7 +4,7 @@
 
 using namespace wage;
 
-#define DockComponent 2001
+#define DockComponent 2002
 
 void addRandomDock(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager);
 

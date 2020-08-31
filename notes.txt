@@ -1,16 +1,15 @@
-Audio Streaming:
+Input Changes:
 
- X - Integrate sound clips as assets
- X - Stream audio file instead of all in mem
- X - Looping support
- X -  Audio adjustments - volume, pitch, etc
- X - Sound status handle/callback system
- X - Spacial Sound 
- 
+Currently:
+ - Only can check if a key is down currently
 
 
-Asset 
-  - input stream 
-  - load strategy 
-  - load state
+Goal:
+  - Check if a key/button was pressed since last update
+  - Check if a key/button is currently pressed <-- Today's func
+  - Check if a key/button was released since last update
 
+Plan of attack:
+  - Create an update event handler that keeps track of new key/button press
+  - Create an update event handler that keeps track of new key/button releases
+  - Cleanup some stuff to get Input less janky...

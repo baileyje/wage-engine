@@ -113,6 +113,9 @@ namespace wage {
       std::vector<UpdateListener> renderListeners;
 
       std::thread updateThread;
+
+      // TODO: Remove me...
+      double renderStep;
     };
 
   }

@@ -1,93 +1,14 @@
-#include "input-glfw/input.h"
+#pragma once
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <iostream>
 
-#include "core/core.h"
-
-#include "input/key_event.h"
-#include "input/key_modifier.h"
-#include "input/mouse_button_event.h"
-#include "input/mouse_move_event.h"
-#include "input/mouse_scroll_event.h"
+#include "input/key.h"
+#include "input/mouse_button.h"
 
 namespace wage {
+
   namespace input {
-
-    Key keyFrom(int keyCode);
-
-    MouseButton buttonFrom(int code);
-
-    int codeFrom(Key key);
-
-    int codeFrom(MouseButton button);
-
-    void GlfwInput::start() {
-      Input::start();
-      auto glfwWindow = window->as<GLFWwindow>();
-      glfwSetWindowUserPointer(glfwWindow, this);
-      glfwSetKeyCallback(glfwWindow, [](GLFWwindow* window, int keyCode, int scancode, int action, int mods) {
-        auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
-        if (keyCode == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-          glfwSetWindowShouldClose(window, GLFW_TRUE);
-          core::Core::Instance->stop();
-          return;
-        } else if (action == GLFW_PRESS) {
-          input->frameKeys.insert(keyCode);
-        } else if (action == GLFW_RELEASE) {
-          input->frameKeys.erase(keyCode);
-        }
-        if (input->messaging) {
-          auto eventType = KeyEventType::press;
-          switch (action) {
-          case GLFW_RELEASE:
-            eventType = KeyEventType::release;
-            break;
-          case GLFW_REPEAT:
-            eventType = KeyEventType::repeat;
-            break;
-          }
-          Key key = keyFrom(keyCode);
-          KeyEvent event(key, eventType, mods);
-          input->messaging->send(event);
-        }
-      });
-      glfwSetMouseButtonCallback(glfwWindow, [](GLFWwindow* window, int buttonCode, int action, int mods) {
-        auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
-        auto eventType = action == GLFW_RELEASE ? MouseButtonEvent::Type::release : MouseButtonEvent::Type::press;
-        MouseButtonEvent event(buttonFrom(buttonCode), eventType, mods, input->mousePosition());
-        input->messaging->send(event);
-      });
-      glfwSetCursorPosCallback(glfwWindow, [](GLFWwindow* window, double x, double y) {
-        auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
-        MouseMoveEvent event(math::Vector2(x, y));
-        input->messaging->send(event);
-      });
-      glfwSetScrollCallback(glfwWindow, [](GLFWwindow* window, double x, double y) {
-        auto input = static_cast<GlfwInput*>(glfwGetWindowUserPointer(window));
-        MouseScrollEvent event(math::Vector2(x, y));
-        input->messaging->send(event);
-      });
-      glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
-
-    bool GlfwInput::isPressed(Key key) const {
-      if (!window) {
-        return false;
-      }
-      return glfwGetKey(window->as<GLFWwindow>(), codeFrom(key)) == GLFW_PRESS;
-    }
-
-    math::Vector2 GlfwInput::mousePosition() const {
-      if (!window) {
-        return math::Vector2();
-      }
-      double x, y;
-      glfwGetCursorPos(window->as<GLFWwindow>(), &x, &y);
-      return math::Vector2(x, y);
-    }
-
     Key keyFrom(int keyCode) {
       switch (keyCode) {
       case GLFW_KEY_UNKNOWN:

@@ -5,7 +5,7 @@ namespace wage {
 
     Allocator* Allocator::Permanent() {
       // TODO: Makes these tunable...
-      static auto instance = new Allocator("Permanent", 1024 * 1024 * 100);
+      static auto instance = new Allocator("Permanent", 1024 * 1024 * 200);
       return instance;
     }
 
