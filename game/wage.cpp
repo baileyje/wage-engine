@@ -106,6 +106,8 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
 
   addEnemy(entityManager, systemManager, {0, 0, 20}, 5 /*scale*/);
 
+  addPlanet(entityManager, systemManager, {100, 0, 1200}, 1000, 0);
+
   addCamera(entityManager, systemManager);
 
   setupHud(entityManager, systemManager);

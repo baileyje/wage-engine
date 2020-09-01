@@ -45,8 +45,8 @@ void addCamera(ecs::EntityManager* entityManager, ecs::SystemManager* systemMana
   auto cameraEntity = entityManager->create();
   auto camTransform = cameraEntity.assign<math::Transform>(TransformComponent);
   camTransform->position({0, 20, -30});
-  camTransform->rotation({20, 0, 0});
-  
+  camTransform->rotation({10, 0, 0});
+
   cameraEntity.assign<render::PerspectiveCamera>(PerspectiveCameraComponent);
   systemManager->create<ThirdPersonCamera>(cameraEntity);
 }

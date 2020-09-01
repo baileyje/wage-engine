@@ -71,9 +71,9 @@ void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemMana
 }
 
 float randomComp() {
-  auto comp = randomBetween(-200000, 200000);
-  if (comp > 0) comp += 5000;
-  if (comp < 0) comp -= 5000;
+  auto comp = randomBetween(-20000, 20000);
+  if (comp > 0) comp += 3000;
+  if (comp < 0) comp -= 3000;
   return comp;
 }
 
@@ -81,7 +81,7 @@ void addRandomPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* syst
   float x = randomComp();
   float y = randomComp();
   float z = randomComp();
-  float scale = randomBetween(20000, 28000);
+  float scale = randomBetween(2000, 2800);
   int texture = rand() % 2;
   addPlanet(entityManager, systemManager, math::Vector(x, y, z), scale, texture);
 }

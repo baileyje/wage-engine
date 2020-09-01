@@ -51,7 +51,7 @@ public:
     auto bearing = entity.get<math::Transform>(TransformComponent)->rotation();
     auto ballPosition = entityTransform->position() + (bearing * Vector::Forward).normalized() * 4;
     ball.assign<math::Transform>(TransformComponent, ballPosition, Vector(1, 1, 1), Vector(0, 0, 0));
-    ball.assign<physics::RigidBody>(RigidBodyComponent, .1);
+    ball.assign<physics::RigidBody>(RigidBodyComponent, 0.1);
     ball.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Sphere);
     ball.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
     ball.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("mover.png"));
@@ -60,5 +60,5 @@ public:
 };
 
 void addCannonTo(ecs::Entity entity, ecs::SystemManager* systemManager) {
-  entity.assign<Cannon>(CannonComponent, Vector3{0, 0, 10}, 100, 5);
+  entity.assign<Cannon>(CannonComponent, Vector3{0, 0, 10}, 200, 5);
 }
