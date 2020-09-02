@@ -41,6 +41,7 @@ namespace wage {
         }
         //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
         _rigidBody->setUserIndex(entity.id().id());
+        _rigidBody->setUserPointer(this);
       }
 
       ~PhysicsEntity() {

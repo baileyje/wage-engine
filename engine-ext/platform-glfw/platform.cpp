@@ -20,7 +20,7 @@ namespace wage {
       glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, 1);
       glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-      GLFWwindow* glfWindow = glfwCreateWindow(1680, 1050, "Wage is the Rage!", NULL, NULL);
+      GLFWwindow* glfWindow = glfwCreateWindow(1024, 768, "Wage is the Rage!", NULL, NULL);
       int screenWidth = 0;
       int screenHeight = 0;
       glfwGetWindowSize(glfWindow, &screenWidth, &screenHeight);

@@ -23,6 +23,7 @@ public:
 
   void fixedUpdate(const ecs::SystemContext& context) {
     auto player = *core::Core::Instance->get<ecs::EntityManager>()->with({PlayerComponent, RigidBodyComponent, TransformComponent}).begin();
+    if (!player.valid()) return;
     auto body = player.get<physics::RigidBody>(RigidBodyComponent);
     auto input = core::Core::Instance->get<input::Input>();
     auto mousePos = input->mousePosition();
@@ -70,6 +71,10 @@ public:
       player.get<math::Transform>(TransformComponent)->position({0, 0, 0});
     }
     lastPos = mousePos;
+
+    auto physics = core::Core::Instance->get<physics::Physics>();
+    if (physics->collisionsFor(player).size() > 0)
+      std::cout << "Player Collisions: " << physics->collisionsFor(player).size() << " \n";
   }
 
 private:

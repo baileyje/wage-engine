@@ -80,20 +80,21 @@ void registerKnownComponents(ecs::EntityManager* entityManager) {
   entityManager->registerComponent(PlanetComponent, sizeof(Planet));
   entityManager->registerComponent(DockComponent, sizeof(Dock));
   entityManager->registerComponent(CannonComponent, sizeof(Cannon));
+  entityManager->registerComponent(CannonBallComponent, sizeof(CannonBall));
 }
 
 void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  auto topLightEnt = entityManager->create();
-  topLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(-90, 0, 0));
-  auto topLight = topLightEnt.assign<render::DirectionalLight>(DirectionalLightComponent);
-  topLight->diffuse(component::Color(0.7, 0.7, 0.7, 1));
-  topLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
+  // auto topLightEnt = entityManager->create();
+  // topLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(-90, 0, 0));
+  // auto topLight = topLightEnt.assign<render::DirectionalLight>(DirectionalLightComponent);
+  // topLight->diffuse(component::Color(0.7, 0.7, 0.7, 1));
+  // topLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
 
-  auto bottomLightEnt = entityManager->create();
-  bottomLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(90, 0, 0));
-  auto bottomLight = bottomLightEnt.assign<render::DirectionalLight>(DirectionalLightComponent);
-  bottomLight->diffuse(component::Color(0.7, 0.7, 0.9, 1));
-  bottomLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
+  // auto bottomLightEnt = entityManager->create();
+  // bottomLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(90, 0, 0));
+  // auto bottomLight = bottomLightEnt.assign<render::DirectionalLight>(DirectionalLightComponent);
+  // bottomLight->diffuse(component::Color(0.7, 0.7, 0.9, 1));
+  // bottomLight->ambient(component::Color(0.4, 0.4, 0.4, 1));
 
   // auto launchPadEnt = entityManager->create();
   // launchPadEnt.assign<math::Transform>(TransformComponent, Vector(0, -15, 75), Vector(200, 15, 800), Vector(0, 0, 0));
@@ -115,12 +116,12 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
   for (int i = 0; i < 200; i++) {
     addRandomEnemy(entityManager, systemManager);
   }
-  for (int i = 0; i < 10; i++) {
-    addRandomPlanet(entityManager, systemManager);
-  }
-  for (int i = 0; i < 5; i++) {
-    addRandomDock(entityManager, systemManager);
-  }
+  // for (int i = 0; i < 10; i++) {
+  //   addRandomPlanet(entityManager, systemManager);
+  // }
+  // for (int i = 0; i < 5; i++) {
+  //   addRandomDock(entityManager, systemManager);
+  // }
 }
 
 int main(int argc, char* argv[]) {

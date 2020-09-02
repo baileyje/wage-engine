@@ -102,8 +102,8 @@ void addEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManag
 }
 
 void addRandomEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  float x = randomBetween(-20000, 20000);
-  float y = randomBetween(-20000, 20000);
-  float z = randomBetween(-20000, 20000);
+  float x = randomBetween(-2000, 2000);
+  float y = randomBetween(-2000, 2000);
+  float z = randomBetween(-2000, 2000);
   addEnemy(entityManager, systemManager, Vector(x, y, z) * 2, 5 /*scale*/);
 }

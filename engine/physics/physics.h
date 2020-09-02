@@ -1,11 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <map>
 
 #include "core/service.h"
 #include "ecs/manager.h"
 
 #include "messaging/messaging.h"
+#include "physics/collision.h"
 
 namespace wage {
   namespace physics {
@@ -28,6 +30,14 @@ namespace wage {
       void start() {
         core::Core::Instance->get<messaging::Messaging>()->listen<ecs::AddEntityMessage>(this);
         core::Core::Instance->get<messaging::Messaging>()->listen<ecs::DestroyEntityMessage>(this);
+        core::Core::Instance->onFixedUpdate([&](const core::Frame& frame) {
+          fixedUpdate(frame);
+        });
+      }
+
+      virtual void fixedUpdate(const core::Frame& frame) {
+        _collisions.clear();
+        _collisionsById.clear();
       }
 
       /**
@@ -45,8 +55,7 @@ namespace wage {
        */
       inline bool on(const ecs::AddEntityMessage& message) {
         auto entity = message.entity();
-        if (
-            (entity.has(RigidBodyComponent)) || (entity.has(ColliderComponent))) {
+        if ((entity.has(RigidBodyComponent)) || (entity.has(ColliderComponent))) {
           add(entity);
         }
         return false;
@@ -59,6 +68,29 @@ namespace wage {
         remove(message.entity());
         return false;
       }
+
+      inline std::vector<Collision>& collisions() {
+        return _collisions;
+      }
+
+      inline std::vector<Collision>& collisionsFor(ecs::Entity entity) {
+        auto entityId = entity.id().id();
+        return _collisionsById[entityId];
+      }
+
+    protected:
+      inline void addCollision(Collision collision) {
+        _collisions.push_back(collision);
+        auto entityId = collision.entity().id().id();
+        if (_collisionsById.find(entityId) != _collisionsById.end()) {
+          _collisionsById[entityId].push_back(collision);
+        } else {
+          _collisionsById[entityId] = {collision};
+        }
+      }
+
+      std::vector<Collision> _collisions;
+      std::unordered_map<ecs::EntityId, std::vector<Collision>> _collisionsById;
     };
 
   }
