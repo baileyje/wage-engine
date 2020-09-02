@@ -17,6 +17,8 @@ namespace wage {
 
     /**
      * Component class used to add a physics collider to an entity.
+     * 
+     * TODO: Give this its own transform.
      */
     class Collider {
 

@@ -8,6 +8,7 @@
 
 #include "messaging/messaging.h"
 #include "physics/collision.h"
+#include "physics/ray_hit.h"
 
 namespace wage {
   namespace physics {
@@ -69,26 +70,35 @@ namespace wage {
         return false;
       }
 
+      /**
+       * Get all the collisions encountered within the physics world in the last fixed update.
+       */
       inline std::vector<Collision>& collisions() {
         return _collisions;
       }
 
+      /**
+       * Get all the collision involving a single entity in the last fixed update.
+       */
       inline std::vector<Collision>& collisionsFor(ecs::Entity entity) {
-        auto entityId = entity.id().id();
-        return _collisionsById[entityId];
+        return _collisionsById[entity.id().id()];
       }
+
+      /**
+       * Cast a ray between two points in the world and return any entities that were in the ray path.
+       */
+      virtual std::vector<RayHit> castRay(math::Vector3 from, math::Vector3 to) = 0;
 
     protected:
+      /**
+       * Primary entry point for a physics implementation to make collisions available to the rest of the engine.
+       */
       inline void addCollision(Collision collision) {
         _collisions.push_back(collision);
-        auto entityId = collision.entity().id().id();
-        if (_collisionsById.find(entityId) != _collisionsById.end()) {
-          _collisionsById[entityId].push_back(collision);
-        } else {
-          _collisionsById[entityId] = {collision};
-        }
+        _collisionsById[collision.entity().id().id()].push_back(collision);
       }
 
+    private:
       std::vector<Collision> _collisions;
       std::unordered_map<ecs::EntityId, std::vector<Collision>> _collisionsById;
     };

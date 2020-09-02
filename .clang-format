@@ -12,3 +12,4 @@ Cpp11BracedListStyle: true
 PointerAlignment: Left
 FixNamespaceComments: false
 NamespaceIndentation: All
+AlignAfterOpenBracket: DontAlign

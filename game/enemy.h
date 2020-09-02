@@ -44,7 +44,7 @@ public:
         }
         auto enemyPosition = enemy.get<math::Transform>(TransformComponent)->position();
         auto targetPosition = target.get<math::Transform>(TransformComponent)->position();
-        if (chasing && Vector::distance(targetPosition, enemyPosition) < 20) {
+        if (chasing && Vector::distance(targetPosition, enemyPosition) < 100) {
           enemy.get<physics::RigidBody>(RigidBodyComponent)->shouldStop(true);
           continue;
         }

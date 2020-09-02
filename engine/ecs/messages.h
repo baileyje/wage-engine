@@ -5,6 +5,7 @@
 namespace wage {
   namespace ecs {
 
+    // TODO: Document these
     class EntityMessage {
 
     public:

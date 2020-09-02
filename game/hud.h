@@ -76,6 +76,11 @@ void setupHud(ecs::EntityManager* entityManager, ecs::SystemManager* systemManag
   auto camPosLabel = camPosLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(600, 0), Vector2(300, 100)), "Cam POS: ", font, component::Color::White);
   systemManager->create<CamPosDisplay>(camPosLabel);
 
+  auto targetLabelEntity = entityManager->create();
+  // auto platform = core::Core::Instance->get<platform::Platform>();
+  // auto window = platform->window();
+  auto targetLabel = targetLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(1024 / 2.0, 768 * 0.9 / 2.0), Vector2(20, 20)), "-X-", font, component::Color::White);
+
   // auto buttonEntity = entityManager->create();
   // buttonEntity.assign<UiButton>(UiFrame(Vector2(600, 0), Vector2(300, 100)), component::Color::Clear,
   //   Texture("textures/button.png"),

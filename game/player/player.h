@@ -142,7 +142,7 @@ private:
 
 ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
   auto player = entityManager->create();
-  player.assign<math::Transform>(TransformComponent, Vector(0, 5, 0), Vector(5, 5, 5), Vector(0, 0, 0));
+  player.assign<math::Transform>(TransformComponent, Vector(0, 5, 0), Vector(5, 5, 5), Vector(-3, 0, 0));
   player.assign<physics::RigidBody>(RigidBodyComponent, 1);
   player.assign<render::MeshSpec>(MeshComponent, "player.obj");
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);

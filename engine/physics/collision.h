@@ -4,31 +4,15 @@
 
 #include "ecs/entity.h"
 #include "math/vector.h"
+#include "physics/contact_point.h"
 
 namespace wage {
 
   namespace physics {
 
-    class ContactPoint {
-    public:
-      ContactPoint() {}
-      ContactPoint(math::Vector3 point, math::Vector3 normal) : _point(point), _normal(normal) {}
-      ContactPoint(const ContactPoint& cp) : ContactPoint(cp._point, cp._normal) {}
-
-      inline math::Vector3
-      point() {
-        return _point;
-      }
-
-      inline math::Vector3 normal() {
-        return _normal;
-      }
-
-    private:
-      math::Vector3 _point;
-      math::Vector3 _normal;
-    };
-
+    /**
+     * Simple class holding the data associated with a collision in the physics world.
+     */
     class Collision {
 
     public:
@@ -36,14 +20,23 @@ namespace wage {
 
       Collision(const Collision& cp) : Collision(cp._entity, cp._otherEntity, cp._contacts) {}
 
+      /**
+       * Get the primary entity for this collision.
+       */
       inline ecs::Entity entity() {
         return _entity;
       }
 
+      /**
+       * Get the other entity involved in this collision.
+       */
       inline ecs::Entity otherEntity() {
         return _otherEntity;
       }
 
+      /**
+       * Get all the contact points between the two entities.
+       */
       inline std::vector<ContactPoint> contacts() {
         return _contacts;
       }

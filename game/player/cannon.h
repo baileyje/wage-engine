@@ -38,12 +38,7 @@ public:
     auto input = core::Core::Instance->get<input::Input>();
     if (input->isPressed(input::MouseButton::One)) {
       for (auto entity : entityManager->with({CannonComponent})) {
-        auto cannon = entity.get<Cannon>(CannonComponent);
-        auto delay = 1 / cannon->rate;
-        if (context.time() > cannon->lastFire + delay) {
-          fire(entity, cannon);
-          cannon->lastFire = context.time();
-        }
+        aim(context, entity, entity.get<Cannon>(CannonComponent));
       }
     }
     auto physics = core::Core::Instance->get<physics::Physics>();
@@ -53,7 +48,25 @@ public:
         std::cout << "Cannon Ball Collisions: " << collisions.size() << " \n";
         for (auto collision : collisions) {
           entityManager->destroy(collision.otherEntity());
+          audio::ClipSpec spec("bounce.wav");
+          core::Core::Instance->get<audio::Audio>()->play(spec);
         }
+      }
+    }
+  }
+
+  void aim(const ecs::SystemContext& context, ecs::Entity entity, Cannon* cannon) {
+    auto physics = core::Core::Instance->get<physics::Physics>();
+    auto transform = entity.get<math::Transform>(TransformComponent);
+    auto bearing = transform->rotation();
+    auto startPosition = transform->position() + (bearing * Vector::Forward).normalized() * 5;
+    auto endPosition = transform->position() + (bearing * Vector::Forward).normalized() * 20000;
+    auto results = physics->castRay(startPosition, endPosition);
+    if (!results.empty()) {
+      auto delay = 1 / cannon->rate;
+      if (context.time() > cannon->lastFire + delay) {
+        fire(entity, cannon);
+        cannon->lastFire = context.time();
       }
     }
   }
@@ -75,5 +88,5 @@ public:
 };
 
 void addCannonTo(ecs::Entity entity, ecs::SystemManager* systemManager) {
-  entity.assign<Cannon>(CannonComponent, Vector3{0, 0, 10}, 800, 10);
+  entity.assign<Cannon>(CannonComponent, Vector3{0, 0, 10}, 2000, 10);
 }
