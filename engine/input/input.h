@@ -34,12 +34,12 @@ namespace wage {
         messaging = core::Core::Instance->get<messaging::Messaging>();
         auto platform = core::Core::Instance->get<platform::Platform>();
         window = platform->window();
-        core::Core::Instance->onUpdate([&](const core::Frame& frame) {
-          update();
+        core::Core::Instance->onInput([&](const core::Frame& frame) {
+          clear();
         });
       }
 
-      void update() {
+      void clear() {
         framePress.clear();
         frameRelease.clear();
         frameMousePress.clear();

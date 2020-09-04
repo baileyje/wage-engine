@@ -21,6 +21,8 @@ namespace wage {
         return _window;
       }
 
+      virtual void flushEvents() = 0;
+
     protected:
       Window* _window;
     };

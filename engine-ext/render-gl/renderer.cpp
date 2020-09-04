@@ -27,7 +27,7 @@ namespace wage {
       GL_FAIL_CHECK(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
       GL_FAIL_CHECK(glEnable(GL_BLEND));
       GL_FAIL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-      glfwSwapInterval(0);
+      glfwSwapInterval(1);
 
       const GLubyte* vendor = glGetString(GL_VENDOR);     // Returns the vendor
       const GLubyte* renderer = glGetString(GL_RENDERER); // Returns a hint to the model
@@ -65,7 +65,6 @@ namespace wage {
 
     void GlRenderer::endRender() {
       GL_FAIL_CHECK(glfwSwapBuffers(window->as<GLFWwindow>()));
-      GL_FAIL_CHECK(glfwPollEvents());
     }
 
   }

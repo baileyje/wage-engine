@@ -5,18 +5,24 @@
 
 #include "platform/platform.h"
 
-namespace wage { namespace platform {
+namespace wage {
+  namespace platform {
 
-  class GlfwPlatform : public Platform {
+    class GlfwPlatform : public Platform {
 
-  public:
-    GlfwPlatform() : Platform() {}
+    public:
+      GlfwPlatform() : Platform() {}
 
-    virtual ~GlfwPlatform() {}
+      virtual ~GlfwPlatform() {}
 
-    void start() override;
+      void start() override;
 
-    void stop() override;
-  };
+      void stop() override;
 
-} }
+      virtual void flushEvents() override {
+        glfwPollEvents();
+      }
+    };
+
+  }
+}

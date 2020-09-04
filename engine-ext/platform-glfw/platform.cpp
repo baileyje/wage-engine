@@ -1,5 +1,6 @@
 #include "platform-glfw/platform.h"
 
+#include "core/core.h"
 #include "core/logger.h"
 #include "memory/allocator.h"
 
@@ -29,6 +30,10 @@ namespace wage {
       glfwGetFramebufferSize(glfWindow, &frameBufferWidth, &frameBufferHeight);
       float scale = (float)frameBufferWidth / (float)screenWidth;
       _window = memory::make<Window>(glfWindow, frameBufferWidth, frameBufferHeight, scale);
+
+      core::Core::Instance->onInput([&](const core::Frame& frame) {
+        flushEvents();
+      });
     }
 
     void GlfwPlatform::stop() {

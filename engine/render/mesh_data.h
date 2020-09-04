@@ -155,14 +155,14 @@ namespace wage {
               _vertices.push_back({vertX, vertY, vertZ});
               if (!attrib.normals.empty()) {
                 _normals.push_back({attrib.normals[3 * idx.normal_index + 0],
-                                    attrib.normals[3 * idx.normal_index + 1],
-                                    attrib.normals[3 * idx.normal_index + 2]});
+                    attrib.normals[3 * idx.normal_index + 1],
+                    attrib.normals[3 * idx.normal_index + 2]});
               } else {
                 _normals.push_back(math::Vector3::Zero);
               }
               if (!attrib.texcoords.empty()) {
                 _uvs.push_back({attrib.texcoords[2 * idx.texcoord_index + 0],
-                                attrib.texcoords[2 * idx.texcoord_index + 1]});
+                    attrib.texcoords[2 * idx.texcoord_index + 1]});
               } else {
                 _uvs.push_back(math::Vector2(0.5, 0.5));
               }

@@ -18,8 +18,8 @@ namespace wage {
 
       virtual ~SystemContext() {}
 
-      inline double timeStep() const {
-        return frame.timeStep();
+      inline double fixedTimeStep() const {
+        return frame.fixedTimeStep();
       }
 
       inline double time() const {

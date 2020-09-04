@@ -71,7 +71,7 @@ namespace wage {
           }
         }
         // Run the Simulation
-        dynamicsWorld.stepSimulation(frame.timeStep(), 3);
+        dynamicsWorld.stepSimulation(frame.fixedTimeStep(), 3);
         // dynamicsWorld.performDiscreteCollisionDetection();
       }
 

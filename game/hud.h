@@ -49,13 +49,6 @@ public:
     std::ostringstream os;
     os << "Cam POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
     label->set(os.str());
-
-    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::p)) {
-      core::Core::Instance->pause();
-    }
-    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::u)) {
-      core::Core::Instance->unpause();
-    }
   }
 
 private:
