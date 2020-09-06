@@ -22,7 +22,7 @@ namespace wage {
       virtual ~Service(){};
 
       /**
-       * Start the server and do anything that is required to get the game service ready to support the game.
+       * Start the service and do anything that is required to get the game service ready to support the game.
        */
       virtual void start(){};
 
@@ -30,6 +30,16 @@ namespace wage {
        * Stop the service and cleanup anything that is no longer needed.
        */
       virtual void stop(){};
+
+      /**
+       * Pause the service..
+       */
+      virtual void pause(){};
+
+      /**
+       *Unpause the service.
+       */
+      virtual void unpause(){};
 
       /**
        * Get the name of the service.

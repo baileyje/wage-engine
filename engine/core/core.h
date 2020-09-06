@@ -135,16 +135,26 @@ namespace wage {
        * Pause the game execution. 
        */
       inline void pause() {
+        if (paused) return;
         _frame.pause();
         paused = true;
+        for (auto service : services) {
+          Logger::info("Pausing ", service->name().c_str());
+          service->pause();
+        }
       }
 
       /**
        * Unpause the game execution.
        */
       inline void unpause() {
+        if (!paused) return;
         _frame.unpause();
         paused = false;
+        for (auto service : services) {
+          Logger::info("Unpausing ", service->name().c_str());
+          service->unpause();
+        }
       }
 
     private:

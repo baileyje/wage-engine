@@ -12,14 +12,27 @@ namespace wage {
 
     class PlayingAudio : public ClipHandle {
     public:
-      PlayingAudio(Clip* clip, math::Vector3 position) : clip(clip), _position(position) {}
+      enum class State {
+        playing,
+        paused,
+        pausedByService
+      };
+
+      PlayingAudio(Clip* clip, math::Vector3 position) : clip(clip),
+                                                         _position(position) {}
 
       virtual void play() {
         AL_FAIL_CHECK(alSourcePlay(source));
+        _state = State::playing;
       }
 
       virtual void pause() {
+        pause(false);
+      }
+
+      void pause(bool fromService = false) {
         AL_FAIL_CHECK(alSourcePause(source));
+        _state = fromService ? State::pausedByService : State::paused;
       }
 
       void volume(float volume) {
@@ -85,10 +98,17 @@ namespace wage {
         }
       }
 
+      inline State state() {
+        return _state;
+      }
+
       Clip* clip;
 
       ALuint buffers[NUM_BUFFERS];
+
       ALuint source;
+
+      State _state;
 
     private:
       math::Vector3 _position;

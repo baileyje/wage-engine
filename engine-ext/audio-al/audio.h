@@ -60,12 +60,28 @@ namespace wage {
             if (state == AL_STOPPED) {
               playingItem->cleanup();
               playingIt = playing.erase(playingIt);
-            } else {              
+            } else {
               playingItem->ensureBuffers();
               ++playingIt;
             }
           }
         });
+      }
+
+      void pause() {
+        for (auto playingIt = playing.begin(); playingIt != playing.end(); playingIt++) {
+          if ((*playingIt)->state() == PlayingAudio::State::playing) {
+            (*playingIt)->pause(true);
+          }
+        }
+      }
+
+      void unpause() {
+        for (auto playingIt = playing.begin(); playingIt != playing.end(); playingIt++) {
+          if ((*playingIt)->state() == PlayingAudio::State::pausedByService) {
+            (*playingIt)->play();
+          }
+        }
       }
 
       ClipHandle* play(ClipSpec spec) {

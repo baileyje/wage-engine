@@ -21,7 +21,6 @@
 #include "render/renderable.h"
 #include "render/queue.h"
 #include "render/frame.h"
-#include "render/frame_queue.h"
 
 #define MAX_FPS_SAMPLES 100
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
