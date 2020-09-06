@@ -33,10 +33,10 @@ public:
     auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
 
     if (input->isPressed(input::Key::q)) {
-      torque += bearing * Vector3::Forward * Vector3(0, 0, -0.1); //bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
+      torque += (bearing * Vector3::Forward).normalized() * Vector3(0, 0, -0.1); //bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
     }
     if (input->isPressed(input::Key::e)) {
-      torque += bearing * Vector3::Forward * Vector3(0, 0, 0.1);
+      torque += (bearing * Vector3::Forward).normalized() * Vector3(0, 0, 0.1);
     }
     body->addTorqueImpulse(torque);
 

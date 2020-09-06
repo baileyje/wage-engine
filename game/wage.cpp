@@ -139,7 +139,7 @@ int main(int argc, char* argv[]) {
   setupCoreSystems(systemManager);
 
   setupScene(entityManager, systemManager);
-  core::Core::Instance->init({1.0 / 120.0});
+  core::Core::Instance->init({1.0 / 60.0});
 
   core::Core::Instance->onInput([&](const core::Frame& frame) {
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::p)) {

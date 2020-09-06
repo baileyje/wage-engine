@@ -19,17 +19,24 @@ namespace wage {
      */
     class Frame {
     public:
+      inline void renderContext(RenderContext *context) {
+        if (_renderContext) {
+          delete _renderContext;
+        }
+        _renderContext = context;
+      }
+
       /**
        * Get access to the ui component render queue.
        */
-      inline RenderQueue& uiQueue() {
+      inline RenderQueue &uiQueue() {
         return _uiQueue;
       }
 
       /**
        * Get access to the mesh render queue.
        */
-      inline RenderQueue& meshQueue() {
+      inline RenderQueue &meshQueue() {
         return _meshQueue;
       }
 
@@ -44,26 +51,30 @@ namespace wage {
       /**
        * Render the frame with with provided render context.
        */
-      inline void render(RenderContext* renderContext) {
-        renderMeshes(renderContext);
+      inline void render() {
+        if (!_renderContext)
+          return;
+        renderMeshes(_renderContext);
         // TODO: Sprites
-        renderUi(renderContext);
+        renderUi(_renderContext);
       }
 
     private:
-      void renderMeshes(RenderContext* renderContext) {
+      void renderMeshes(RenderContext *renderContext) {
         _meshQueue.cull(renderContext);
         _meshQueue.sort(renderContext);
         _meshQueue.render(renderContext);
       }
 
-      void renderUi(RenderContext* renderContext) {
+      void renderUi(RenderContext *renderContext) {
         _uiQueue.sort(renderContext);
         _uiQueue.render(renderContext);
       }
 
       RenderQueue _uiQueue;
       RenderQueue _meshQueue;
+
+      RenderContext *_renderContext;
     };
-  }
-}
+  } // namespace render
+} // namespace wage

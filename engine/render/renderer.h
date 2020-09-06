@@ -21,6 +21,7 @@
 #include "render/renderable.h"
 #include "render/queue.h"
 #include "render/frame.h"
+#include "render/frame_queue.h"
 
 #define MAX_FPS_SAMPLES 100
 typedef std::chrono::high_resolution_clock::time_point TimePoint;
@@ -57,31 +58,12 @@ namespace wage {
        * camera and world information.
        */
       void render() {
-        beginRender();
         while (stale.exchange(true))
           ;
-        auto manager = core::Core::Instance->get<ecs::EntityManager>();
-        auto camera = cameraAndEntity(manager);
-        // if (!std::get<0>(camera).valid()) {
-        //   core::Logger::error("No Camera");
-        //   return;
-        // }
-        std::vector<ecs::Entity> dirLights;
-        // for (auto ent : manager->with<DirectionalLight>()) {
-        //   dirLights.push_back(ent);
-        // }
-        std::vector<ecs::Entity> pointLights;
-        // for (auto ent : manager->with<PointLight>()) {
-        //   pointLights.push_back(ent);
-        // }
-        std::vector<ecs::Entity> spotlights;
-        // for (auto ent : manager->with<Spotlight>()) {
-        //   spotlights.push_back(ent);
-        // }
-        RenderContext renderContext(std::get<0>(camera), std::get<1>(camera), math::Vector2(window->width(), window->height()), dirLights, pointLights, spotlights);
-        renderFrame()->render(&renderContext);
-        renderFrame()->clear();
+        beginRender();
+        renderFrame()->render();
         endRender();
+        renderFrame()->clear();
         _renderFrame = _readyFrame.exchange(_renderFrame);
       }
 
@@ -105,8 +87,27 @@ namespace wage {
        * at the end of every game update look.
        */
       inline void swapFrames() {
+        auto manager = core::Core::Instance->get<ecs::EntityManager>();
+        auto camera = cameraAndEntity(manager);
+        // if (!std::get<0>(camera).valid()) {
+        //   core::Logger::error("No Camera");
+        //   return;
+        // }
+        std::vector<ecs::Entity> dirLights;
+        // for (auto ent : manager->with<DirectionalLight>()) {
+        //   dirLights.push_back(ent);
+        // }
+        std::vector<ecs::Entity> pointLights;
+        // for (auto ent : manager->with<PointLight>()) {
+        //   pointLights.push_back(ent);
+        // }
+        std::vector<ecs::Entity> spotlights;
+        // for (auto ent : manager->with<Spotlight>()) {
+        //   spotlights.push_back(ent);
+        // }
         _loadingFrame = _readyFrame.exchange(_loadingFrame);
         loadingFrame()->clear();
+        _readyFrame.load()->renderContext(new RenderContext(std::get<0>(camera), std::get<1>(camera), math::Vector2(window->width(), window->height()), dirLights, pointLights, spotlights));
         stale.store(false);
       }
 
