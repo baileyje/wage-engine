@@ -8,6 +8,7 @@
 #include "memory/allocator.h"
 
 #include "core/config.h"
+#include "core/mode.h"
 #include "core/service_map.h"
 #include "core/frame.h"
 #include "core/logger.h"
@@ -37,10 +38,11 @@ namespace wage {
        * Start the game engine core service and beging game simulation.
        */
       void start() {
-        if (running) return;
+        if (mode != Mode::stopped) return;
         Logger::info("Starting WAGE Engine");
-        running = true;
+        mode = Mode::starting;
         startServices();
+        mode = Mode::running;
         startUpdateLoop();
         startRenderLoop();
       }
@@ -49,14 +51,15 @@ namespace wage {
        * Stop the game engine and shutdown the any services.
        */
       void stop() {
-        if (!running) return;
+        if (mode == Mode::stopping || mode == Mode::stopped) return;
         Logger::info("Stopping WAGE Core.");
-        running = false;
+        mode = Mode::stopping;
         updateThread.join();
         for (auto service : services) {
           Logger::info("Stopping ", service->name().c_str());
           service->stop();
         }
+        mode = Mode::stopped;
       }
 
       /**
@@ -72,7 +75,7 @@ namespace wage {
        */
       template <typename T, typename... Args>
       T* create(Args... args) {
-        auto instance = memory::make<T>(args...);
+        auto instance = new T(args...);
         add<T>(instance);
         return instance;
       }
@@ -83,7 +86,7 @@ namespace wage {
        */
       template <typename T, typename I, typename... Args>
       I* create(Args... args) {
-        auto instance = memory::make<I>(args...);
+        auto instance = new I(args...);
         add<T>(instance);
         return instance;
       }
@@ -135,9 +138,9 @@ namespace wage {
        * Pause the game execution. 
        */
       inline void pause() {
-        if (paused) return;
+        if (mode != Mode::running) return;
         _frame.pause();
-        paused = true;
+        mode = Mode::paused;
         for (auto service : services) {
           Logger::info("Pausing ", service->name().c_str());
           service->pause();
@@ -148,13 +151,20 @@ namespace wage {
        * Unpause the game execution.
        */
       inline void unpause() {
-        if (!paused) return;
+        if (mode != Mode::paused) return;
         _frame.unpause();
-        paused = false;
+        mode = Mode::running;
         for (auto service : services) {
           Logger::info("Unpausing ", service->name().c_str());
           service->unpause();
         }
+      }
+
+      /**
+       * Pause the game execution. 
+       */
+      inline void reset() {
+        mode = Mode::resetting;
       }
 
     private:
@@ -186,19 +196,17 @@ namespace wage {
         updateThread = std::thread([&]() {
           double accumulator = 0;
           _frame.reset();
-          while (running) {
-            if (paused) {
-              std::this_thread::sleep_for(std::chrono::seconds(2));
+          while (mode != Mode::stopped && mode != Mode::stopping) {
+            if (mode == Mode::paused) {
               continue;
             };
             _frame.nextFrame();
             accumulator += _frame.deltaTime();
-            while (running && accumulator >= _frame.fixedTimeStep()) {
+            while (accumulator >= _frame.fixedTimeStep()) {
               fixedUpdate();
               accumulator -= _frame.fixedTimeStep();
             }
             update();
-            // Signal to the render that we need the next render queue to fill.
             postUpdate();
           }
         });
@@ -207,8 +215,8 @@ namespace wage {
       void postUpdate();
 
       void startRenderLoop() {
-        while (running) {
-          if (!paused) {
+        while (mode != Mode::stopped && mode != Mode::stopping) {
+          if (mode != Mode::paused) {
             render();
           }
           processInput();
@@ -224,9 +232,7 @@ namespace wage {
 
       ServiceMap services;
 
-      volatile bool running = false;
-
-      volatile bool paused;
+      volatile Mode mode = Mode::stopped;
 
       Frame _frame;
 

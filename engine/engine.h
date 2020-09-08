@@ -50,4 +50,6 @@
 
 #include "util/random.h"
 
+#include "scene/manager.h"
+
 #endif //ENGINE_H

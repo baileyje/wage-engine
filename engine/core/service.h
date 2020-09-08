@@ -32,14 +32,19 @@ namespace wage {
       virtual void stop(){};
 
       /**
-       * Pause the service..
+       * Pause the service.
        */
       virtual void pause(){};
 
       /**
-       *Unpause the service.
+       * Unpause the service.
        */
       virtual void unpause(){};
+
+      /**
+       * Reset the service to an initial state.
+       */
+      virtual void reset(){};
 
       /**
        * Get the name of the service.

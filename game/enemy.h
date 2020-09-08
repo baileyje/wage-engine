@@ -6,7 +6,7 @@ using namespace wage;
 
 #define EnemyComponent 2001
 
-void addRandomEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager);
+void addRandomEnemy(scene::Scene& scene);
 
 class Enemy {
 };
@@ -18,7 +18,7 @@ public:
   }
 
   void fixedUpdate(const ecs::SystemContext& context) {
-    auto manager = core::Core::Instance->get<ecs::EntityManager>();
+    auto& entities = scene::Scene::current().entities();
     auto input = core::Core::Instance->get<input::Input>();
     if (input->isPressed(input::Key::c) && !chasing) {
       // for (auto entity : manager->with({EnemyComponent})) {
@@ -29,16 +29,16 @@ public:
       return;
     }
     if (input->isPressed(input::Key::r) && !running) {
-      for (auto entity : manager->with({EnemyComponent})) {
+      for (auto entity : entities.with({EnemyComponent})) {
         entity.get<physics::RigidBody>(RigidBodyComponent)->shouldStop(true);
       }
       running = true;
       chasing = false;
     }
 
-    auto target = *manager->with({PlayerComponent}).begin();
+    auto target = *entities.with({PlayerComponent}).begin();
     if (running || chasing) {
-      for (auto enemy : manager->with({EnemyComponent})) {
+      for (auto enemy : entities.with({EnemyComponent})) {
         if (!enemy.valid()) {
           continue;
         }
@@ -76,9 +76,7 @@ public:
 
   void update(const ecs::SystemContext& context) {
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::n) && context.time() - lastLaunch > launchThreshold) {
-      auto manager = core::Core::Instance->get<ecs::EntityManager>();
-      auto systemManager = core::Core::Instance->get<ecs::SystemManager>();
-      addRandomEnemy(manager, systemManager);
+      addRandomEnemy(scene::Scene::current());
       lastLaunch = context.time();
     }
   }
@@ -89,8 +87,8 @@ private:
   double launchThreshold = 0.001;
 };
 
-void addEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager, Vector position, float scale) {
-  auto entity = entityManager->create();
+void addEnemy(scene::Scene& scene, Vector position, float scale) {
+  auto entity = scene.entities().create();
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(Vector(scale, scale, scale));
@@ -101,9 +99,9 @@ void addEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManag
   entity.assign<Enemy>(EnemyComponent);
 }
 
-void addRandomEnemy(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
+void addRandomEnemy(scene::Scene& scene) {
   float x = randomBetween(-2000, 2000);
   float y = randomBetween(-2000, 2000);
   float z = randomBetween(-2000, 2000);
-  addEnemy(entityManager, systemManager, Vector(x, y, z) * 2, 5 /*scale*/);
+  addEnemy(scene, Vector(x, y, z) * 2, 5 /*scale*/);
 }

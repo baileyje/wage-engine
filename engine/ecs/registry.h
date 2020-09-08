@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_set>
+
 #include "ecs/entity.h"
 #include "ecs/component_pool.h"
 #include "ecs/id_pool.h"
@@ -46,7 +48,7 @@ namespace wage {
        */
       inline void registerComponent(ComponentType type, size_t componentSize) {
         // TODO: Assert we didn't go over max component id
-        knownComponents.push_back(type);
+        knownComponents.insert(type);
         auto storage = pools[type];
         new (storage) ComponentPool(componentSize);
       }
@@ -84,11 +86,12 @@ namespace wage {
 
       View<Registry> view(std::vector<ComponentType> types) {
         // TODO: Assert at least one type.
-        ComponentPool* basePool = nullptr;
+        ComponentPool* basePool = ComponentPool::empty;
         size_t minSize = MAX_ENTITY_ID;
         for (auto type : types) {
+          if (knownComponents.find(type) == knownComponents.end()) continue;
           auto pool = poolFor(type);
-          if (pool->currentSize() < minSize) {
+          if (pool != nullptr && pool->currentSize() < minSize) {
             minSize = pool->currentSize();
             basePool = pool;
           }
@@ -108,12 +111,12 @@ namespace wage {
         return pools[componentType];
       }
 
-      std::vector<ComponentType> knownComponents;
+      std::unordered_set<ComponentType> knownComponents;
 
       memory::ChunkyIndexedStorage<ComponentPool> pools;
 
       IdPool<EntityId> entityIds;
     };
 
-  }
-}
+  } // namespace ecs
+} // namespace wage

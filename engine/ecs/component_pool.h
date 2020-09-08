@@ -99,6 +99,8 @@ namespace wage {
         WrappedIterator wrapped;
       };
 
+      static ComponentPool* empty;
+
       ComponentPool() : ComponentPool(0) {}
 
       ComponentPool(size_t componentSize) : pool(componentSize + sizeof(Item::Header)) {

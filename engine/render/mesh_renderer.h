@@ -1,9 +1,10 @@
 #pragma once
 
+#include "ecs/system.h"
+#include "scene/scene.h"
+
 namespace wage {
   namespace render {
-
-#include "ecs/system.h"
 
     /**
      * System that finds any entities that have a mesh component and automatically submits them to the renderer. This system is dumb
@@ -18,8 +19,8 @@ namespace wage {
        * On each game update, submit all renderable mesh components to the renderer.
        */
       void update(const ecs::SystemContext& context) {
-        auto manager = core::Core::Instance->get<ecs::EntityManager>();
-        for (auto entity : manager->with({MeshComponent, TransformComponent, MaterialComponent})) {
+        auto& entities = scene::Scene::current().entities();
+        for (auto entity : entities.with({MeshComponent, TransformComponent, MaterialComponent})) {
           core::Core::Instance->get<Renderer>()->renderMesh(*entity.get<math::Transform>(TransformComponent), entity.get<MeshSpec>(MeshComponent), entity.get<MaterialSpec>(MaterialComponent));
         }
       }

@@ -40,7 +40,7 @@ namespace wage {
         if (std::align(alignSize, size, current, this->size)) {
           char* c = (char*)current; // Gross
           if (c + size > ((char*)base) + this->size) {
-            core::Logger::error("Failed to allocate. No free space.", name);
+            core::Logger::error("Failed to allocate. No free space. ", name);
             return nullptr;
           }
           void* result = current;

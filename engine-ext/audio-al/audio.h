@@ -9,7 +9,7 @@
 #include "audio-al/util.h"
 #include "audio-al/data.h"
 #include "audio-al/playing_audio.h"
-#include "ecs/manager.h"
+#include "scene/scene.h"
 
 #include "core/logger.h"
 
@@ -69,19 +69,32 @@ namespace wage {
       }
 
       void pause() {
-        for (auto playingIt = playing.begin(); playingIt != playing.end(); playingIt++) {
-          if ((*playingIt)->state() == PlayingAudio::State::playing) {
-            (*playingIt)->pause(true);
+        for (auto playingIt : playing) {
+          if (playingIt->state() == PlayingAudio::State::playing) {
+            playingIt->pause(true);
           }
         }
       }
 
       void unpause() {
-        for (auto playingIt = playing.begin(); playingIt != playing.end(); playingIt++) {
-          if ((*playingIt)->state() == PlayingAudio::State::pausedByService) {
-            (*playingIt)->play();
+        for (auto playingIt : playing) {
+          if (playingIt->state() == PlayingAudio::State::pausedByService) {
+            playingIt->play();
           }
         }
+      }
+
+      void reset() {
+        for (auto playingIt : playing) {
+          playingIt->stop();
+          delete playingIt;
+        }
+        playing.clear();
+        for (auto loadingIt : loading) {
+          loadingIt->stop();
+          delete loadingIt;
+        }
+        loading.clear();
       }
 
       ClipHandle* play(ClipSpec spec) {
@@ -119,8 +132,8 @@ namespace wage {
       }
 
       math::Transform cameraTransform() {
-        auto manager = core::Core::Instance->get<ecs::EntityManager>();
-        for (auto entity : manager->with({PerspectiveCameraComponent, TransformComponent})) {
+        auto& entities = scene::Scene::current().entities();
+        for (auto entity : entities.with({PerspectiveCameraComponent, TransformComponent})) {
           return *entity.get<math::Transform>(TransformComponent);
         }
         return math::Transform();

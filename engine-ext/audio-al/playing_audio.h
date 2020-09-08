@@ -15,11 +15,14 @@ namespace wage {
       enum class State {
         playing,
         paused,
-        pausedByService
+        pausedByService,
+        stopped
       };
 
       PlayingAudio(Clip* clip, math::Vector3 position) : clip(clip),
                                                          _position(position) {}
+
+      virtual ~PlayingAudio(){};
 
       virtual void play() {
         AL_FAIL_CHECK(alSourcePlay(source));
@@ -33,6 +36,12 @@ namespace wage {
       void pause(bool fromService = false) {
         AL_FAIL_CHECK(alSourcePause(source));
         _state = fromService ? State::pausedByService : State::paused;
+      }
+
+      virtual void stop() {
+        AL_FAIL_CHECK(alSourceStop(source));
+        cleanup();
+        _state = State::stopped;
       }
 
       void volume(float volume) {

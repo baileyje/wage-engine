@@ -89,6 +89,11 @@ namespace wage {
        */
       virtual std::vector<RayHit> castRay(math::Vector3 from, math::Vector3 to) = 0;
 
+      virtual void reset() {
+        _collisions.clear();
+        _collisionsById.clear();
+      }
+
     protected:
       /**
        * Primary entry point for a physics implementation to make collisions available to the rest of the engine.

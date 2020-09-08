@@ -6,13 +6,13 @@ using namespace wage;
 
 #define DockComponent 2002
 
-void addRandomDock(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager);
+void addRandomDock(scene::Scene* const scene);
 
 class Dock {
 };
 
-void addDock(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager, Vector position, float scale) {
-  auto entity = entityManager->create();
+void addDock(scene::Scene& scene, Vector position, float scale) {
+  auto entity = scene.entities().create();
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(Vector(scale, scale, scale));
@@ -23,10 +23,10 @@ void addDock(ecs::EntityManager* entityManager, ecs::SystemManager* systemManage
   entity.assign<Enemy>(EnemyComponent);
 }
 
-void addRandomDock(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
+void addRandomDock(scene::Scene& scene) {
   float x = randomBetween(-20000, 20000);
   float y = randomBetween(-20000, 20000);
   float z = randomBetween(-20000, 20000);
   // float scale = (rand() % 100) / 30.0;
-  addDock(entityManager, systemManager, Vector(x, y, z) * 2, 50 /*scale*/);
+  addDock(scene, Vector(x, y, z) * 2, 50 /*scale*/);
 }

@@ -7,7 +7,7 @@
 #include "core/service.h"
 #include "platform/window.h"
 #include "assets/manager.h"
-#include "ecs/manager.h"
+#include "scene/scene.h"
 #include "platform/platform.h"
 
 #include "render/components/lighting/directional_light.h"
@@ -86,27 +86,30 @@ namespace wage {
        * at the end of every game update look.
        */
       inline void swapFrames() {
-        auto manager = core::Core::Instance->get<ecs::EntityManager>();
-        auto camera = cameraAndEntity(manager);
-        // if (!std::get<0>(camera).valid()) {
-        //   core::Logger::error("No Camera");
-        //   return;
-        // }
-        std::vector<ecs::Entity> dirLights;
-        // for (auto ent : manager->with<DirectionalLight>()) {
-        //   dirLights.push_back(ent);
-        // }
-        std::vector<ecs::Entity> pointLights;
-        // for (auto ent : manager->with<PointLight>()) {
-        //   pointLights.push_back(ent);
-        // }
-        std::vector<ecs::Entity> spotlights;
-        // for (auto ent : manager->with<Spotlight>()) {
-        //   spotlights.push_back(ent);
-        // }
         _loadingFrame = _readyFrame.exchange(_loadingFrame);
         loadingFrame()->clear();
-        _readyFrame.load()->renderContext(new RenderContext(std::get<0>(camera), std::get<1>(camera), math::Vector2(window->width(), window->height()), dirLights, pointLights, spotlights));
+        auto manager = &scene::Scene::current().entities();
+        auto camera = cameraAndEntity(manager);
+        if (std::get<1>(camera)) {
+          // if (!std::get<0>(camera).valid()) {
+          //   core::Logger::error("No Camera");
+          //   return;
+          // }
+          std::vector<ecs::Entity> dirLights;
+          // for (auto ent : manager->with<DirectionalLight>()) {
+          //   dirLights.push_back(ent);
+          // }
+          std::vector<ecs::Entity> pointLights;
+          // for (auto ent : manager->with<PointLight>()) {
+          //   pointLights.push_back(ent);
+          // }
+          std::vector<ecs::Entity> spotlights;
+          // for (auto ent : manager->with<Spotlight>()) {
+          //   spotlights.push_back(ent);
+          // }
+
+          _readyFrame.load()->renderContext(new RenderContext(std::get<0>(camera), std::get<1>(camera), math::Vector2(window->width(), window->height()), dirLights, pointLights, spotlights));
+        }
         stale.store(false);
       }
 

@@ -41,7 +41,7 @@ namespace wage {
     class ChunkyIndexedStorage : public IndexedStorage<T> {
 
     public:
-           // TODO:  How do we want to tune the chunks per.....
+      // TODO:  How do we want to tune the chunks per.....
       ChunkyIndexedStorage(int chunksPerBlock = 128, Allocator* allocator = Allocator::Permanent()) : _chunkSize(sizeof(T)), _chunksPerBlock(chunksPerBlock), allocator(allocator) {
       }
 
@@ -49,7 +49,10 @@ namespace wage {
         auto blockIndex = index / _chunksPerBlock;
         auto block = blockAt(blockIndex);
         auto chunkIndex = index % _chunksPerBlock;
-        return reinterpret_cast<T*>(static_cast<char*>(block._storage) + chunkIndex * _chunkSize);
+        if (block._storage != nullptr) {
+          return reinterpret_cast<T*>(static_cast<char*>(block._storage) + chunkIndex * _chunkSize);
+        }
+        return nullptr;
       }
 
     private:

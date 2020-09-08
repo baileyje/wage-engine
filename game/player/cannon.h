@@ -36,16 +36,16 @@ public:
   }
 
   void update(const ecs::SystemContext& context) {
-    auto entityManager = core::Core::Instance->get<ecs::EntityManager>();
+    auto& entities = scene::Scene::current().entities();
     auto input = core::Core::Instance->get<input::Input>();
     if (input->isPressed(input::MouseButton::One)) {
-      for (auto entity : entityManager->with({CannonComponent})) {
+      for (auto entity : entities.with({CannonComponent})) {
         fire(context, entity, entity.get<Cannon>(CannonComponent));
       }
     }
     auto physics = core::Core::Instance->get<physics::Physics>();
-    auto player = *entityManager->with({2000}).begin();
-    for (auto entity : entityManager->with({CannonBallComponent})) {
+    auto player = *entities.with({2000}).begin();
+    for (auto entity : entities.with({CannonBallComponent})) {
       auto collisions = physics->collisionsFor(entity);
       if (collisions.size() > 0) {
         // std::cout << "Cannon Ball Collisions: " << collisions.size() << " \n";
@@ -54,8 +54,8 @@ public:
             std::cout << "Skipping Player\n";
             continue;
           }
-          entityManager->destroy(collision.otherEntity());
-          entityManager->destroy(collision.entity());
+          entities.destroy(collision.otherEntity());
+          entities.destroy(collision.entity());
           audio::ClipSpec spec("bounce.wav");
           core::Core::Instance->get<audio::Audio>()->play(spec);
         }
@@ -79,8 +79,8 @@ public:
   void fire(const ecs::SystemContext& context, ecs::Entity entity, Cannon* cannon) {
     auto delay = 1 / cannon->rate;
     if (context.time() > cannon->lastFire + delay) {
-      auto entityManager = core::Core::Instance->get<ecs::EntityManager>();
-      auto ball = entityManager->create();
+      auto& entities = scene::Scene::current().entities();
+      auto ball = entities.create();
       auto entityTransform = entity.get<math::Transform>(TransformComponent);
       auto bearing = entity.get<math::Transform>(TransformComponent)->rotation();
       auto ballPosition = entityTransform->position() + (bearing * Vector::Forward).normalized() * 4;
@@ -97,6 +97,6 @@ public:
   }
 };
 
-void addCannonTo(ecs::Entity entity, ecs::SystemManager* systemManager) {
+void addCannonTo(ecs::Entity entity) {
   entity.assign<Cannon>(CannonComponent, Vector3{0, 0, 10}, 1000, 10);
 }

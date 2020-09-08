@@ -30,60 +30,63 @@ void setupServices(core::Core* core, std::string path) {
   core->create<platform::Platform, platform::GlfwPlatform>();
   core->create<input::Input, input::GlfwInput>();
   core->create<audio::Audio, audio::AlAudio>();
-  core->create<ecs::EntityManager>();
-  core->create<ecs::SystemManager>();
   core->create<physics::Physics, physics::BulletPhysics>();
   core->create<render::Renderer, render::GlRenderer>();
+  core->create<scene::Manager>();
 }
 
-void setupCoreSystems(ecs::SystemManager* systemManager) {
-  systemManager->create<ui::UiSystem>();
-  systemManager->create<render::MeshRenderer>();
-  systemManager->create<EnemyLauncher>();
-  systemManager->create<EnemyMovement>();
-  // systemManager->create<PlayerBasicMovement>();
-  systemManager->create<PlayerPhysicsMovement>();
-  systemManager->create<CannonControl>();
-  systemManager->create<PlanetLauncher>();
-  systemManager->create<DumbMusicSystem>();
+void setupCoreSystems(scene::Scene& scene) {
+  scene.systems().create<ui::UiSystem>();
+  scene.systems().create<render::MeshRenderer>();
+  scene.systems().create<EnemyLauncher>();
+  scene.systems().create<EnemyMovement>();
+  // scene.systems().create<PlayerBasicMovement>();
+  scene.systems().create<PlayerPhysicsMovement>();
+  scene.systems().create<CannonControl>();
+  scene.systems().create<PlanetLauncher>();
+  scene.systems().create<DumbMusicSystem>();
 }
 
-void registerKnownComponents(ecs::EntityManager* entityManager) {
+void registerKnownComponents(scene::Scene& scene) {
   // TODO: Move engine provided components to the some engine bootstap function.
 
-  entityManager->registerComponent(TransformComponent, sizeof(math::Transform));
+  scene.entities().registerComponent(TransformComponent, sizeof(math::Transform));
 
   // Camera
-  entityManager->registerComponent(CameraComponent, sizeof(render::Camera));
+  scene.entities().registerComponent(CameraComponent, sizeof(render::Camera));
   // entityManager->registerComponent(OrthographicCameraComponent, sizeof(render::OrthographicCamera));
-  entityManager->registerComponent(PerspectiveCameraComponent, sizeof(render::PerspectiveCamera));
+  scene.entities().registerComponent(PerspectiveCameraComponent, sizeof(render::PerspectiveCamera));
 
   // Lights
-  entityManager->registerComponent(SpotlightComponent, sizeof(render::Spotlight));
-  entityManager->registerComponent(PointLightComponent, sizeof(render::PointLight));
-  entityManager->registerComponent(DirectionalLightComponent, sizeof(render::DirectionalLight));
+  scene.entities().registerComponent(SpotlightComponent, sizeof(render::Spotlight));
+  scene.entities().registerComponent(PointLightComponent, sizeof(render::PointLight));
+  scene.entities().registerComponent(DirectionalLightComponent, sizeof(render::DirectionalLight));
 
   // Renderer
-  entityManager->registerComponent(MeshComponent, sizeof(render::MeshSpec));
-  entityManager->registerComponent(MaterialComponent, sizeof(render::MaterialSpec));
+  scene.entities().registerComponent(MeshComponent, sizeof(render::MeshSpec));
+  scene.entities().registerComponent(MaterialComponent, sizeof(render::MaterialSpec));
 
   // Physics
-  entityManager->registerComponent(ColliderComponent, sizeof(physics::Collider));
-  entityManager->registerComponent(RigidBodyComponent, sizeof(physics::RigidBody));
+  scene.entities().registerComponent(ColliderComponent, sizeof(physics::Collider));
+  scene.entities().registerComponent(RigidBodyComponent, sizeof(physics::RigidBody));
 
   // UI
-  entityManager->registerComponent(UiLabelComponent, sizeof(ui::UiLabel));
+  scene.entities().registerComponent(UiLabelComponent, sizeof(ui::UiLabel));
 
   // Game Junk
-  entityManager->registerComponent(PlayerComponent, sizeof(Player));
-  entityManager->registerComponent(EnemyComponent, sizeof(Enemy));
-  entityManager->registerComponent(PlanetComponent, sizeof(Planet));
-  entityManager->registerComponent(DockComponent, sizeof(Dock));
-  entityManager->registerComponent(CannonComponent, sizeof(Cannon));
-  entityManager->registerComponent(CannonBallComponent, sizeof(CannonBall));
+  scene.entities().registerComponent(PlayerComponent, sizeof(Player));
+  scene.entities().registerComponent(EnemyComponent, sizeof(Enemy));
+  scene.entities().registerComponent(PlanetComponent, sizeof(Planet));
+  scene.entities().registerComponent(DockComponent, sizeof(Dock));
+  scene.entities().registerComponent(CannonComponent, sizeof(Cannon));
+  scene.entities().registerComponent(CannonBallComponent, sizeof(CannonBall));
 }
 
-void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
+void setupScene(scene::Scene& scene) {
+  
+  registerKnownComponents(scene);
+  
+  setupCoreSystems(scene);
   // auto topLightEnt = entityManager->create();
   // topLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(-90, 0, 0));
   // auto topLight = topLightEnt.assign<render::DirectionalLight>(DirectionalLightComponent);
@@ -103,24 +106,24 @@ void setupScene(ecs::EntityManager* entityManager, ecs::SystemManager* systemMan
   // launchPadEnt.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
   // launchPadEnt.assign<render::MaterialSpec>(MaterialComponent, component::Color::White);
 
-  addPlayer(entityManager, systemManager);
+  addPlayer(scene);
 
-  addEnemy(entityManager, systemManager, {0, 0, 20}, 5 /*scale*/);
+  addEnemy(scene, {0, 0, 20}, 5 /*scale*/);
 
-  addPlanet(entityManager, systemManager, {100, 0, 1200}, 1000, 0);
+  addPlanet(scene, {100, 0, 1200}, 1000, 0);
 
-  addCamera(entityManager, systemManager);
+  addCamera(scene);
 
-  setupHud(entityManager, systemManager);
+  setupHud(scene);
 
   for (int i = 0; i < 200; i++) {
-    addRandomEnemy(entityManager, systemManager);
+    addRandomEnemy(scene);
   }
   // for (int i = 0; i < 10; i++) {
-  //   addRandomPlanet(entityManager, systemManager);
+  //   addRandomPlanet(scene);
   // }
   // for (int i = 0; i < 5; i++) {
-  //   addRandomDock(entityManager, systemManager);
+  //   addRandomDock(scene);
   // }
 }
 
@@ -133,12 +136,10 @@ int main(int argc, char* argv[]) {
   });
 
   setupServices(core::Core::Instance, path);
-  auto systemManager = core::Core::Instance->get<ecs::SystemManager>();
-  auto entityManager = core::Core::Instance->get<ecs::EntityManager>();
-  registerKnownComponents(entityManager);
-  setupCoreSystems(systemManager);
-
-  setupScene(entityManager, systemManager);
+  auto sceneManager = core::Core::Instance->get<scene::Manager>();
+  auto scene = sceneManager->currentScene();
+  // setupScene(scene);
+  sceneManager->builder(setupScene);
   core::Core::Instance->init({1.0 / 60.0});
 
   core::Core::Instance->onInput([&](const core::Frame& frame) {
@@ -147,6 +148,9 @@ int main(int argc, char* argv[]) {
     }
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::u)) {
       core::Core::Instance->unpause();
+    }
+    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::f2)) {
+      core::Core::Instance->reset();
     }
   });
 

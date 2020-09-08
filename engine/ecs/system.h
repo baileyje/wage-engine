@@ -14,8 +14,6 @@ namespace wage {
 
       virtual ~System(){};
 
-      virtual void init(const SystemContext& context){};
-
       virtual void start(const SystemContext& context){};
 
       virtual void update(const SystemContext& context){};
@@ -23,8 +21,6 @@ namespace wage {
       virtual void fixedUpdate(const SystemContext& context){};
 
       virtual void stop(const SystemContext& context){};
-
-      virtual void deinit(const SystemContext& context){};
     };
 
   }

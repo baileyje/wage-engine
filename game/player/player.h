@@ -22,7 +22,7 @@ public:
   }
 
   void fixedUpdate(const ecs::SystemContext& context) {
-    auto player = *core::Core::Instance->get<ecs::EntityManager>()->with({PlayerComponent, RigidBodyComponent, TransformComponent}).begin();
+    auto player = *scene::Scene::current().entities().with({PlayerComponent, RigidBodyComponent, TransformComponent}).begin();
     if (!player.valid()) return;
     auto body = player.get<physics::RigidBody>(RigidBodyComponent);
     auto input = core::Core::Instance->get<input::Input>();
@@ -94,7 +94,7 @@ public:
   }
 
   void fixedUpdate(const ecs::SystemContext& context) {
-    auto player = *core::Core::Instance->get<ecs::EntityManager>()->with({PlayerComponent, TransformComponent}).begin();
+    auto player = *scene::Scene::current().entities().with({PlayerComponent, TransformComponent}).begin();
     auto input = core::Core::Instance->get<input::Input>();
     auto mousePos = input->mousePosition();
     // auto dx = lastPos.x - mousePos.x;
@@ -140,14 +140,14 @@ private:
   // float mouseSpeed;
 };
 
-ecs::Entity addPlayer(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
-  auto player = entityManager->create();
+ecs::Entity addPlayer(scene::Scene& scene) {
+  auto player = scene.entities().create();
   player.assign<math::Transform>(TransformComponent, Vector(0, 5, 0), Vector(5, 5, 5), Vector(-3, 0, 0));
   player.assign<physics::RigidBody>(RigidBodyComponent, 1);
   player.assign<render::MeshSpec>(MeshComponent, "player.obj");
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
   player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space.png"));
   player.assign<Player>(PlayerComponent);
-  addCannonTo(player, systemManager);
+  addCannonTo(player);
   return player;
 }

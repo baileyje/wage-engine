@@ -11,12 +11,12 @@
 namespace wage {
   namespace render {
 
-    void checkGLError(const char* command);
+    void checkGLError(const std::string& filename, const std::uint_fast32_t line, const char* command);
 
-#define GL_FAIL_CHECK(cmd) \
-  do {                     \
-    cmd;                   \
-    checkGLError(#cmd);    \
+#define GL_FAIL_CHECK(cmd)                  \
+  do {                                      \
+    cmd;                                    \
+    checkGLError(__FILE__, __LINE__, #cmd); \
   } while (0)
 
     inline math::Vector vec3From(const component::Color& color) {

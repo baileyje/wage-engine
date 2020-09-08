@@ -25,11 +25,11 @@ namespace wage {
 
       virtual ~EntityManager() {}
 
-      void start() override {
-        core::Core::Instance->onUpdate([&](const core::Frame& frame) {
-          update();
-        });
-      }
+      // void start() override {
+      //   core::Core::Instance->onUpdate([&](const core::Frame& frame) {
+      //     update();
+      //   });
+      // }
 
       /*
         1.  Send Add Messages
@@ -92,15 +92,6 @@ namespace wage {
       View<Registry> with(std::vector<ComponentType> types) {
         return _registry.view(types);
       }
-
-      // template <typename T> struct identity { typedef T type; };
-      // template <typename... Components>
-      // void each(std::vector<ComponentType> types, identity<std::function<void(Entity entity, Components*...)>>::type f) {
-      //   for (auto entity : with(types))
-      //     f(entity, *(entity.get<Components>())...);
-      // }
-
-      // TODO: Typed view
 
       /**
        * Destroy an entity at the next safe opportunity.

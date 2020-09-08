@@ -23,23 +23,23 @@ namespace wage {
         }
         auto vao = cache[meshData->spec().key()];
         // Only make a single cache item
-        if (vao == nullptr) {
-          vao = memory::make<VertexArray>();
+        if (vao == nullptr) { 
+          vao = memory::Allocator::Assets()->create<VertexArray>();
           cache[meshData->spec().key()] = vao;
           vao->bind();
           // Create Verts Buff
-          auto verts = memory::make<VertexBuffer>(meshData->vertices().data(), meshData->vertices().size() * 3 * sizeof(float));
+          auto verts = memory::Allocator::Assets()->create<VertexBuffer>(meshData->vertices().data(), meshData->vertices().size() * 3 * sizeof(float));
           verts->layout()->pushFloat(3);
           vao->addBuffer(verts);
           // Create Norms Buff
-          auto norms = memory::make<VertexBuffer>(meshData->normals().data(), meshData->normals().size() * 3 * sizeof(float));
+          auto norms = memory::Allocator::Assets()->create<VertexBuffer>(meshData->normals().data(), meshData->normals().size() * 3 * sizeof(float));
           norms->layout()->pushFloat(3);
           vao->addBuffer(norms);
           // Create Texture Buff
-          auto uvs = memory::make<VertexBuffer>(meshData->uvs().data(), meshData->uvs().size() * 3 * sizeof(float));
+          auto uvs = memory::Allocator::Assets()->create<VertexBuffer>(meshData->uvs().data(), meshData->uvs().size() * 3 * sizeof(float));
           uvs->layout()->pushFloat(2);
           vao->addBuffer(uvs);
-          auto indices = memory::make<IndexBuffer>((const unsigned int*)meshData->indices().data(), meshData->indices().size());
+          auto indices = memory::Allocator::Assets()->create<IndexBuffer>((const unsigned int*)meshData->indices().data(), meshData->indices().size());
           indices->bind();
         }
         return vao;

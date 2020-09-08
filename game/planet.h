@@ -7,7 +7,7 @@ using namespace wage;
 
 #define PlanetComponent 2002
 
-void addRandomPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager);
+void addRandomPlanet(scene::Scene& scene);
 
 class Planet {
 };
@@ -24,9 +24,8 @@ public:
 
   void update(const ecs::SystemContext& context) {
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::l) && context.time() - lastLaunch > launchThreshold) {
-      auto manager = core::Core::Instance->get<ecs::EntityManager>();
-      auto systemManager = core::Core::Instance->get<ecs::SystemManager>();
-      addRandomPlanet(manager, systemManager);
+      auto manager = core::Core::Instance->get<scene::Manager>();
+      addRandomPlanet(manager->currentScene());
       lastLaunch = context.time();
     }
   }
@@ -43,8 +42,8 @@ public:
   }
 
   void fixedUpdate(const ecs::SystemContext& context) {
-    auto manager = core::Core::Instance->get<ecs::EntityManager>();
-    for (auto planent : manager->with({PlanetComponent})) {
+    auto& entities = scene::Scene::current().entities();
+    for (auto planent : entities.with({PlanetComponent})) {
       if (!planent.valid()) {
         continue;
       }
@@ -53,8 +52,8 @@ public:
   }
 };
 
-void addPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager, math::Vector position, float scale, int texture) {
-  auto entity = entityManager->create();
+void addPlanet(scene::Scene& scene, math::Vector position, float scale, int texture) {
+  auto entity = scene.entities().create();
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(math::Vector(scale, scale, scale));
@@ -77,13 +76,13 @@ float randomComp() {
   return comp;
 }
 
-void addRandomPlanet(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
+void addRandomPlanet(scene::Scene& scene) {
   float x = randomComp();
   float y = randomComp();
   float z = randomComp();
   float scale = randomBetween(2000, 2800);
   int texture = rand() % 2;
-  addPlanet(entityManager, systemManager, math::Vector(x, y, z), scale, texture);
+  addPlanet(scene, math::Vector(x, y, z), scale, texture);
 }
 
 #endif // PLANET_H

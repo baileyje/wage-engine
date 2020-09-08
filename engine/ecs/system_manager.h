@@ -15,7 +15,6 @@ namespace wage {
 
     class SystemManager : public core::Service {
 
-    private:
     public:
       SystemManager() : Service("SystemManager") {
       }
@@ -24,21 +23,22 @@ namespace wage {
         // TODO: What if added after start
         SystemContext context(core::Core::Instance->get<EntityManager>(), core::Core::Instance->frame());
         for (auto system : systems) {
-          system->init(context);
           system->start(context);
         }
-        core::Core::Instance->onUpdate([&](const core::Frame& frame) {
-          SystemContext context(core::Core::Instance->get<EntityManager>(), core::Core::Instance->frame());
-          for (auto system : systems) {
-            system->update(context);
-          }
-        });
-        core::Core::Instance->onFixedUpdate([&](const core::Frame& frame) {
-          SystemContext context(core::Core::Instance->get<EntityManager>(), core::Core::Instance->frame());
-          for (auto system : systems) {
-            system->fixedUpdate(context);
-          }
-        });
+      }
+
+      void update() {
+        SystemContext context(core::Core::Instance->get<EntityManager>(), core::Core::Instance->frame());
+        for (auto system : systems) {
+          system->update(context);
+        }
+      }
+
+      void fixedUpdate() {
+        SystemContext context(core::Core::Instance->get<EntityManager>(), core::Core::Instance->frame());
+        for (auto system : systems) {
+          system->fixedUpdate(context);
+        }
       }
 
       template <typename T, typename I, typename... Args>

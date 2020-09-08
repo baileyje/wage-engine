@@ -29,7 +29,7 @@ namespace wage {
       int frameBufferHeight = 0;
       glfwGetFramebufferSize(glfWindow, &frameBufferWidth, &frameBufferHeight);
       float scale = (float)frameBufferWidth / (float)screenWidth;
-      _window = memory::make<Window>(glfWindow, frameBufferWidth, frameBufferHeight, scale);
+      _window = new Window(glfWindow, frameBufferWidth, frameBufferHeight, scale);
 
       core::Core::Instance->onInput([&](const core::Frame& frame) {
         flushEvents();

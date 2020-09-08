@@ -27,7 +27,7 @@ public:
   PosDisplay(ui::UiLabel* label) : System(), label(label) {}
 
   void update(const ecs::SystemContext& context) {
-    auto player = *core::Core::Instance->get<ecs::EntityManager>()->with({PlayerComponent}).begin();
+    auto player = *(scene::Scene::current().entities().with({PlayerComponent}).begin());
     auto pos = player.get<math::Transform>(TransformComponent)->position();
     std::ostringstream os;
     os << "Player POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
@@ -44,7 +44,7 @@ public:
   CamPosDisplay(ui::UiLabel* label) : System(), label(label) {}
 
   void update(const ecs::SystemContext& context) {
-    auto camera = *core::Core::Instance->get<ecs::EntityManager>()->with({PerspectiveCameraComponent}).begin();
+    auto camera = *(scene::Scene::current().entities().with({PerspectiveCameraComponent}).begin());
     auto pos = camera.get<math::Transform>(TransformComponent)->position();
     std::ostringstream os;
     os << "Cam POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
@@ -55,21 +55,21 @@ private:
   ui::UiLabel* label;
 };
 
-void setupHud(ecs::EntityManager* entityManager, ecs::SystemManager* systemManager) {
+void setupHud(scene::Scene& scene) {
   render::FontSpec font("ARCADE.TTF", 20);
-  auto fpsLabelEntity = entityManager->create();
+  auto fpsLabelEntity = scene.entities().create();
   auto fpsLabel = fpsLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(20, 0), Vector2(300, 100)), "FPS: ", font, component::Color::White);
-  systemManager->create<FpsDisplay>(fpsLabel);
+  scene.systems().create<FpsDisplay>(fpsLabel);
 
-  auto posLabelEntity = entityManager->create();
+  auto posLabelEntity = scene.entities().create();
   auto posLabel = posLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(200, 0), Vector2(300, 100)), "Player POS: ", font, component::Color::White);
-  systemManager->create<PosDisplay>(posLabel);
+  scene.systems().create<PosDisplay>(posLabel);
 
-  auto camPosLabelEntity = entityManager->create();
+  auto camPosLabelEntity = scene.entities().create();
   auto camPosLabel = camPosLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(600, 0), Vector2(300, 100)), "Cam POS: ", font, component::Color::White);
-  systemManager->create<CamPosDisplay>(camPosLabel);
+  scene.systems().create<CamPosDisplay>(camPosLabel);
 
-  auto targetLabelEntity = entityManager->create();
+  auto targetLabelEntity = scene.entities().create();
   // auto platform = core::Core::Instance->get<platform::Platform>();
   // auto window = platform->window();
   auto targetLabel = targetLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(1024 / 2.0, 768 * 0.9 / 2.0), Vector2(20, 20)), "-X-", font, component::Color::White);
