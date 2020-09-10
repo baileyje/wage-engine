@@ -19,7 +19,7 @@ namespace wage {
     class Manager : public core::Service {
 
     public:
-      Manager() : Service("AssetManager"), queue("AssetLoad", 2) {
+      Manager() : Service("AssetManager"), queue("AssetLoad", 1) {
       }
 
       /**

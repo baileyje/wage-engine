@@ -161,6 +161,15 @@ namespace wage {
       }
 
       /**
+       *  Step the game forward a single frame.
+       */
+      inline void step() {
+        std::cout << "Step....\n";
+        if (mode != Mode::paused) return;
+        _step = true;
+      }
+
+      /**
        * Pause the game execution. 
        */
       inline void reset() {
@@ -198,8 +207,9 @@ namespace wage {
           _frame.reset();
           while (mode != Mode::stopped && mode != Mode::stopping) {
             if (mode == Mode::paused) {
-              continue;
-            };
+              if (!_step) continue;
+              unpause();
+            }
             _frame.nextFrame();
             accumulator += _frame.deltaTime();
             while (accumulator >= _frame.fixedTimeStep()) {
@@ -208,6 +218,10 @@ namespace wage {
             }
             update();
             postUpdate();
+            if (_step) {
+              _step = false;
+              pause();
+            }
           }
         });
       }
@@ -245,6 +259,8 @@ namespace wage {
       std::vector<UpdateListener> renderListeners;
 
       std::thread updateThread;
+
+      volatile bool _step = false;
     };
 
   }

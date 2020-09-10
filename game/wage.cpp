@@ -83,9 +83,9 @@ void registerKnownComponents(scene::Scene& scene) {
 }
 
 void setupScene(scene::Scene& scene) {
-  
+
   registerKnownComponents(scene);
-  
+
   setupCoreSystems(scene);
   // auto topLightEnt = entityManager->create();
   // topLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(-90, 0, 0));
@@ -145,6 +145,9 @@ int main(int argc, char* argv[]) {
   core::Core::Instance->onInput([&](const core::Frame& frame) {
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::p)) {
       core::Core::Instance->pause();
+    }
+    if (core::Core::Instance->get<input::Input>()->wasPressed(input::Key::f1)) {
+      core::Core::Instance->step();
     }
     if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::u)) {
       core::Core::Instance->unpause();

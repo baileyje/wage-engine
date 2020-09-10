@@ -6,7 +6,6 @@ namespace wage {
       starting,
       running,
       paused,
-      stepping,
       resetting,
       stopping,
       stopped
