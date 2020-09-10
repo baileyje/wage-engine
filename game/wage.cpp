@@ -127,6 +127,29 @@ void setupScene(scene::Scene& scene) {
   // }
 }
 
+class GameController : public messaging::MessageListener<input::KeyEvent> {
+
+  /**
+   * Message listener triggered by entities being removed from the game.
+   */
+  inline bool on(const input::KeyEvent& event) {
+
+    if (event.key() == input::Key::p && event.type() == input::KeyEventType::press) {
+      core::Core::Instance->pause();
+    }
+    if (event.key() == input::Key::f1 && event.type() == input::KeyEventType::press) {
+      core::Core::Instance->step();
+    }
+    if (event.key() == input::Key::u && event.type() == input::KeyEventType::press) {
+      core::Core::Instance->unpause();
+    }
+    if (event.key() == input::Key::f2 && event.type() == input::KeyEventType::press) {
+      core::Core::Instance->reset();
+    }
+    return false;
+  }
+};
+
 int main(int argc, char* argv[]) {
 
   char buffer[255];
@@ -142,20 +165,8 @@ int main(int argc, char* argv[]) {
   sceneManager->builder(setupScene);
   core::Core::Instance->init({1.0 / 60.0});
 
-  core::Core::Instance->onInput([&](const core::Frame& frame) {
-    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::p)) {
-      core::Core::Instance->pause();
-    }
-    if (core::Core::Instance->get<input::Input>()->wasPressed(input::Key::f1)) {
-      core::Core::Instance->step();
-    }
-    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::u)) {
-      core::Core::Instance->unpause();
-    }
-    if (core::Core::Instance->get<input::Input>()->isPressed(input::Key::f2)) {
-      core::Core::Instance->reset();
-    }
-  });
+  GameController controller;
+  core::Core::Instance->get<messaging::Messaging>()->listen<input::KeyEvent>(&controller);
 
   core::Core::Instance->start();
   return 0;
