@@ -34,9 +34,15 @@ namespace wage {
         core::Core::Instance->onFixedUpdate([&](const core::Frame& frame) {
           fixedUpdate(frame);
         });
+        core::Core::Instance->onPostUpdate([&](const core::Frame& frame) {
+          postUpdate();
+        });
       }
 
-      virtual void fixedUpdate(const core::Frame& frame) {
+      virtual void fixedUpdate(const core::Frame& frame) = 0;
+
+      virtual void postUpdate() {
+        // std::cout << "Total Colls: " << _collisions.size() << "\n";
         _collisions.clear();
         _collisionsById.clear();
       }

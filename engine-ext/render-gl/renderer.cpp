@@ -27,7 +27,7 @@ namespace wage {
       GL_FAIL_CHECK(glClearColor(0.1f, 0.1f, 0.1f, 1.0f));
       GL_FAIL_CHECK(glEnable(GL_BLEND));
       GL_FAIL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-      glfwSwapInterval(1);
+      glfwSwapInterval(0);
 
       const GLubyte* vendor = glGetString(GL_VENDOR);     // Returns the vendor
       const GLubyte* renderer = glGetString(GL_RENDERER); // Returns a hint to the model
@@ -49,18 +49,18 @@ namespace wage {
     }
 
     void GlRenderer::renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) {
-      loadingFrame()->uiQueue().add<GlTextRenderable>(
+      updateFrame()->uiQueue().add<GlTextRenderable>(
           assetManager, position, text, font, color);
     }
 
     void GlRenderer::renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture) {
-      loadingFrame()->uiQueue().add<GlSpriteRenderable>(
+      updateFrame()->uiQueue().add<GlSpriteRenderable>(
           assetManager, position, size, color, texture);
     }
 
     void GlRenderer::renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material) {
       auto meshData = meshManager.load(*mesh);
-      loadingFrame()->meshQueue().add<GlMeshRenderable>(assetManager, &vaoManager, transform, meshData, material);
+      updateFrame()->meshQueue().add<GlMeshRenderable>(assetManager, &vaoManager, transform, meshData, material);
     }
 
     void GlRenderer::endRender() {

@@ -15,6 +15,7 @@
 #include "player/player.h"
 #include "player/cannon.h"
 #include "enemy.h"
+#include "wall.h"
 #include "planet.h"
 #include "dock.h"
 #include "camera.h"
@@ -108,17 +109,19 @@ void setupScene(scene::Scene& scene) {
 
   addPlayer(scene);
 
-  addEnemy(scene, {0, 0, 20}, 5 /*scale*/);
+  // addEnemy(scene, {0, 0, 20}, 5 /*scale*/);
 
-  addPlanet(scene, {100, 0, 1200}, 1000, 0);
+  // addPlanet(scene, {100, 0, 1200}, 1000, 0);
 
   addCamera(scene);
 
   setupHud(scene);
 
-  for (int i = 0; i < 200; i++) {
-    addRandomEnemy(scene);
-  }
+  addWall(scene);
+
+  // for (int i = 0; i < 200; i++) {
+  //   addRandomEnemy(scene);
+  // }
   // for (int i = 0; i < 10; i++) {
   //   addRandomPlanet(scene);
   // }
@@ -136,9 +139,6 @@ class GameController : public messaging::MessageListener<input::KeyEvent> {
 
     if (event.key() == input::Key::p && event.type() == input::KeyEventType::press) {
       core::Core::Instance->pause();
-    }
-    if (event.key() == input::Key::f1 && event.type() == input::KeyEventType::press) {
-      core::Core::Instance->step();
     }
     if (event.key() == input::Key::u && event.type() == input::KeyEventType::press) {
       core::Core::Instance->unpause();

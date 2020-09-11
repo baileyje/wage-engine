@@ -19,25 +19,32 @@
 
 #include "render-gl/material.h"
 
-namespace wage {
-  namespace render {
+namespace wage
+{
+  namespace render
+  {
 
-    class GlMeshRenderable : public Renderable {
+    class GlMeshRenderable : public Renderable
+    {
 
     public:
-      GlMeshRenderable(assets::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, MeshData* meshData, MaterialSpec* material)
+      GlMeshRenderable(assets::Manager *assetManager, VaoManager *vaoManager, math::Transform transform, MeshData *meshData, MaterialSpec *material)
           : _assetManager(assetManager), _vaoManager(vaoManager), transform(transform), meshData(meshData), material(material) {}
 
-      inline VaoManager* vaoManager() {
+      inline VaoManager *vaoManager()
+      {
         return _vaoManager;
       }
 
-      virtual math::Vector position() {
+      virtual math::Vector position()
+      {
         return transform.position();
       }
 
-      virtual math::BoundingBox boundingBox() {
-        if (!meshData->loaded()) {
+      virtual math::BoundingBox boundingBox()
+      {
+        if (!meshData->loaded())
+        {
           return math::BoundingBox(position(), {0, 0, 0});
         }
         math::Vector maxDims = meshData->maxDim();
@@ -49,32 +56,34 @@ namespace wage {
         return math::BoundingBox(position(), scaledMaxHalfDim);
       }
 
-      virtual math::BoundingSphere boundingSphere() {
+      virtual math::BoundingSphere boundingSphere()
+      {
         auto box = boundingBox();
         float radius = sqrt(box.halfDim.x * box.halfDim.x + box.halfDim.y * box.halfDim.y + box.halfDim.z * box.halfDim.z);
         return math::BoundingSphere(box.position, radius);
       }
 
-      void setupMaterial(GlMaterial& glMaterial, RenderContext* context) {
+      void setupMaterial(GlMaterial &glMaterial, RenderContext *context)
+      {
         glMaterial.bind();
         glMaterial.setMat4("model", transform.worldProjection());
         glMaterial.setMat4("view", context->viewProjection());
         glMaterial.setMat4("projection", context->screenProjection());
         glMaterial.setVec3("viewPos", context->cameraPosition());
 
-        glMaterial.setInt("numDirLights", context->dirLights().size());
+        // glMaterial.setInt("numDirLights", context->dirLights().size());
         int idx = 0;
-        for (auto lightEntity : context->dirLights()) {
-          auto light = lightEntity.get<DirectionalLight>(DirectionalLightComponent);
-          std::stringstream base;
-          base << "dirLights[" << idx++ << "]";
-          auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);
-          auto cameraEulers = lightTransform->rotation().eulerAngles();
-          glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
-          glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
-          glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
-          glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
-        }
+        // for (auto lightEntity : context->dirLights()) {
+        //   auto light = lightEntity.get<DirectionalLight>(DirectionalLightComponent);
+        //   std::stringstream base;
+        //   base << "dirLights[" << idx++ << "]";
+        //   auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);
+        //   auto cameraEulers = lightTransform->rotation().eulerAngles();
+        //   glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
+        //   glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
+        //   glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
+        //   glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
+        // }
         // TEMP: Remove when lighting data is clean for render
         glMaterial.setInt("numDirLights", 2);
         glMaterial.setVec3("dirLights[0].direction", directionFromEulers(math::Vector(0, -1, 0)));
@@ -87,58 +96,66 @@ namespace wage {
         glMaterial.setVec3("dirLights[1].diffuse", math::Vector(0.7, 0.7, 0.9));
         glMaterial.setVec3("dirLights[1].specular", math::Vector(0.5f, 0.5f, 0.5f));
 
-        glMaterial.setInt("numPointLights", context->pointLights().size());
-        idx = 0;
-        for (auto lightEntity : context->pointLights()) {
-          auto light = lightEntity.get<PointLight>(PointLightComponent);
-          std::stringstream base;
-          base << "pointLights[" << idx++ << "]";
-          auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);
-          glMaterial.setVec3(base.str() + ".position", lightTransform->position());
-          glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
-          glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
-          glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
-          glMaterial.setFloat(base.str() + ".constant", light->constant());
-          glMaterial.setFloat(base.str() + ".linear", light->linear());
-          glMaterial.setFloat(base.str() + ".quadratic", light->quadratic());
-        }
+        glMaterial.setInt("numPointLights", 0);
+        // glMaterial.setInt("numPointLights", context->pointLights().size());
+        // idx = 0;
+        // for (auto lightEntity : context->pointLights())
+        // {
+        //   auto light = lightEntity.get<PointLight>(PointLightComponent);
+        //   std::stringstream base;
+        //   base << "pointLights[" << idx++ << "]";
+        //   auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);
+        //   glMaterial.setVec3(base.str() + ".position", lightTransform->position());
+        //   glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
+        //   glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
+        //   glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
+        //   glMaterial.setFloat(base.str() + ".constant", light->constant());
+        //   glMaterial.setFloat(base.str() + ".linear", light->linear());
+        //   glMaterial.setFloat(base.str() + ".quadratic", light->quadratic());
+        // }
 
-        glMaterial.setInt("numSpotLights", context->spotlights().size());
-        idx = 0;
-        for (auto lightEntity : context->spotlights()) {
-          auto light = lightEntity.get<Spotlight>(SpotlightComponent);
-          std::stringstream base;
-          base << "spotLights[" << idx++ << "]";
-          auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);
-          glMaterial.setVec3(base.str() + ".position", lightTransform->position());
-          auto cameraEulers = lightTransform->rotation().eulerAngles();
-          glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
-          glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
-          glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
-          glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
-          glMaterial.setFloat(base.str() + ".constant", light->constant());
-          glMaterial.setFloat(base.str() + ".linear", light->linear());
-          glMaterial.setFloat(base.str() + ".quadratic", light->quadratic());
-          glMaterial.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->cutOff())));
-          glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->outerCutOff())));
-        }
-        GlTexture* glTexture = _assetManager->load<GlTexture>(material->texture());
+        glMaterial.setInt("numSpotLights", 0);
+        // glMaterial.setInt("numSpotLights", context->spotlights().size());
+        // idx = 0;
+        // for (auto lightEntity : context->spotlights())
+        // {
+        //   auto light = lightEntity.get<Spotlight>(SpotlightComponent);
+        //   std::stringstream base;
+        //   base << "spotLights[" << idx++ << "]";
+        //   auto lightTransform = lightEntity.get<math::Transform>(TransformComponent);
+        //   glMaterial.setVec3(base.str() + ".position", lightTransform->position());
+        //   auto cameraEulers = lightTransform->rotation().eulerAngles();
+        //   glMaterial.setVec3(base.str() + ".direction", directionFromEulers(cameraEulers));
+        //   glMaterial.setVec3(base.str() + ".ambient", vec3From(light->ambient()));
+        //   glMaterial.setVec3(base.str() + ".diffuse", vec3From(light->diffuse()));
+        //   glMaterial.setVec3(base.str() + ".specular", vec3From(light->specular()));
+        //   glMaterial.setFloat(base.str() + ".constant", light->constant());
+        //   glMaterial.setFloat(base.str() + ".linear", light->linear());
+        //   glMaterial.setFloat(base.str() + ".quadratic", light->quadratic());
+        //   glMaterial.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->cutOff())));
+        //   glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->outerCutOff())));
+        // }
+        GlTexture *glTexture = _assetManager->load<GlTexture>(material->texture());
         glTexture->bind();
         glMaterial.setInt("material.diffuse", 0);
         glMaterial.setFloat("material.shininess", 32.0f);
       }
 
-      virtual void render(RenderContext* context) {
-        if (!meshData->loaded()) {
+      virtual void render(RenderContext *context)
+      {
+        if (!meshData->loaded())
+        {
           return;
         }
         auto vao = vaoManager()->load(meshData);
-        if (vao == nullptr) {
+        if (vao == nullptr)
+        {
           return;
         }
         vao->bind();
         auto program = GlProgram::Default;
-        if (!program->loaded()) {
+        if (!program->loaded())
+        {
           return;
         }
         GlMaterial material(program);
@@ -151,16 +168,16 @@ namespace wage {
       }
 
     private:
-      assets::Manager* _assetManager;
+      assets::Manager *_assetManager;
 
-      VaoManager* _vaoManager;
+      VaoManager *_vaoManager;
 
       math::Transform transform;
 
-      MeshData* meshData;
+      MeshData *meshData;
 
-      MaterialSpec* material;
+      MaterialSpec *material;
     };
 
-  }
-}
+  } // namespace render
+} // namespace wage

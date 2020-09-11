@@ -27,6 +27,9 @@ namespace wage {
         core::Core::Instance->onFixedUpdate([&](const core::Frame& frame) {
           _currentScene.systems().fixedUpdate();
         });
+        core::Core::Instance->onPostUpdate([&](const core::Frame& frame) {
+          _currentScene.entities().postUpdate();
+        });
       }
 
       virtual void reset() override {

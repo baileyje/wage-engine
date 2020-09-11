@@ -34,7 +34,7 @@ namespace wage {
         messaging = core::Core::Instance->get<messaging::Messaging>();
         auto platform = core::Core::Instance->get<platform::Platform>();
         window = platform->window();
-        core::Core::Instance->onInput([&](const core::Frame& frame) {
+        core::Core::Instance->onPostUpdate([&](const core::Frame& frame) {
           clear();
         });
       }

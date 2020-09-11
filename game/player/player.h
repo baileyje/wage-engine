@@ -2,6 +2,7 @@
 
 #include "engine.h"
 #include "cannon.h"
+#include "debug.h"
 
 using namespace wage;
 using namespace wage::math;
@@ -14,7 +15,7 @@ class Player {
 class PlayerPhysicsMovement : public ecs::System {
 
 public:
-  PlayerPhysicsMovement() : System(), lastPos(Vector2()), mouseSpeed(0.01) {
+  PlayerPhysicsMovement() : System(), lastPos(Vector2()), mouseSpeed(1) {
   }
 
   void start(const ecs::SystemContext& context) {
@@ -40,7 +41,7 @@ public:
     }
     body->addTorqueImpulse(torque);
 
-    float force = 100.0;
+    float force = 10000.0;
     auto impulse = Vector3::Zero;
     if (input->isPressed(input::Key::w)) {
       impulse += (bearing * Vector::Forward).normalized() * force;
@@ -97,10 +98,11 @@ public:
     auto player = *scene::Scene::current().entities().with({PlayerComponent, TransformComponent}).begin();
     auto input = core::Core::Instance->get<input::Input>();
     auto mousePos = input->mousePosition();
-    // auto dx = lastPos.x - mousePos.x;
-    // auto dy = lastPos.y - mousePos.y;
+    auto dx = lastPos.x - mousePos.x;
+    auto dy = lastPos.y - mousePos.y;
     auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
-    // auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
+    auto newDir = bearing * Vector3::Up * 1 * dx + bearing * Vector3::Right * 1 * -dy;
+    player.get<math::Transform>(TransformComponent)->rotation({newDir});
 
     // body->addTorqueImpulse(torque);
     float force = 1.0;
@@ -141,9 +143,9 @@ private:
 };
 
 ecs::Entity addPlayer(scene::Scene& scene) {
-  auto player = scene.entities().create();
+  auto player = IDCHECK(scene.entities().create());
   player.assign<math::Transform>(TransformComponent, Vector(0, 5, 0), Vector(5, 5, 5), Vector(-3, 0, 0));
-  player.assign<physics::RigidBody>(RigidBodyComponent, 1);
+  player.assign<physics::RigidBody>(RigidBodyComponent, 100);
   player.assign<render::MeshSpec>(MeshComponent, "player.obj");
   player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
   player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space.png"));

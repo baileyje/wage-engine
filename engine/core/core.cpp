@@ -12,6 +12,11 @@ namespace wage {
       // TODO: What if there is no renderer??
       get<render::Renderer>()->swapFrames();
       memory::Allocator::Temporary()->clear();
+      // Fire any post update listeners.
+      for (auto listener : postUpdateListeners) {
+        listener(frame());
+      }
+      // Last post update step....
       if (mode == Mode::resetting) {
         memory::Allocator::Permanent()->clear();
         for (auto service : services) {

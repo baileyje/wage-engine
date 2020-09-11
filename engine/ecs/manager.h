@@ -25,12 +25,6 @@ namespace wage {
 
       virtual ~EntityManager() {}
 
-      // void start() override {
-      //   core::Core::Instance->onUpdate([&](const core::Frame& frame) {
-      //     update();
-      //   });
-      // }
-
       /*
         1.  Send Add Messages
         2.  Destroy entities
@@ -38,6 +32,24 @@ namespace wage {
         4.  Queue destroys
       */
       void update() {
+
+        // for (auto entity : destroys) {
+        //   printf("Fully destroying\n");
+        //   _registry.destroy(entity.id());
+        // }
+        // destroys.clear();
+        // for (auto entity : destroyRequests) {
+        //   printf("Letting others know of pending destroy\n");
+        //   if (messaging) {
+        //     DestroyEntityMessage message(entity);
+        //     messaging->send(message);
+        //   }
+        //   destroys.push_back(entity);
+        // }
+        // destroyRequests.clear();
+      }
+
+      void postUpdate() {
         auto messaging = core::Core::Instance->get<messaging::Messaging>();
         if (messaging) {
           for (auto entity : adds) {
@@ -46,21 +58,18 @@ namespace wage {
           }
         }
         adds.clear();
-
-        for (auto entity : destroys) {
-          printf("Fully destroying\n");
-          _registry.destroy(entity.id());
-        }
-        destroys.clear();
         for (auto entity : destroyRequests) {
-          printf("Letting others know of pending destroy\n");
+          // printf("Letting others know of pending destroy\n");
           if (messaging) {
             DestroyEntityMessage message(entity);
             messaging->send(message);
           }
-          destroys.push_back(entity);
+          // destroys.push_back(entity);
+          _registry.destroy(entity.id());
         }
         destroyRequests.clear();
+
+        std::vector<Entity> destroyRequests;
       }
 
       /**
@@ -97,8 +106,10 @@ namespace wage {
        * Destroy an entity at the next safe opportunity.
        */
       inline void destroy(ecs::Entity entity) {
-        printf("Destroy requested\n");
-        destroyRequests.push_back(entity);
+        if (entity.valid())
+          destroyRequests.push_back(entity);
+        else
+          core::Logger::info("Attempted to detroy an invalid entity");
       }
 
     private:
@@ -110,6 +121,5 @@ namespace wage {
 
       std::vector<Entity> destroys;
     };
-
   }
 }

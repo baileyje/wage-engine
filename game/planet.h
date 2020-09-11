@@ -2,6 +2,7 @@
 #define PLANET_H
 
 #include "engine.h"
+#include "debug.h"
 
 using namespace wage;
 
@@ -53,7 +54,7 @@ public:
 };
 
 void addPlanet(scene::Scene& scene, math::Vector position, float scale, int texture) {
-  auto entity = scene.entities().create();
+  auto entity = IDCHECK(scene.entities().create());
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(math::Vector(scale, scale, scale));

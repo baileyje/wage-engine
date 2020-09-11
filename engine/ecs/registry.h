@@ -78,6 +78,7 @@ namespace wage {
        *  Destroy the entity at the provided id and free it for recycling.
        */
       inline void destroy(VersionedId<EntityId> entityId) {
+        // std::cout << "Removing from registry: " << entityId << " -- " << std::this_thread::get_id() << "\n";
         for (auto componentType : knownComponents) {
           poolFor(componentType)->destroy(entityId.id());
         }

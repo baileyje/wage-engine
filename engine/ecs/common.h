@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include <iostream>
 
 #include "util/types.h"
 
@@ -70,5 +71,10 @@ namespace wage {
       VersionType _version;
     };
 
+    template <typename IdType, typename VersionType>
+    std::ostream& operator<<(std::ostream& os, const VersionedId<IdType, VersionType>& id) {
+      os << id.id() << ':' << id.version();
+      return os;
+    }
   }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine.h"
+#include "debug.h"
 
 using namespace wage;
 
@@ -43,7 +44,7 @@ private:
 };
 
 void addCamera(scene::Scene& scene) {
-  auto cameraEntity = scene.entities().create();
+  auto cameraEntity = IDCHECK(scene.entities().create());
   auto camTransform = cameraEntity.assign<math::Transform>(TransformComponent);
   camTransform->position({0, 15, -20});
   camTransform->rotation({5, 0, 0});

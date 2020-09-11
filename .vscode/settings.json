@@ -80,6 +80,7 @@
         "list": "cpp",
         "stack": "cpp",
         "memory_resource": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "__memory": "cpp"
     }
 }

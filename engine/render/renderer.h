@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 #include <atomic>
-#include <chrono>
 
 #include "core/service.h"
 #include "platform/window.h"
@@ -21,9 +20,7 @@
 #include "render/renderable.h"
 #include "render/queue.h"
 #include "render/frame.h"
-
-#define MAX_FPS_SAMPLES 100
-typedef std::chrono::high_resolution_clock::time_point TimePoint;
+#include "util/timer.h"
 
 namespace wage {
   namespace render {
@@ -37,7 +34,7 @@ namespace wage {
     class Renderer : public core::Service {
 
     public:
-      Renderer() : Service("Renderer"), _renderFrame(&frames[0]), _readyFrame(&frames[1]), _loadingFrame(&frames[2]) {}
+      Renderer() : Service("Renderer"), _updateFrame(new Frame()) {}
 
       ~Renderer() {}
 
@@ -46,7 +43,6 @@ namespace wage {
         window = platform->window();
         assetManager = core::Core::Instance->get<assets::Manager>();
         core::Core::Instance->onRender([&](const core::Frame& frame) {
-          captureFrameTime();
           render();
         });
       }
@@ -57,13 +53,18 @@ namespace wage {
        * camera and world information.
        */
       void render() {
-        while (stale.exchange(true))
-          ;
+        auto currentFrame = _renderFrame.load(std::memory_order_acquire);
+        if (!currentFrame) {
+          std::cout << "Skipping\n";
+          return;
+        }
         beginRender();
-        renderFrame()->render();
+        currentFrame->render();
         endRender();
-        renderFrame()->clear();
-        _renderFrame = _readyFrame.exchange(_renderFrame);
+        timer.tick();
+        std::cout << "Render time: " << timer.averageTime() << "\n";
+        delete currentFrame;
+        _renderFrame.store(nullptr);
       }
 
       /**
@@ -86,44 +87,25 @@ namespace wage {
        * at the end of every game update look.
        */
       inline void swapFrames() {
-        _loadingFrame = _readyFrame.exchange(_loadingFrame);
-        loadingFrame()->clear();
+        std::cout << "Swapping..."
+                  << "\n";
+        _renderFrame.store(_readyFrame);
         auto manager = &scene::Scene::current().entities();
         auto camera = cameraAndEntity(manager);
         if (std::get<1>(camera)) {
-          // if (!std::get<0>(camera).valid()) {
-          //   core::Logger::error("No Camera");
-          //   return;
-          // }
-          std::vector<ecs::Entity> dirLights;
-          // for (auto ent : manager->with<DirectionalLight>()) {
-          //   dirLights.push_back(ent);
-          // }
-          std::vector<ecs::Entity> pointLights;
-          // for (auto ent : manager->with<PointLight>()) {
-          //   pointLights.push_back(ent);
-          // }
-          std::vector<ecs::Entity> spotlights;
-          // for (auto ent : manager->with<Spotlight>()) {
-          //   spotlights.push_back(ent);
-          // }
-
-          _readyFrame.load()->renderContext(new RenderContext(std::get<0>(camera), std::get<1>(camera), math::Vector2(window->width(), window->height()), dirLights, pointLights, spotlights));
+          _updateFrame->prepare(new RenderContext(std::get<0>(camera), std::get<1>(camera), math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {}));
         }
-        stale.store(false);
+        _readyFrame.store(_updateFrame);
+        _updateFrame = new Frame();
       }
 
       inline double averageFrameTime() {
-        return frameAverage;
+        return timer.averageTime();
       }
 
     protected:
-      Frame* loadingFrame() {
-        return _loadingFrame.load();
-      }
-
-      Frame* renderFrame() {
-        return _renderFrame.load();
+      inline Frame* updateFrame() {
+        return _updateFrame;
       }
 
       std::tuple<ecs::Entity, Camera*> cameraAndEntity(ecs::EntityManager* manager) {
@@ -140,34 +122,17 @@ namespace wage {
 
       virtual void endRender() = 0;
 
-      void captureFrameTime() {
-        auto newTime = std::chrono::high_resolution_clock::now();
-        double elapsed = (std::chrono::duration_cast<std::chrono::milliseconds>(newTime - lastTime)).count();
-        lastTime = newTime;
-        frameSum -= frameTimes[frameIndex];
-        frameSum += elapsed;
-        frameTimes[frameIndex] = elapsed;
-        frameIndex = (frameIndex + 1) % MAX_FPS_SAMPLES;
-        frameAverage = frameSum / MAX_FPS_SAMPLES;
-      }
-
       platform::Window* window;
 
       assets::Manager* assetManager;
 
-      // Triple buffer the frames.
-      Frame frames[3];
       std::atomic<Frame*> _renderFrame;
       std::atomic<Frame*> _readyFrame;
-      std::atomic<Frame*> _loadingFrame;
-      std::atomic<bool> stale;
+      Frame* _updateFrame;
 
       // For FPS calculation
-      TimePoint lastTime;
-      int frameIndex = 0;
-      double frameSum = 0;
-      double frameTimes[MAX_FPS_SAMPLES];
-      double frameAverage;
+      util::Timer timer;
     };
-  } // namespace render
+
+    } // namespace render
 } // namespace wage

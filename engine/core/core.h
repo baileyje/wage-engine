@@ -12,6 +12,7 @@
 #include "core/service_map.h"
 #include "core/frame.h"
 #include "core/logger.h"
+#include "util/timer.h"
 
 namespace wage {
   namespace core {
@@ -114,13 +115,6 @@ namespace wage {
       }
 
       /**
-       * Add an update listener to be executed at the game logic phase of the game loop.
-       */
-      inline void onUpdate(UpdateListener listener) {
-        updateListeners.push_back(listener);
-      }
-
-      /**
        * Add an update listener to be executed at the fixed input (physics) phase of the game loop.
        */
       inline void onFixedUpdate(UpdateListener listener) {
@@ -128,10 +122,24 @@ namespace wage {
       }
 
       /**
+       * Add an update listener to be executed at the game logic phase of the game loop.
+       */
+      inline void onUpdate(UpdateListener listener) {
+        updateListeners.push_back(listener);
+      }
+
+      /**
        * Add an update listener to be executed at the render phase of the game loop.
        */
       inline void onRender(UpdateListener listener) {
         renderListeners.push_back(listener);
+      }
+
+      /**
+       * Add an update listener to be executed at the post update phase of the game loop.
+       */
+      inline void onPostUpdate(UpdateListener listener) {
+        postUpdateListeners.push_back(listener);
       }
 
       /**
@@ -158,15 +166,6 @@ namespace wage {
           Logger::info("Unpausing ", service->name().c_str());
           service->unpause();
         }
-      }
-
-      /**
-       *  Step the game forward a single frame.
-       */
-      inline void step() {
-        std::cout << "Step....\n";
-        if (mode != Mode::paused) return;
-        _step = true;
       }
 
       /**
@@ -207,8 +206,7 @@ namespace wage {
           _frame.reset();
           while (mode != Mode::stopped && mode != Mode::stopping) {
             if (mode == Mode::paused) {
-              if (!_step) continue;
-              unpause();
+              continue;
             }
             _frame.nextFrame();
             accumulator += _frame.deltaTime();
@@ -218,10 +216,8 @@ namespace wage {
             }
             update();
             postUpdate();
-            if (_step) {
-              _step = false;
-              pause();
-            }
+            timer.tick();
+            // std::cout << "Update time: " << timer.averageTime() << "\n";
           }
         });
       }
@@ -258,9 +254,11 @@ namespace wage {
 
       std::vector<UpdateListener> renderListeners;
 
+      std::vector<UpdateListener> postUpdateListeners;
+
       std::thread updateThread;
 
-      volatile bool _step = false;
+      util::Timer timer;
     };
 
   }

@@ -3,6 +3,7 @@
 #include "engine.h"
 
 #include "player.h"
+#include "debug.h"
 
 using namespace wage;
 using namespace wage::math;
@@ -80,7 +81,7 @@ public:
     auto delay = 1 / cannon->rate;
     if (context.time() > cannon->lastFire + delay) {
       auto& entities = scene::Scene::current().entities();
-      auto ball = entities.create();
+      auto ball = IDCHECK(entities.create());
       auto entityTransform = entity.get<math::Transform>(TransformComponent);
       auto bearing = entity.get<math::Transform>(TransformComponent)->rotation();
       auto ballPosition = entityTransform->position() + (bearing * Vector::Forward).normalized() * 4;

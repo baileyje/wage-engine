@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine.h"
+#include "debug.h"
 
 using namespace wage;
 
@@ -49,7 +50,7 @@ public:
           continue;
         }
         auto dir = targetPosition - enemyPosition;
-        auto impulse = dir.normalized() * 200.0;
+        auto impulse = dir.normalized() * 1000.0;
         if (running) {
           impulse *= -1;
         }
@@ -88,13 +89,13 @@ private:
 };
 
 void addEnemy(scene::Scene& scene, Vector position, float scale) {
-  auto entity = scene.entities().create();
+  auto entity = IDCHECK(scene.entities().create());
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(Vector(scale, scale, scale));
   entity.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Cube);
   entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
-  entity.assign<physics::RigidBody>(RigidBodyComponent, 5);
+  entity.assign<physics::RigidBody>(RigidBodyComponent, 5, physics::RigidBodyType::dynamic);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
   entity.assign<Enemy>(EnemyComponent);
 }
