@@ -6,11 +6,11 @@
 #include "memory/input_stream.h"
 #include "core/core.h"
 #include "core/service.h"
-#include "async/dispatch_queue.h"
-#include "assets/asset.h"
+#include "asset/asset.h"
+#include "job/service.h"
 
 namespace wage {
-  namespace assets {
+  namespace asset {
 
     /**
      * Manages the loading and unloading of assets for the engine. It is upto the implementations to decide how the 
@@ -19,7 +19,7 @@ namespace wage {
     class Manager : public core::Service {
 
     public:
-      Manager() : Service("AssetManager"), queue("AssetLoad", 1) {
+      Manager() : Service("AssetManager") {
       }
 
       /**
@@ -61,7 +61,8 @@ namespace wage {
       template <typename A = Asset, typename AS = AssetSpec>
       inline A* performLoad(AS spec) {
         auto asset = memory::Allocator::Assets()->create<A>(spec);
-        queue.dispatch([this, asset] {
+        auto jobManager = core::Core::Instance->get<job::Manager>();
+        jobManager->dispatch([this, asset] {
           auto assetStream = this->assetStream(asset);
           if (asset->onLoad(assetStream)) {
             delete assetStream;
@@ -76,13 +77,11 @@ namespace wage {
         return spec.type() + "-" + spec.key();
       }
 
-      async::DispatchQueue queue;
-
       std::vector<Asset*> loaded;
 
       std::mutex mutex;
 
       std::unordered_map<std::string, Asset*> cache;
     };
-  } // namespace assets
-} // namespace wage
+  }
+}

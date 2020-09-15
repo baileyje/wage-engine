@@ -52,7 +52,6 @@ public:
         // std::cout << "Cannon Ball Collisions: " << collisions.size() << " \n";
         for (auto collision : collisions) {
           if (collision.otherEntity().id() == player.id()) {
-            std::cout << "Skipping Player\n";
             continue;
           }
           entities.destroy(collision.otherEntity());

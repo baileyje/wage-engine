@@ -8,7 +8,7 @@
 #include FT_FREETYPE_H
 
 #include "math/vector.h"
-#include "assets/manager.h"
+#include "asset/manager.h"
 #include "memory/buffer.h"
 
 #include "render-gl/util.h"
@@ -64,7 +64,7 @@ namespace wage {
       bool pushed;
     };
 
-    class GlFont : public assets::Asset {
+    class GlFont : public asset::Asset {
 
     public:
       GlFont(FontSpec font) : Asset(font), size(font.size()) {}

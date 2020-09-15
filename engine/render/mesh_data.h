@@ -7,7 +7,7 @@
 #include "tiny_obj_loader.h"
 
 #include "math/vector.h"
-#include "assets/asset.h"
+#include "asset/asset.h"
 #include "render/components/mesh.h"
 #include "memory/input_stream.h"
 #include "memory/buffer_stream.h"
@@ -22,13 +22,13 @@ namespace wage {
     /**
      * Mesh data storage container.
      */
-    class MeshData : public assets::Asset {
+    class MeshData : public asset::Asset {
 
     public:
       /**
        * Create a mesh data object with a mesh spec.
        */
-      MeshData(MeshSpec mesh) : assets::Asset(mesh) {}
+      MeshData(MeshSpec mesh) : asset::Asset(mesh) {}
 
       /**
        * Create a mesh data object with the pre-produced mesh data.

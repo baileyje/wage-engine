@@ -279,6 +279,9 @@ namespace wage {
       }
     };
 
+    std::ostream& operator<<(std::ostream& os, Vector3 vec);
+    std::ostream& operator<<(std::ostream& os, Vector2 vec);
+
     typedef Vector3 Vector;
 
   }

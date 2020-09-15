@@ -1,6 +1,6 @@
 #pragma once
 
-#include "assets/asset.h"
+#include "asset/asset.h"
 #include "audio/clip_spec.h"
 #include "audio-al/data.h"
 #include "audio-al/wav.h"
@@ -8,7 +8,7 @@
 namespace wage {
   namespace audio {
 
-    class Clip : public assets::Asset {
+    class Clip : public asset::Asset {
 
     public:
       Clip(ClipSpec spec) : Asset(spec), _volume(spec.volume()), _pitch(spec.pitch()), _loop(spec.loop()) {

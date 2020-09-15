@@ -25,8 +25,9 @@
 using namespace wage;
 
 void setupServices(core::Core* core, std::string path) {
+  core->create<job::Manager>();
   auto fileSystem = core->create<fs::FileSystem, fs::Local>(path);
-  core->create<assets::Manager, assets::FsManager>(fileSystem);
+  core->create<asset::Manager, asset::FsManager>(fileSystem);
   core->create<messaging::Messaging>();
   core->create<platform::Platform, platform::GlfwPlatform>();
   core->create<input::Input, input::GlfwInput>();
@@ -46,11 +47,11 @@ void setupCoreSystems(scene::Scene& scene) {
   scene.systems().create<CannonControl>();
   scene.systems().create<PlanetLauncher>();
   scene.systems().create<DumbMusicSystem>();
+  scene.systems().create<WallSystem>();
 }
 
 void registerKnownComponents(scene::Scene& scene) {
-  // TODO: Move engine provided components to the some engine bootstap function.
-
+  // TODO: Make registering components not the effing worst.
   scene.entities().registerComponent(TransformComponent, sizeof(math::Transform));
 
   // Camera
@@ -81,6 +82,7 @@ void registerKnownComponents(scene::Scene& scene) {
   scene.entities().registerComponent(DockComponent, sizeof(Dock));
   scene.entities().registerComponent(CannonComponent, sizeof(Cannon));
   scene.entities().registerComponent(CannonBallComponent, sizeof(CannonBall));
+  scene.entities().registerComponent(WallComponent, sizeof(Wall));
 }
 
 void setupScene(scene::Scene& scene) {

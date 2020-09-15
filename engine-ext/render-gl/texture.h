@@ -1,14 +1,14 @@
 #pragma once
 
 #include "render/components/texture.h"
-#include "assets/manager.h"
+#include "asset/manager.h"
 
 #include "render-gl/util.h"
 
 namespace wage {
   namespace render {
 
-    class GlTexture : public assets::Asset {
+    class GlTexture : public asset::Asset {
 
     public:
       GlTexture(TextureSpec texture) : Asset(texture), pushed(false), _texture(texture) {
@@ -20,7 +20,7 @@ namespace wage {
         return _texture;
       }
 
-      void load(assets::Manager* assetManager);
+      void load(asset::Manager* assetManager);
 
       bool onLoad(memory::InputStream* stream);
 

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "assets/manager.h"
+#include "asset/manager.h"
 #include "render/renderable.h"
 #include "render/context.h"
 
@@ -15,7 +15,7 @@ namespace wage {
     class GlTextRenderable : public Renderable {
 
     public:
-      GlTextRenderable(assets::Manager* assetManager, math::Vector2 position, std::string text, FontSpec font, component::Color color)
+      GlTextRenderable(asset::Manager* assetManager, math::Vector2 position, std::string text, FontSpec font, component::Color color)
           : _assetManager(assetManager), _position(position), _text(text), _font(font), _color(color) {}
 
       virtual math::Vector position() {
@@ -97,7 +97,7 @@ namespace wage {
       }
 
     private:
-      assets::Manager* _assetManager;
+      asset::Manager* _assetManager;
 
       math::Vector2 _position;
 

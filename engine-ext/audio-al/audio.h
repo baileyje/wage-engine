@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "core/core.h"
-#include "assets/manager.h"
+#include "asset/manager.h"
 #include "audio/audio.h"
 #include "audio-al/clip.h"
 #include "audio-al/util.h"
@@ -20,7 +20,7 @@ namespace wage {
 
     public:
       void start() {
-        assetManager = core::Core::Instance->get<assets::Manager>();
+        assetManager = core::Core::Instance->get<asset::Manager>();
         initAl();
 
         core::Core::Instance->onUpdate([&](const core::Frame& frame) {
@@ -139,7 +139,7 @@ namespace wage {
         return math::Transform();
       }
 
-      assets::Manager* assetManager;
+      asset::Manager* assetManager;
       std::vector<PlayingAudio*> loading;
       std::vector<PlayingAudio*> playing;
     };

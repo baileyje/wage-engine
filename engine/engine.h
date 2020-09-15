@@ -1,7 +1,4 @@
-#ifndef ENGINE_H
-#define ENGINE_H
-
-#include <vector>
+#pragma once
 
 #include "math/vector.h"
 #include "math/matrix.h"
@@ -10,46 +7,26 @@
 
 #include "core/core.h"
 
-#include "ecs/registry.h"
-#include "ecs/system.h"
-#include "ecs/system_manager.h"
+#include "ecs/service.h"
 
-#include "platform/platform.h"
-#include "platform/window.h"
+#include "platform/service.h"
 
-#include "input/input.h"
-#include "input/key_event.h"
-#include "input/key.h"
-#include "input/key_modifier.h"
-#include "input/mouse_button_event.h"
-#include "input/mouse_move_event.h"
-#include "input/mouse_scroll_event.h"
+#include "job/service.h"
 
-#include "fs/file_system.h"
-#include "fs/local.h"
+#include "input/service.h"
 
-#include "assets/fs_manager.h"
+#include "fs/service.h"
 
-#include "physics/components/rigid_body.h"
-#include "physics/components/collider.h"
+#include "asset/service.h"
 
-#include "render/renderer.h"
-#include "render/mesh_renderer.h"
-#include "render/components/mesh.h"
-#include "render/components/material.h"
+#include "physics/service.h"
 
-#include "render/components/camera/perspective_camera.h"
-#include "render/components/lighting/directional_light.h"
-#include "render/components/lighting/point_light.h"
-#include "render/components/lighting/spotlight.h"
+#include "render/service.h"
 
-#include "ui/ui.h"
-#include "ui/system.h"
+#include "ui/service.h"
 
-#include "audio/audio.h"
+#include "audio/service.h"
 
 #include "util/random.h"
 
 #include "scene/manager.h"
-
-#endif //ENGINE_H

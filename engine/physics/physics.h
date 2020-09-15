@@ -9,6 +9,8 @@
 #include "messaging/messaging.h"
 #include "physics/collision.h"
 #include "physics/ray_hit.h"
+#include "physics/components/rigid_body.h"
+#include "physics/components/collider.h"
 
 namespace wage {
   namespace physics {

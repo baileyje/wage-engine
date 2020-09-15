@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "assets/asset_spec.h"
+#include "asset/spec.h"
 
 #define MeshComponent 30
 
@@ -12,23 +12,23 @@ namespace wage {
     /**
      * Specification for a mesh to be rendered that includes an asset key use to load the mesh data.
      */
-    class MeshSpec : public assets::AssetSpec {
+    class MeshSpec : public asset::AssetSpec {
 
     public:
       /**
        * Primitive cube mesh key.
        */
-      static assets::AssetSpec::Key Cube;
+      static asset::AssetSpec::Key Cube;
 
       /**
        * Primitive sphere mesh key.
        */
-      static assets::AssetSpec::Key Sphere;
+      static asset::AssetSpec::Key Sphere;
 
       /**
        * Primitive quad mesh key.
        */
-      static assets::AssetSpec::Key Quad;
+      static asset::AssetSpec::Key Quad;
 
       /**
        * Default mesh spec. Defaults to Cube.
@@ -38,7 +38,7 @@ namespace wage {
       /**
        * Create a mesh spec with an asset key pointing to the mesh object data.
        */
-      MeshSpec(std::string key) : assets::AssetSpec("mesh", key) {}
+      MeshSpec(std::string key) : asset::AssetSpec("mesh", key) {}
 
       virtual ~MeshSpec() {
       }

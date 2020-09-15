@@ -6,7 +6,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/ext.hpp"
 
-#include "assets/manager.h"
+#include "asset/manager.h"
 #include "math/matrix.h"
 #include "memory/allocator.h"
 #include "render/renderable.h"
@@ -19,32 +19,25 @@
 
 #include "render-gl/material.h"
 
-namespace wage
-{
-  namespace render
-  {
+namespace wage {
+  namespace render {
 
-    class GlMeshRenderable : public Renderable
-    {
+    class GlMeshRenderable : public Renderable {
 
     public:
-      GlMeshRenderable(assets::Manager *assetManager, VaoManager *vaoManager, math::Transform transform, MeshData *meshData, MaterialSpec *material)
+      GlMeshRenderable(asset::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, MeshData* meshData, MaterialSpec* material)
           : _assetManager(assetManager), _vaoManager(vaoManager), transform(transform), meshData(meshData), material(material) {}
 
-      inline VaoManager *vaoManager()
-      {
+      inline VaoManager* vaoManager() {
         return _vaoManager;
       }
 
-      virtual math::Vector position()
-      {
+      virtual math::Vector position() {
         return transform.position();
       }
 
-      virtual math::BoundingBox boundingBox()
-      {
-        if (!meshData->loaded())
-        {
+      virtual math::BoundingBox boundingBox() {
+        if (!meshData->loaded()) {
           return math::BoundingBox(position(), {0, 0, 0});
         }
         math::Vector maxDims = meshData->maxDim();
@@ -56,15 +49,13 @@ namespace wage
         return math::BoundingBox(position(), scaledMaxHalfDim);
       }
 
-      virtual math::BoundingSphere boundingSphere()
-      {
+      virtual math::BoundingSphere boundingSphere() {
         auto box = boundingBox();
         float radius = sqrt(box.halfDim.x * box.halfDim.x + box.halfDim.y * box.halfDim.y + box.halfDim.z * box.halfDim.z);
         return math::BoundingSphere(box.position, radius);
       }
 
-      void setupMaterial(GlMaterial &glMaterial, RenderContext *context)
-      {
+      void setupMaterial(GlMaterial& glMaterial, RenderContext* context) {
         glMaterial.bind();
         glMaterial.setMat4("model", transform.worldProjection());
         glMaterial.setMat4("view", context->viewProjection());
@@ -135,27 +126,23 @@ namespace wage
         //   glMaterial.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->cutOff())));
         //   glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->outerCutOff())));
         // }
-        GlTexture *glTexture = _assetManager->load<GlTexture>(material->texture());
+        GlTexture* glTexture = _assetManager->load<GlTexture>(material->texture());
         glTexture->bind();
         glMaterial.setInt("material.diffuse", 0);
         glMaterial.setFloat("material.shininess", 32.0f);
       }
 
-      virtual void render(RenderContext *context)
-      {
-        if (!meshData->loaded())
-        {
+      virtual void render(RenderContext* context) {
+        if (!meshData->loaded()) {
           return;
         }
         auto vao = vaoManager()->load(meshData);
-        if (vao == nullptr)
-        {
+        if (vao == nullptr) {
           return;
         }
         vao->bind();
         auto program = GlProgram::Default;
-        if (!program->loaded())
-        {
+        if (!program->loaded()) {
           return;
         }
         GlMaterial material(program);
@@ -168,15 +155,15 @@ namespace wage
       }
 
     private:
-      assets::Manager *_assetManager;
+      asset::Manager* _assetManager;
 
-      VaoManager *_vaoManager;
+      VaoManager* _vaoManager;
 
       math::Transform transform;
 
-      MeshData *meshData;
+      MeshData* meshData;
 
-      MaterialSpec *material;
+      MaterialSpec* material;
     };
 
   } // namespace render

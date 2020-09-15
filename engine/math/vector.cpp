@@ -1,5 +1,6 @@
 #include "math/vector.h"
 #include <limits>
+#include <iostream>
 
 namespace wage {
   namespace math {
@@ -35,5 +36,14 @@ namespace wage {
       return glm::cross(left.glm(), right.glm());
     }
 
+    std::ostream& operator<<(std::ostream& os, Vector3 vec) {
+      os << "vec3(" << vec.x << ':' << vec.y << ':' << vec.z << ")";
+      return os;
+    }
+
+    std::ostream& operator<<(std::ostream& os, Vector2 vec) {
+      os << "vec2(" << vec.x << ':' << vec.y << ")";
+      return os;
+    }
   }
 }

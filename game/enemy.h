@@ -88,7 +88,7 @@ private:
   double launchThreshold = 0.001;
 };
 
-void addEnemy(scene::Scene& scene, Vector position, float scale) {
+ecs::Entity addEnemy(scene::Scene& scene, Vector position, float scale) {
   auto entity = IDCHECK(scene.entities().create());
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
@@ -98,6 +98,7 @@ void addEnemy(scene::Scene& scene, Vector position, float scale) {
   entity.assign<physics::RigidBody>(RigidBodyComponent, 5, physics::RigidBodyType::dynamic);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
   entity.assign<Enemy>(EnemyComponent);
+  return entity;
 }
 
 void addRandomEnemy(scene::Scene& scene) {

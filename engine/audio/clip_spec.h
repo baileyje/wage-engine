@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "assets/asset_spec.h"
+#include "asset/spec.h"
 
 namespace wage {
   namespace audio {
@@ -10,7 +10,7 @@ namespace wage {
     /**
      * Simple reference to and Audio clip.
      */
-    class ClipSpec : public assets::AssetSpec {
+    class ClipSpec : public asset::AssetSpec {
 
     public:
       /**

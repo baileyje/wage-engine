@@ -26,7 +26,7 @@ namespace wage {
         GL_FAIL_CHECK(glDeleteProgram(_id));
       }
 
-      void load(assets::Manager* assetManager) {
+      void load(asset::Manager* assetManager) {
         vertexShader = assetManager->load<GlShader>(vertexShaderSpec);
         fragmentShader = assetManager->load<GlShader>(fragmentShaderSpec);
         _id = glCreateProgram();

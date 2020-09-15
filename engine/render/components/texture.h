@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "assets/asset_spec.h"
+#include "asset/spec.h"
 
 namespace wage {
   namespace render {
@@ -10,7 +10,7 @@ namespace wage {
     /**
      * Specification for a texture with basically no options other than providing an asset key to load.
      */
-    class TextureSpec : public assets::AssetSpec {
+    class TextureSpec : public asset::AssetSpec {
 
     public:
       /**

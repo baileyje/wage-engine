@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 #include "memory/allocator.h"
-#include "assets/manager.h"
+#include "asset/manager.h"
 
 #include "render/components/mesh.h"
 #include "render/mesh_data.h"
@@ -33,7 +33,7 @@ namespace wage {
       /**
        * Set the asset manager to use for loading mesh data.
        */
-      inline void assetManager(assets::Manager* assetManager) {
+      inline void assetManager(asset::Manager* assetManager) {
         _assetManager = assetManager;
       }
 
@@ -43,7 +43,7 @@ namespace wage {
       void generatePrimitives();
 
     private:
-      assets::Manager* _assetManager;
+      asset::Manager* _assetManager;
 
       std::unordered_map<std::string, MeshData*> primitives;
     };

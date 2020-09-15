@@ -50,7 +50,7 @@ namespace wage {
       /**
        * Just slam data into a newly allocated item. Maybe this isn't great...
        */
-      template <typename Component, typename... Args>
+      template <typename Component>
       inline Component* set(ComponentType componentType, Component component) {
         auto storage = allocateComponent(componentType);
         memcpy(storage, &component, sizeof(Component));

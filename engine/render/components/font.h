@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "assets/asset_spec.h"
+#include "asset/spec.h"
 
 namespace wage {
   namespace render {
@@ -10,7 +10,7 @@ namespace wage {
     /**
      * Specification for a font which includes a font asset key and a size.
      */
-    class FontSpec : public assets::AssetSpec {
+    class FontSpec : public asset::AssetSpec {
 
     public:
       /**

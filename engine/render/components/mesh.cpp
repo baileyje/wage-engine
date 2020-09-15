@@ -8,8 +8,8 @@
 namespace wage {
   namespace render {
 
-    assets::AssetSpec::Key MeshSpec::Cube = "CubeMesh";
-    assets::AssetSpec::Key MeshSpec::Sphere = "SphereMesh";
-    assets::AssetSpec::Key MeshSpec::Quad = "QuadMesh";
+    asset::AssetSpec::Key MeshSpec::Cube = "CubeMesh";
+    asset::AssetSpec::Key MeshSpec::Sphere = "SphereMesh";
+    asset::AssetSpec::Key MeshSpec::Quad = "QuadMesh";
   }
 }

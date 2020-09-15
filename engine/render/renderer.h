@@ -5,7 +5,7 @@
 
 #include "core/service.h"
 #include "platform/window.h"
-#include "assets/manager.h"
+#include "asset/manager.h"
 #include "scene/scene.h"
 #include "platform/platform.h"
 
@@ -41,7 +41,7 @@ namespace wage {
       void start() {
         auto platform = core::Core::Instance->get<platform::Platform>();
         window = platform->window();
-        assetManager = core::Core::Instance->get<assets::Manager>();
+        assetManager = core::Core::Instance->get<asset::Manager>();
         core::Core::Instance->onRender([&](const core::Frame& frame) {
           render();
         });
@@ -55,14 +55,12 @@ namespace wage {
       void render() {
         auto currentFrame = _renderFrame.load(std::memory_order_acquire);
         if (!currentFrame) {
-          std::cout << "Skipping\n";
           return;
         }
         beginRender();
         currentFrame->render();
         endRender();
         timer.tick();
-        std::cout << "Render time: " << timer.averageTime() << "\n";
         delete currentFrame;
         _renderFrame.store(nullptr);
       }
@@ -87,8 +85,7 @@ namespace wage {
        * at the end of every game update look.
        */
       inline void swapFrames() {
-        std::cout << "Swapping..."
-                  << "\n";
+
         _renderFrame.store(_readyFrame);
         auto manager = &scene::Scene::current().entities();
         auto camera = cameraAndEntity(manager);
@@ -124,7 +121,7 @@ namespace wage {
 
       platform::Window* window;
 
-      assets::Manager* assetManager;
+      asset::Manager* assetManager;
 
       std::atomic<Frame*> _renderFrame;
       std::atomic<Frame*> _readyFrame;
@@ -134,5 +131,5 @@ namespace wage {
       util::Timer timer;
     };
 
-    } // namespace render
+  } // namespace render
 } // namespace wage

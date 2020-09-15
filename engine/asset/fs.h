@@ -3,11 +3,11 @@
 #include <string>
 
 #include "fs/file_system.h"
-#include "assets/asset.h"
-#include "assets/manager.h"
+#include "asset/asset.h"
+#include "asset/manager.h"
 
 namespace wage {
-  namespace assets {
+  namespace asset {
 
     /**
      * Asset manager which uses the filesystem to load indavidual files per asset.

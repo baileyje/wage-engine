@@ -5,7 +5,7 @@
 #include "memory/allocator.h"
 #include "render/components/mesh.h"
 #include "render/mesh_manager.h"
-#include "assets/manager.h"
+#include "asset/manager.h"
 
 #include "render-gl/vertex_array.h"
 #include "render-gl/index_buffer.h"
@@ -23,7 +23,7 @@ namespace wage {
         }
         auto vao = cache[meshData->spec().key()];
         // Only make a single cache item
-        if (vao == nullptr) { 
+        if (vao == nullptr) {
           vao = memory::Allocator::Assets()->create<VertexArray>();
           cache[meshData->spec().key()] = vao;
           vao->bind();

@@ -4,7 +4,7 @@
 
 using namespace wage;
 
-#define DockComponent 2002
+#define DockComponent 2003
 
 void addRandomDock(scene::Scene* const scene);
 

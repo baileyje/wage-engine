@@ -3,22 +3,22 @@
 #include <string>
 #include <glad/glad.h>
 
-#include "assets/manager.h"
+#include "asset/manager.h"
 
 #include "render-gl/util.h"
 
 namespace wage {
   namespace render {
 
-    class GlShaderSpec : public assets::AssetSpec {
+    class GlShaderSpec : public asset::AssetSpec {
     public:
-      GlShaderSpec(std::string key, GLenum shaderType) : assets::AssetSpec({"shader", key}), shaderType(shaderType) {
+      GlShaderSpec(std::string key, GLenum shaderType) : asset::AssetSpec({"shader", key}), shaderType(shaderType) {
       }
 
       GLenum shaderType;
     };
 
-    class GlShader : public assets::Asset {
+    class GlShader : public asset::Asset {
 
     public:
       GlShader(GlShaderSpec spec) : Asset(spec), shaderType(spec.shaderType) {

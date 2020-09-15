@@ -2,11 +2,11 @@
 
 #include <string>
 
-#include "assets/asset_spec.h"
+#include "asset/spec.h"
 #include "memory/input_stream.h"
 
 namespace wage {
-  namespace assets {
+  namespace asset {
 
     /**
      * A data backed engine asset like a texture or mesh. Assets have a specific load process

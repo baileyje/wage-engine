@@ -3,7 +3,7 @@
 #include <string>
 
 namespace wage {
-  namespace assets {
+  namespace asset {
 
     /**
      * A specificaton class to help identify assets in the system. These are not actual assets,
