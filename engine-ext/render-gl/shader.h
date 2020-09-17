@@ -36,7 +36,7 @@ namespace wage {
         return _compiled;
       }
 
-      bool onLoad(memory::InputStream* stream) {
+      bool onLoad(memory::InputStream* stream, memory::Allocator* allocator) {
         shaderLength = stream->size();
         shaderText = (char*)memory::Allocator::Permanent()->allocate(shaderLength);
         stream->read((memory::Byte*)shaderText, shaderLength);

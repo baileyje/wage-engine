@@ -12,7 +12,7 @@ namespace wage {
       }
     }
 
-    bool GlTexture::onLoad(memory::InputStream* stream) {
+    bool GlTexture::onLoad(memory::InputStream* stream, memory::Allocator* allocator) {
       auto bufferSize = stream->size();
       auto buffer = (memory::Byte*)malloc(bufferSize);
       stream->read(buffer, bufferSize);

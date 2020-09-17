@@ -77,7 +77,7 @@ namespace wage {
         return nullptr;
       }
 
-      bool onLoad(memory::InputStream* stream) {
+      bool onLoad(memory::InputStream* stream, memory::Allocator* allocator) {
         FT_Library freeType;
         if (FT_Init_FreeType(&freeType))
           std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;

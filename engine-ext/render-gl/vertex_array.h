@@ -1,29 +1,34 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <vector>
 
 #include "render-gl/vertex_buffer.h"
 #include "render-gl/vertex_buffer_layout.h"
 
-namespace wage { namespace render {
+namespace wage {
+  namespace render {
 
-  class VertexArray {
+    class VertexArray {
 
-  public:
-    VertexArray();
+    public:
+      VertexArray();
 
-    ~VertexArray();
+      ~VertexArray();
 
-    void addBuffer(VertexBuffer* buffer);
+      void addBuffer(VertexBuffer* buffer);
 
-    void bind() const;
+      void bind() const;
 
-    void unbind() const;
+      void unbind() const;
 
-  private:
-    unsigned int id;
+    private:
+      unsigned int id;
 
-    unsigned int index;
-  };
+      unsigned int index;
 
-} }
+      std::vector<VertexBuffer*> buffers;
+    };
+
+  }
+}

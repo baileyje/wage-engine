@@ -6,6 +6,7 @@
 
 #include "render-gl/texture.h"
 #include "render-gl/vao_manager.h"
+#include "render-gl/program.h"
 
 namespace wage {
   namespace render {
@@ -14,6 +15,14 @@ namespace wage {
 
     public:
       void start();
+
+      void reset() {
+        Renderer::reset();
+        vaoManager.reset();
+        GlProgram::Default->load(assetManager);
+        GlProgram::Font->load(assetManager);
+        GlProgram::Sprite->load(assetManager);
+      }
 
       void initializeRenderer();
 

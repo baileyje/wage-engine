@@ -226,7 +226,7 @@ namespace wage {
 
       void startRenderLoop() {
         while (mode != Mode::stopped && mode != Mode::stopping) {
-          if (mode != Mode::paused) {
+          if (mode == Mode::running) {
             render();
           }
           processInput();

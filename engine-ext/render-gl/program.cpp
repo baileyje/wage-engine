@@ -5,10 +5,10 @@
 namespace wage {
   namespace render {
 
-    GlProgram* GlProgram::Default = memory::Allocator::Assets()->create<GlProgram>("default.vs", "default.fs");
+    GlProgram* GlProgram::Default = new GlProgram("default.vs", "default.fs");
 
-    GlProgram* GlProgram::Font = memory::Allocator::Assets()->create<GlProgram>("font.vs", "font.fs");
+    GlProgram* GlProgram::Font = new GlProgram("font.vs", "font.fs");
 
-    GlProgram* GlProgram::Sprite = memory::Allocator::Assets()->create<GlProgram>("sprite.vs", "sprite.fs");
+    GlProgram* GlProgram::Sprite = new GlProgram("sprite.vs", "sprite.fs");
   }
 }

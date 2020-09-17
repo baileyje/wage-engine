@@ -47,6 +47,12 @@ namespace wage {
         });
       }
 
+      void reset() {
+        _renderFrame.store(nullptr);
+        _readyFrame.store(nullptr);
+        _updateFrame = new Frame();
+      }
+
       /**
        * Render the next frame of the game to the screen. This will grab the next ready frame and render it. Once complete it will 
        * move the frame back into the ready position. The render will create a contect to render the frame that includes the current
@@ -85,7 +91,6 @@ namespace wage {
        * at the end of every game update look.
        */
       inline void swapFrames() {
-
         _renderFrame.store(_readyFrame);
         auto manager = &scene::Scene::current().entities();
         auto camera = cameraAndEntity(manager);

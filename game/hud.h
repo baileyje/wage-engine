@@ -72,7 +72,7 @@ void setupHud(scene::Scene& scene) {
   auto targetLabelEntity = scene.entities().create();
   // auto platform = core::Core::Instance->get<platform::Platform>();
   // auto window = platform->window();
-  auto targetLabel = targetLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(1024 / 2.0, 768 * 0.9 / 2.0), Vector2(20, 20)), "-X-", font, component::Color::White);
+  targetLabelEntity.assign<ui::UiLabel>(UiLabelComponent, ui::UiFrame(Vector2(1024 / 2.0, 768 * 0.9 / 2.0), Vector2(20, 20)), "-X-", font, component::Color::White);
 
   // auto buttonEntity = entityManager->create();
   // buttonEntity.assign<UiButton>(UiFrame(Vector2(600, 0), Vector2(300, 100)), component::Color::Clear,

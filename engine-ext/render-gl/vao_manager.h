@@ -24,22 +24,22 @@ namespace wage {
         auto vao = cache[meshData->spec().key()];
         // Only make a single cache item
         if (vao == nullptr) {
-          vao = memory::Allocator::Assets()->create<VertexArray>();
+          vao = new VertexArray();
           cache[meshData->spec().key()] = vao;
           vao->bind();
           // Create Verts Buff
-          auto verts = memory::Allocator::Assets()->create<VertexBuffer>(meshData->vertices().data(), meshData->vertices().size() * 3 * sizeof(float));
-          verts->layout()->pushFloat(3);
-          vao->addBuffer(verts);
+          auto verticies = new VertexBuffer(meshData->vertices().data(), static_cast<unsigned int>(meshData->vertices().size() * 3 * sizeof(float)));
+          verticies->layout()->pushFloat(3);
+          vao->addBuffer(verticies);
           // Create Norms Buff
-          auto norms = memory::Allocator::Assets()->create<VertexBuffer>(meshData->normals().data(), meshData->normals().size() * 3 * sizeof(float));
+          auto norms = new VertexBuffer(meshData->normals().data(), static_cast<unsigned int>(meshData->normals().size() * 3 * sizeof(float)));
           norms->layout()->pushFloat(3);
           vao->addBuffer(norms);
-          // Create Texture Buff
-          auto uvs = memory::Allocator::Assets()->create<VertexBuffer>(meshData->uvs().data(), meshData->uvs().size() * 3 * sizeof(float));
+          // Create Texture Buff31
+          auto uvs = new VertexBuffer(meshData->uvs().data(), static_cast<unsigned int>(meshData->uvs().size() * 3 * sizeof(float)));
           uvs->layout()->pushFloat(2);
           vao->addBuffer(uvs);
-          auto indices = memory::Allocator::Assets()->create<IndexBuffer>((const unsigned int*)meshData->indices().data(), meshData->indices().size());
+          auto indices = new IndexBuffer((const unsigned int*)meshData->indices().data(), meshData->indices().size());
           indices->bind();
         }
         return vao;
@@ -47,6 +47,15 @@ namespace wage {
 
       inline void meshManager(MeshManager* meshManager) {
         _meshManager = meshManager;
+      }
+
+      inline void reset() {
+        // TODO: Need a scheme to handle resets on the render thread.....
+        
+        // for (auto it : cache) {
+        //   delete it.second;
+        // }
+        cache.clear();
       }
 
     private:

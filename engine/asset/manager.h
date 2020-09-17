@@ -29,10 +29,16 @@ namespace wage {
         core::Core::Instance->onUpdate([&](const core::Frame& frame) {
           std::unique_lock<std::mutex> lock(mutex);
           for (auto asset : loaded) {
-            asset->state(Asset::AssetState::loaded);
+            asset->state(Asset::State::loaded);
           }
           loaded.clear();
         });
+      }
+
+      void reset() {
+        std::cout << "Cleared assets stuff maybe???\n"; 
+        cache.clear();
+        loaded.clear();
       }
 
       /**
@@ -64,7 +70,7 @@ namespace wage {
         auto jobManager = core::Core::Instance->get<job::Manager>();
         jobManager->dispatch([this, asset] {
           auto assetStream = this->assetStream(asset);
-          if (asset->onLoad(assetStream)) {
+          if (asset->onLoad(assetStream, memory::Allocator::Assets())) {
             delete assetStream;
           }
           std::unique_lock<std::mutex> lock(mutex);

@@ -19,6 +19,7 @@ namespace wage {
       // Last post update step....
       if (mode == Mode::resetting) {
         memory::Allocator::Permanent()->clear();
+        memory::Allocator::Assets()->clear();
         for (auto service : services) {
           Logger::info("Resetting ", service->name().c_str());
           service->reset();

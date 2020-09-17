@@ -14,7 +14,7 @@ namespace wage {
       Clip(ClipSpec spec) : Asset(spec), _volume(spec.volume()), _pitch(spec.pitch()), _loop(spec.loop()) {
       }
 
-      bool onLoad(memory::InputStream* stream) {
+      bool onLoad(memory::InputStream* stream, memory::Allocator* allocator) {
         _data = loadWav(stream);
 
         return false;

@@ -40,7 +40,7 @@ namespace wage {
           _maxDim.y = std::max(_maxDim.y, std::abs(vertex.y));
           _maxDim.z = std::max(_maxDim.z, std::abs(vertex.z));
         }
-        state(AssetState::loaded);
+        state(State::loaded);
       }
 
       virtual ~MeshData() {}
@@ -90,7 +90,7 @@ namespace wage {
       /**
        * Called by the asset manager when the input stream is made availble. This will load mesh data from the input stream provided.
        */
-      bool onLoad(memory::InputStream* stream) {
+      bool onLoad(memory::InputStream* stream, memory::Allocator* allocator) {
         std::string err;
         std::string warn;
         tinyobj::attrib_t attrib;
