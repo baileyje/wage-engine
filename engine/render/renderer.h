@@ -74,17 +74,17 @@ namespace wage {
       /**
        * Pure virtual method for rendering a chunk of text on the screen at a specificed position.
        */
-      virtual void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) = 0;
+      virtual void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) {};
 
       /**
        * Render a simple sprite to the screen at a specific position.
        */
-      virtual void renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture) = 0;
+      virtual void renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture) {};
 
       /**
        * Render a mesh to the screen.
        */
-      virtual void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material) = 0;
+      virtual void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material){};
 
       /**
        * Swap the frame currently beeing updated with the ready frame for the next render cycle. This should be called
@@ -120,9 +120,9 @@ namespace wage {
         return {ecs::Entity::Invalid, nullptr};
       }
 
-      virtual void beginRender() = 0;
+      virtual void beginRender() {};
 
-      virtual void endRender() = 0;
+      virtual void endRender() {};
 
       platform::Window* window;
 

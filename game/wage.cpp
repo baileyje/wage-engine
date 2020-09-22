@@ -8,6 +8,7 @@
 #include "engine.h"
 #include "physics-bullet/physics.h"
 #include "render-gl/renderer.h"
+#include "render-vulkan/vulkan_renderer.h"
 #include "platform-glfw/platform.h"
 #include "input-glfw/input.h"
 #include "audio-al/audio.h"
@@ -33,7 +34,8 @@ void setupServices(core::Core* core, std::string path) {
   core->create<input::Input, input::GlfwInput>();
   core->create<audio::Audio, audio::AlAudio>();
   core->create<physics::Physics, physics::BulletPhysics>();
-  core->create<render::Renderer, render::GlRenderer>();
+  // core->create<render::Renderer, render::GlRenderer>();
+  core->create<render::Renderer, render::VulkanRenderer>();
   core->create<scene::Manager>();
 }
 

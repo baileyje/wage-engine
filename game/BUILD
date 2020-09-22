@@ -17,6 +17,7 @@ cc_binary(
     "@engine_ext//platform-glfw",
     "@engine_ext//input-glfw",
     "@engine_ext//render-gl",
+    "@engine_ext//render-vulkan",
     "@engine_ext//physics-bullet",
     "@engine_ext//audio-al",
     ":wage_lib"

@@ -120,3 +120,35 @@ cc_library(
 )
     """
   )
+
+
+
+  native.new_local_repository(
+      name = "vulkan_osx",
+      path = "/Users/john/vulkan/macOS/",
+      build_file_content = """
+cc_library(
+  name = "vulkan",
+  includes = ["lib", "include"],
+  srcs = ["lib/libvulkan.1.2.148.dylib", "lib/libVkLayer_khronos_validation.dylib", "lib/libVkLayer_api_dump.dylib", "lib/libdxcompiler.3.7.dylib"],
+  hdrs = glob(["**/*.h"]),
+  visibility = ["//visibility:public"]
+)
+      """
+  )
+
+
+  native.new_local_repository(
+    name = "vulkan",
+    path = ".",
+    build_file_content = """
+cc_library(
+  name = "vulkan",
+    deps = select({
+    "@bazel_tools//src/conditions:darwin":["@vulkan_osx//:vulkan"] ,
+    "//conditions:default": [],
+  }),
+  visibility = ["//visibility:public"]
+)
+    """
+  )  

@@ -28,10 +28,13 @@ namespace wage {
         if (!glfwInit()) {
           core::Logger::error("GLFW Init Failed.");
         }
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, 1);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        // OpenGL vvvv
+        // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+        // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, 1);
+        // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        // Vulkan vvvv
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
         GLFWwindow* glfWindow = glfwCreateWindow(1024, 768, "Wage is the Rage!", NULL, NULL);
         int screenWidth = 0;
