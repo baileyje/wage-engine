@@ -25,7 +25,7 @@ namespace wage {
 
     class VulkanRenderer : public Renderer {
     public:
-      VulkanRenderer() :  surface(&instance), swapChain(&device), pipeline(&device, &swapChain), commandPool(&device, &swapChain) {}
+      VulkanRenderer() : surface(&instance), swapChain(&device), pipeline(&device, &swapChain), commandPool(&device, &swapChain) {}
 
       void start() {
         Renderer::start();
@@ -194,15 +194,18 @@ namespace wage {
         ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.proj = glm::perspective(glm::radians(45.0f), swapChain.extent().width / (float)swapChain.extent().height, 0.1f, 10.0f);
         ubo.proj[1][1] *= -1;
+        
+        UniformBufferObject ubo2{};
+        ubo2.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo2.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo2.proj = glm::perspective(glm::radians(45.0f), swapChain.extent().width / (float)swapChain.extent().height, 0.1f, 10.0f);
+        ubo2.proj[1][1] *= -1;
 
-        void* data;
-        vkMapMemory(device.logical(), commandPool.uniformBuffersMemory()[currentImage], 0, sizeof(ubo), 0, &data);
-        memcpy(data, &ubo, sizeof(ubo));
-        vkUnmapMemory(device.logical(), commandPool.uniformBuffersMemory()[currentImage]);
+         commandPool.model1.uniformBuffers[currentImage].fillWith(&ubo, sizeof(ubo));
+         commandPool.model2.uniformBuffers[currentImage].fillWith(&ubo2, sizeof(ubo));
       }
 
       Instance instance;
-
       Surface surface;
       Device device;
       SwapChain swapChain;

@@ -5,14 +5,16 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
+// #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 #include "render-vulkan/common.h"
 #include "render-vulkan/device.h"
+#include "render-vulkan/buffer.h"
 #include "core/core.h"
 #include "fs/file_system.h"
 #include "memory/buffer.h"
+
 
 namespace wage {
   namespace render {
@@ -21,15 +23,14 @@ namespace wage {
     public:
       void create(Device* device, VkCommandPool commandPool) {
         createTextureImage(device, commandPool);
-        createTextureImageView(device);
+        textureImage.createImageView(VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, &_imageView);
         createTextureSampler(device);
       }
 
       void cleanup(Device* device) {
         vkDestroySampler(device->logical(), _sampler, nullptr);
         vkDestroyImageView(device->logical(), _imageView, nullptr);
-        vkDestroyImage(device->logical(), textureImage, nullptr);
-        vkFreeMemory(device->logical(), textureImageMemory, nullptr);
+        textureImage.destroy();
       }
 
       inline VkImageView imageView() {
@@ -104,38 +105,23 @@ namespace wage {
       }
 
       void createTextureImage(Device* device, VkCommandPool commandPool) {
-        int texWidth, texHeight, texChannels;
-        auto fs = core::Core::Instance->get<fs::FileSystem>();
-        auto stream = fs->readStream({{"resources/texture/default.png"}});
-        auto bufferSize = stream->size();
-        auto buffer = (memory::Byte*)malloc(bufferSize);
-        stream->read(buffer, bufferSize);
-        stbi_uc* pixels = stbi_load_from_memory(buffer, bufferSize, &texWidth, &texHeight, &texChannels, 0);
-        free(buffer);
-
+        int texWidth, texHeight, texChannels;        
+        stbi_uc* pixels = stbi_load("/Users/john/dev/devmode/wage/game/resources/texture/viking_room.png", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         VkDeviceSize imageSize = texWidth * texHeight * 4;
         if (!pixels) {
           throw std::runtime_error("failed to load texture image!");
         }
-        VkBuffer stagingBuffer;
-        VkDeviceMemory stagingBufferMemory;
-        createBuffer(device->logical(), device->physical(), imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-        void* data;
-        vkMapMemory(device->logical(), stagingBufferMemory, 0, imageSize, 0, &data);
-        memcpy(data, pixels, static_cast<size_t>(imageSize));
-        vkUnmapMemory(device->logical(), stagingBufferMemory);
-        stbi_image_free(pixels);
-        createImage(device->logical(), device->physical(), texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
-        transitionImageLayout(device, commandPool, textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        copyBufferToImage(device, commandPool, stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-        transitionImageLayout(device, commandPool, textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-        vkDestroyBuffer(device->logical(), stagingBuffer, nullptr);
-        vkFreeMemory(device->logical(), stagingBufferMemory, nullptr);
+        Buffer stagingBuffer;
+        device->createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, imageSize, &stagingBuffer);
+        stagingBuffer.fillWith(pixels, static_cast<size_t>(imageSize));
+        stbi_image_free(pixels);      
+        device->createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &textureImage);
+        transitionImageLayout(device, commandPool, textureImage.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        copyBufferToImage(device, commandPool, stagingBuffer.buffer, textureImage.image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
+        transitionImageLayout(device, commandPool, textureImage.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        stagingBuffer.destroy();
       }
 
-      void createTextureImageView(Device* device) {
-        _imageView = createImageView(device->logical(), textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
-      }
 
       void createTextureSampler(Device* device) {
         VkSamplerCreateInfo samplerInfo{};
@@ -158,9 +144,7 @@ namespace wage {
         }
       }
 
-      VkImage textureImage;
-      VkDeviceMemory textureImageMemory;
-
+      Image textureImage;
       VkImageView _imageView;
       VkSampler _sampler;
     };

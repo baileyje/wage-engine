@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <unordered_map>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -10,6 +11,8 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
 
 namespace wage {
   namespace render {
@@ -49,6 +52,19 @@ namespace wage {
 
         return attributeDescriptions;
       }
+
+      bool operator==(const Vertex& other) const {
+        return pos == other.pos && color == other.color && texCoord == other.texCoord;
+      }
     };
   }
+}
+
+namespace std {
+  template <>
+  struct hash<wage::render::Vertex> {
+    size_t operator()(wage::render::Vertex const& vertex) const {
+      return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
+    }
+  };
 }

@@ -58,7 +58,6 @@ namespace wage {
         vkGetSwapchainImagesKHR(device->logical(), _wrapped, &imageCount, _images.data());
         _imageFormat = surfaceFormat.format;
         _extent = extent;
-
         createImageViews();
       }
 
@@ -85,8 +84,8 @@ namespace wage {
 
       void createDepthResources() {
         VkFormat depthFormat = findDepthFormat(device->physical());
-        createImage(device->logical(), device->physical(), _extent.width, _extent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
-        depthImageView = createImageView(device->logical(), depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+        device->createImage(_extent.width, _extent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &depthImage);
+        depthImage.createImageView(depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, &depthImageView);
       }
 
       void cleanup() {
@@ -97,8 +96,7 @@ namespace wage {
 
       void cleanupFrameBuffers() {
         vkDestroyImageView(device->logical(), depthImageView, nullptr);
-        vkDestroyImage(device->logical(), depthImage, nullptr);
-        vkFreeMemory(device->logical(), depthImageMemory, nullptr);
+        depthImage.destroy();
         for (auto framebuffer : _frameBuffers) {
           vkDestroyFramebuffer(device->logical(), framebuffer, nullptr);
         }
@@ -158,7 +156,7 @@ namespace wage {
       void createImageViews() {
         _imageViews.resize(_images.size());
         for (size_t i = 0; i < _images.size(); i++) {
-          _imageViews[i] = createImageView(device->logical(), _images[i], _imageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
+          commonCreateImageView(device->logical(), _images[i], _imageFormat, VK_IMAGE_ASPECT_COLOR_BIT, &_imageViews[i]);
         }
       }
 
@@ -171,8 +169,7 @@ namespace wage {
       std::vector<VkImageView> _imageViews;
       std::vector<VkFramebuffer> _frameBuffers;
 
-      VkImage depthImage;
-      VkDeviceMemory depthImageMemory;
+      Image depthImage;
       VkImageView depthImageView;
     };
 
