@@ -14,6 +14,10 @@
 #include "render-vulkan/device.h"
 #include "render-vulkan/graphics_pipeline.h"
 #include "render-vulkan/command_pool.h"
+#include "render-vulkan/context.h"
+#include "render-vulkan/model_renderable.h"
+#include "render-vulkan/model_manager.h"
+#include "render-vulkan/scene.h"
 
 // TODO: Move to engine math
 #include <glm/glm.hpp>
@@ -29,6 +33,8 @@ namespace wage {
 
       void start() {
         Renderer::start();
+        meshManager.assetManager(assetManager);
+        meshManager.generatePrimitives();
         if (glfwVulkanSupported()) {
           core::Logger::info("Vulkan Supported FTW");
         } else {
@@ -49,23 +55,22 @@ namespace wage {
         swapChain.createFrameBuffers(pipeline.renderPass());
         commandPool.create(surface, pipeline);
         createSyncObjects();
+        scene.create(&device, &commandPool, &pipeline, swapChain.images().size());
       }
 
       void stop() {
-        commandPool.cleanup();
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-          vkDestroySemaphore(device.logical(), renderFinishedSemaphores[i], nullptr);
-          vkDestroySemaphore(device.logical(), imageAvailableSemaphores[i], nullptr);
-          vkDestroyFence(device.logical(), inFlightFences[i], nullptr);
-        }
-        swapChain.cleanupFrameBuffers();
-        pipeline.cleanup();
+        vkDeviceWaitIdle(device.logical());
         swapChain.cleanup();
+        commandPool.cleanupBuffers();       
+        pipeline.cleanup();
+        destroySyncObjects();
+        commandPool.destroy();
+        device.destroy();
         surface.destroy();
         instance.destroy();
       }
 
-      void beginRender() {
+      void beginRender(RenderContext* context) {
         vkWaitForFences(device.logical(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
         uint32_t imageIndex;
         VkResult result = vkAcquireNextImageKHR(device.logical(), swapChain.wrapped(), UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
@@ -74,18 +79,36 @@ namespace wage {
           return;
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
           throw std::runtime_error("failed to acquire swap chain image!");
-        }
-
-        updateUniformBuffer(imageIndex);
-
+        }        
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
           vkWaitForFences(device.logical(), 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
         }
         imagesInFlight[imageIndex] = inFlightFences[currentFrame];
+        auto commandBuffer = commandPool.commandBuffers()[imageIndex];
+        auto vkContext = static_cast<VulkanRenderContext*>(context);
+        vkContext->device = &device;
+        vkContext->commandPool = &commandPool;
+        vkContext->pipeline = &pipeline;
+        vkContext->commandBuffer = commandBuffer;
+        vkContext->imageIndex = imageIndex;
+        vkContext->imageCount = swapChain.images().size();
 
+        commandPool.beginCommandBuffer(commandBuffer, pipeline, imageIndex);
+
+        UniformBufferScene ubo{};
+        // ubo.model = transform.worldProjection().glm();
+        ubo.view = context->viewProjection().glm();
+        ubo.proj = context->screenProjection().glm();
+        ubo.proj[1][1] *= -1;
+        scene.uniformBuffers[vkContext->imageIndex].fillWith(&ubo, sizeof(ubo));
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkContext->pipeline->layout(), 0, 1, &scene.descriptorSets[vkContext->imageIndex], 0, nullptr);
+      }
+
+      void endRender(RenderContext* context) {
+        auto vkContext = static_cast<VulkanRenderContext*>(context);
+        commandPool.endCommandBuffer(vkContext->commandBuffer);
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
         VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]};
         VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
         submitInfo.waitSemaphoreCount = 1;
@@ -93,7 +116,7 @@ namespace wage {
         submitInfo.pWaitDstStageMask = waitStages;
 
         submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &commandPool.commandBuffers()[imageIndex];
+        submitInfo.pCommandBuffers = &vkContext->commandBuffer;
 
         VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
         submitInfo.signalSemaphoreCount = 1;
@@ -114,24 +137,30 @@ namespace wage {
         VkSwapchainKHR swapChains[] = {swapChain.wrapped()};
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = swapChains;
+        presentInfo.pImageIndices = &vkContext->imageIndex;
 
-        presentInfo.pImageIndices = &imageIndex;
-
-        result = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
-
+        VkResult result = vkQueuePresentKHR(device.presentQueue(), &presentInfo);
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
           framebufferResized = false;
           recreateSwapChain();
         } else if (result != VK_SUCCESS) {
           throw std::runtime_error("failed to present swap chain image!");
         }
-
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
       }
 
       static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
         auto renderer = reinterpret_cast<VulkanRenderer*>(glfwGetWindowUserPointer(window));
         renderer->framebufferResized = true;
+      }
+
+      void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material) {
+        updateFrame()->meshQueue().add<ModelRenderable>(assetManager, &meshManager, &modelManager, transform, mesh, material);
+      }
+
+    protected:
+      RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera) {
+        return new VulkanRenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
       }
 
     private:
@@ -158,6 +187,14 @@ namespace wage {
         }
       }
 
+      void destroySyncObjects() {
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+          vkDestroySemaphore(device.logical(), renderFinishedSemaphores[i], nullptr);
+          vkDestroySemaphore(device.logical(), imageAvailableSemaphores[i], nullptr);
+          vkDestroyFence(device.logical(), inFlightFences[i], nullptr);
+        }
+      }
+
       void recreateSwapChain() {
         int width = 0, height = 0;
         auto glfwWindow = window->as<GLFWwindow>();
@@ -179,31 +216,30 @@ namespace wage {
         swapChain.cleanupFrameBuffers();
         commandPool.cleanupBuffers();
         pipeline.cleanup();
-        swapChain.cleanup();
-        vkDestroySwapchainKHR(device.logical(), swapChain.wrapped(), nullptr);
+        swapChain.cleanup();        
       }
 
-      void updateUniformBuffer(uint32_t currentImage) {
-        static auto startTime = std::chrono::high_resolution_clock::now();
+      // void updateUniformBuffer(uint32_t currentImage) {
+      //   static auto startTime = std::chrono::high_resolution_clock::now();
 
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+      //   auto currentTime = std::chrono::high_resolution_clock::now();
+      //   float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-        UniformBufferObject ubo{};
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.proj = glm::perspective(glm::radians(45.0f), swapChain.extent().width / (float)swapChain.extent().height, 0.1f, 10.0f);
-        ubo.proj[1][1] *= -1;
+      //   UniformBufferObject ubo{};
+      //   ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+      //   ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+      //   ubo.proj = glm::perspective(glm::radians(45.0f), swapChain.extent().width / (float)swapChain.extent().height, 0.1f, 10.0f);
+      //   ubo.proj[1][1] *= -1;
         
-        UniformBufferObject ubo2{};
-        ubo2.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo2.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo2.proj = glm::perspective(glm::radians(45.0f), swapChain.extent().width / (float)swapChain.extent().height, 0.1f, 10.0f);
-        ubo2.proj[1][1] *= -1;
+      //   UniformBufferObject ubo2{};
+      //   ubo2.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+      //   ubo2.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+      //   ubo2.proj = glm::perspective(glm::radians(45.0f), swapChain.extent().width / (float)swapChain.extent().height, 0.1f, 10.0f);
+      //   ubo2.proj[1][1] *= -1;
 
-         commandPool.model1.uniformBuffers[currentImage].fillWith(&ubo, sizeof(ubo));
-         commandPool.model2.uniformBuffers[currentImage].fillWith(&ubo2, sizeof(ubo));
-      }
+      //    commandPool.model1.uniformBuffers[currentImage].fillWith(&ubo, sizeof(ubo));
+      //    commandPool.model2.uniformBuffers[currentImage].fillWith(&ubo2, sizeof(ubo));
+      // }
 
       Instance instance;
       Surface surface;
@@ -213,12 +249,17 @@ namespace wage {
       GraphicsPipeline pipeline;
       CommandPool commandPool;
 
+      VulkanScene scene;
+
       std::vector<VkSemaphore> imageAvailableSemaphores;
       std::vector<VkSemaphore> renderFinishedSemaphores;
       std::vector<VkFence> inFlightFences;
       std::vector<VkFence> imagesInFlight;
       size_t currentFrame = 0;
       bool framebufferResized = false;
+
+      MeshManager meshManager;
+      ModelManager modelManager;
     };
 
   }

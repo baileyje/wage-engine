@@ -54,7 +54,7 @@ namespace wage {
 
       // Operators
 
-      bool operator==(const Vector3& other) {
+      bool operator==(const Vector3& other) const {
         return x == other.x && y == other.y && z == other.z;
       }
 
@@ -186,7 +186,7 @@ namespace wage {
 
       // Operators
 
-      bool operator==(const Vector2& other) {
+      bool operator==(const Vector2& other) const {
         return x == other.x && y == other.y;
       }
 
@@ -285,4 +285,13 @@ namespace wage {
     typedef Vector3 Vector;
 
   }
+}
+
+namespace std {
+  template <>
+  struct hash<wage::math::Vector3> {
+    size_t operator()(wage::math::Vector3 const& vector) const {
+      return ((hash<float>()(vector.x) ^ (hash<float>()(vector.y) << 1)) >> 1) ^ (hash<float>()(vector.z) << 1);
+    }
+  };
 }

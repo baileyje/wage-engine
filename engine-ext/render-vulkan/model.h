@@ -4,10 +4,14 @@
 #include <map>
 #include <string>
 
+#include "render/mesh/manager.h"
+#include "asset/manager.h"
+
 #include "render-vulkan/vertex.h"
 #include "render-vulkan/device.h"
 #include "render-vulkan/graphics_pipeline.h"
 #include "render-vulkan/texture.h"
+#include "render-vulkan/mesh.h"
 #include "render-vulkan/buffer.h"
 
 namespace wage {
@@ -17,41 +21,56 @@ namespace wage {
 
     class Model {
       public:
-        Model(std::string meshPath) : meshPath(meshPath) {
+        Model(MeshSpec meshSpec, TextureSpec textureSpec) : meshSpec(meshSpec), textureSpec(textureSpec), pushed(false) {
         }
 
-        void create(Device* device, CommandPool* commandPool, GraphicsPipeline& pipeline, int imageCount);
+        void load(asset::Manager* assetManager, render::MeshManager* meshManager) {
+          if (loaded()) return;
+          mesh = new VulkanMesh(meshManager->load(meshSpec));
+          texture = assetManager->load<Texture>(textureSpec);
+        }
+
+        void push(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount) {
+          if (pushed) return;
+          mesh->push(device, commandPool);
+          texture->push(device, commandPool);
+          createUniformBuffers(device, imageCount);
+          createDescriptorPool(device, imageCount);
+          createDescriptorSets(device, commandPool, pipeline, imageCount);
+          pushed = true;
+        }
+
+        void create(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount);
 
         void destroy(Device* device, int imageCount);
-        
-
-        Buffer vertexBuffer;
-        Buffer indexBuffer;
-        std::vector<uint32_t> indices;
 
         std::vector<Buffer> uniformBuffers;
+
         VkDescriptorPool descriptorPool;
+
         std::vector<VkDescriptorSet> descriptorSets;
 
+        VulkanMesh* mesh = nullptr;
+
+        Texture* texture = nullptr;
+
+        inline bool loaded() {
+          return mesh && texture && mesh->loaded() && texture->loaded();
+        }
+
       private:
-        void loadMesh();
-
-        void createVertexBuffer(Device * device, CommandPool * commandPool);
-
-        void createIndexBuffer(Device * device, CommandPool * commandPool);
 
         void createUniformBuffers(Device* device, int imageCount);
 
         void createDescriptorPool(Device* device, int imageCount);
 
-        void createDescriptorSets(Device* device, CommandPool* commandPool, GraphicsPipeline& pipeline, VkDescriptorPool descriptorPool, int imageCount);
+        void createDescriptorSets(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount);
 
-        std::string meshPath;
+        MeshSpec meshSpec;
 
-        std::vector<Vertex> vertices;
-        // VkDeviceMemory vertexBufferMemory;
-        // VkDeviceMemory indexBufferMemory;
-        Texture texture;
+        TextureSpec textureSpec;
+
+        bool pushed; // Atomic??
       };
   }
 }

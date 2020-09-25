@@ -24,6 +24,10 @@ namespace wage {
         createLogicalDevice(surface.wrapped());
       }
 
+      void destroy() {
+        vkDestroyDevice(_logical, nullptr);
+      }
+
       inline VkPhysicalDevice physical() {
         return _physical;
       }

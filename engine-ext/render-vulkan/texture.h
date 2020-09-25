@@ -5,41 +5,42 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-// #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
+#include "asset/asset.h"
+#include "render/components/texture.h"
 #include "render-vulkan/common.h"
 #include "render-vulkan/device.h"
+#include "render-vulkan/command_pool.h"
 #include "render-vulkan/buffer.h"
 #include "core/core.h"
 #include "fs/file_system.h"
 #include "memory/buffer.h"
 
-
 namespace wage {
   namespace render {
 
-    class Texture {
+    class Texture : public asset::Asset {
     public:
-      void create(Device* device, VkCommandPool commandPool) {
-        createTextureImage(device, commandPool);
-        textureImage.createImageView(VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, &_imageView);
+      
+      Texture(TextureSpec texture) : Asset(texture) {}
+
+      bool onLoad(memory::InputStream* stream, memory::Allocator* allocator);
+
+      void push(Device* device, CommandPool* commandPool) {
+        if (pushed) return;
+        createTextureImage(device, commandPool->wrapped);
+        textureImage.createImageView(VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, &imageView);
         createTextureSampler(device);
+        pushed = true;
       }
 
       void cleanup(Device* device) {
-        vkDestroySampler(device->logical(), _sampler, nullptr);
-        vkDestroyImageView(device->logical(), _imageView, nullptr);
+        vkDestroySampler(device->logical(), sampler, nullptr);
+        vkDestroyImageView(device->logical(), imageView, nullptr);
         textureImage.destroy();
       }
 
-      inline VkImageView imageView() {
-        return _imageView;
-      }
-
-      inline VkSampler sampler() {
-        return _sampler;
-      }
+      VkImageView imageView;
+      VkSampler sampler;
 
     private:
       
@@ -104,24 +105,7 @@ namespace wage {
         endSingleTimeCommands(device->logical(), commandPool, device->graphicsQueue(), commandBuffer);
       }
 
-      void createTextureImage(Device* device, VkCommandPool commandPool) {
-        int texWidth, texHeight, texChannels;        
-        stbi_uc* pixels = stbi_load("/Users/john/dev/devmode/wage/game/resources/texture/viking_room.png", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
-        VkDeviceSize imageSize = texWidth * texHeight * 4;
-        if (!pixels) {
-          throw std::runtime_error("failed to load texture image!");
-        }
-        Buffer stagingBuffer;
-        device->createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, imageSize, &stagingBuffer);
-        stagingBuffer.fillWith(pixels, static_cast<size_t>(imageSize));
-        stbi_image_free(pixels);      
-        device->createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &textureImage);
-        transitionImageLayout(device, commandPool, textureImage.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        copyBufferToImage(device, commandPool, stagingBuffer.buffer, textureImage.image, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-        transitionImageLayout(device, commandPool, textureImage.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-        stagingBuffer.destroy();
-      }
-
+      void createTextureImage(Device* device, VkCommandPool commandPool);
 
       void createTextureSampler(Device* device) {
         VkSamplerCreateInfo samplerInfo{};
@@ -139,14 +123,19 @@ namespace wage {
         samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
         samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 
-        if (vkCreateSampler(device->logical(), &samplerInfo, nullptr, &_sampler) != VK_SUCCESS) {
+        if (vkCreateSampler(device->logical(), &samplerInfo, nullptr, &sampler) != VK_SUCCESS) {
           throw std::runtime_error("failed to create texture sampler!");
         }
       }
 
+      bool pushed = false;
+
+      int texWidth;
+      int texHeight;
+      int texChannels;
+      VkDeviceSize imageSize;
+      void* pixels;
       Image textureImage;
-      VkImageView _imageView;
-      VkSampler _sampler;
     };
   }
 }

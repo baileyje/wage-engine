@@ -26,7 +26,7 @@ namespace wage {
 
       void create() {
         createRenderPass();
-        createDescriptorSetLayout();
+        createDescriptorSetLayouts();
         auto fs = core::Core::Instance->get<fs::FileSystem>();
         Shader vertShader(device, VK_SHADER_STAGE_VERTEX_BIT);
         vertShader.create(fs->read({{"resources/shader/vert.spv"}}, memory::Allocator::Temporary()));
@@ -37,8 +37,8 @@ namespace wage {
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        auto bindingDescription = Vertex::getBindingDescription();
-        auto attributeDescriptions = Vertex::getAttributeDescriptions();
+        auto bindingDescription = VulkanVertex::getBindingDescription();
+        auto attributeDescriptions = VulkanVertex::getAttributeDescriptions();
         vertexInputInfo.vertexBindingDescriptionCount = 1;
         vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
         vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
@@ -108,9 +108,18 @@ namespace wage {
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &_descriptorSetLayout;
-        // pipelineLayoutInfo.pushConstantRangeCount = 0;
+        std::array<VkDescriptorSetLayout, 2> setLayouts = {sceneUboLayout, modelTextureLayout};
+        pipelineLayoutInfo.setLayoutCount = setLayouts.size();
+        pipelineLayoutInfo.pSetLayouts = setLayouts.data();
+
+        // We will use push constants to push the local matrices of a primitive to the vertex shader
+        VkPushConstantRange pushConstantRange{};
+        pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        pushConstantRange.offset = 0;
+        pushConstantRange.size = sizeof(glm::mat4);
+        // Push constant ranges are part of the pipeline layout
+        pipelineLayoutInfo.pushConstantRangeCount = 1;
+        pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
         if (vkCreatePipelineLayout(device->logical(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
           throw std::runtime_error("failed to create pipeline layout!");
@@ -143,7 +152,7 @@ namespace wage {
         vkDestroyPipeline(device->logical(), _wrapped, nullptr);
         vkDestroyPipelineLayout(device->logical(), pipelineLayout, nullptr);
         vkDestroyRenderPass(device->logical(), _renderPass, nullptr);
-        vkDestroyDescriptorSetLayout(device->logical(), _descriptorSetLayout, nullptr);
+        vkDestroyDescriptorSetLayout(device->logical(), modelTextureLayout, nullptr);
       }
 
       inline VkPipeline wrapped() {
@@ -154,13 +163,12 @@ namespace wage {
         return _renderPass;
       }
 
-      inline VkDescriptorSetLayout descriptorSetLayout() {
-        return _descriptorSetLayout;
-      }
-
       inline VkPipelineLayout layout() {
         return pipelineLayout;
       }
+
+      VkDescriptorSetLayout modelTextureLayout;
+      VkDescriptorSetLayout sceneUboLayout;
 
     private:
       VkShaderModule createShaderModule(const memory::Buffer &code) {
@@ -234,27 +242,34 @@ namespace wage {
         }
       }
 
-      void createDescriptorSetLayout() {
+      void createDescriptorSetLayouts() {
+        VkDescriptorSetLayoutBinding samplerLayoutBinding{};
+        samplerLayoutBinding.binding = 0;
+        samplerLayoutBinding.descriptorCount = 1;
+        samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        samplerLayoutBinding.pImmutableSamplers = nullptr;
+        samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        std::array<VkDescriptorSetLayoutBinding,1> samplerBindings = {samplerLayoutBinding};
+        VkDescriptorSetLayoutCreateInfo samplerLayoutInfo{};
+        samplerLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        samplerLayoutInfo.bindingCount = static_cast<uint32_t>(samplerBindings.size());
+        samplerLayoutInfo.pBindings = samplerBindings.data();
+        if (vkCreateDescriptorSetLayout(device->logical(), &samplerLayoutInfo, nullptr, &modelTextureLayout) != VK_SUCCESS) {
+          throw std::runtime_error("failed to create descriptor set layout!");
+        }
+
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
         uboLayoutBinding.descriptorCount = 1;
         uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         uboLayoutBinding.pImmutableSamplers = nullptr;
         uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-
-        VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-        samplerLayoutBinding.binding = 1;
-        samplerLayoutBinding.descriptorCount = 1;
-        samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        samplerLayoutBinding.pImmutableSamplers = nullptr;
-        samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
-        VkDescriptorSetLayoutCreateInfo layoutInfo{};
-        layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
-        layoutInfo.pBindings = bindings.data();
-
-        if (vkCreateDescriptorSetLayout(device->logical(), &layoutInfo, nullptr, &_descriptorSetLayout) != VK_SUCCESS) {
+        std::array<VkDescriptorSetLayoutBinding, 1> uboBindings = {uboLayoutBinding};
+        VkDescriptorSetLayoutCreateInfo uboLayoutInfo{};
+        uboLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        uboLayoutInfo.bindingCount = static_cast<uint32_t>(uboBindings.size());
+        uboLayoutInfo.pBindings = uboBindings.data();
+        if (vkCreateDescriptorSetLayout(device->logical(), &uboLayoutInfo, nullptr, &sceneUboLayout) != VK_SUCCESS) {
           throw std::runtime_error("failed to create descriptor set layout!");
         }
       }
@@ -265,7 +280,6 @@ namespace wage {
 
       VkPipeline _wrapped;
       VkRenderPass _renderPass;
-      VkDescriptorSetLayout _descriptorSetLayout;
       VkPipelineLayout pipelineLayout;
       
     };

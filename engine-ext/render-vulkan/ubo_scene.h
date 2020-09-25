@@ -10,8 +10,7 @@ namespace wage {
 
   namespace render {
 
-    struct UniformBufferObject {
-      alignas(16) glm::mat4 model;
+    struct UniformBufferScene {      
       alignas(16) glm::mat4 view;
       alignas(16) glm::mat4 proj;
     };

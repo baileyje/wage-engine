@@ -14,7 +14,7 @@ class Wall {
 void addWall(scene::Scene &scene) {
   int width = 20;
   int height = 20;
-  float margin = 0.1;
+  float margin = 1;
   float enemyScale = 5;
   float offsetX = -(enemyScale * width / 2);
   float offsetY = -(enemyScale * height / 2);
@@ -33,22 +33,22 @@ void addWall(scene::Scene &scene) {
 class WallSystem : public ecs::System {
 
   void update(const ecs::SystemContext &context) {
-    auto &entities = scene::Scene::current().entities();
-    auto physics = core::Core::Instance->get<physics::Physics>();
-    std::vector<job::Job> castJobs;
-    for (auto wallSegment : entities.with({WallComponent, TransformComponent, MaterialComponent})) {
-      auto mat = wallSegment.get<render::MaterialSpec>(MaterialComponent);
-      auto position = wallSegment.get<math::Transform>(TransformComponent)->position();
-      castJobs.push_back({[mat, position, physics]() {        
-        auto hits = physics->castRay(position, position + Vector3{0, 0, -40});
-        if (hits.size() > 0) {          
-          mat->texture(render::TextureSpec("default.png"));
-        } else {
-          mat->texture(render::TextureSpec("odd_space_2.png"));
-        }
-      }});
-    }
-    core::Core::Instance->get<job::Manager>()->dispatch(castJobs)->wait();
+    // auto &entities = scene::Scene::current().entities();
+    // auto physics = core::Core::Instance->get<physics::Physics>();
+    // std::vector<job::Job> castJobs;
+    // for (auto wallSegment : entities.with({WallComponent, TransformComponent, MaterialComponent})) {
+    //   auto mat = wallSegment.get<render::MaterialSpec>(MaterialComponent);
+    //   auto position = wallSegment.get<math::Transform>(TransformComponent)->position();
+    //   // castJobs.push_back({[mat, position, physics]() {        
+    //   //   auto hits = physics->castRay(position, position + Vector3{0, 0, -40});
+    //   //   if (hits.size() > 0) {          
+    //   //     mat->texture(render::TextureSpec("default.png"));
+    //   //   } else {
+    //   //     mat->texture(render::TextureSpec("odd_space_2.png"));
+    //   //   }
+    //   // }});
+    // }
+    // core::Core::Instance->get<job::Manager>()->dispatch(castJobs)->wait();
     /*
    for (auto wallSegment : entities.with({WallComponent, TransformComponent, MaterialComponent})) {
       auto mat = wallSegment.get<render::MaterialSpec>(MaterialComponent);

@@ -93,7 +93,7 @@ ecs::Entity addEnemy(scene::Scene& scene, Vector position, float scale) {
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->position(position);
   transform->localScale(Vector(scale, scale, scale));
-  entity.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Cube);
+  entity.assign<render::MeshSpec>(MeshComponent, "cube.obj");
   entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
   entity.assign<physics::RigidBody>(RigidBodyComponent, 5, physics::RigidBodyType::dynamic);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);

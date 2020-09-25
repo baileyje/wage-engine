@@ -6,7 +6,7 @@
 #include "asset/manager.h"
 
 #include "render/components/mesh.h"
-#include "render/mesh_data.h"
+#include "render/mesh/mesh.h"
 
 namespace wage {
   namespace render {
@@ -22,12 +22,12 @@ namespace wage {
        * Load the mesh data for the provided mesh spec. This will return a primitive mesh if the spec key mataches
        * that of a pre-generated mesh/
        */
-      MeshData* load(MeshSpec mesh) {
+      Mesh* load(MeshSpec mesh) {
         auto primitive = primitives[mesh.key()];
         if (primitive != nullptr) {
           return primitive;
         }
-        return _assetManager->load<MeshData>(mesh);
+        return _assetManager->load<Mesh>(mesh);
       }
 
       /**
@@ -45,7 +45,7 @@ namespace wage {
     private:
       asset::Manager* _assetManager;
 
-      std::unordered_map<std::string, MeshData*> primitives;
+      std::unordered_map<std::string, Mesh*> primitives;
     };
 
   }

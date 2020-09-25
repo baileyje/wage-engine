@@ -20,13 +20,6 @@ namespace wage {
      */
     class Frame {
     public:
-      // inline void renderContext(RenderContext* context) {
-      //   if (_renderContext) {
-      //     delete _renderContext;
-      //   }
-      //   _renderContext = context;
-      // }
-
       /**
        * Get access to the ui component render queue.
        */
@@ -40,6 +33,14 @@ namespace wage {
       inline RenderQueue& meshQueue() {
         return _meshQueue;
       }
+
+      /**
+       * Get access to current render context.
+       */
+      inline RenderContext* context() {
+        return _renderContext;
+      }
+
 
       /**
        * Clear frame data.
@@ -105,47 +106,5 @@ namespace wage {
       RenderContext* _renderContext;
     };
 
-    // TODO: TEMP...
-    class FrameQueue : public std::queue<Frame*> {
-    public:
-      FrameQueue(int size) {
-        maxSize = size;
-      }
-
-      void push(Frame* frame) {
-        std::unique_lock<std::mutex> wlck(writerMutex);
-        while (full())
-          isFull.wait(wlck);
-        std::queue<Frame*>::push(frame);
-        isEmpty.notify_all();
-      }
-
-      bool notEmpty() {
-        return !std::queue<Frame*>::empty();
-      }
-
-      bool full() {
-        return std::queue<Frame*>::size() >= maxSize;
-      }
-
-      Frame* pop() {
-        std::unique_lock<std::mutex> lck(readerMutex);
-        while (std::queue<Frame*>::empty()) {
-          isEmpty.wait(lck);
-        }
-        Frame* value = std::queue<Frame*>::front();
-        std::queue<Frame*>::pop();
-        if (!full())
-          isFull.notify_all();
-        return value;
-      }
-
-    private:
-      int maxSize;
-      std::mutex readerMutex;
-      std::mutex writerMutex;
-      std::condition_variable isFull;
-      std::condition_variable isEmpty;
-    };
   } // namespace render
 } // namespace wage

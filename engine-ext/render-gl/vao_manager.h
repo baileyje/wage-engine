@@ -4,7 +4,7 @@
 
 #include "memory/allocator.h"
 #include "render/components/mesh.h"
-#include "render/mesh_manager.h"
+#include "render/mesh/manager.h"
 #include "asset/manager.h"
 
 #include "render-gl/vertex_array.h"
@@ -17,31 +17,31 @@ namespace wage {
     class VaoManager {
 
     public:
-      VertexArray* load(MeshData* meshData) {
-        if (!meshData->loaded()) {
-          return nullptr;
-        }
+      VertexArray* load(Mesh* meshData) {
+        // if (!meshData->loaded()) {
+        //   return nullptr;
+        // }
         auto vao = cache[meshData->spec().key()];
-        // Only make a single cache item
-        if (vao == nullptr) {
-          vao = new VertexArray();
-          cache[meshData->spec().key()] = vao;
-          vao->bind();
-          // Create Verts Buff
-          auto verticies = new VertexBuffer(meshData->vertices().data(), static_cast<unsigned int>(meshData->vertices().size() * 3 * sizeof(float)));
-          verticies->layout()->pushFloat(3);
-          vao->addBuffer(verticies);
-          // Create Norms Buff
-          auto norms = new VertexBuffer(meshData->normals().data(), static_cast<unsigned int>(meshData->normals().size() * 3 * sizeof(float)));
-          norms->layout()->pushFloat(3);
-          vao->addBuffer(norms);
-          // Create Texture Buff31
-          auto uvs = new VertexBuffer(meshData->uvs().data(), static_cast<unsigned int>(meshData->uvs().size() * 3 * sizeof(float)));
-          uvs->layout()->pushFloat(2);
-          vao->addBuffer(uvs);
-          auto indices = new IndexBuffer((const unsigned int*)meshData->indices().data(), meshData->indices().size());
-          indices->bind();
-        }
+        // // Only make a single cache item
+        // if (vao == nullptr) {
+        //   vao = new VertexArray();
+        //   cache[meshData->spec().key()] = vao;
+        //   vao->bind();
+        //   // Create Verts Buff
+        //   auto verticies = new VertexBuffer(meshData->vertices().data(), static_cast<unsigned int>(meshData->vertices().size() * 3 * sizeof(float)));
+        //   verticies->layout()->pushFloat(3);
+        //   vao->addBuffer(verticies);
+        //   // Create Norms Buff
+        //   auto norms = new VertexBuffer(meshData->normals().data(), static_cast<unsigned int>(meshData->normals().size() * 3 * sizeof(float)));
+        //   norms->layout()->pushFloat(3);
+        //   vao->addBuffer(norms);
+        //   // Create Texture Buff31
+        //   auto uvs = new VertexBuffer(meshData->uvs().data(), static_cast<unsigned int>(meshData->uvs().size() * 3 * sizeof(float)));
+        //   uvs->layout()->pushFloat(2);
+        //   vao->addBuffer(uvs);
+        //   auto indices = new IndexBuffer((const unsigned int*)meshData->indices().data(), meshData->indices().size());
+        //   indices->bind();
+        // }
         return vao;
       }
 

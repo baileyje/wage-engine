@@ -2,7 +2,7 @@
 
 #include "render/renderer.h"
 #include "render/queue.h"
-#include "render/mesh_manager.h"
+#include "render/mesh/manager.h"
 
 #include "render-gl/texture.h"
 #include "render-gl/vao_manager.h"

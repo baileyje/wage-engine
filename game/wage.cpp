@@ -119,7 +119,7 @@ void setupScene(scene::Scene& scene) {
 
   addCamera(scene);
 
-  setupHud(scene);
+  // setupHud(scene);
 
   addWall(scene);
 

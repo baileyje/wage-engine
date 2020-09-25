@@ -89,17 +89,19 @@ namespace wage {
       }
 
       void cleanup() {
-        for (auto imageView : _imageViews) {
-          vkDestroyImageView(device->logical(), imageView, nullptr);
-        }
-      }
-
-      void cleanupFrameBuffers() {
         vkDestroyImageView(device->logical(), depthImageView, nullptr);
         depthImage.destroy();
         for (auto framebuffer : _frameBuffers) {
           vkDestroyFramebuffer(device->logical(), framebuffer, nullptr);
         }
+        for (auto imageView : _imageViews) {
+          vkDestroyImageView(device->logical(), imageView, nullptr);
+        }
+        vkDestroySwapchainKHR(device->logical(), _wrapped, nullptr);
+      }
+
+      void cleanupFrameBuffers() {
+        
       }
 
       inline VkSwapchainKHR wrapped() {

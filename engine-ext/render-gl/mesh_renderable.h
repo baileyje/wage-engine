@@ -25,7 +25,7 @@ namespace wage {
     class GlMeshRenderable : public Renderable {
 
     public:
-      GlMeshRenderable(asset::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, MeshData* meshData, MaterialSpec* material)
+      GlMeshRenderable(asset::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, Mesh* meshData, MaterialSpec* material)
           : _assetManager(assetManager), _vaoManager(vaoManager), transform(transform), meshData(meshData), material(material) {}
 
       inline VaoManager* vaoManager() {
@@ -40,7 +40,7 @@ namespace wage {
         if (!meshData->loaded()) {
           return math::BoundingBox(position(), {0, 0, 0});
         }
-        math::Vector maxDims = meshData->maxDim();
+        math::Vector maxDims = meshData->maxDim;
         math::Vector scale = transform.scale();
         math::Vector scaledMaxHalfDim(
             maxDims.x * scale.x,
@@ -161,7 +161,7 @@ namespace wage {
 
       math::Transform transform;
 
-      MeshData* meshData;
+      Mesh* meshData;
 
       MaterialSpec* material;
     };

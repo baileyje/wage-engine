@@ -63,10 +63,11 @@ namespace wage {
         if (!currentFrame) {
           return;
         }
-        beginRender();
+        beginRender(currentFrame->context());
         currentFrame->render();
-        endRender();
+        endRender(currentFrame->context());
         timer.tick();
+        std::cout << "Ftime: " << timer.averageTime() << "\n";
         delete currentFrame;
         _renderFrame.store(nullptr);
       }
@@ -95,7 +96,7 @@ namespace wage {
         auto manager = &scene::Scene::current().entities();
         auto camera = cameraAndEntity(manager);
         if (std::get<1>(camera)) {
-          _updateFrame->prepare(new RenderContext(std::get<0>(camera), std::get<1>(camera), math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {}));
+          _updateFrame->prepare(createContext(std::get<0>(camera), std::get<1>(camera)) );
         }
         _readyFrame.store(_updateFrame);
         _updateFrame = new Frame();
@@ -106,6 +107,10 @@ namespace wage {
       }
 
     protected:
+      virtual RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera) {
+        return new RenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
+      }
+
       inline Frame* updateFrame() {
         return _updateFrame;
       }
@@ -120,9 +125,9 @@ namespace wage {
         return {ecs::Entity::Invalid, nullptr};
       }
 
-      virtual void beginRender() {};
+      virtual void beginRender(RenderContext* context) {};
 
-      virtual void endRender() {};
+      virtual void endRender(RenderContext* context){};
 
       platform::Window* window;
 
