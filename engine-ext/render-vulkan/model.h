@@ -9,7 +9,7 @@
 
 #include "render-vulkan/vertex.h"
 #include "render-vulkan/device.h"
-#include "render-vulkan/graphics_pipeline.h"
+#include "render-vulkan/model_pipeline.h"
 #include "render-vulkan/texture.h"
 #include "render-vulkan/mesh.h"
 #include "render-vulkan/buffer.h"

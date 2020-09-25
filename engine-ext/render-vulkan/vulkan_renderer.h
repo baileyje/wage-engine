@@ -12,7 +12,7 @@
 #include "render-vulkan/instance.h"
 #include "render-vulkan/swap_chain.h"
 #include "render-vulkan/device.h"
-#include "render-vulkan/graphics_pipeline.h"
+#include "render-vulkan/model_pipeline.h"
 #include "render-vulkan/command_pool.h"
 #include "render-vulkan/context.h"
 #include "render-vulkan/model_renderable.h"
@@ -246,7 +246,7 @@ namespace wage {
       Device device;
       SwapChain swapChain;
 
-      GraphicsPipeline pipeline;
+      ModelPipeline pipeline;
       CommandPool commandPool;
 
       VulkanScene scene;

@@ -4,7 +4,7 @@
 namespace wage {
   namespace render {
 
-    void VulkanScene::create(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount) {
+    void VulkanScene::create(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount) {
       createUniformBuffers(device, imageCount);
       createDescriptorPool(device, imageCount);
       createDescriptorSets(device, commandPool, pipeline, imageCount);
@@ -38,7 +38,7 @@ namespace wage {
       }
     }
 
-    void VulkanScene::createDescriptorSets(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount) {
+    void VulkanScene::createDescriptorSets(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount) {
       std::vector<VkDescriptorSetLayout> layouts(imageCount, pipeline->sceneUboLayout);
       VkDescriptorSetAllocateInfo allocInfo{};
       allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;

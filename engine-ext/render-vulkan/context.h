@@ -9,7 +9,7 @@
 #include "math/vector.h"
 #include "render-vulkan/device.h"
 #include "render-vulkan/command_pool.h"
-#include "render-vulkan/graphics_pipeline.h"
+#include "render-vulkan/model_pipeline.h"
 
 namespace wage {
   namespace render {
@@ -20,7 +20,7 @@ namespace wage {
         }
         
         Device* device;
-        GraphicsPipeline* pipeline;
+        ModelPipeline* pipeline;
         CommandPool* commandPool;
         
         uint32_t imageIndex;

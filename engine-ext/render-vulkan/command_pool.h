@@ -3,7 +3,7 @@
 #include "render-vulkan/common.h"
 #include "render-vulkan/device.h"
 #include "render-vulkan/swap_chain.h"
-#include "render-vulkan/graphics_pipeline.h"
+#include "render-vulkan/model_pipeline.h"
 #include "render-vulkan/vertex.h"
 
 namespace wage {
@@ -14,7 +14,7 @@ namespace wage {
     public:
       CommandPool(Device* device, SwapChain* swapChain) : device(device), swapChain(swapChain) {}
 
-      void create(Surface& surface, GraphicsPipeline& pipeline) {
+      void create(Surface& surface, ModelPipeline & pipeline) {
         QueueFamilyIndices queueFamilyIndices = findQueueFamilies(device->physical(), surface.wrapped());
         VkCommandPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -40,7 +40,7 @@ namespace wage {
         return _commandBuffers;
       }
 
-      void beginCommandBuffer(VkCommandBuffer commandBuffer, GraphicsPipeline& pipeline, uint32_t imageIndex) {
+      void beginCommandBuffer(VkCommandBuffer commandBuffer, ModelPipeline & pipeline, uint32_t imageIndex) {
         vkResetCommandBuffer(commandBuffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -74,7 +74,7 @@ namespace wage {
 
     private:
       
-      void createCommandBuffers(GraphicsPipeline& pipeline) {
+      void createCommandBuffers(ModelPipeline& pipeline) {
         _commandBuffers.resize(swapChain->frameBuffers().size());
 
         VkCommandBufferAllocateInfo allocInfo{};
