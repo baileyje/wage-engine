@@ -30,7 +30,7 @@ namespace wage {
           texture = assetManager->load<Texture>(textureSpec);
         }
 
-        void push(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount) {
+        void push(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount) {
           if (pushed) return;
           mesh->push(device, commandPool);
           texture->push(device, commandPool);
@@ -40,7 +40,7 @@ namespace wage {
           pushed = true;
         }
 
-        void create(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount);
+        void create(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount);
 
         void destroy(Device* device, int imageCount);
 
@@ -64,7 +64,7 @@ namespace wage {
 
         void createDescriptorPool(Device* device, int imageCount);
 
-        void createDescriptorSets(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount);
+        void createDescriptorSets(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount);
 
         MeshSpec meshSpec;
 

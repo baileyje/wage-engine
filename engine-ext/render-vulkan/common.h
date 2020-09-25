@@ -45,11 +45,11 @@ namespace wage {
     VkFormat findSupportedFormat(VkPhysicalDevice physicalDevice, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat(VkPhysicalDevice physicalDevice);
 
-        // #ifdef NDEBUG
-        const bool enableValidationLayers = true;
-        // #else
-        //     const bool enableValidationLayers = false;
-        // #endif
+    // #ifdef NDEBUG
+    const bool enableValidationLayers = true;
+    // #else
+    //     const bool enableValidationLayers = false;
+    // #endif
 
       }
     }

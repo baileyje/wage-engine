@@ -1,6 +1,7 @@
 #include "render-vulkan/scene.h"
 #include "render-vulkan/ubo_scene.h"
 
+
 namespace wage {
   namespace render {
 
@@ -11,7 +12,7 @@ namespace wage {
     }
 
     void VulkanScene::destroy(Device* device) {
-      // vkDestroyDescriptorSetLayout(device->logical(), sceneUboLayout, nullptr);
+      // vkDestroyDescriptorSetLayout(device->logical, sceneUboLayout, nullptr);
     }
 
     void VulkanScene::createUniformBuffers(Device* device, int imageCount) {
@@ -33,7 +34,7 @@ namespace wage {
       poolInfo.pPoolSizes = poolSizes.data();
       poolInfo.maxSets = static_cast<uint32_t>(imageCount);
 
-      if (vkCreateDescriptorPool(device->logical(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+      if (vkCreateDescriptorPool(device->logical, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor pool!");
       }
     }
@@ -47,7 +48,7 @@ namespace wage {
       allocInfo.pSetLayouts = layouts.data();
 
       descriptorSets.resize(imageCount);
-      if (vkAllocateDescriptorSets(device->logical(), &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
+      if (vkAllocateDescriptorSets(device->logical, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate descriptor sets!");
       }
       for (size_t i = 0; i < imageCount; i++) {
@@ -65,7 +66,7 @@ namespace wage {
         descriptorWrites[0].descriptorCount = 1;
         descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-        vkUpdateDescriptorSets(device->logical(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+        vkUpdateDescriptorSets(device->logical, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
       }
     }
   }

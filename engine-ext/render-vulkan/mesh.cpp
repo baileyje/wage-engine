@@ -1,46 +1,45 @@
 #include "render-vulkan/mesh.h"
 
+#include "render/mesh/mesh.h"
+#include "render-vulkan/device.h"
+#include "render-vulkan/command_pool.h"
+
 namespace wage {
   namespace render {
 
-  //   bool Mesh::onLoad(memory::InputStream* stream, memory::Allocator* allocator) {
-  //     auto bufferSize = stream->size();
-  //     auto buffer = (memory::Byte*)malloc(bufferSize);
-  //     stream->read(buffer, bufferSize);
-  //     memory::BufferStream bufferStream(buffer, bufferSize);
-  //     std::istream istream(&bufferStream);
+    VulkanMesh::VulkanMesh(Mesh* meshData) : meshData(meshData) {}
 
-  //     tinyobj::attrib_t attrib;
-  //     std::vector<tinyobj::shape_t> shapes;
-  //     std::vector<tinyobj::material_t> materials;
-  //     std::string warn, err;
-  //     if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, &istream)) {
-  //       throw std::runtime_error(warn + err);
-  //     }
-  //     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
-  //     for (const auto& shape : shapes) {
-  //       for (const auto& index : shape.mesh.indices) {
-  //         Vertex vertex{};
-  //         vertex.pos = {
-  //             attrib.vertices[3 * index.vertex_index + 0],
-  //             attrib.vertices[3 * index.vertex_index + 1],
-  //             attrib.vertices[3 * index.vertex_index + 2]
-  //         };
-  //         vertex.texCoord = {
-  //             attrib.texcoords[2 * index.texcoord_index + 0],
-  //             1.0f - attrib.texcoords[2 * index.texcoord_index + 1]};
-  //         vertex.color = {1.0f, 1.0f, 1.0f};
-  //         if (uniqueVertices.count(vertex) == 0) {
-  //           uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-  //           vertices.push_back(vertex);
-  //         }
-  //         indices.push_back(uniqueVertices[vertex]);
-  //         maxDim.x = std::max(maxDim.x, std::abs(vertex.pos.x));
-  //         maxDim.y = std::max(maxDim.y, std::abs(vertex.pos.y));
-  //         maxDim.z = std::max(maxDim.z, std::abs(vertex.pos.z));
-  //       }
-  //     }
-  //     return true;
-  //   }
+    void VulkanMesh::destroy() {}
+
+    bool VulkanMesh::loaded() {
+      return meshData && meshData->loaded();
+    }
+
+    void VulkanMesh::push(Device* device, CommandPool* commandPool) {
+      if (pushed) return;
+      createVertexBuffer(device, commandPool);
+      createIndexBuffer(device, commandPool);
+      pushed = true;
+    }
+
+    void VulkanMesh::createVertexBuffer(Device* device, CommandPool* commandPool) {
+      VkDeviceSize bufferSize = sizeof(meshData->vertices[0]) * meshData->vertices.size();
+      Buffer stagingBuffer;
+      device->createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, bufferSize, &stagingBuffer);
+      stagingBuffer.fillWith(meshData->vertices.data(), (size_t)bufferSize);
+      device->createBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, bufferSize, &vertexBuffer);
+      copyBuffer(device->logical, commandPool->wrapped, device->graphicsQueue, stagingBuffer.buffer, vertexBuffer.buffer, bufferSize);
+      stagingBuffer.destroy();
+    }
+
+    void VulkanMesh::createIndexBuffer(Device* device, CommandPool* commandPool) {
+      VkDeviceSize bufferSize = sizeof(meshData->indices[0]) * meshData->indices.size();
+      Buffer stagingBuffer;
+      device->createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, bufferSize, &stagingBuffer);
+      stagingBuffer.fillWith(meshData->indices.data(), (size_t)bufferSize);
+      device->createBuffer(VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, bufferSize, &indexBuffer);
+      copyBuffer(device->logical, commandPool->wrapped, device->graphicsQueue, stagingBuffer.buffer, indexBuffer.buffer, bufferSize);
+      stagingBuffer.destroy();
+    }
   }
 }

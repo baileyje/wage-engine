@@ -9,7 +9,7 @@ namespace wage {
       for (size_t i = 0; i < imageCount; i++) {
         uniformBuffers[i].destroy();
       }
-      vkDestroyDescriptorPool(device->logical(), descriptorPool, nullptr);
+      vkDestroyDescriptorPool(device->logical, descriptorPool, nullptr);
     }
 
     void Model::createUniformBuffers(Device* device, int imageCount) {
@@ -33,12 +33,12 @@ namespace wage {
       poolInfo.pPoolSizes = poolSizes.data();
       poolInfo.maxSets = static_cast<uint32_t>(imageCount);
 
-      if (vkCreateDescriptorPool(device->logical(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+      if (vkCreateDescriptorPool(device->logical, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor pool!");
       }
     }
 
-    void Model::createDescriptorSets(Device* device, CommandPool* commandPool, GraphicsPipeline* pipeline, int imageCount) {
+    void Model::createDescriptorSets(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount) {
       std::vector<VkDescriptorSetLayout> layouts(imageCount, pipeline->modelTextureLayout);
       VkDescriptorSetAllocateInfo allocInfo{};
       allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -47,7 +47,7 @@ namespace wage {
       allocInfo.pSetLayouts = layouts.data();
 
       descriptorSets.resize(imageCount);
-      if (vkAllocateDescriptorSets(device->logical(), &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
+      if (vkAllocateDescriptorSets(device->logical, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate descriptor sets!");
       }
 
@@ -72,7 +72,7 @@ namespace wage {
         descriptorWrites[0].descriptorCount = 1;
         descriptorWrites[0].pImageInfo = &imageInfo;
 
-        vkUpdateDescriptorSets(device->logical(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+        vkUpdateDescriptorSets(device->logical, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
       }
     }
   }
