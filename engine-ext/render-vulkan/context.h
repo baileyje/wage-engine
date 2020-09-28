@@ -1,38 +1,35 @@
 #pragma once
 
-#include <vector>
+#include "platform/window.h"
 
-#include "render-vulkan/common.h"
-#include "render/context.h"
-#include "ecs/entity.h"
-#include "math/vector.h"
+#include "render-vulkan/command_pool.h"
+#include "render-vulkan/instance.h"
+#include "render-vulkan/surface.h"
+#include "render-vulkan/device.h"
+#include "render-vulkan/swap_chain.h"
+#include "render-vulkan/render_pass.h"
+
 
 namespace wage {
-
   namespace render {
-    
-    class Device;
-    class ModelPipeline;
-    class CommandPool;
-    class Camera;
 
-    class VulkanRenderContext : public RenderContext {
+    class VulkanContext {
       public:
-        
-        Device* device;
+      Instance instance;
+      
+      Surface surface;
+      
+      Device device;
+      
+      SwapChain swapChain;
+      
+      RenderPass renderPass;
 
-        ModelPipeline* pipeline;
+      VulkanContext();
 
-        CommandPool* commandPool;
-        
-        uint32_t imageIndex;
+      void create(platform::Window* window);
 
-        VkCommandBuffer commandBuffer;
-
-        uint8_t imageCount;
-
-        VulkanRenderContext(ecs::Entity cameraEntity, Camera* camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights);
+      void destroy();
     };
-
   }
 }

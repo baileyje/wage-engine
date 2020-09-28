@@ -34,17 +34,14 @@ namespace wage {
           if (pushed) return;
           mesh->push(device, commandPool);
           texture->push(device, commandPool);
-          createUniformBuffers(device, imageCount);
           createDescriptorPool(device, imageCount);
           createDescriptorSets(device, commandPool, pipeline, imageCount);
           pushed = true;
         }
 
-        void create(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount);
+        void create(Device* device, CommandPool* commandPool, ModelPipeline* pipeline);
 
-        void destroy(Device* device, int imageCount);
-
-        std::vector<Buffer> uniformBuffers;
+        void destroy(Device* device);
 
         VkDescriptorPool descriptorPool;
 
@@ -59,8 +56,6 @@ namespace wage {
         }
 
       private:
-
-        void createUniformBuffers(Device* device, int imageCount);
 
         void createDescriptorPool(Device* device, int imageCount);
 

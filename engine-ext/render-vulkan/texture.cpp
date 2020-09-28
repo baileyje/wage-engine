@@ -37,10 +37,12 @@ namespace wage {
       pushed = true;
     }
 
-    void Texture::cleanup(Device* device) {
+    void Texture::destroy(Device* device) {
+      if (!pushed) return;
       vkDestroySampler(device->logical, sampler, nullptr);
       vkDestroyImageView(device->logical, imageView, nullptr);
       textureImage.destroy();
+      pushed = false;
     }
 
     void Texture::createTextureImage(Device* device, VkCommandPool commandPool) {

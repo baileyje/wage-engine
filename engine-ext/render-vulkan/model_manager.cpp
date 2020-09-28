@@ -17,5 +17,10 @@ namespace wage {
       return model;
     }
 
+    void ModelManager::destroy(Device* device) {
+      for (auto pair : cache) {
+        pair.second->destroy(device);
+      }
+    }
   }
 }

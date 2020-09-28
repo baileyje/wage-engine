@@ -24,7 +24,7 @@ namespace wage {
       
       VulkanMesh(Mesh* meshData);
 
-      void destroy();
+      void destroy(Device* decice);
 
       bool loaded();
 

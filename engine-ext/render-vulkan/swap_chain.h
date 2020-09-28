@@ -6,8 +6,9 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include "math/vector.h"
+
 #include "render-vulkan/common.h"
-#include "platform/window.h"
 #include "render-vulkan/image.h"
 
 namespace wage {
@@ -33,7 +34,7 @@ namespace wage {
 
       SwapChain(Device* device);
 
-      void create(platform::Window* window, Surface& surface);
+      void create(float width, float height, Surface& surface);
 
       void createFrameBuffers(VkRenderPass renderPass);
 
@@ -46,7 +47,7 @@ namespace wage {
 
       VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 
-      VkExtent2D chooseSwapExtent(platform::Window* window, const VkSurfaceCapabilitiesKHR& capabilities);
+      VkExtent2D chooseSwapExtent(float width, float height, const VkSurfaceCapabilitiesKHR& capabilities);
 
       void createImageViews();
 

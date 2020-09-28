@@ -1,14 +1,29 @@
 #include "render-vulkan/context.h"
 
-#include "render/components/camera/camera.h"
-#include "render-vulkan/device.h"
-#include "render-vulkan/command_pool.h"
-#include "render-vulkan/model_pipeline.h"
+
 
 namespace wage {
   namespace render {
-    VulkanRenderContext::VulkanRenderContext(ecs::Entity cameraEntity, Camera* camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights) 
-      : RenderContext(cameraEntity, camera, screenSize, dirLights, pointLights, spotlights) {
+    VulkanContext::VulkanContext() : surface(&instance), swapChain(&device), renderPass(&device, &swapChain) {
+    }
+
+    void VulkanContext::create(platform::Window* window) {
+      auto glfwWindow = window->as<GLFWwindow>();
+      instance.create(enableValidationLayers);
+      surface.create(glfwWindow);
+      device.create(instance.wrapped, &surface);
+      swapChain.create(window->width(), window->height(), surface);
+      renderPass.create();
+      swapChain.createDepthResources();
+      swapChain.createFrameBuffers(renderPass.wrapped);
+    }
+    
+    void VulkanContext::destroy() {
+      renderPass.destroy();
+      swapChain.cleanup();
+      device.destroy();
+      surface.destroy();
+      instance.destroy();
     }
   }
 }

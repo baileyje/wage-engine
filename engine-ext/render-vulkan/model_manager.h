@@ -11,12 +11,15 @@ namespace wage {
   namespace render { 
 
     class Model;
+    class Device;
     class MeshManager;
 
     class ModelManager {
       public:
         
         Model* load(asset::Manager* assetManager, MeshManager* meshManager, MeshSpec meshSpec, TextureSpec textureSpec);
+
+        void destroy(Device* device);
 
       private: 
        

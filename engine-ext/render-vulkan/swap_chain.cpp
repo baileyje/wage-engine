@@ -8,11 +8,11 @@ namespace wage {
 
     SwapChain::SwapChain(Device* device) : device(device) {}
 
-    void SwapChain::create(platform::Window* window, Surface& surface) {
+    void SwapChain::create(float width, float height, Surface& surface) {
       SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device->physical, surface.wrapped);
       VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
       VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-      extent = chooseSwapExtent(window, swapChainSupport.capabilities);
+      extent = chooseSwapExtent(width, height, swapChainSupport.capabilities);
       uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
       if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
         imageCount = swapChainSupport.capabilities.maxImageCount;
@@ -107,12 +107,12 @@ namespace wage {
       return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    VkExtent2D SwapChain::chooseSwapExtent(platform::Window* window, const VkSurfaceCapabilitiesKHR& capabilities) {
+    VkExtent2D SwapChain::chooseSwapExtent(float width, float height, const VkSurfaceCapabilitiesKHR& capabilities) {
       if (capabilities.currentExtent.width != UINT32_MAX) {
         return capabilities.currentExtent;
       } else {
         // TODO: Get from window.....
-        VkExtent2D actualExtent = {static_cast<uint32_t>(window->width()), static_cast<uint32_t>(window->height())};
+        VkExtent2D actualExtent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
         actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
         actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));
         return actualExtent;

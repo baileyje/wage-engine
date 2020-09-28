@@ -5,19 +5,10 @@
 namespace wage {
   namespace render {
 
-    void Model::destroy(Device* device, int imageCount) {
-      for (size_t i = 0; i < imageCount; i++) {
-        uniformBuffers[i].destroy();
-      }
+    void Model::destroy(Device* device) {
       vkDestroyDescriptorPool(device->logical, descriptorPool, nullptr);
-    }
-
-    void Model::createUniformBuffers(Device* device, int imageCount) {
-      VkDeviceSize bufferSize = sizeof(UniformBufferScene);
-      uniformBuffers.resize(imageCount);
-      for (size_t i = 0; i < imageCount; i++) {
-        device->createBuffer(VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, bufferSize, &uniformBuffers[i]);
-      }
+      texture->destroy(device);
+      mesh->destroy(device);
     }
 
     void Model::createDescriptorPool(Device* device, int imageCount) {
@@ -52,11 +43,6 @@ namespace wage {
       }
 
       for (size_t i = 0; i < imageCount; i++) {
-        VkDescriptorBufferInfo bufferInfo{};
-        bufferInfo.buffer = uniformBuffers[i].buffer;
-        bufferInfo.offset = 0;
-        bufferInfo.range = sizeof(UniformBufferScene);
-
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         imageInfo.imageView = texture->imageView;

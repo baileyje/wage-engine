@@ -12,7 +12,11 @@ namespace wage {
     }
 
     void VulkanScene::destroy(Device* device) {
-      // vkDestroyDescriptorSetLayout(device->logical, sceneUboLayout, nullptr);
+      vkDestroyDescriptorPool(device->logical, descriptorPool, nullptr);
+      for (auto& buffer : uniformBuffers) {
+        buffer.destroy();
+      }
+      
     }
 
     void VulkanScene::createUniformBuffers(Device* device, int imageCount) {

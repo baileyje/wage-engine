@@ -9,7 +9,12 @@ namespace wage {
 
     VulkanMesh::VulkanMesh(Mesh* meshData) : meshData(meshData) {}
 
-    void VulkanMesh::destroy() {}
+    void VulkanMesh::destroy(Device* decice) {
+      if (!pushed) return;
+      vertexBuffer.destroy();
+      indexBuffer.destroy();
+      pushed = false;
+    }
 
     bool VulkanMesh::loaded() {
       return meshData && meshData->loaded();

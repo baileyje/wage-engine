@@ -6,28 +6,25 @@
 namespace wage {
   namespace render {
 
-    class Surface;
-    class Device;
-    class SwapChain;
-    class ModelPipeline;
-
+    class VulkanContext;
+    
     class CommandPool {
 
     public:
       
       VkCommandPool wrapped;
       
-      std::vector<VkCommandBuffer> commandBuffers;  
+      std::vector<VkCommandBuffer> commandBuffers;
 
-      CommandPool(Device* device, SwapChain* swapChain);
+      CommandPool(VulkanContext* context);
 
-      void create(Surface& surface, ModelPipeline* pipeline);
+      void create();
 
       void destroy();
 
       void cleanupBuffers();
 
-      void beginCommandBuffer(VkCommandBuffer commandBuffer, ModelPipeline* pipeline, uint32_t imageIndex);
+      VkCommandBuffer beginCommandBuffer(uint32_t imageIndex);
 
       void endCommandBuffer(VkCommandBuffer commandBuffer);
 
@@ -35,9 +32,8 @@ namespace wage {
       
       void createCommandBuffers();
 
-      Device* device;
+      VulkanContext* context;
       
-      SwapChain* swapChain;
     };
 
   }

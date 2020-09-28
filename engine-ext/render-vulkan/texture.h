@@ -29,7 +29,7 @@ namespace wage {
 
       void push(Device* device, CommandPool* commandPool);
 
-      void cleanup(Device* device);
+      void destroy(Device* device);
 
     private:
       

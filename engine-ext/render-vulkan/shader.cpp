@@ -4,7 +4,7 @@
 
 namespace wage {
   namespace render {
-    Shader::Shader(Device* device, VkShaderStageFlagBits stage) : device(device), stage(stage) {}
+    Shader::Shader(Device* device, VkShaderStageFlagBits stage) : stage(stage), device(device) {}
 
     void Shader::create(const memory::Buffer& code) {
       VkShaderModuleCreateInfo createInfo{};
