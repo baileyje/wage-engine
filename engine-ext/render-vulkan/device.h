@@ -2,43 +2,39 @@
 
 #include "render-vulkan/common.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Surface;
-    class Image;
-    class Buffer;
+  class Surface;
+  class Image;
+  class Buffer;
 
-    class Device {
+  class Device {
 
-    public:
-      VkPhysicalDevice physical = VK_NULL_HANDLE;
-      
-      VkDevice logical = VK_NULL_HANDLE;
-      
-      VkQueue graphicsQueue;
+  public:
+    VkPhysicalDevice physical = VK_NULL_HANDLE;
 
-      VkQueue presentQueue;
+    VkDevice logical = VK_NULL_HANDLE;
 
-      void create(VkInstance instance, Surface* surface);
+    VkQueue graphicsQueue;
 
-      void destroy();
+    VkQueue presentQueue;
 
-      VkResult createBuffer(VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkDeviceSize size, Buffer* buffer);
+    void create(VkInstance instance, Surface* surface);
 
-      VkResult createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image* image);
+    void destroy();
 
-    private:
-      void pickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface);
+    VkResult createBuffer(VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkDeviceSize size, Buffer* buffer);
 
-      bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface);
+    VkResult createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, Image* image);
 
-      void createLogicalDevice(VkSurfaceKHR surface);
+  private:
+    void pickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface);
 
-      bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+    bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface);
 
-    };
+    void createLogicalDevice(VkSurfaceKHR surface);
 
-  }
+    bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+  };
 
 }

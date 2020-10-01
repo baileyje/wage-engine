@@ -11,50 +11,48 @@
 #include "render-vulkan/common.h"
 #include "render-vulkan/image.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class VulkanContext;
+  class VulkanContext;
 
-    class SwapChain {
+  class SwapChain {
 
-    public:
-      VkSwapchainKHR wrapped;
+  public:
+    VkSwapchainKHR wrapped;
 
-      std::vector<VkImage> images;
-      
-      VkFormat imageFormat;
-      
-      VkExtent2D extent;
-      
-      std::vector<VkImageView> imageViews;
-      
-      std::vector<VkFramebuffer> frameBuffers;
+    std::vector<VkImage> images;
 
-      SwapChain(VulkanContext* context);
+    VkFormat imageFormat;
 
-      void create(float width, float height);
+    VkExtent2D extent;
 
-      void createFrameBuffers();
+    std::vector<VkImageView> imageViews;
 
-      void createDepthResources();
+    std::vector<VkFramebuffer> frameBuffers;
 
-      void cleanup();
+    SwapChain(VulkanContext* context);
 
-    private:
-      VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+    void create(float width, float height);
 
-      VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+    void createFrameBuffers();
 
-      VkExtent2D chooseSwapExtent(float width, float height, const VkSurfaceCapabilitiesKHR& capabilities);
+    void createDepthResources();
 
-      void createImageViews();
+    void cleanup();
 
-      VulkanContext* context;
+  private:
+    VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 
-      Image depthImage;
+    VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 
-      VkImageView depthImageView;
-    };
-  }
+    VkExtent2D chooseSwapExtent(float width, float height, const VkSurfaceCapabilitiesKHR& capabilities);
+
+    void createImageViews();
+
+    VulkanContext* context;
+
+    Image depthImage;
+
+    VkImageView depthImageView;
+  };
 }

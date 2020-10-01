@@ -7,36 +7,32 @@
 #include "ecs/entity.h"
 #include "math/vector.h"
 
-namespace wage {
+namespace wage::render {
 
-  namespace render {
-    
-    class Device;
-    class Pipeline;
-    class CommandPool;
-    class Camera;
+  class Device;
+  class Pipeline;
+  class CommandPool;
+  class Camera;
 
-    class VulkanRenderContext : public RenderContext {
-      public:
-        
-        Device* device;
+  class VulkanRenderContext : public RenderContext {
+  public:
+    Device* device;
 
-        Pipeline* modelPipeline;
+    Pipeline* modelPipeline;
 
-        Pipeline* uiPipeline;
+    Pipeline* uiPipeline;
 
-        CommandPool* commandPool;
-        
-        uint32_t imageIndex;
+    CommandPool* commandPool;
 
-        VkCommandBuffer commandBuffer;
+    uint32_t imageIndex;
 
-        uint8_t imageCount;
+    VkCommandBuffer commandBuffer;
 
-        std::vector<std::function<void(VulkanRenderContext*)>> cleanups;
+    uint8_t imageCount;
 
-        VulkanRenderContext(ecs::Entity cameraEntity, Camera* camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights);
-    };
+    std::vector<std::function<void(VulkanRenderContext*)>> cleanups;
 
-  }
+    VulkanRenderContext(ecs::Entity cameraEntity, Camera* camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights);
+  };
+
 }

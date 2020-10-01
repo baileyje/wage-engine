@@ -9,29 +9,26 @@
 #include "render-vulkan/swap_chain.h"
 #include "render-vulkan/render_pass.h"
 
+namespace wage::render {
 
-namespace wage {
-  namespace render {
+  class VulkanContext {
+  public:
+    Instance instance;
 
-    class VulkanContext {
-      public:
-      Instance instance;
-      
-      Surface surface;
-      
-      Device device;
-      
-      SwapChain swapChain;
-      
-      RenderPass renderPass;
+    Surface surface;
 
-      int frameCount;
+    Device device;
 
-      VulkanContext();
+    SwapChain swapChain;
 
-      void create(platform::Window* window);
+    RenderPass renderPass;
 
-      void destroy();
-    };
-  }
+    int frameCount;
+
+    VulkanContext();
+
+    void create(platform::Window* window);
+
+    void destroy();
+  };
 }

@@ -4,50 +4,52 @@
 #include "render-vulkan/common.h"
 #include "render-vulkan/image.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Device;
-    class CommandPool;
+  class Device;
+  class CommandPool;
+  class Pipeline;
 
-    class Texture {
-    
-    public:
-      int width;
+  class Texture {
 
-      int height;
+  public:
+    int width;
 
-      int channels;
+    int height;
 
-      VkDeviceSize imageSize;
+    int channels;
 
-      void* pixels;
-      
-      VkImageView imageView;
+    VkDeviceSize imageSize;
 
-      VkSampler sampler;
+    void* pixels;
 
-      VkFormat format;
-    
-      Texture();
+    VkImageView imageView;
 
-      virtual void push(Device* device, CommandPool* commandPool);
+    VkSampler sampler;
 
-      virtual void destroy(Device* device);
+    VkFormat format;
 
-    protected:
+    std::vector<VkDescriptorSet> descriptorSets;
 
-      void transitionImageLayout(Device* device, VkCommandPool commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+    Texture(VkFormat format = VK_FORMAT_R8G8B8A8_SRGB);
 
-      void copyBufferToImage(Device* device, VkCommandPool commandPool, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+    virtual void push(Device* device, CommandPool* commandPool, Pipeline* pipeline, VkDescriptorPool descriptorPool, int imageCount);
 
-      void createTextureImage(Device* device, VkCommandPool commandPool);
+    virtual void destroy(Device* device);
 
-      void createTextureSampler(Device* device);
+  protected:
+    void createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* pipeline, VkDescriptorPool descriptorPool, int imageCount);
 
-      bool pushed = false;
-      
-      Image textureImage;
-    };
-  }
+    void transitionImageLayout(Device* device, CommandPool* commandPool, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout);
+
+    void copyBufferToImage(Device* device, CommandPool* commandPool, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+
+    void createTextureImage(Device* device, CommandPool* commandPool);
+
+    void createTextureSampler(Device* device);
+
+    bool pushed = false;
+
+    Image textureImage;
+  };
 }

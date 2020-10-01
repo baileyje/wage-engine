@@ -5,29 +5,25 @@
 
 #include "memory/buffer.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Device;
+  class Device;
 
-    class Shader {
-      public:
-        
-        VkShaderStageFlagBits stage;
-        
-        VkShaderModule module;
+  class Shader {
+  public:
+    VkShaderStageFlagBits stage;
 
-        Shader(Device* device, VkShaderStageFlagBits stage);
+    VkShaderModule module;
 
-        void create(const memory::Buffer& code);
+    Shader(Device* device, VkShaderStageFlagBits stage);
 
-        VkPipelineShaderStageCreateInfo createInfo();
+    void create(const memory::Buffer& code);
 
-        void destroy();
+    VkPipelineShaderStageCreateInfo createInfo();
 
-      private:
-        Device* device;
-       
-    };
-  } 
+    void destroy();
+
+  private:
+    Device* device;
+  };
 }

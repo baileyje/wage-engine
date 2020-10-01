@@ -2,39 +2,39 @@
 
 #include "render-vulkan/common.h"
 
+namespace wage::render {
 
-namespace wage {
-  namespace render {
+  class VulkanContext;
 
-    class VulkanContext;
-    
-    class CommandPool {
+  class CommandPool {
 
-    public:
-      
-      VkCommandPool wrapped;
-      
-      std::vector<VkCommandBuffer> commandBuffers;
+  public:
+    VkCommandPool wrapped;
 
-      CommandPool(VulkanContext* context);
+    std::vector<VkCommandBuffer> commandBuffers;
 
-      void create();
+    CommandPool(VulkanContext* context);
 
-      void destroy();
+    void create();
 
-      void cleanupBuffers();
+    void destroy();
 
-      VkCommandBuffer beginCommandBuffer(uint32_t imageIndex);
+    void cleanupBuffers();
 
-      void endCommandBuffer(VkCommandBuffer commandBuffer);
+    VkCommandBuffer beginCommandBuffer(uint32_t imageIndex);
 
-    private:
-      
-      void createCommandBuffers();
+    void endCommandBuffer(VkCommandBuffer commandBuffer);
 
-      VulkanContext* context;
-      
-    };
+    VkCommandBuffer beginSingleTimeCommands();
 
-  }
+    void endSingleTimeCommands(VkQueue graphicsQueue, VkCommandBuffer commandBuffer);
+
+    void copyBuffer(VkQueue graphicsQueue, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+  private:
+    void createCommandBuffers();
+
+    VulkanContext* context;
+  };
+
 }

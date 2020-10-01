@@ -7,36 +7,32 @@
 #include "render/components/mesh.h"
 #include "render/components/material.h"
 
+namespace wage::render {
 
-namespace wage {
-  namespace render {
+  class MeshManager;
+  class ModelManager;
+  class Model;
 
-    class MeshManager;
-    class ModelManager;
-    class Model;
+  class ModelRenderable : public Renderable {
 
-    class ModelRenderable : public Renderable {
+  public:
+    ModelRenderable(asset::Manager* assetManager, MeshManager* meshManager, ModelManager* modelManager, math::Transform transform, MeshSpec* meshSpec, MaterialSpec* material);
 
-    public:
-      ModelRenderable(asset::Manager* assetManager, MeshManager* meshManager, ModelManager* modelManager, math::Transform transform, MeshSpec* meshSpec, MaterialSpec* material);
+    virtual math::Vector position();
 
-      virtual math::Vector position();
+    virtual math::BoundingBox boundingBox();
 
-      virtual math::BoundingBox boundingBox();
+    virtual math::BoundingSphere boundingSphere();
 
-      virtual math::BoundingSphere boundingSphere();
+    virtual void render(RenderContext* context);
 
-      virtual void render(RenderContext * context);
+  private:
+    math::Transform transform;
 
-    private:
+    MeshSpec meshSpec;
 
-      math::Transform transform;
+    TextureSpec textureSpec;
 
-      MeshSpec meshSpec;
-      
-      TextureSpec textureSpec;
-
-      Model* model;
-    };
-  }
+    Model* model;
+  };
 }

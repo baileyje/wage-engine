@@ -35,7 +35,7 @@ void setupServices(core::Core* core, std::string path) {
   core->create<audio::Audio, audio::AlAudio>();
   core->create<physics::Physics, physics::BulletPhysics>();
   // core->create<render::Renderer, render::GlRenderer>();
-  core->create<render::Renderer, render::VulkanRenderer>();
+  core->create<render::Renderer, render::vulkan::VulkanRenderer>();
   core->create<scene::Manager>();
 }
 

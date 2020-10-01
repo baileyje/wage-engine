@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include "render-vulkan/common.h"
 #include "render-vulkan/device.h"
@@ -6,33 +6,29 @@
 #include "render-vulkan/buffer.h"
 #include "render-vulkan/pipeline.h"
 
-namespace wage {
+namespace wage::render {
 
-  namespace render {
+  class VulkanScene {
+  public:
+    std::vector<Buffer> modelUniformBuffers;
 
-    class VulkanScene {
-      public:
-        std::vector<Buffer> modelUniformBuffers;
+    std::vector<Buffer> uiUniformBuffers;
 
-        std::vector<Buffer> uiUniformBuffers;
+    VkDescriptorPool descriptorPool;
 
-        VkDescriptorPool descriptorPool;
-        
-        std::vector<VkDescriptorSet> modelDescriptorSets;
+    std::vector<VkDescriptorSet> modelDescriptorSets;
 
-        std::vector<VkDescriptorSet> uiDescriptorSets;
+    std::vector<VkDescriptorSet> uiDescriptorSets;
 
-        void create(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount);
+    void create(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount);
 
-        void destroy(Device* device);
+    void destroy(Device* device);
 
-        void createUniformBuffers(Device* device, int imageCount);
+    void createUniformBuffers(Device* device, int imageCount);
 
-        void createDescriptorPool(Device* device, int imageCount);
+    void createDescriptorPool(Device* device, int imageCount);
 
-        void createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount);
-    };
-
-  }
+    void createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount);
+  };
 
 }

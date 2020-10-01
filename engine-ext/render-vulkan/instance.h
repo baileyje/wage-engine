@@ -3,36 +3,33 @@
 #include <vector>
 #include "render-vulkan/common.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Instance {
+  class Instance {
 
-    public:
-      VkInstance wrapped;
+  public:
+    VkInstance wrapped;
 
-      Instance();
+    Instance();
 
-      void create(bool enableValidationLayers);
+    void create(bool enableValidationLayers);
 
-      void destroy();
+    void destroy();
 
-    private:
+  private:
+    std::vector<const char*> getRequiredExtensions();
 
-      std::vector<const char*> getRequiredExtensions();
+    bool checkValidationLayerSupport();
 
-      bool checkValidationLayerSupport();
+    void setupDebugMessenger();
 
-      void setupDebugMessenger();
+    void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
-      void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+    VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 
-      VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
+    void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
-      void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
-
-      private: 
-      VkDebugUtilsMessengerEXT debugMessenger;
-    };
-  }
+  private:
+    VkDebugUtilsMessengerEXT debugMessenger;
+  };
 }

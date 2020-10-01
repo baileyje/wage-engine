@@ -1,7 +1,6 @@
 #include "render-vulkan/vertex.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
     VkVertexInputBindingDescription VulkanVertex::getBindingDescription() {
       VkVertexInputBindingDescription bindingDescription{};
       bindingDescription.binding = 0;
@@ -31,4 +30,3 @@ namespace wage {
       return attributeDescriptions;
     }
   }
-}

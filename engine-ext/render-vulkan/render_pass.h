@@ -2,30 +2,28 @@
 
 #include "render-vulkan/common.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Device;
-    class SwapChain;
+  class Device;
+  class SwapChain;
 
-    class RenderPass {
-      
-      public:
-        VkRenderPass wrapped;
+  class RenderPass {
 
-        RenderPass(Device* device, SwapChain* swapChain);
+  public:
+    VkRenderPass wrapped;
 
-        void create();
+    RenderPass(Device* device, SwapChain* swapChain);
 
-        void destroy();
+    void create();
 
-        void begin(VkCommandBuffer commandBuffer, int indexImage);
-        
-        void end(VkCommandBuffer commandBuffer);
+    void destroy();
 
-      private:
-        Device* device;
-        SwapChain* swapChain;
-    };
-  }
+    void begin(VkCommandBuffer commandBuffer, int indexImage);
+
+    void end(VkCommandBuffer commandBuffer);
+
+  private:
+    Device* device;
+    SwapChain* swapChain;
+  };
 }

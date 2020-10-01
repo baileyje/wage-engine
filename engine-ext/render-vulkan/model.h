@@ -12,48 +12,41 @@
 #include "render-vulkan/mesh.h"
 #include "render-vulkan/buffer.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class CommandPool;
-    class Device;
-    class Pipeline;
+  class CommandPool;
+  class Device;
+  class Pipeline;
 
-    class Model {
-      public:
-        Model(MeshSpec meshSpec, TextureSpec textureSpec);
+  class Model {
+  public:
+    Model(MeshSpec meshSpec, TextureSpec textureSpec);
 
-        void load(asset::Manager* assetManager, render::MeshManager* meshManager);
+    void load(asset::Manager* assetManager, render::MeshManager* meshManager);
 
-        void push(Device* device, CommandPool* commandPool, Pipeline* pipeline, int imageCount);
+    void push(Device* device, CommandPool* commandPool, Pipeline* pipeline, int imageCount);
 
-        void create(Device* device, CommandPool* commandPool, Pipeline* pipeline);
+    void create(Device* device, CommandPool* commandPool, Pipeline* pipeline);
 
-        void destroy(Device* device);
+    void destroy(Device* device);
 
-        VkDescriptorPool descriptorPool;
+    VkDescriptorPool descriptorPool;
 
-        std::vector<VkDescriptorSet> descriptorSets;
+    VulkanMesh* mesh = nullptr;
 
-        VulkanMesh* mesh = nullptr;
+    TextureAsset* textureAsset = nullptr;
 
-        TextureAsset* textureAsset = nullptr;
+    inline bool loaded() {
+      return mesh && textureAsset && mesh->loaded() && textureAsset->loaded();
+    }
 
-        inline bool loaded() {
-          return mesh && textureAsset && mesh->loaded() && textureAsset->loaded();
-        }
+  private:
+    void createDescriptorPool(Device* device, int imageCount);
 
-      private:
+    MeshSpec meshSpec;
 
-        void createDescriptorPool(Device* device, int imageCount);
+    TextureSpec textureSpec;
 
-        void createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* pipeline, int imageCount);
-
-        MeshSpec meshSpec;
-
-        TextureSpec textureSpec;
-
-        bool pushed = false; // Atomic??
-      };
-  }
+    bool pushed = false; // Atomic??
+  };
 }

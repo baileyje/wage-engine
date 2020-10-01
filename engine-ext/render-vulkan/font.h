@@ -4,9 +4,6 @@
 #include <iostream>
 #include <vector>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include "math/vector.h"
 #include "asset/manager.h"
 #include "memory/buffer.h"
@@ -14,88 +11,36 @@
 
 #include "render-vulkan/texture.h"
 #include "render-vulkan/buffer.h"
+#include "render-vulkan/font_glyph.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Device;
-    class CommandPool;
-    class Pipeline;
-    struct Vertex;
+  class Device;
 
-    class Character {
+  class CommandPool;
 
-    public:
-      Character(math::Vector2 size, math::Vector2 bearing, unsigned int advance);
+  class Font : public asset::Asset {
 
-      void push(Device* device, CommandPool* commandPool, Pipeline* pipeline, VkDescriptorPool descriptorPool);
+  public:
+    Font(FontSpec font) : Asset(font), size(font.size()) {}
 
-      void destroy(Device* device);
+    Glyph* glyphFor(char c);
 
-      math::Vector2 size;
+    bool onLoad(memory::InputStream* stream, memory::Allocator* allocator);
 
-      math::Vector2 bearing;
+    void push(Device* device, CommandPool* commandPool);
 
-      unsigned int advance;
+    void destroy(Device* device);
 
-      VkDeviceSize imageSize;
+    VkDescriptorPool descriptorPool;
 
-      void* pixels;
-      
-      bool pushed = false;
+  private:
+    void createDescriptorPool(Device* device, int imageCount);
 
-      std::vector<VkDescriptorSet> descriptorSets;
+    int size;
 
-      VkImageView imageView;
+    std::map<char, Glyph> glyphs;
 
-      VkSampler sampler;
-
-      Image textureImage;
-
-      Buffer vertexBuffer;
-
-      Buffer indexBuffer;
-
-    private:
-      void createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* pipeline, VkDescriptorPool descriptorPool, int imageCount);
-
-      void transitionImageLayout(Device* device, VkCommandPool commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
-
-      void copyBufferToImage(Device* device, VkCommandPool commandPool, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-
-      void createTextureImage(Device* device, VkCommandPool commandPool);
-
-      void createTextureSampler(Device* device);
-
-      void createVertexBuffer(Device* device, CommandPool* commandPool, std::vector<Vertex> vertices);
-
-      void createIndexBuffer(Device* device, CommandPool* commandPool, std::vector<uint32_t> indices);
-    };
-
-    class Font : public asset::Asset {
-
-    public:
-      Font(FontSpec font) : Asset(font), size(font.size()) {}
-
-      Character* characterFor(char c);
-
-      bool onLoad(memory::InputStream* stream, memory::Allocator* allocator);
-      
-      void push(Device* device, CommandPool* commandPool);
-
-      void destroy(Device* device);
-
-      VkDescriptorPool descriptorPool;
-
-    private:
-      void createDescriptorPool(Device* device, int imageCount);      
-
-      int size;
-
-      std::map<char, Character> characters;
-
-      bool pushed = false;
-    };
-
-  }
+    bool pushed = false;
+  };
 }

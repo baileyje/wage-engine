@@ -7,54 +7,49 @@
 #include "render-vulkan/shader.h"
 #include "memory/buffer.h"
 
+namespace wage::render {
 
-namespace wage {
-  namespace render {
+  class VulkanContext;
 
-    class VulkanContext;
+  class Pipeline {
 
-    class Pipeline {
+  public:
+    VkPipeline model;
 
-    public:
+    VkPipeline ui;
 
-      VkPipeline model;
+    VkDescriptorSetLayout uboLayout;
 
-      VkPipeline ui;
+    VkDescriptorSetLayout textureLayout;
 
-      VkDescriptorSetLayout uboLayout;
+    VkPipelineLayout layout;
 
-      VkDescriptorSetLayout textureLayout;
+    Pipeline(VulkanContext* context);
 
-      VkPipelineLayout layout;
+    void create();
 
-      Pipeline(VulkanContext* context);
+    void cleanup();
 
-      void create();
+    void bindModel(VkCommandBuffer commandBuffer);
 
-      void cleanup();
+    void bindUi(VkCommandBuffer commandBuffer);
 
-      void bindModel(VkCommandBuffer commandBuffer);
+  protected:
+    VkShaderModule createShaderModule(const memory::Buffer& code);
 
-      void bindUi(VkCommandBuffer commandBuffer);      
+    std::vector<Shader> shaderStages();
 
-    protected:
+    void createDescriptorSetLayouts();
 
-      VkShaderModule createShaderModule(const memory::Buffer& code);
+    std::vector<VkDescriptorSetLayout> descriptorSetLayouts();
 
-      std::vector<Shader> shaderStages();
+    void cleanupDescriptorSetLayouts();
 
-      void createDescriptorSetLayouts();
+    std::vector<VkPushConstantRange> pushConstantRanges();
 
-      std::vector<VkDescriptorSetLayout> descriptorSetLayouts();
+    void setupVertexInputInfo(VkPipelineVertexInputStateCreateInfo* info);
 
-      void cleanupDescriptorSetLayouts();
+    VulkanContext* context;
+  };
 
-      std::vector<VkPushConstantRange> pushConstantRanges();
-
-      void setupVertexInputInfo(VkPipelineVertexInputStateCreateInfo* info);
-
-      VulkanContext* context;
-    };
-
-  }
 }

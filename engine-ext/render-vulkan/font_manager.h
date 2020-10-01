@@ -4,22 +4,20 @@
 #include "render/components/font.h"
 #include "asset/manager.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Font;
-    class Device;
+  class Font;
+  class Device;
 
-    class FontManager {
-    public:
-      Font* load(FontSpec fontSpec);
+  class FontManager {
+  public:
+    Font* load(FontSpec fontSpec);
 
-      void destroy(Device* device);
+    void destroy(Device* device);
 
-      asset::Manager* assetManager;
+    asset::Manager* assetManager;
 
-    private:
-      std::unordered_map<std::string, Font*> cache;
-    };
-  }
+  private:
+    std::unordered_map<std::string, Font*> cache;
+  };
 }

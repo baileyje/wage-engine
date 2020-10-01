@@ -28,68 +28,65 @@
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
-namespace wage {
-  namespace render {
+namespace wage::render::vulkan {
 
-    class VulkanRenderer : public Renderer {
-    public:
-      VulkanRenderer();
+  class VulkanRenderer : public Renderer {
+  public:
+    VulkanRenderer();
 
-      void start();
+    void start();
 
-      void stop();
+    void stop();
 
-      void beginRender(RenderContext* renderContext);
+    void beginRender(RenderContext* renderContext);
 
-      void endRender(RenderContext* renderContext);
+    void endRender(RenderContext* renderContext);
 
-      void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material);
+    void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material);
 
-      void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color);
+    void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color);
 
-      static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 
-    protected:
-      RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera);
+  protected:
+    RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera);
 
-      void beginMeshRender(RenderContext* renderContext);
-      
+    void beginMeshRender(RenderContext* renderContext);
 
-      void endMeshRender(RenderContext* renderContext);
+    void endMeshRender(RenderContext* renderContext);
 
-      void beginUiRender(RenderContext* renderContext);
+    void beginUiRender(RenderContext* renderContext);
 
-      void endUiRender(RenderContext* renderContext);
+    void endUiRender(RenderContext* renderContext);
 
-    private:
-      void createSyncObjects();
+  private:
+    void createSyncObjects();
 
-      void destroySyncObjects();
+    void destroySyncObjects();
 
-      void recreateSwapChain();
+    void recreateSwapChain();
 
-      void cleanupSwapChain();
+    void cleanupSwapChain();
 
-      VulkanContext context;
+    VulkanContext context;
 
-      Pipeline pipeline;
+    Pipeline pipeline;
 
-      CommandPool commandPool;
+    CommandPool commandPool;
 
-      VulkanScene scene;
+    VulkanScene scene;
 
-      std::vector<VkSemaphore> imageAvailableSemaphores;
-      std::vector<VkSemaphore> renderFinishedSemaphores;
-      std::vector<VkFence> inFlightFences;
-      std::vector<VkFence> imagesInFlight;
-      size_t currentFrame = 0;
-      bool framebufferResized = false;
+    std::vector<VkSemaphore> imageAvailableSemaphores;
+    std::vector<VkSemaphore> renderFinishedSemaphores;
+    std::vector<VkFence> inFlightFences;
+    std::vector<VkFence> imagesInFlight;
+    size_t currentFrame = 0;
+    bool framebufferResized = false;
 
-      MeshManager meshManager;
-      ModelManager modelManager;
-      
-      FontManager fontManager;
-    };
+    MeshManager meshManager;
+    ModelManager modelManager;
 
-  }
+    FontManager fontManager;
+  };
+
 }

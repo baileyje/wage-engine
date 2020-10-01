@@ -2,24 +2,21 @@
 
 #include "render-vulkan/common.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Instance;
-      
-    class Surface {
-      public:
-         
-        VkSurfaceKHR wrapped;
+  class Instance;
 
-        Surface(Instance* instance);
+  class Surface {
+  public:
+    VkSurfaceKHR wrapped;
 
-        void create(GLFWwindow* window);
+    Surface(Instance* instance);
 
-        void destroy();
+    void create(GLFWwindow* window);
 
-      private:
-        Instance* instance;
-    };
-  }
+    void destroy();
+
+  private:
+    Instance* instance;
+  };
 }

@@ -5,37 +5,34 @@
 #include "render-vulkan/common.h"
 #include "render-vulkan/buffer.h"
 
-namespace wage {
-  namespace render {
+namespace wage::render {
 
-    class Mesh;
-    class Device;
-    class CommandPool;
-    class Buffer;
+  class Mesh;
+  class Device;
+  class CommandPool;
+  class Buffer;
 
-    class VulkanMesh {
-    public:
+  class VulkanMesh {
+  public:
+    Buffer vertexBuffer;
 
-      Buffer vertexBuffer;
-      
-      Buffer indexBuffer;
-      
-      Mesh* meshData = nullptr;
-      
-      VulkanMesh(Mesh* meshData);
+    Buffer indexBuffer;
 
-      void destroy(Device* decice);
+    Mesh* meshData = nullptr;
 
-      bool loaded();
+    VulkanMesh(Mesh* meshData);
 
-      void push(Device* device, CommandPool* commandPool);
+    void destroy(Device* decice);
 
-      void createVertexBuffer(Device* device, CommandPool* commandPool);
+    bool loaded();
 
-      void createIndexBuffer(Device* device, CommandPool* commandPool);
+    void push(Device* device, CommandPool* commandPool);
 
-      private:
-        bool pushed = false;
-    };
-  }
+    void createVertexBuffer(Device* device, CommandPool* commandPool);
+
+    void createIndexBuffer(Device* device, CommandPool* commandPool);
+
+  private:
+    bool pushed = false;
+  };
 }

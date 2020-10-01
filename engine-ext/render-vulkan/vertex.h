@@ -8,27 +8,13 @@
 
 #include "render/mesh/vertex.h"
 
-// TODO: Move to engine math
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/hash.hpp>
+namespace wage::render {
 
-namespace wage {
-  namespace render {
+  struct VulkanVertex : public Vertex {
 
-    struct VulkanVertex : public Vertex {
-    
-      static VkVertexInputBindingDescription getBindingDescription();
+    static VkVertexInputBindingDescription getBindingDescription();
 
-      static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions();
-
-      // bool operator==(const GLVertex& other) const {
-      //   return pos == other.pos && color == other.color && texCoord == other.texCoord;
-      // }
-    };
-  }
+    static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions();
+  };
+  
 }
-
