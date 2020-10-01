@@ -3,12 +3,13 @@
 namespace wage {
   namespace render {
 
-    VulkanRenderer::VulkanRenderer() : pipeline(&context.device, &context.swapChain), commandPool(&context) {}
+    VulkanRenderer::VulkanRenderer() : pipeline(&context), commandPool(&context) {}
 
     void VulkanRenderer::start() {
       Renderer::start();
       meshManager.assetManager(assetManager);
       meshManager.generatePrimitives();
+      fontManager.assetManager = assetManager;
       if (glfwVulkanSupported()) {
         core::Logger::info("Vulkan Supported FTW");
       } else {
@@ -16,19 +17,20 @@ namespace wage {
         exit(99);
       }
       // TODO: Integrate window resize events into the platform window handling...
-      auto glfwWindow = window->as<GLFWwindow>();
+      // auto glfwWindow = window->as<GLFWwindow>();
       // glfwSetWindowUserPointer(glfwWindow, this);
       // glfwSetFramebufferSizeCallback(glfwWindow, framebufferResizeCallback);
 
       context.create(window);
-      pipeline.create(&context.renderPass);
+      pipeline.create();
       commandPool.create();
       createSyncObjects();
-      scene.create(&context.device, &commandPool, &pipeline, context.swapChain.images.size());
+      scene.create(&context.device, &commandPool, &pipeline, &pipeline, context.frameCount);
     }
 
     void VulkanRenderer::stop() {
       vkDeviceWaitIdle(context.device.logical);
+      fontManager.destroy(&context.device);
       modelManager.destroy(&context.device);
       scene.destroy(&context.device);
       commandPool.cleanupBuffers();
@@ -56,21 +58,65 @@ namespace wage {
       auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
       vkContext->device = &context.device;
       vkContext->commandPool = &commandPool;
-      vkContext->pipeline = &pipeline;
+      vkContext->modelPipeline = &pipeline;
+      vkContext->uiPipeline = &pipeline;
       vkContext->imageIndex = imageIndex;
-      vkContext->imageCount = context.swapChain.images.size();
+      vkContext->imageCount = context.frameCount;
       vkContext->commandBuffer = commandBuffer;
 
       context.renderPass.begin(commandBuffer, imageIndex);
-      pipeline.bind(commandBuffer);
+    }
+
+    void VulkanRenderer::beginMeshRender(RenderContext* renderContext) {
+      auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
+      auto commandBuffer = vkContext->commandBuffer;
+      pipeline.bindModel(commandBuffer);
 
       UniformBufferScene ubo{};
-      // ubo.model = transform.worldProjection().glm();
       ubo.view = renderContext->viewProjection().glm();
       ubo.proj = renderContext->screenProjection().glm();
       ubo.proj[1][1] *= -1;
-      scene.uniformBuffers[vkContext->imageIndex].fillWith(&ubo, sizeof(ubo));
-      vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkContext->pipeline->layout, 0, 1, &scene.descriptorSets[vkContext->imageIndex], 0, nullptr);
+      scene.modelUniformBuffers[vkContext->imageIndex].fillWith(&ubo, sizeof(ubo));
+      vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 0, 1, &scene.modelDescriptorSets[vkContext->imageIndex], 0, nullptr);
+    }
+
+    void VulkanRenderer::endMeshRender(RenderContext* renderContext) {
+      auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
+    }
+
+    void VulkanRenderer::beginUiRender(RenderContext* renderContext) {
+      auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
+      auto commandBuffer = vkContext->commandBuffer;
+      pipeline.bindUi(commandBuffer);
+
+      UniformBufferScene ubo{};
+      auto projection = math::Matrix::orthographic(0.0f, renderContext->screenSize().x, 0.0f, renderContext->screenSize().y);
+      ubo.view = renderContext->viewProjection().glm();
+      ubo.proj = projection.glm();
+
+      scene.uiUniformBuffers[vkContext->imageIndex].fillWith(&ubo, sizeof(ubo));
+      vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 0, 1, &scene.uiDescriptorSets[vkContext->imageIndex], 0, nullptr);
+
+      // Font* font = assetManager->load<Font>(FontSpec{"ARCADE.TTF", 100});
+      // if (!font->loaded()) {
+      //   return;
+      // }
+      // font->push(&context.device, &commandPool);
+      // auto character = font->characterFor('R');
+      // character->push(&context.device, &commandPool, &pipeline, font->descriptorPool);
+      // VkBuffer vertexBuffers[] = {character->vertexBuffer.buffer};
+      // VkDeviceSize offsets[] = {0};
+      // math::Transform transform({100, 100, 0}, {1, 1, 1}, math::Vector3::Zero);
+      
+      // auto matrix = transform.worldProjection().glm();
+      // vkCmdBindVertexBuffers(vkContext->commandBuffer, 0, 1, vertexBuffers, offsets);
+      // vkCmdBindIndexBuffer(vkContext->commandBuffer, character->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+      // vkCmdPushConstants(vkContext->commandBuffer, vkContext->uiPipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &matrix);
+      // vkCmdBindDescriptorSets(vkContext->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 1, 1, &character->descriptorSets[vkContext->imageIndex], 0, nullptr);
+      // vkCmdDrawIndexed(vkContext->commandBuffer, static_cast<uint32_t>(6), 1, 0, 0, 0);
+    }
+
+    void VulkanRenderer::endUiRender(RenderContext* renderContext) {
     }
 
     void VulkanRenderer::endRender(RenderContext* renderContext) {
@@ -117,6 +163,9 @@ namespace wage {
         throw std::runtime_error("failed to present swap chain image!");
       }
       currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+      for (auto& cleanup : vkContext->cleanups) {
+        cleanup(vkContext);
+      }
     }
 
     void VulkanRenderer::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
@@ -129,6 +178,10 @@ namespace wage {
       updateFrame()->meshQueue().add<ModelRenderable>(assetManager, &meshManager, &modelManager, transform, mesh, material);
     }
 
+    void VulkanRenderer::renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) {
+      updateFrame()->uiQueue().add<TextRenderable>(&fontManager, position, text, font, color);
+    }
+
     RenderContext* VulkanRenderer::createContext(ecs::Entity cameraEntity, Camera* camera) {
       return new VulkanRenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
     }
@@ -137,7 +190,7 @@ namespace wage {
       imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
       renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
       inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-      imagesInFlight.resize(context.swapChain.images.size(), VK_NULL_HANDLE);
+      imagesInFlight.resize(context.frameCount, VK_NULL_HANDLE);
 
       VkSemaphoreCreateInfo semaphoreInfo{};
       semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -173,10 +226,10 @@ namespace wage {
       }
       vkDeviceWaitIdle(context.device.logical);
       cleanupSwapChain();
-      context.swapChain.create(window->width(), window->height(), context.surface);
-      pipeline.create(&context.renderPass);
+      context.swapChain.create(window->width(), window->height());
+      pipeline.create();
       context.swapChain.createDepthResources();
-      context.swapChain.createFrameBuffers(context.renderPass.wrapped);
+      context.swapChain.createFrameBuffers();
       commandPool.create();
     }
 

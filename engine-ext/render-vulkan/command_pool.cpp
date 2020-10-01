@@ -29,7 +29,6 @@ namespace wage {
 
     VkCommandBuffer CommandPool::beginCommandBuffer(uint32_t imageIndex) {
       auto commandBuffer = commandBuffers[imageIndex];
-      vkResetCommandBuffer(commandBuffer, VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT);
       VkCommandBufferBeginInfo beginInfo{};
       beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
       if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
@@ -38,8 +37,7 @@ namespace wage {
       return commandBuffer;
     }
 
-    void CommandPool::endCommandBuffer(VkCommandBuffer commandBuffer) {
-      
+    void CommandPool::endCommandBuffer(VkCommandBuffer commandBuffer) {   
       if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
         throw std::runtime_error("failed to record command buffer!");
       }

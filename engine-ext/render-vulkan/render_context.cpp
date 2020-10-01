@@ -3,7 +3,7 @@
 #include "render/components/camera/camera.h"
 #include "render-vulkan/device.h"
 #include "render-vulkan/command_pool.h"
-#include "render-vulkan/model_pipeline.h"
+#include "render-vulkan/pipeline.h"
 
 namespace wage {
   namespace render {

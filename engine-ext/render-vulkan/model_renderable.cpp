@@ -3,6 +3,7 @@
 #include "render-vulkan/render_context.h"
 #include "render-vulkan/model.h"
 #include "render-vulkan/model_manager.h"
+#include "render-vulkan/pipeline.h"
 
 namespace wage {
   namespace render {
@@ -37,7 +38,7 @@ namespace wage {
       if (!model->loaded()) {
         return;
       }
-      model->push(vkContext->device, vkContext->commandPool, vkContext->pipeline, vkContext->imageCount);
+      model->push(vkContext->device, vkContext->commandPool, vkContext->modelPipeline, vkContext->imageCount);
       // std::cout << "Ctx: " << vkContext << "\n";
       // START: MODEL
       VkBuffer vertexBuffers[] = {model->mesh->vertexBuffer.buffer};
@@ -47,11 +48,12 @@ namespace wage {
       vkCmdBindIndexBuffer(vkContext->commandBuffer, model->mesh->indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
       // Apply transform to mesh
       auto modelMat = transform.worldProjection().glm();
-      vkCmdPushConstants(vkContext->commandBuffer, vkContext->pipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &modelMat);
-      vkCmdBindDescriptorSets(vkContext->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkContext->pipeline->layout, 1, 1, &model->descriptorSets[vkContext->imageIndex], 0, nullptr);
+      vkCmdPushConstants(vkContext->commandBuffer, vkContext->modelPipeline->layout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(glm::mat4), &modelMat);
+      vkCmdBindDescriptorSets(vkContext->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vkContext->modelPipeline->layout, 1, 1, &model->descriptorSets[vkContext->imageIndex], 0, nullptr);
       // Draw.
       vkCmdDrawIndexed(vkContext->commandBuffer, static_cast<uint32_t>(model->mesh->meshData->indices.size()), 1, 0, 0, 0);
       // END: MODEL
     }
+
   }
 }

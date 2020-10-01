@@ -1,119 +1,101 @@
-// #pragma once
+#pragma once
 
-// #include <map>
-// #include <iostream>
-// #include <glad/glad.h>
+#include <map>
+#include <iostream>
+#include <vector>
 
-// #include <ft2build.h>
-// #include FT_FREETYPE_H
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
-// #include "math/vector.h"
-// #include "asset/manager.h"
-// #include "memory/buffer.h"
+#include "math/vector.h"
+#include "asset/manager.h"
+#include "memory/buffer.h"
+#include "render/components/font.h"
 
-// #include "render-gl/util.h"
+#include "render-vulkan/texture.h"
+#include "render-vulkan/buffer.h"
 
-// namespace wage {
-//   namespace render {
+namespace wage {
+  namespace render {
 
-//     class GlCharacter {
+    class Device;
+    class CommandPool;
+    class Pipeline;
+    struct Vertex;
 
-//     public:
-//       GlCharacter(math::Vector2 size, math::Vector2 bearing, unsigned int advance) : textureId(0), size(size), bearing(bearing), advance(advance), bound(false), pushed(false) {}
+    class Character {
 
-//       inline void bind() {
-//         if (bound) {
-//           return;
-//         }
-//         if (!pushed) {
-//           glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-//           GL_FAIL_CHECK(glGenTextures(1, &textureId));
-//           GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, textureId));
-//           GL_FAIL_CHECK(glTexImage2D(
-//               GL_TEXTURE_2D,
-//               0,
-//               GL_RED,
-//               size.x,
-//               size.y,
-//               0,
-//               GL_RED,
-//               GL_UNSIGNED_BYTE,
-//               buffer.data()));
-//           // Set texture options
-//           GL_FAIL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-//           GL_FAIL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-//           GL_FAIL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-//           GL_FAIL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-//           pushed = true;
-//         }
-//         GL_FAIL_CHECK(glBindTexture(GL_TEXTURE_2D, textureId));
-//       }
+    public:
+      Character(math::Vector2 size, math::Vector2 bearing, unsigned int advance);
 
-//       unsigned int textureId;
+      void push(Device* device, CommandPool* commandPool, Pipeline* pipeline, VkDescriptorPool descriptorPool);
 
-//       memory::Buffer buffer;
+      void destroy(Device* device);
 
-//       math::Vector2 size;
+      math::Vector2 size;
 
-//       math::Vector2 bearing;
+      math::Vector2 bearing;
 
-//       unsigned int advance;
+      unsigned int advance;
 
-//       bool bound;
+      VkDeviceSize imageSize;
 
-//       bool pushed;
-//     };
+      void* pixels;
+      
+      bool pushed = false;
 
-//     class GlFont : public asset::Asset {
+      std::vector<VkDescriptorSet> descriptorSets;
 
-//     public:
-//       GlFont(FontSpec font) : Asset(font), size(font.size()) {}
+      VkImageView imageView;
 
-//       inline GlCharacter* characterFor(char c) {
-//         auto found = characters.find(c);
-//         if (found != characters.end()) {
-//           return &found->second;
-//         }
-//         return nullptr;
-//       }
+      VkSampler sampler;
 
-//       bool onLoad(memory::InputStream* stream, memory::Allocator* allocator) {
-//         FT_Library freeType;
-//         if (FT_Init_FreeType(&freeType))
-//           std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-//         FT_Face face;
-//         auto bufferSize = stream->size();
-//         auto buffer = (memory::Byte*)malloc(bufferSize);
-//         stream->read(buffer, bufferSize);
-//         if (FT_New_Memory_Face(freeType, buffer, bufferSize, 0, &face))
-//           std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-//         free(buffer);
+      Image textureImage;
 
-//         FT_Set_Pixel_Sizes(face, 0, size);
-//         for (GLubyte c = 0; c < 128; c++) {
-//           FT_Error error = FT_Load_Char(face, c, FT_LOAD_RENDER);
-//           if (error) {
-//             printf("Error: %d\n", error);
-//             std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-//             continue;
-//           }
-//           GlCharacter character(
-//               math::Vector2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-//               math::Vector2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-//               face->glyph->advance.x);
-//           character.buffer.fill(face->glyph->bitmap.buffer, sizeof(GL_UNSIGNED_BYTE) * character.size.x * character.size.y);
-//           characters.insert(std::pair<char, GlCharacter>(c, character));
-//         }
-//         FT_Done_Face(face);
-//         FT_Done_FreeType(freeType);
-//         return true;
-//       }
+      Buffer vertexBuffer;
 
-//     private:
-//       int size;
+      Buffer indexBuffer;
 
-//       std::map<char, GlCharacter> characters;
-//     };
+    private:
+      void createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* pipeline, VkDescriptorPool descriptorPool, int imageCount);
 
-//   }
-// }
+      void transitionImageLayout(Device* device, VkCommandPool commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+
+      void copyBufferToImage(Device* device, VkCommandPool commandPool, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+
+      void createTextureImage(Device* device, VkCommandPool commandPool);
+
+      void createTextureSampler(Device* device);
+
+      void createVertexBuffer(Device* device, CommandPool* commandPool, std::vector<Vertex> vertices);
+
+      void createIndexBuffer(Device* device, CommandPool* commandPool, std::vector<uint32_t> indices);
+    };
+
+    class Font : public asset::Asset {
+
+    public:
+      Font(FontSpec font) : Asset(font), size(font.size()) {}
+
+      Character* characterFor(char c);
+
+      bool onLoad(memory::InputStream* stream, memory::Allocator* allocator);
+      
+      void push(Device* device, CommandPool* commandPool);
+
+      void destroy(Device* device);
+
+      VkDescriptorPool descriptorPool;
+
+    private:
+      void createDescriptorPool(Device* device, int imageCount);      
+
+      int size;
+
+      std::map<char, Character> characters;
+
+      bool pushed = false;
+    };
+
+  }
+}

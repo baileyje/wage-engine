@@ -2,9 +2,9 @@
 
 #include "render-vulkan/common.h"
 #include "render-vulkan/device.h"
-#include "render-vulkan/model_pipeline.h"
 #include "render-vulkan/command_pool.h"
 #include "render-vulkan/buffer.h"
+#include "render-vulkan/pipeline.h"
 
 namespace wage {
 
@@ -12,13 +12,17 @@ namespace wage {
 
     class VulkanScene {
       public:
-        std::vector<Buffer> uniformBuffers;
-        
+        std::vector<Buffer> modelUniformBuffers;
+
+        std::vector<Buffer> uiUniformBuffers;
+
         VkDescriptorPool descriptorPool;
         
-        std::vector<VkDescriptorSet> descriptorSets;
-        
-        void create(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount);
+        std::vector<VkDescriptorSet> modelDescriptorSets;
+
+        std::vector<VkDescriptorSet> uiDescriptorSets;
+
+        void create(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount);
 
         void destroy(Device* device);
 
@@ -26,7 +30,7 @@ namespace wage {
 
         void createDescriptorPool(Device* device, int imageCount);
 
-        void createDescriptorSets(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount);
+        void createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount);
     };
 
   }

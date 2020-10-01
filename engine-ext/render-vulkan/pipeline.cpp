@@ -12,23 +12,15 @@
 #include "render-vulkan/shader.h"
 #include "render-vulkan/vertex.h"
 #include "render-vulkan/render_pass.h"
+#include "render-vulkan/context.h"
 
 namespace wage {
   namespace render {
-    
 
-    Pipeline::Pipeline(Device* device, SwapChain* swapChain) : device(device), swapChain(swapChain) {}
+    Pipeline::Pipeline(VulkanContext* context) : context(context) {}
 
-    void Pipeline::create(RenderPass* renderPass) {
+    void Pipeline::create() {
       createDescriptorSetLayouts();
-      auto fs = core::Core::Instance->get<fs::FileSystem>();
-      Shader vertShader(device, VK_SHADER_STAGE_VERTEX_BIT);
-      vertShader.create(fs->read({{"resources/shader/model.vert.spv"}}, memory::Allocator::Temporary()));
-      Shader fragShader(device, VK_SHADER_STAGE_FRAGMENT_BIT);
-      fragShader.create(fs->read({{"resources/shader/model.frag.spv"}}, memory::Allocator::Temporary()));
-
-      VkPipelineShaderStageCreateInfo shaderStages[] = {vertShader.createInfo(), fragShader.createInfo()};
-
       VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
       vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
       auto bindingDescription = VulkanVertex::getBindingDescription();
@@ -46,14 +38,14 @@ namespace wage {
       VkViewport viewport{};
       viewport.x = 0.0f;
       viewport.y = 0.0f;
-      viewport.width = (float)swapChain->extent.width;
-      viewport.height = (float)swapChain->extent.height;
+      viewport.width = (float)context->swapChain.extent.width;
+      viewport.height = (float)context->swapChain.extent.height;
       viewport.minDepth = 0.0f;
       viewport.maxDepth = 1.0f;
 
       VkRect2D scissor{};
       scissor.offset = {0, 0};
-      scissor.extent = swapChain->extent;
+      scissor.extent = context->swapChain.extent;
 
       VkPipelineViewportStateCreateInfo viewportState{};
       viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -87,7 +79,13 @@ namespace wage {
 
       VkPipelineColorBlendAttachmentState colorBlendAttachment{};
       colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-      colorBlendAttachment.blendEnable = VK_FALSE;
+      colorBlendAttachment.blendEnable = VK_TRUE;
+      colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+      colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+      colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+      colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+      colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+      colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
       VkPipelineColorBlendStateCreateInfo colorBlending{};
       colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -106,24 +104,19 @@ namespace wage {
       pipelineLayoutInfo.setLayoutCount = setLayouts.size();
       pipelineLayoutInfo.pSetLayouts = setLayouts.data();
 
-      // We will use push constants to push the local matrices of a primitive to the vertex shader
-      // VkPushConstantRange pushConstantRange{};
-      // pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-      // pushConstantRange.offset = 0;
-      // pushConstantRange.size = sizeof(glm::mat4);
-      // Push constant ranges are part of the pipeline layout
-      auto pushRanges = pushConstantRanges(); 
+      auto pushRanges = pushConstantRanges();
       pipelineLayoutInfo.pushConstantRangeCount = pushRanges.size();
       pipelineLayoutInfo.pPushConstantRanges = pushRanges.data();
 
-      if (vkCreatePipelineLayout(device->logical, &pipelineLayoutInfo, nullptr, &layout) != VK_SUCCESS) {
+      if (vkCreatePipelineLayout(context->device.logical, &pipelineLayoutInfo, nullptr, &layout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create pipeline layout!");
       }
 
+      // VkPipelineShaderStageCreateInfo shaderStages[] = {vertShader.createInfo(), fragShader.createInfo()};
+    
       VkGraphicsPipelineCreateInfo pipelineInfo{};
       pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-      pipelineInfo.stageCount = 2;
-      pipelineInfo.pStages = shaderStages;
+            
       pipelineInfo.pVertexInputState = &vertexInputInfo;
       pipelineInfo.pInputAssemblyState = &inputAssembly;
       pipelineInfo.pViewportState = &viewportState;
@@ -132,25 +125,56 @@ namespace wage {
       pipelineInfo.pDepthStencilState = &depthStencil;
       pipelineInfo.pColorBlendState = &colorBlending;
       pipelineInfo.layout = layout;
-      pipelineInfo.renderPass = renderPass->wrapped;
+      pipelineInfo.renderPass = context->renderPass.wrapped;
       pipelineInfo.subpass = 0;
       pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-      if (vkCreateGraphicsPipelines(device->logical, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &wrapped) != VK_SUCCESS) {
+      
+      std::array < VkPipelineShaderStageCreateInfo, 2> shaderStages;
+      pipelineInfo.stageCount = shaderStages.size();
+      pipelineInfo.pStages = shaderStages.data();
+
+      auto fs = core::Core::Instance->get<fs::FileSystem>();
+      Shader modelVertShader(&context->device, VK_SHADER_STAGE_VERTEX_BIT);
+      modelVertShader.create(fs->read({{"resources/shader/model.vert.spv"}}, memory::Allocator::Temporary()));
+      Shader modelFragShader(&context->device, VK_SHADER_STAGE_FRAGMENT_BIT);
+      modelFragShader.create(fs->read({{"resources/shader/model.frag.spv"}}, memory::Allocator::Temporary()));
+      shaderStages[0] = modelVertShader.createInfo();
+      shaderStages[1] = modelFragShader.createInfo();
+
+      if (vkCreateGraphicsPipelines(context->device.logical, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &model) != VK_SUCCESS) {
         throw std::runtime_error("failed to create graphics pipeline!");
       }
-      fragShader.destroy();
-      vertShader.destroy();
+      modelVertShader.destroy();
+      modelFragShader.destroy();
+
+      Shader uiVertShader(&context->device, VK_SHADER_STAGE_VERTEX_BIT);
+      uiVertShader.create(fs->read({{"resources/shader/font.vert.spv"}}, memory::Allocator::Temporary()));
+      Shader uiFragShader(&context->device, VK_SHADER_STAGE_FRAGMENT_BIT);
+      uiFragShader.create(fs->read({{"resources/shader/font.frag.spv"}}, memory::Allocator::Temporary()));
+      shaderStages[0] = uiVertShader.createInfo();
+      shaderStages[1] = uiFragShader.createInfo();
+
+      if (vkCreateGraphicsPipelines(context->device.logical, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &ui) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create graphics pipeline!");
+      }
+      uiVertShader.destroy();
+      uiFragShader.destroy();
     }
 
     void Pipeline::cleanup() {
-      vkDestroyPipeline(device->logical, wrapped, nullptr);
-      vkDestroyPipelineLayout(device->logical, layout, nullptr);
+      vkDestroyPipeline(context->device.logical, model, nullptr);
+      vkDestroyPipeline(context->device.logical, ui, nullptr);
+      vkDestroyPipelineLayout(context->device.logical, layout, nullptr);
       cleanupDescriptorSetLayouts();
     }
-    
-    void Pipeline::bind(VkCommandBuffer commandBuffer) {
-      vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, wrapped);
+
+    void Pipeline::bindModel(VkCommandBuffer commandBuffer) {
+      vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, model);
+    }
+
+    void Pipeline::bindUi(VkCommandBuffer commandBuffer) {
+      vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, ui);
     }
 
     VkShaderModule Pipeline::createShaderModule(const memory::Buffer& code) {
@@ -160,10 +184,69 @@ namespace wage {
       createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
       VkShaderModule shaderModule;
-      if (vkCreateShaderModule(device->logical, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
+      if (vkCreateShaderModule(context->device.logical, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
         throw std::runtime_error("failed to create shader module!");
       }
       return shaderModule;
+    }
+
+    void Pipeline::createDescriptorSetLayouts() {
+      VkDescriptorSetLayoutBinding samplerLayoutBinding{};
+      samplerLayoutBinding.binding = 0;
+      samplerLayoutBinding.descriptorCount = 1;
+      samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+      samplerLayoutBinding.pImmutableSamplers = nullptr;
+      samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+      std::array<VkDescriptorSetLayoutBinding, 1> samplerBindings = {samplerLayoutBinding};
+      VkDescriptorSetLayoutCreateInfo samplerLayoutInfo{};
+      samplerLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+      samplerLayoutInfo.bindingCount = static_cast<uint32_t>(samplerBindings.size());
+      samplerLayoutInfo.pBindings = samplerBindings.data();
+      if (vkCreateDescriptorSetLayout(context->device.logical, &samplerLayoutInfo, nullptr, &textureLayout) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create descriptor set layout!");
+      }
+
+      VkDescriptorSetLayoutBinding uboLayoutBinding{};
+      uboLayoutBinding.binding = 0;
+      uboLayoutBinding.descriptorCount = 1;
+      uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+      uboLayoutBinding.pImmutableSamplers = nullptr;
+      uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+      std::array<VkDescriptorSetLayoutBinding, 1> uboBindings = {uboLayoutBinding};
+      VkDescriptorSetLayoutCreateInfo uboLayoutInfo{};
+      uboLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+      uboLayoutInfo.bindingCount = static_cast<uint32_t>(uboBindings.size());
+      uboLayoutInfo.pBindings = uboBindings.data();
+      if (vkCreateDescriptorSetLayout(context->device.logical, &uboLayoutInfo, nullptr, &uboLayout) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create descriptor set layout!");
+      }
+    }
+
+    std::vector<VkDescriptorSetLayout> Pipeline::descriptorSetLayouts() {
+      return {uboLayout, textureLayout};
+    }
+
+    void Pipeline::cleanupDescriptorSetLayouts() {
+      vkDestroyDescriptorSetLayout(context->device.logical, textureLayout, nullptr);
+      vkDestroyDescriptorSetLayout(context->device.logical, uboLayout, nullptr);
+    }
+
+    std::vector<VkPushConstantRange> Pipeline::pushConstantRanges() {
+      VkPushConstantRange pushConstantRange{};
+      pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+      pushConstantRange.offset = 0;
+      pushConstantRange.size = sizeof(glm::mat4);
+      return {pushConstantRange};
+    }
+
+    void Pipeline::setupVertexInputInfo(VkPipelineVertexInputStateCreateInfo* info) {
+      info->sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+      auto bindingDescription = VulkanVertex::getBindingDescription();
+      auto attributeDescriptions = VulkanVertex::getAttributeDescriptions();
+      info->vertexBindingDescriptionCount = 1;
+      info->vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+      info->pVertexBindingDescriptions = &bindingDescription;
+      info->pVertexAttributeDescriptions = attributeDescriptions.data();
     }
   }
 }

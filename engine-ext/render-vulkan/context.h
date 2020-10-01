@@ -25,6 +25,8 @@ namespace wage {
       
       RenderPass renderPass;
 
+      int frameCount;
+
       VulkanContext();
 
       void create(platform::Window* window);

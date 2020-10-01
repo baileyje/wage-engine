@@ -8,9 +8,7 @@
 #include "asset/manager.h"
 
 #include "render-vulkan/vertex.h"
-#include "render-vulkan/device.h"
-#include "render-vulkan/model_pipeline.h"
-#include "render-vulkan/texture.h"
+#include "render-vulkan/texture_asset.h"
 #include "render-vulkan/mesh.h"
 #include "render-vulkan/buffer.h"
 
@@ -18,28 +16,18 @@ namespace wage {
   namespace render {
 
     class CommandPool;
+    class Device;
+    class Pipeline;
 
     class Model {
       public:
-        Model(MeshSpec meshSpec, TextureSpec textureSpec) : meshSpec(meshSpec), textureSpec(textureSpec), pushed(false) {
-        }
+        Model(MeshSpec meshSpec, TextureSpec textureSpec);
 
-        void load(asset::Manager* assetManager, render::MeshManager* meshManager) {
-          if (loaded()) return;
-          mesh = new VulkanMesh(meshManager->load(meshSpec));
-          texture = assetManager->load<Texture>(textureSpec);
-        }
+        void load(asset::Manager* assetManager, render::MeshManager* meshManager);
 
-        void push(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount) {
-          if (pushed) return;
-          mesh->push(device, commandPool);
-          texture->push(device, commandPool);
-          createDescriptorPool(device, imageCount);
-          createDescriptorSets(device, commandPool, pipeline, imageCount);
-          pushed = true;
-        }
+        void push(Device* device, CommandPool* commandPool, Pipeline* pipeline, int imageCount);
 
-        void create(Device* device, CommandPool* commandPool, ModelPipeline* pipeline);
+        void create(Device* device, CommandPool* commandPool, Pipeline* pipeline);
 
         void destroy(Device* device);
 
@@ -49,23 +37,23 @@ namespace wage {
 
         VulkanMesh* mesh = nullptr;
 
-        Texture* texture = nullptr;
+        TextureAsset* textureAsset = nullptr;
 
         inline bool loaded() {
-          return mesh && texture && mesh->loaded() && texture->loaded();
+          return mesh && textureAsset && mesh->loaded() && textureAsset->loaded();
         }
 
       private:
 
         void createDescriptorPool(Device* device, int imageCount);
 
-        void createDescriptorSets(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount);
+        void createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* pipeline, int imageCount);
 
         MeshSpec meshSpec;
 
         TextureSpec textureSpec;
 
-        bool pushed; // Atomic??
+        bool pushed = false; // Atomic??
       };
   }
 }

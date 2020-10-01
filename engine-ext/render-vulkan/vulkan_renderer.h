@@ -14,14 +14,16 @@
 #include "render-vulkan/swap_chain.h"
 #include "render-vulkan/device.h"
 #include "render-vulkan/surface.h"
-#include "render-vulkan/model_pipeline.h"
+#include "render-vulkan/pipeline.h"
 #include "render-vulkan/command_pool.h"
 #include "render-vulkan/render_context.h"
 #include "render-vulkan/model_renderable.h"
 #include "render-vulkan/model_manager.h"
+#include "render-vulkan/text_renderable.h"
+#include "render-vulkan/font_manager.h"
 #include "render-vulkan/scene.h"
 #include "render-vulkan/ubo_scene.h"
-#include "render-vulkan/render_pass.h" 
+#include "render-vulkan/render_pass.h"
 #include "render-vulkan/context.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -43,13 +45,23 @@ namespace wage {
 
       void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material);
 
+      void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color);
+
       static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
-      
+
     protected:
       RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera);
 
-    private:
+      void beginMeshRender(RenderContext* renderContext);
+      
 
+      void endMeshRender(RenderContext* renderContext);
+
+      void beginUiRender(RenderContext* renderContext);
+
+      void endUiRender(RenderContext* renderContext);
+
+    private:
       void createSyncObjects();
 
       void destroySyncObjects();
@@ -60,8 +72,8 @@ namespace wage {
 
       VulkanContext context;
 
-      ModelPipeline pipeline;
-      
+      Pipeline pipeline;
+
       CommandPool commandPool;
 
       VulkanScene scene;
@@ -75,6 +87,8 @@ namespace wage {
 
       MeshManager meshManager;
       ModelManager modelManager;
+      
+      FontManager fontManager;
     };
 
   }

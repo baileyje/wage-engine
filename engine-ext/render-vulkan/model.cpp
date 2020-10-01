@@ -1,13 +1,34 @@
 #include "render-vulkan/model.h"
 #include "render-vulkan/ubo_scene.h"
+
+#include "render-vulkan/device.h"
+#include "render-vulkan/pipeline.h"
 #include "render-vulkan/command_pool.h"
 
 namespace wage {
   namespace render {
 
+    Model::Model(MeshSpec meshSpec, TextureSpec textureSpec) : meshSpec(meshSpec), textureSpec(textureSpec) {
+    }
+
+    void Model::load(asset::Manager* assetManager, render::MeshManager* meshManager) {
+      if (loaded()) return;
+      mesh = new VulkanMesh(meshManager->load(meshSpec));
+      textureAsset = assetManager->load<TextureAsset>(textureSpec);
+    }
+
+    void Model::push(Device* device, CommandPool* commandPool, Pipeline* pipeline, int imageCount) {
+      if (pushed) return;
+      mesh->push(device, commandPool);
+      textureAsset->texture.push(device, commandPool);
+      createDescriptorPool(device, imageCount);
+      createDescriptorSets(device, commandPool, pipeline, imageCount);
+      pushed = true;
+    }
+
     void Model::destroy(Device* device) {
       vkDestroyDescriptorPool(device->logical, descriptorPool, nullptr);
-      texture->destroy(device);
+      textureAsset->texture.destroy(device);
       mesh->destroy(device);
     }
 
@@ -29,8 +50,8 @@ namespace wage {
       }
     }
 
-    void Model::createDescriptorSets(Device* device, CommandPool* commandPool, ModelPipeline* pipeline, int imageCount) {
-      std::vector<VkDescriptorSetLayout> layouts(imageCount, pipeline->modelTextureLayout);
+    void Model::createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* pipeline, int imageCount) {
+      std::vector<VkDescriptorSetLayout> layouts(imageCount, pipeline->textureLayout);
       VkDescriptorSetAllocateInfo allocInfo{};
       allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
       allocInfo.descriptorPool = descriptorPool;
@@ -45,8 +66,8 @@ namespace wage {
       for (size_t i = 0; i < imageCount; i++) {
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageView = texture->imageView;
-        imageInfo.sampler = texture->sampler;
+        imageInfo.imageView = textureAsset->texture.imageView;
+        imageInfo.sampler = textureAsset->texture.sampler;
 
         std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
 

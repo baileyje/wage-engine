@@ -64,10 +64,16 @@ namespace wage {
           return;
         }
         beginRender(currentFrame->context());
-        currentFrame->render();
+        beginMeshRender(currentFrame->context());
+        currentFrame->renderMeshes();
+        endMeshRender(currentFrame->context());
+        beginUiRender(currentFrame->context());
+        currentFrame->renderUi();
+        endUiRender(currentFrame->context());
         endRender(currentFrame->context());
+
         timer.tick();
-        std::cout << "Ftime: " << timer.averageTime() << "\n";
+        // std::cout << "Ftime: " << timer.averageTime() << "\n";
         delete currentFrame;
         _renderFrame.store(nullptr);
       }
@@ -75,12 +81,12 @@ namespace wage {
       /**
        * Pure virtual method for rendering a chunk of text on the screen at a specificed position.
        */
-      virtual void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) {};
+      virtual void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color){};
 
       /**
        * Render a simple sprite to the screen at a specific position.
        */
-      virtual void renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture) {};
+      virtual void renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture){};
 
       /**
        * Render a mesh to the screen.
@@ -96,7 +102,7 @@ namespace wage {
         auto manager = &scene::Scene::current().entities();
         auto camera = cameraAndEntity(manager);
         if (std::get<1>(camera)) {
-          _updateFrame->prepare(createContext(std::get<0>(camera), std::get<1>(camera)) );
+          _updateFrame->prepare(createContext(std::get<0>(camera), std::get<1>(camera)));
         }
         _readyFrame.store(_updateFrame);
         _updateFrame = new Frame();
@@ -125,9 +131,17 @@ namespace wage {
         return {ecs::Entity::Invalid, nullptr};
       }
 
-      virtual void beginRender(RenderContext* context) {};
+      virtual void beginRender(RenderContext* context){};
 
       virtual void endRender(RenderContext* context){};
+
+      virtual void beginMeshRender(RenderContext* context){};
+
+      virtual void endMeshRender(RenderContext* context){};
+
+      virtual void beginUiRender(RenderContext* context){};
+
+      virtual void endUiRender(RenderContext* context){};
 
       platform::Window* window;
 

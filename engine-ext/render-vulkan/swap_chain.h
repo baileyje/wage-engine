@@ -14,8 +14,7 @@
 namespace wage {
   namespace render {
 
-    class Device;
-    class Surface;
+    class VulkanContext;
 
     class SwapChain {
 
@@ -32,11 +31,11 @@ namespace wage {
       
       std::vector<VkFramebuffer> frameBuffers;
 
-      SwapChain(Device* device);
+      SwapChain(VulkanContext* context);
 
-      void create(float width, float height, Surface& surface);
+      void create(float width, float height);
 
-      void createFrameBuffers(VkRenderPass renderPass);
+      void createFrameBuffers();
 
       void createDepthResources();
 
@@ -51,7 +50,7 @@ namespace wage {
 
       void createImageViews();
 
-      Device* device;
+      VulkanContext* context;
 
       Image depthImage;
 

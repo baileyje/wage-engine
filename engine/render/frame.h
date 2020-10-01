@@ -81,24 +81,29 @@ namespace wage {
       /**
        * Render the frame with with provided render context.
        */
-      inline void render() {
+      // inline void render() {
+    
+      //   renderMeshes(_renderContext);
+      //   // TODO: Sprites
+      //   renderUi(_renderContext);
+      // }
+
+      void renderMeshes() {
         if (!_renderContext)
           return;
-        renderMeshes(_renderContext);
-        // TODO: Sprites
-        renderUi(_renderContext);
+        // _meshQueue.sort(renderContext);
+        _meshQueue.render(_renderContext);
+      }
+
+      void renderUi() {
+        if (!_renderContext)
+          return;
+        // _uiQueue.sort(renderContext);
+        _uiQueue.render(_renderContext);
       }
 
     private:
-      void renderMeshes(RenderContext* renderContext) {
-        // _meshQueue.sort(renderContext);
-        _meshQueue.render(renderContext);
-      }
 
-      void renderUi(RenderContext* renderContext) {
-        // _uiQueue.sort(renderContext);
-        _uiQueue.render(renderContext);
-      }
 
       RenderQueue _uiQueue;
       RenderQueue _meshQueue;

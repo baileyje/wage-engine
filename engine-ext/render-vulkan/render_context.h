@@ -12,7 +12,7 @@ namespace wage {
   namespace render {
     
     class Device;
-    class ModelPipeline;
+    class Pipeline;
     class CommandPool;
     class Camera;
 
@@ -21,7 +21,9 @@ namespace wage {
         
         Device* device;
 
-        ModelPipeline* pipeline;
+        Pipeline* modelPipeline;
+
+        Pipeline* uiPipeline;
 
         CommandPool* commandPool;
         
@@ -30,6 +32,8 @@ namespace wage {
         VkCommandBuffer commandBuffer;
 
         uint8_t imageCount;
+
+        std::vector<std::function<void(VulkanRenderContext*)>> cleanups;
 
         VulkanRenderContext(ecs::Entity cameraEntity, Camera* camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights);
     };

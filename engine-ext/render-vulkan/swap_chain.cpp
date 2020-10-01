@@ -1,15 +1,15 @@
 #include "render-vulkan/swap_chain.h"
 
-#include "render-vulkan/device.h"
+#include "render-vulkan/context.h"
 #include "render-vulkan/surface.h"
 
 namespace wage {
   namespace render {
 
-    SwapChain::SwapChain(Device* device) : device(device) {}
+    SwapChain::SwapChain(VulkanContext* context) : context(context) {}
 
-    void SwapChain::create(float width, float height, Surface& surface) {
-      SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device->physical, surface.wrapped);
+    void SwapChain::create(float width, float height) {
+      SwapChainSupportDetails swapChainSupport = querySwapChainSupport(context->device.physical, context->surface.wrapped);
       VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
       VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
       extent = chooseSwapExtent(width, height, swapChainSupport.capabilities);
@@ -19,14 +19,14 @@ namespace wage {
       }
       VkSwapchainCreateInfoKHR createInfo{};
       createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-      createInfo.surface = surface.wrapped;
+      createInfo.surface = context->surface.wrapped;
       createInfo.minImageCount = imageCount;
       createInfo.imageFormat = surfaceFormat.format;
       createInfo.imageColorSpace = surfaceFormat.colorSpace;
       createInfo.imageExtent = extent;
       createInfo.imageArrayLayers = 1;
       createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-      QueueFamilyIndices indices = findQueueFamilies(device->physical, surface.wrapped);
+      QueueFamilyIndices indices = findQueueFamilies(context->device.physical, context->surface.wrapped);
       uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
       if (indices.graphicsFamily != indices.presentFamily) {
         createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
@@ -40,17 +40,17 @@ namespace wage {
       createInfo.presentMode = presentMode;
       createInfo.clipped = VK_TRUE;
       createInfo.oldSwapchain = VK_NULL_HANDLE;
-      if (vkCreateSwapchainKHR(device->logical, &createInfo, nullptr, &wrapped) != VK_SUCCESS) {
+      if (vkCreateSwapchainKHR(context->device.logical, &createInfo, nullptr, &wrapped) != VK_SUCCESS) {
         throw std::runtime_error("failed to create swap chain!");
       }
-      vkGetSwapchainImagesKHR(device->logical, wrapped, &imageCount, nullptr);
+      vkGetSwapchainImagesKHR(context->device.logical, wrapped, &imageCount, nullptr);
       images.resize(imageCount);
-      vkGetSwapchainImagesKHR(device->logical, wrapped, &imageCount, images.data());
+      vkGetSwapchainImagesKHR(context->device.logical, wrapped, &imageCount, images.data());
       imageFormat = surfaceFormat.format;
       createImageViews();
     }
 
-    void SwapChain::createFrameBuffers(VkRenderPass renderPass) {
+    void SwapChain::createFrameBuffers() {
       frameBuffers.resize(imageViews.size());
       for (size_t i = 0; i < imageViews.size(); i++) {
         std::array<VkImageView, 2> attachments = {
@@ -58,35 +58,35 @@ namespace wage {
 
         VkFramebufferCreateInfo framebufferInfo{};
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.renderPass = renderPass;
+        framebufferInfo.renderPass = context->renderPass.wrapped;
         framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
         framebufferInfo.pAttachments = attachments.data();
         framebufferInfo.width = extent.width;
         framebufferInfo.height = extent.height;
         framebufferInfo.layers = 1;
 
-        if (vkCreateFramebuffer(device->logical, &framebufferInfo, nullptr, &frameBuffers[i]) != VK_SUCCESS) {
+        if (vkCreateFramebuffer(context->device.logical, &framebufferInfo, nullptr, &frameBuffers[i]) != VK_SUCCESS) {
           throw std::runtime_error("failed to create framebuffer!");
         }
       }
     }
 
     void SwapChain::createDepthResources() {
-      VkFormat depthFormat = findDepthFormat(device->physical);
-      device->createImage(extent.width, extent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &depthImage);
+      VkFormat depthFormat = findDepthFormat(context->device.physical);
+      context->device.createImage(extent.width, extent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &depthImage);
       depthImage.createImageView(depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, &depthImageView);
     }
 
     void SwapChain::cleanup() {
-      vkDestroyImageView(device->logical, depthImageView, nullptr);
+      vkDestroyImageView(context->device.logical, depthImageView, nullptr);
       depthImage.destroy();
       for (auto framebuffer : frameBuffers) {
-        vkDestroyFramebuffer(device->logical, framebuffer, nullptr);
+        vkDestroyFramebuffer(context->device.logical, framebuffer, nullptr);
       }
       for (auto imageView : imageViews) {
-        vkDestroyImageView(device->logical, imageView, nullptr);
+        vkDestroyImageView(context->device.logical, imageView, nullptr);
       }
-      vkDestroySwapchainKHR(device->logical, wrapped, nullptr);
+      vkDestroySwapchainKHR(context->device.logical, wrapped, nullptr);
     }
 
     VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
@@ -122,7 +122,7 @@ namespace wage {
     void SwapChain::createImageViews() {
       imageViews.resize(images.size());
       for (size_t i = 0; i < images.size(); i++) {
-        commonCreateImageView(device->logical, images[i], imageFormat, VK_IMAGE_ASPECT_COLOR_BIT, &imageViews[i]);
+        commonCreateImageView(context->device.logical, images[i], imageFormat, VK_IMAGE_ASPECT_COLOR_BIT, &imageViews[i]);
       }
     }
   }
