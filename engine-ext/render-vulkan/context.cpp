@@ -1,6 +1,6 @@
 #include "render-vulkan/context.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
   VulkanContext::VulkanContext() : surface(&instance), swapChain(this), renderPass(&device, &swapChain) {
   }
 

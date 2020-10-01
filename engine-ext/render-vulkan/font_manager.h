@@ -4,7 +4,7 @@
 #include "render/components/font.h"
 #include "asset/manager.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class Font;
   class Device;

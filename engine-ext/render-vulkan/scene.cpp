@@ -3,7 +3,7 @@
 
 #include <array>
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   void VulkanScene::create(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount) {
     createUniformBuffers(device, imageCount);

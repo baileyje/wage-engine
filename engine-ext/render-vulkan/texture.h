@@ -4,7 +4,7 @@
 #include "render-vulkan/common.h"
 #include "render-vulkan/image.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class Device;
   class CommandPool;

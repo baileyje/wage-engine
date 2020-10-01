@@ -6,7 +6,7 @@
 #include "render/components/texture.h"
 #include "render-vulkan/texture.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class TextureAsset : public asset::Asset {
   public:

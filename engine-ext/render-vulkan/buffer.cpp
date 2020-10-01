@@ -1,6 +1,6 @@
 #include "render-vulkan/buffer.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
   
   VkResult Buffer::map(VkDeviceSize size, VkDeviceSize offset) {
     return vkMapMemory(device, memory, offset, size, 0, &mapped);

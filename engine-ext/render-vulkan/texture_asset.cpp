@@ -5,8 +5,8 @@
 
 #include "memory/buffer.h"
 
-namespace wage::render {
-  
+namespace wage::render::vulkan {
+
   TextureAsset::TextureAsset(TextureSpec texture) : Asset(texture) {}
 
   bool TextureAsset::onLoad(memory::InputStream* stream, memory::Allocator* allocator) {

@@ -5,7 +5,7 @@
 
 #include "memory/buffer.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class Device;
 

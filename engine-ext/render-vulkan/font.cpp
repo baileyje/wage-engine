@@ -9,7 +9,7 @@
 #include "render-vulkan/buffer.h"
 #include "render-vulkan/vertex.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   Glyph* Font::glyphFor(char c) {
     auto found = glyphs.find(c);

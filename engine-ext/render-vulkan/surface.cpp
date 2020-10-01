@@ -2,7 +2,7 @@
 
 #include "render-vulkan/instance.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   Surface::Surface(Instance* instance) : instance(instance) {}
 

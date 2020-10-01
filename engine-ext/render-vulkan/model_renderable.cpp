@@ -5,8 +5,8 @@
 #include "render-vulkan/model_manager.h"
 #include "render-vulkan/pipeline.h"
 
-namespace wage::render {
-  
+namespace wage::render::vulkan {
+
   ModelRenderable::ModelRenderable(asset::Manager* assetManager, render::MeshManager* meshManager, ModelManager* modelManager, math::Transform transform, MeshSpec* meshSpec, MaterialSpec* material)
       : transform(transform), meshSpec(*meshSpec), textureSpec(material->texture()) {
     model = modelManager->load(assetManager, meshManager, *meshSpec, textureSpec);

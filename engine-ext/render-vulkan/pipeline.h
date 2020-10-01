@@ -7,7 +7,7 @@
 #include "render-vulkan/shader.h"
 #include "memory/buffer.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class VulkanContext;
 

@@ -4,8 +4,8 @@
 #include "render-vulkan/command_pool.h"
 #include "render-vulkan/pipeline.h"
 
-namespace wage::render {
-  
+namespace wage::render::vulkan {
+
   Glyph::Glyph(math::Vector2 size, math::Vector2 bearing, unsigned int advance) : size(size), bearing(bearing), advance(advance), texture(VK_FORMAT_R8_UNORM), pushed(false) {}
 
   void Glyph::push(Device* device, CommandPool* commandPool, Pipeline* pipeline, VkDescriptorPool descriptorPool) {

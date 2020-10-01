@@ -3,7 +3,7 @@
 #include "render-vulkan/context.h"
 #include "render-vulkan/surface.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   SwapChain::SwapChain(VulkanContext* context) : context(context) {}
 

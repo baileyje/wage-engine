@@ -13,7 +13,7 @@
 
 const std::vector<const char*> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   void Device::create(VkInstance instance, Surface* surface) {
     pickPhysicalDevice(instance, surface->wrapped);

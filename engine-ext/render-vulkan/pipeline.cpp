@@ -14,7 +14,7 @@
 #include "render-vulkan/render_pass.h"
 #include "render-vulkan/context.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   Pipeline::Pipeline(VulkanContext* context) : context(context) {}
 

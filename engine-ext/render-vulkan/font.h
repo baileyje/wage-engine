@@ -13,7 +13,7 @@
 #include "render-vulkan/buffer.h"
 #include "render-vulkan/font_glyph.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class Device;
 

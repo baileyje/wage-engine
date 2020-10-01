@@ -4,13 +4,13 @@
 
 #include "asset/manager.h"
 #include "render/components/mesh.h"
+#include "render/mesh/manager.h"
 #include "render/components/texture.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class Model;
   class Device;
-  class MeshManager;
 
   class ModelManager {
   public:

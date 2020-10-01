@@ -4,15 +4,15 @@
 
 #include "asset/manager.h"
 #include "render/renderable.h"
+#include "render/context.h"
 #include "render/components/font.h"
 #include "render/context.h"
 #include "math/vector.h"
 #include "component/color.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class FontManager;
-  class RenderContext;
 
   class TextRenderable : public Renderable {
 

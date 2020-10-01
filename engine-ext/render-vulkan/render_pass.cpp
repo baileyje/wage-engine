@@ -3,7 +3,7 @@
 #include "render-vulkan/device.h"
 #include "render-vulkan/swap_chain.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   RenderPass::RenderPass(Device* device, SwapChain* swapChain) : device(device), swapChain(swapChain) {
   }

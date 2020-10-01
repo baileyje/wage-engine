@@ -6,7 +6,7 @@
 #include "render-vulkan/buffer.h"
 #include "render-vulkan/pipeline.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class VulkanScene {
   public:

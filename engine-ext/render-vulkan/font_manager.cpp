@@ -3,7 +3,7 @@
 #include "render-vulkan/device.h"
 #include "render-vulkan/font.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   Font* FontManager::load(FontSpec fontSpec) {
     auto font = cache[fontSpec.key()];

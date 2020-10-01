@@ -5,7 +5,7 @@
 #include "render-vulkan/pipeline.h"
 #include "render-vulkan/command_pool.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   Model::Model(MeshSpec meshSpec, TextureSpec textureSpec) : meshSpec(meshSpec), textureSpec(textureSpec) {
   }

@@ -6,10 +6,10 @@
 
 #include "render/components/mesh.h"
 #include "render/components/material.h"
+#include "render/mesh/manager.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
-  class MeshManager;
   class ModelManager;
   class Model;
 

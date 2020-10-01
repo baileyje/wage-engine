@@ -12,7 +12,7 @@
 #include "render-vulkan/mesh.h"
 #include "render-vulkan/buffer.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class CommandPool;
   class Device;

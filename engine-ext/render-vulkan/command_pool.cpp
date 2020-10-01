@@ -3,8 +3,8 @@
 #include "render-vulkan/context.h"
 #include "render-vulkan/vertex.h"
 
-namespace wage::render {
-  
+namespace wage::render::vulkan {
+
   CommandPool::CommandPool(VulkanContext* context) : context(context) {}
 
   void CommandPool::create() {

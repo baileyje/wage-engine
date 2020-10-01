@@ -9,7 +9,7 @@
 #include "render-vulkan/swap_chain.h"
 #include "render-vulkan/render_pass.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class VulkanContext {
   public:

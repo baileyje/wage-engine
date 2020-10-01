@@ -7,7 +7,7 @@
 #include "render-vulkan/buffer.h"
 #include "render-vulkan/pipeline.h"\
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   Texture::Texture(VkFormat textFormat) : format(textFormat) {}
 

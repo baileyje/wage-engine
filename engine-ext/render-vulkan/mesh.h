@@ -2,12 +2,12 @@
 
 #include <stdexcept>
 
+#include "render/mesh/mesh.h"
 #include "render-vulkan/common.h"
 #include "render-vulkan/buffer.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
-  class Mesh;
   class Device;
   class CommandPool;
   class Buffer;

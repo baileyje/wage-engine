@@ -5,7 +5,7 @@
 #include "render-vulkan/command_pool.h"
 #include "render-vulkan/pipeline.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   VulkanRenderContext::VulkanRenderContext(ecs::Entity cameraEntity, Camera* camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights)
       : RenderContext(cameraEntity, camera, screenSize, dirLights, pointLights, spotlights) {

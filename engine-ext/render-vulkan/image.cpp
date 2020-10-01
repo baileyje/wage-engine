@@ -1,6 +1,6 @@
 #include "render-vulkan/image.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   VkResult Image::map(VkDeviceSize size, VkDeviceSize offset) {
     return vkMapMemory(device, memory, offset, size, 0, &mapped);

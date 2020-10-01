@@ -6,7 +6,7 @@
 
 #include "render-vulkan/font.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   TextRenderable::TextRenderable(FontManager* fontManager, math::Vector2 position, std::string text, FontSpec font, component::Color color)
       : fontManager(fontManager), _position(position), text(text), fontSpec(font), color(color.r, color.g, color.b) {}

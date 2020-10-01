@@ -2,7 +2,7 @@
 
 #include "render-vulkan/common.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class Buffer {
 

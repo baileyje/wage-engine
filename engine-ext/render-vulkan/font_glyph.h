@@ -7,7 +7,7 @@
 
 #include "math/vector.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class Device;
   class CommandPool;

@@ -1,10 +1,9 @@
 #include "render-vulkan/mesh.h"
 
-#include "render/mesh/mesh.h"
 #include "render-vulkan/device.h"
 #include "render-vulkan/command_pool.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   VulkanMesh::VulkanMesh(Mesh* meshData) : meshData(meshData) {}
 

@@ -3,7 +3,7 @@
 #include "render-vulkan/model.h"
 #include "render/mesh/manager.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   Model* ModelManager::load(asset::Manager* assetManager, MeshManager* meshManager, MeshSpec meshSpec, TextureSpec textureSpec) {
     auto key = meshSpec.key() + ":" + textureSpec.key();

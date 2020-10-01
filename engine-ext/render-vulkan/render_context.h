@@ -4,15 +4,15 @@
 
 #include "render-vulkan/common.h"
 #include "render/context.h"
+#include "render/components/camera/camera.h"
 #include "ecs/entity.h"
 #include "math/vector.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   class Device;
   class Pipeline;
   class CommandPool;
-  class Camera;
 
   class VulkanRenderContext : public RenderContext {
   public:

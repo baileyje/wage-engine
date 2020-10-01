@@ -8,7 +8,7 @@
 
 #include "render/mesh/vertex.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   struct VulkanVertex : public Vertex {
 
@@ -16,5 +16,5 @@ namespace wage::render {
 
     static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions();
   };
-  
+
 }

@@ -2,7 +2,7 @@
 
 #include "render-vulkan/device.h"
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   Shader::Shader(Device* device, VkShaderStageFlagBits stage) : stage(stage), device(device) {}
 

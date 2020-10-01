@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace wage::render {
+namespace wage::render::vulkan {
 
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface) {
     QueueFamilyIndices indices;
