@@ -12,8 +12,8 @@ class Wall {
 };
 
 void addWall(scene::Scene &scene) {
-  int width = 20;
-  int height = 20;
+  int width = 40;
+  int height = 40;
   float margin = 1;
   float enemyScale = 5;
   float offsetX = -(enemyScale * width / 2);

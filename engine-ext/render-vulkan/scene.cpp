@@ -1,14 +1,15 @@
 #include "render-vulkan/scene.h"
 #include "render-vulkan/ubo_scene.h"
+#include "render-vulkan/ui/ubo.h"
 
 #include <array>
 
 namespace wage::render::vulkan {
 
-  void VulkanScene::create(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount) {
+  void VulkanScene::create(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* textPipeline, int imageCount) {
     createUniformBuffers(device, imageCount);
     createDescriptorPool(device, imageCount);
-    createDescriptorSets(device, commandPool, modelPipeline, uiPipeline, imageCount);
+    createDescriptorSets(device, commandPool, modelPipeline, textPipeline, imageCount);
   }
 
   void VulkanScene::destroy(Device* device) {
@@ -47,7 +48,7 @@ namespace wage::render::vulkan {
     }
   }
 
-  void VulkanScene::createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* uiPipeline, int imageCount) {
+  void VulkanScene::createModelDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, int imageCount) {
     std::vector<VkDescriptorSetLayout> modelLayouts(imageCount, modelPipeline->uboLayout);
     VkDescriptorSetAllocateInfo modelAllocInfo{};
     modelAllocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -76,8 +77,10 @@ namespace wage::render::vulkan {
 
       vkUpdateDescriptorSets(device->logical, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
     }
+  }
 
-    std::vector<VkDescriptorSetLayout> uiLayouts(imageCount, uiPipeline->uboLayout);
+  void VulkanScene::createUiDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* textPipeline, int imageCount) {
+    std::vector<VkDescriptorSetLayout> uiLayouts(imageCount, textPipeline->uboLayout);
     VkDescriptorSetAllocateInfo uiAllocInfo{};
     uiAllocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     uiAllocInfo.descriptorPool = descriptorPool;
@@ -89,23 +92,26 @@ namespace wage::render::vulkan {
       throw std::runtime_error("failed to allocate descriptor sets!");
     }
     for (size_t i = 0; i < imageCount; i++) {
-      {
-        VkDescriptorBufferInfo bufferInfo{};
-        bufferInfo.buffer = uiUniformBuffers[i].buffer;
-        bufferInfo.offset = 0;
-        bufferInfo.range = sizeof(UniformBufferScene);
+      VkDescriptorBufferInfo bufferInfo{};
+      bufferInfo.buffer = uiUniformBuffers[i].buffer;
+      bufferInfo.offset = 0;
+      bufferInfo.range = sizeof(UiUniformBuffer);
 
-        std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
-        descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        descriptorWrites[0].dstSet = uiDescriptorSets[i];
-        descriptorWrites[0].dstBinding = 0;
-        descriptorWrites[0].dstArrayElement = 0;
-        descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        descriptorWrites[0].descriptorCount = 1;
-        descriptorWrites[0].pBufferInfo = &bufferInfo;
+      std::array<VkWriteDescriptorSet, 1> descriptorWrites{};
+      descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+      descriptorWrites[0].dstSet = uiDescriptorSets[i];
+      descriptorWrites[0].dstBinding = 0;
+      descriptorWrites[0].dstArrayElement = 0;
+      descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+      descriptorWrites[0].descriptorCount = 1;
+      descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-        vkUpdateDescriptorSets(device->logical, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
-        }
-      }
+      vkUpdateDescriptorSets(device->logical, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
     }
+  }
+
+  void VulkanScene::createDescriptorSets(Device* device, CommandPool* commandPool, Pipeline* modelPipeline, Pipeline* textPipeline, int imageCount) {
+    createModelDescriptorSets(device, commandPool, modelPipeline, imageCount);
+    createUiDescriptorSets(device, commandPool, textPipeline, imageCount);
+  }
 }

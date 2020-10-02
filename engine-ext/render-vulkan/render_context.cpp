@@ -1,9 +1,9 @@
 #include "render-vulkan/render_context.h"
 
 #include "render/components/camera/camera.h"
-#include "render-vulkan/device.h"
-#include "render-vulkan/command_pool.h"
-#include "render-vulkan/pipeline.h"
+#include "render-vulkan/core/device.h"
+#include "render-vulkan/core/command_pool.h"
+#include "render-vulkan/core/pipeline.h"
 
 namespace wage::render::vulkan {
 

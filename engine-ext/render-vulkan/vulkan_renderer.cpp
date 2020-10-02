@@ -1,8 +1,11 @@
 #include "render-vulkan/vulkan_renderer.h"
 
+#include "render-vulkan/ubo_scene.h"
+#include "render-vulkan/ui/ubo.h"
+
 namespace wage::render::vulkan {
 
-  VulkanRenderer::VulkanRenderer() : pipeline(&context), commandPool(&context) {}
+  VulkanRenderer::VulkanRenderer() : modelPipeline(&context), textPipeline(&context), commandPool(&context) {}
 
   void VulkanRenderer::start() {
     Renderer::start();
@@ -21,10 +24,11 @@ namespace wage::render::vulkan {
     // glfwSetFramebufferSizeCallback(glfwWindow, framebufferResizeCallback);
 
     context.create(window);
-    pipeline.create();
+    modelPipeline.create();
+    textPipeline.create();
     commandPool.create();
     createSyncObjects();
-    scene.create(&context.device, &commandPool, &pipeline, &pipeline, context.frameCount);
+    scene.create(&context.device, &commandPool, &modelPipeline, &textPipeline, context.frameCount);
   }
 
   void VulkanRenderer::stop() {
@@ -33,7 +37,8 @@ namespace wage::render::vulkan {
     modelManager.destroy(&context.device);
     scene.destroy(&context.device);
     commandPool.cleanupBuffers();
-    pipeline.cleanup();
+    modelPipeline.cleanup();
+    modelPipeline.cleanup();
     destroySyncObjects();
     commandPool.destroy();
     context.destroy();
@@ -57,8 +62,8 @@ namespace wage::render::vulkan {
     auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
     vkContext->device = &context.device;
     vkContext->commandPool = &commandPool;
-    vkContext->modelPipeline = &pipeline;
-    vkContext->uiPipeline = &pipeline;
+    vkContext->modelPipeline = &modelPipeline;
+    vkContext->textPipeline = &textPipeline;
     vkContext->imageIndex = imageIndex;
     vkContext->imageCount = context.frameCount;
     vkContext->commandBuffer = commandBuffer;
@@ -69,14 +74,14 @@ namespace wage::render::vulkan {
   void VulkanRenderer::beginMeshRender(RenderContext* renderContext) {
     auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
     auto commandBuffer = vkContext->commandBuffer;
-    pipeline.bindModel(commandBuffer);
+    modelPipeline.bind(commandBuffer);
 
     UniformBufferScene ubo{};
     ubo.view = renderContext->viewProjection().glm();
     ubo.proj = renderContext->screenProjection().glm();
     ubo.proj[1][1] *= -1;
     scene.modelUniformBuffers[vkContext->imageIndex].fillWith(&ubo, sizeof(ubo));
-    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 0, 1, &scene.modelDescriptorSets[vkContext->imageIndex], 0, nullptr);
+    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, modelPipeline.layout, 0, 1, &scene.modelDescriptorSets[vkContext->imageIndex], 0, nullptr);
   }
 
   void VulkanRenderer::endMeshRender(RenderContext* renderContext) {
@@ -86,15 +91,14 @@ namespace wage::render::vulkan {
   void VulkanRenderer::beginUiRender(RenderContext* renderContext) {
     auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
     auto commandBuffer = vkContext->commandBuffer;
-    pipeline.bindUi(commandBuffer);
+    textPipeline.bind(commandBuffer);
 
-    UniformBufferScene ubo{};
+    UiUniformBuffer ubo{};
     auto projection = math::Matrix::orthographic(0.0f, renderContext->screenSize().x, 0.0f, renderContext->screenSize().y);
-    ubo.view = renderContext->viewProjection().glm();
     ubo.proj = projection.glm();
 
     scene.uiUniformBuffers[vkContext->imageIndex].fillWith(&ubo, sizeof(ubo));
-    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.layout, 0, 1, &scene.uiDescriptorSets[vkContext->imageIndex], 0, nullptr);
+    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, textPipeline.layout, 0, 1, &scene.uiDescriptorSets[vkContext->imageIndex], 0, nullptr);
   }
 
   void VulkanRenderer::endUiRender(RenderContext* renderContext) {
@@ -208,7 +212,8 @@ namespace wage::render::vulkan {
     vkDeviceWaitIdle(context.device.logical);
     cleanupSwapChain();
     context.swapChain.create(window->width(), window->height());
-    pipeline.create();
+    modelPipeline.create();
+    textPipeline.create();
     context.swapChain.createDepthResources();
     context.swapChain.createFrameBuffers();
     commandPool.create();
@@ -216,7 +221,8 @@ namespace wage::render::vulkan {
 
   void VulkanRenderer::cleanupSwapChain() {
     commandPool.cleanupBuffers();
-    pipeline.cleanup();
+    modelPipeline.cleanup();
+    textPipeline.cleanup();
     context.swapChain.cleanup();
   }
 }

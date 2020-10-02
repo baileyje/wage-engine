@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "render-vulkan/common.h"
+#include "render-vulkan/core/common.h"
 #include "render/context.h"
 #include "render/components/camera/camera.h"
 #include "ecs/entity.h"
@@ -11,16 +11,17 @@
 namespace wage::render::vulkan {
 
   class Device;
-  class Pipeline;
+  class ModelPipeline;
+  class TextPipeline;
   class CommandPool;
 
   class VulkanRenderContext : public RenderContext {
   public:
     Device* device;
 
-    Pipeline* modelPipeline;
+    ModelPipeline* modelPipeline;
 
-    Pipeline* uiPipeline;
+    TextPipeline* textPipeline;
 
     CommandPool* commandPool;
 

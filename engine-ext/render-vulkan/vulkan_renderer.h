@@ -9,22 +9,23 @@
 
 #include "render/renderer.h"
 #include "render/mesh/manager.h"
-#include "render-vulkan/common.h"
-#include "render-vulkan/instance.h"
-#include "render-vulkan/swap_chain.h"
-#include "render-vulkan/device.h"
-#include "render-vulkan/surface.h"
-#include "render-vulkan/pipeline.h"
-#include "render-vulkan/command_pool.h"
+#include "render-vulkan/core/common.h"
+#include "render-vulkan/core/instance.h"
+#include "render-vulkan/core/swap_chain.h"
+#include "render-vulkan/core/device.h"
+#include "render-vulkan/core/surface.h"
+#include "render-vulkan/core/pipeline.h"
+#include "render-vulkan/core/command_pool.h"
 #include "render-vulkan/render_context.h"
-#include "render-vulkan/model_renderable.h"
-#include "render-vulkan/model_manager.h"
-#include "render-vulkan/text_renderable.h"
-#include "render-vulkan/font_manager.h"
+#include "render-vulkan/model/renderable.h"
+#include "render-vulkan/model/manager.h"
+#include "render-vulkan/text/renderable.h"
+#include "render-vulkan/text/font/manager.h"
 #include "render-vulkan/scene.h"
-#include "render-vulkan/ubo_scene.h"
-#include "render-vulkan/render_pass.h"
-#include "render-vulkan/context.h"
+#include "render-vulkan/core/render_pass.h"
+#include "render-vulkan/core/context.h"
+#include "render-vulkan/model/pipeline.h"
+#include "render-vulkan/text/pipeline.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -70,7 +71,9 @@ namespace wage::render::vulkan {
 
     VulkanContext context;
 
-    Pipeline pipeline;
+    ModelPipeline modelPipeline;
+    
+    TextPipeline textPipeline;
 
     CommandPool commandPool;
 
@@ -84,6 +87,7 @@ namespace wage::render::vulkan {
     bool framebufferResized = false;
 
     MeshManager meshManager;
+    
     ModelManager modelManager;
 
     FontManager fontManager;
