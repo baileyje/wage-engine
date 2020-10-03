@@ -17,6 +17,13 @@ namespace wage::render::vulkan {
   bool VulkanMesh::loaded() {
     return meshData && meshData->loaded();
   }
+  
+  void VulkanMesh::bind(VkCommandBuffer commandBuffer) {
+    VkBuffer vertexBuffers[] = {vertexBuffer.buffer};
+    VkDeviceSize offsets[] = {0};
+    vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+    vkCmdBindIndexBuffer(commandBuffer, indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT32);
+  }
 
   void VulkanMesh::push(Device* device, CommandPool* commandPool) {
     if (pushed) return;

@@ -10,7 +10,7 @@ namespace wage::render::vulkan {
   void VulkanRenderer::start() {
     Renderer::start();
     meshManager.assetManager(assetManager);
-    meshManager.generatePrimitives();
+    textureManager.assetManager(assetManager);
     fontManager.assetManager = assetManager;
     if (glfwVulkanSupported()) {
       core::Logger::info("Vulkan Supported FTW");
@@ -34,7 +34,8 @@ namespace wage::render::vulkan {
   void VulkanRenderer::stop() {
     vkDeviceWaitIdle(context.device.logical);
     fontManager.destroy(&context.device);
-    modelManager.destroy(&context.device);
+    meshManager.destroy(&context.device);
+    textureManager.destroy(&context.device);
     scene.destroy(&context.device);
     commandPool.cleanupBuffers();
     modelPipeline.cleanup();
@@ -61,6 +62,7 @@ namespace wage::render::vulkan {
     auto commandBuffer = commandPool.beginCommandBuffer(imageIndex);
     auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
     vkContext->device = &context.device;
+    vkContext->scene = &scene;
     vkContext->commandPool = &commandPool;
     vkContext->modelPipeline = &modelPipeline;
     vkContext->textPipeline = &textPipeline;
@@ -86,6 +88,7 @@ namespace wage::render::vulkan {
 
   void VulkanRenderer::endMeshRender(RenderContext* renderContext) {
     auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
+    vkContext->modelTree.render(vkContext);
   }
 
   void VulkanRenderer::beginUiRender(RenderContext* renderContext) {
@@ -160,7 +163,7 @@ namespace wage::render::vulkan {
   }
 
   void VulkanRenderer::renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material) {
-    updateFrame()->meshQueue().add<ModelRenderable>(assetManager, &meshManager, &modelManager, transform, mesh, material);
+    updateFrame()->meshQueue().add<ModelRenderable>(transform, mesh, material);
   }
 
   void VulkanRenderer::renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) {
@@ -168,7 +171,11 @@ namespace wage::render::vulkan {
   }
 
   RenderContext* VulkanRenderer::createContext(ecs::Entity cameraEntity, Camera* camera) {
-    return new VulkanRenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
+    auto ctx = new VulkanRenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
+    ctx->assetManager = assetManager;
+    ctx->meshManager = &meshManager;
+    ctx->textureManager = &textureManager;
+    return ctx;
   }
 
   void VulkanRenderer::createSyncObjects() {

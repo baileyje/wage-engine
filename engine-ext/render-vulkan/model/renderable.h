@@ -6,17 +6,14 @@
 
 #include "render/components/mesh.h"
 #include "render/components/material.h"
-#include "render/mesh/manager.h"
+
 
 namespace wage::render::vulkan {
-
-  class ModelManager;
-  class Model;
 
   class ModelRenderable : public Renderable {
 
   public:
-    ModelRenderable(asset::Manager* assetManager, MeshManager* meshManager, ModelManager* modelManager, math::Transform transform, MeshSpec* meshSpec, MaterialSpec* material);
+    ModelRenderable(math::Transform transform, MeshSpec* meshSpec, MaterialSpec* material);
 
     virtual math::Vector position();
 
@@ -33,6 +30,5 @@ namespace wage::render::vulkan {
 
     TextureSpec textureSpec;
 
-    Model* model;
   };
 }

@@ -3,7 +3,9 @@
 #include <vector>
 
 #include "render-vulkan/core/common.h"
+#include "render-vulkan/model/tree.h"
 #include "render/context.h"
+#include "asset/manager.h"
 #include "render/components/camera/camera.h"
 #include "ecs/entity.h"
 #include "math/vector.h"
@@ -14,10 +16,16 @@ namespace wage::render::vulkan {
   class ModelPipeline;
   class TextPipeline;
   class CommandPool;
+  class VulkanScene;
+  class VulkanMeshManager;
+  class VulkanTextureManager;
 
   class VulkanRenderContext : public RenderContext {
   public:
+
     Device* device;
+
+    VulkanScene* scene;
 
     ModelPipeline* modelPipeline;
 
@@ -33,7 +41,15 @@ namespace wage::render::vulkan {
 
     std::vector<std::function<void(VulkanRenderContext*)>> cleanups;
 
-    VulkanRenderContext(ecs::Entity cameraEntity, Camera* camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights);
+    ModelTree modelTree;
+
+    asset::Manager *assetManager;
+    
+    VulkanMeshManager *meshManager;
+
+    VulkanTextureManager* textureManager;
+
+    VulkanRenderContext(ecs::Entity cameraEntity, Camera*camera, math::Vector2 screenSize, std::vector<ecs::Entity> dirLights, std::vector<ecs::Entity> pointLights, std::vector<ecs::Entity> spotlights);
   };
 
 }

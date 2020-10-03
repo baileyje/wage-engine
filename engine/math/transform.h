@@ -20,11 +20,11 @@ namespace wage {
 
       ~Transform() {}
 
-      inline Vector& localPosition() { return _position; }
+      inline Vector localPosition() const { return _position; }
 
       inline void localPosition(Vector position) { _position = position; };
 
-      inline Vector position() {
+      inline Vector position() const {
         if (_parent) {
           return _parent->position() + _position;
         }
@@ -39,11 +39,11 @@ namespace wage {
         localPosition(position);
       }
 
-      inline Vector& localScale() {
+      inline Vector localScale() const {
         return _scale;
       }
 
-      inline Vector scale() {
+      inline Vector scale() const {
         if (_parent) {
           Vector parentScale = _parent->scale();
           return Vector(
@@ -56,11 +56,11 @@ namespace wage {
 
       inline void localScale(Vector scale) { _scale = scale; };
 
-      inline Quaternion& localRotation() {
+      inline Quaternion localRotation() const {
         return _rotation;
       }
 
-      inline Quaternion rotation() {
+      inline Quaternion rotation() const {
         if (_parent) {
           Quaternion parentQuat = _parent->rotation();
           return _rotation * parentQuat;
@@ -93,14 +93,14 @@ namespace wage {
         }
       }
 
-      inline Matrix localProjection() {
+      inline Matrix localProjection() const {
         Matrix translation = Matrix(1).translate(_position);
         Matrix scale = Matrix(1).scale(_scale);
         Matrix rotate = Matrix(_rotation);
         return translation * rotate * scale;
       }
 
-      inline Matrix worldProjection() {
+      inline Matrix worldProjection() const {
         Matrix local = localProjection();
         if (_parent) {
           Matrix parentProjection = _parent->worldProjection();
@@ -109,7 +109,7 @@ namespace wage {
         return local;
       }
 
-      inline Transform* parent() {
+      inline Transform* parent() const {
         return _parent;
       }
 

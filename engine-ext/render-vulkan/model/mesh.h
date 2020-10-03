@@ -26,6 +26,8 @@ namespace wage::render::vulkan {
 
     bool loaded();
 
+    void bind(VkCommandBuffer commandBuffer);
+
     void push(Device* device, CommandPool* commandPool);
 
     void createVertexBuffer(Device* device, CommandPool* commandPool);

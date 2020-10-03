@@ -28,6 +28,10 @@ namespace wage::render::vulkan {
     pushed = false;
   }
 
+  void Texture::bind(VkCommandBuffer commandBuffer, VkPipelineLayout layout, int imageIndex) {
+    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, layout, 1, 1, &descriptorSets[imageIndex], 0, nullptr);
+  }
+
   void Texture::createTextureImage(Device* device, CommandPool* commandPool) {
     Buffer stagingBuffer;
     device->createBuffer(VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, imageSize, &stagingBuffer);

@@ -113,7 +113,7 @@ void setupScene(scene::Scene& scene) {
 
   addPlayer(scene);
 
-  // addEnemy(scene, {0, 0, 20}, 5 /*scale*/);
+  // addEnemy(scene, {0, 0, 100}, 10 /*scale*/);
 
   // addPlanet(scene, {100, 0, 1200}, 1000, 0);
 

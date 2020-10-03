@@ -2,6 +2,7 @@
 #include "render-vulkan/ubo_scene.h"
 #include "render-vulkan/ui/ubo.h"
 
+
 #include <array>
 
 namespace wage::render::vulkan {
@@ -35,7 +36,10 @@ namespace wage::render::vulkan {
   void VulkanScene::createDescriptorPool(Device* device, int imageCount) {
     std::array<VkDescriptorPoolSize, 1> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSizes[0].descriptorCount = static_cast<uint32_t>(100);
+    poolSizes[0].descriptorCount = static_cast<uint32_t>(imageCount);
+    poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    // TODO: Do we have a max number of textures to load....
+    poolSizes[1].descriptorCount = static_cast<uint32_t>(imageCount * 100);
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;

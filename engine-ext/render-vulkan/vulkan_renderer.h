@@ -8,7 +8,6 @@
 #include "core/logger.h"
 
 #include "render/renderer.h"
-#include "render/mesh/manager.h"
 #include "render-vulkan/core/common.h"
 #include "render-vulkan/core/instance.h"
 #include "render-vulkan/core/swap_chain.h"
@@ -18,7 +17,8 @@
 #include "render-vulkan/core/command_pool.h"
 #include "render-vulkan/render_context.h"
 #include "render-vulkan/model/renderable.h"
-#include "render-vulkan/model/manager.h"
+#include "render-vulkan/model/mesh_manager.h"
+#include "render-vulkan/model/texture_manager.h"
 #include "render-vulkan/text/renderable.h"
 #include "render-vulkan/text/font/manager.h"
 #include "render-vulkan/scene.h"
@@ -86,9 +86,9 @@ namespace wage::render::vulkan {
     size_t currentFrame = 0;
     bool framebufferResized = false;
 
-    MeshManager meshManager;
-    
-    ModelManager modelManager;
+    VulkanMeshManager meshManager;
+
+    VulkanTextureManager textureManager;
 
     FontManager fontManager;
   };

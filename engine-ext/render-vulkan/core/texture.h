@@ -37,6 +37,8 @@ namespace wage::render::vulkan {
 
     virtual void destroy(Device* device);
 
+    virtual void bind(VkCommandBuffer commandBuffer, VkPipelineLayout layout, int imageIndex);
+
   protected:
     void createDescriptorSets(Device* device, CommandPool* commandPool, VkDescriptorSetLayout textureLayout, VkDescriptorPool descriptorPool, int imageCount);
 

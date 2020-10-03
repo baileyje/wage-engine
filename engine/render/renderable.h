@@ -28,11 +28,6 @@ namespace wage {
       virtual math::Vector position() = 0;
 
       /**
-       * Get the bounding box for the renderable in the world.
-       */
-      virtual math::BoundingBox boundingBox() = 0;
-
-      /**
        * Get the bounding sphere for the renderable in the world.
        */
       virtual math::BoundingSphere boundingSphere() = 0;

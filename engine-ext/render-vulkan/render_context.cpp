@@ -4,6 +4,9 @@
 #include "render-vulkan/core/device.h"
 #include "render-vulkan/core/command_pool.h"
 #include "render-vulkan/core/pipeline.h"
+#include "render-vulkan/scene.h"
+#include "render-vulkan/model/mesh_manager.h"
+#include "render-vulkan/model/texture_manager.h"
 
 namespace wage::render::vulkan {
 

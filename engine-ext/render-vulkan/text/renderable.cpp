@@ -1,7 +1,6 @@
 #include "render-vulkan/text/renderable.h"
 
 #include "render-vulkan/render_context.h"
-// #include "render-vulkan/model/pipeline.h"
 #include "render-vulkan/text/pipeline.h"
 
 #include "render-vulkan/text/font/manager.h"
