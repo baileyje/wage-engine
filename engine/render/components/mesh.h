@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "math/math.h"
 #include "asset/spec.h"
 
 #define MeshComponent 30
@@ -31,17 +32,21 @@ namespace wage {
       static asset::AssetSpec::Key Quad;
 
       /**
+       * The mesh's local transform with respect to the entity transform.
+       */
+      math::Transform transform;
+
+      /**
        * Default mesh spec. Defaults to Cube.
        */
-      MeshSpec() : MeshSpec(Cube) {}
+      MeshSpec();
 
       /**
        * Create a mesh spec with an asset key pointing to the mesh object data.
        */
-      MeshSpec(std::string key) : asset::AssetSpec("mesh", key) {}
+      MeshSpec(std::string key);
 
-      virtual ~MeshSpec() {
-      }
+      ~MeshSpec();
     };
   }
 }

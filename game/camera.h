@@ -15,11 +15,11 @@ public:
   void start(const ecs::SystemContext& context) {
     auto& entities = scene::Scene::current().entities();
     auto player = *entities.with({PlayerComponent}).begin();
-    auto cameraPosition = camera.get<math::Transform>(TransformComponent)->position();
-    auto playerPosition = player.get<math::Transform>(TransformComponent)->position();
+    auto cameraPosition = camera.get<math::Transform>(TransformComponent)->localPosition;
+    auto playerPosition = player.get<math::Transform>(TransformComponent)->localPosition;
     followDistance = cameraPosition.distanceTo(playerPosition);
     staringOffset = cameraPosition - playerPosition;
-    staringRotation = camera.get<math::Transform>(TransformComponent)->rotation();
+    staringRotation = camera.get<math::Transform>(TransformComponent)->localRotation;
   }
 
   void update(const ecs::SystemContext& context) {
@@ -28,9 +28,9 @@ public:
     auto player = *entities.with({PlayerComponent}).begin();
     if (!player.valid())
       return;
-    auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
-    camera.get<math::Transform>(TransformComponent)->position(player.get<math::Transform>(TransformComponent)->position() + bearing * staringOffset);
-    camera.get<math::Transform>(TransformComponent)->rotation(bearing * staringRotation);
+    auto bearing = player.get<math::Transform>(TransformComponent)->localRotation;
+    camera.get<math::Transform>(TransformComponent)->localPosition = player.get<math::Transform>(TransformComponent)->localPosition + bearing * staringOffset;
+    camera.get<math::Transform>(TransformComponent)->localRotation = bearing * staringRotation;
   }
 
 private:
@@ -46,9 +46,8 @@ private:
 void addCamera(scene::Scene& scene) {
   auto cameraEntity = IDCHECK(scene.entities().create());
   auto camTransform = cameraEntity.assign<math::Transform>(TransformComponent);
-  camTransform->position({0, 15, -20});
-  camTransform->rotation({5, 0, 0});
-
+  camTransform->localPosition = {0, 15, -20};
+  camTransform->setEulerRotation({5, 0, 0});
   cameraEntity.assign<render::PerspectiveCamera>(PerspectiveCameraComponent);
   scene.systems().create<ThirdPersonCamera>(cameraEntity);
 }

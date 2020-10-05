@@ -35,6 +35,13 @@ namespace wage {
       }
 
       /**
+       * Get access to the mesh render queue.
+       */
+      inline RenderQueue& wireframeQueue() {
+        return _wireframeQueue;
+      }
+
+      /**
        * Get access to current render context.
        */
       inline RenderContext* context() {
@@ -78,21 +85,18 @@ namespace wage {
         sort();
       }
 
-      /**
-       * Render the frame with with provided render context.
-       */
-      // inline void render() {
-    
-      //   renderMeshes(_renderContext);
-      //   // TODO: Sprites
-      //   renderUi(_renderContext);
-      // }
-
       void renderMeshes() {
         if (!_renderContext)
           return;
         // _meshQueue.sort(renderContext);
         _meshQueue.render(_renderContext);
+      }
+
+      void renderWireframes() {
+        if (!_renderContext)
+          return;
+        // _meshQueue.sort(renderContext);
+        _wireframeQueue.render(_renderContext);
       }
 
       void renderUi() {
@@ -107,8 +111,9 @@ namespace wage {
 
       RenderQueue _uiQueue;
       RenderQueue _meshQueue;
+      RenderQueue _wireframeQueue;
 
-      RenderContext* _renderContext;
+      RenderContext* _renderContext  = nullptr;
     };
 
   } // namespace render

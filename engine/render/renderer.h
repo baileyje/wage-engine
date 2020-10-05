@@ -34,7 +34,7 @@ namespace wage {
     class Renderer : public core::Service {
 
     public:
-      Renderer() : Service("Renderer"), _updateFrame(new Frame()) {}
+      Renderer() : Service("Renderer"), _updateFrame(new Frame()), _renderFrame(nullptr), _readyFrame(nullptr) {}
 
       ~Renderer() {}
 
@@ -60,13 +60,16 @@ namespace wage {
        */
       void render() {
         auto currentFrame = _renderFrame.load(std::memory_order_acquire);
-        if (!currentFrame) {
+        if (!currentFrame || !currentFrame->context())  {
           return;
         }
         beginRender(currentFrame->context());
         beginMeshRender(currentFrame->context());
         currentFrame->renderMeshes();
         endMeshRender(currentFrame->context());
+        beginWireframeRender(currentFrame->context());
+        currentFrame->renderWireframes();
+        endWireframeRender(currentFrame->context());
         beginUiRender(currentFrame->context());
         currentFrame->renderUi();
         endUiRender(currentFrame->context());
@@ -91,7 +94,12 @@ namespace wage {
       /**
        * Render a mesh to the screen.
        */
-      virtual void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material){};
+      virtual void renderMesh(math::Transform transform, MeshSpec mesh, MaterialSpec material) {};
+
+      /**
+       * Render wireframe.  FOR DEBUGGING.
+       */
+      virtual void renderWireframe(math::Transform transform, MeshSpec mesh) { };
 
       /**
        * Swap the frame currently beeing updated with the ready frame for the next render cycle. This should be called
@@ -112,10 +120,14 @@ namespace wage {
         return timer.averageTime();
       }
 
+      bool renderWireFrames = false;
+
     protected:
-      virtual RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera) {
-        return new RenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
-      }
+      virtual RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera) = 0;
+
+      // {
+      //   return new RenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
+      // }
 
       inline Frame* updateFrame() {
         return _updateFrame;
@@ -139,6 +151,10 @@ namespace wage {
 
       virtual void endMeshRender(RenderContext* context){};
 
+      virtual void beginWireframeRender(RenderContext* context){};
+
+      virtual void endWireframeRender(RenderContext* context){};
+
       virtual void beginUiRender(RenderContext* context){};
 
       virtual void endUiRender(RenderContext* context){};
@@ -153,6 +169,7 @@ namespace wage {
 
       // For FPS calculation
       util::Timer timer;
+
     };
 
   } // namespace render

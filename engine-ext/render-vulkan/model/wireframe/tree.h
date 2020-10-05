@@ -11,14 +11,16 @@ namespace wage::render::vulkan {
 
   class VulkanRenderContext;
 
-  class ModelTree {
+
+  class WireframeTree {
 
   public:
-    void add(TextureSpec texture, MeshSpec mesh, math::Matrix modelMatrix);
+    void add(MeshSpec mesh, math::Matrix modelMatrix);
 
     void render(VulkanRenderContext* context);
 
   private:
+    
     struct MeshGroup {
 
       MeshSpec meshSpec;
@@ -26,13 +28,6 @@ namespace wage::render::vulkan {
       std::vector<math::Matrix> modelMatrices;
     };
 
-    struct TextureGroup {
-
-      TextureSpec textureSpec;
-
-      std::map<std::string, MeshGroup> meshes;
-    };
-
-    std::map<std::string, TextureGroup> groups;
+    std::map<std::string, MeshGroup> groups;
   };
 }

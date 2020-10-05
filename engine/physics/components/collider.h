@@ -1,5 +1,7 @@
 #pragma once
 
+#include "math/math.h"
+
 // TODO: SCRUB THE SOURCE OF THESE
 #define ColliderComponent 50
 
@@ -32,20 +34,15 @@ namespace wage {
       /**
        * Create a collider with a specifc collider type.
        */
-      Collider(ColliderType type) : _type(type) {
+      Collider(ColliderType type) : type(type) {      
       }
 
       ~Collider() {}
 
-      /**
-       * Get the collider type.
-       */
-      inline ColliderType type() const {
-        return _type;
-      }
+      ColliderType type;
 
-    private:
-      ColliderType _type;
+      math::Transform transform;
+
     };
 
   }

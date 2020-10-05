@@ -15,7 +15,7 @@ class Player {
 class PlayerPhysicsMovement : public ecs::System {
 
 public:
-  PlayerPhysicsMovement() : System(), lastPos(Vector2()), mouseSpeed(1) {
+  PlayerPhysicsMovement() : System(), lastPos(Vector2()), mouseSpeed(10) {
   }
 
   void start(const ecs::SystemContext& context) {
@@ -30,7 +30,7 @@ public:
     auto mousePos = input->mousePosition();
     auto dx = lastPos.x - mousePos.x;
     auto dy = lastPos.y - mousePos.y;
-    auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
+    auto bearing = player.get<math::Transform>(TransformComponent)->localRotation;
     auto torque = bearing * Vector3::Up * mouseSpeed * dx + bearing * Vector3::Right * mouseSpeed * -dy;
 
     if (input->isPressed(input::Key::q)) {
@@ -100,7 +100,7 @@ public:
     auto mousePos = input->mousePosition();
     auto dx = lastPos.x - mousePos.x;
     auto dy = lastPos.y - mousePos.y;
-    auto bearing = player.get<math::Transform>(TransformComponent)->rotation();
+    auto bearing = player.get<math::Transform>(TransformComponent)->localRotation;
     auto newDir = bearing * Vector3::Up * 1 * dx + bearing * Vector3::Right * 1 * -dy;
     player.get<math::Transform>(TransformComponent)->rotation({newDir});
 
@@ -126,7 +126,7 @@ public:
       impulse += (bearing * Vector::Down).normalized() * force;
     }
 
-    player.get<math::Transform>(TransformComponent)->position(player.get<math::Transform>(TransformComponent)->position() + impulse);
+    player.get<math::Transform>(TransformComponent)->position(player.get<math::Transform>(TransformComponent)->localPosition + impulse);
 
     // body->addForce(impulse);
 
@@ -144,10 +144,13 @@ private:
 
 ecs::Entity addPlayer(scene::Scene& scene) {
   auto player = IDCHECK(scene.entities().create());
-  player.assign<math::Transform>(TransformComponent, Vector(0, 5, 0), Vector(5, 5, 5), Vector(-3, 0, 0));
+  auto transform = player.assign<math::Transform>(TransformComponent, Vector(0, 5, 0), Vector(5, 5, 5), Vector(-3, 0, 0));
   player.assign<physics::RigidBody>(RigidBodyComponent, 100);
-  player.assign<render::MeshSpec>(MeshComponent, "player.obj");
-  player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
+  auto mesh = player.assign<render::MeshSpec>(MeshComponent, "player.obj");
+  mesh->transform.localPosition = { 0,0,0.2 };
+  // mesh->transform.localScale = { 1, 1, 1 };
+  auto collider = player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
+  collider->transform.localScale = {2, 2, 2};
   player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space.png"));
   player.assign<Player>(PlayerComponent);
   addCannonTo(player);

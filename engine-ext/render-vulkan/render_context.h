@@ -4,6 +4,7 @@
 
 #include "render-vulkan/core/common.h"
 #include "render-vulkan/model/tree.h"
+#include "render-vulkan/model/wireframe/tree.h"
 #include "render/context.h"
 #include "asset/manager.h"
 #include "render/components/camera/camera.h"
@@ -14,6 +15,7 @@ namespace wage::render::vulkan {
 
   class Device;
   class ModelPipeline;
+  class WireframePipeline;
   class TextPipeline;
   class CommandPool;
   class VulkanScene;
@@ -29,6 +31,8 @@ namespace wage::render::vulkan {
 
     ModelPipeline* modelPipeline;
 
+    WireframePipeline* wireframePipeline;
+
     TextPipeline* textPipeline;
 
     CommandPool* commandPool;
@@ -42,6 +46,8 @@ namespace wage::render::vulkan {
     std::vector<std::function<void(VulkanRenderContext*)>> cleanups;
 
     ModelTree modelTree;
+
+    WireframeTree wireframeTree;
 
     asset::Manager *assetManager;
     

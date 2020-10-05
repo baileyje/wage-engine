@@ -66,9 +66,9 @@ public:
   void aim(const ecs::SystemContext& context, ecs::Entity entity, Cannon* cannon) {
     auto physics = core::Core::Instance->get<physics::Physics>();
     auto transform = entity.get<math::Transform>(TransformComponent);
-    auto bearing = transform->rotation();
-    auto startPosition = transform->position() + (bearing * Vector::Forward).normalized() * 5;
-    auto endPosition = transform->position() + (bearing * Vector::Forward).normalized() * 20000;
+    auto bearing = transform->localRotation;
+    auto startPosition = transform->localPosition + (bearing * Vector::Forward).normalized() * 5;
+    auto endPosition = transform->localPosition + (bearing * Vector::Forward).normalized() * 20000;
     auto results = physics->castRay(startPosition, endPosition);
     if (!results.empty()) {
 
@@ -82,8 +82,8 @@ public:
       auto& entities = scene::Scene::current().entities();
       auto ball = IDCHECK(entities.create());
       auto entityTransform = entity.get<math::Transform>(TransformComponent);
-      auto bearing = entity.get<math::Transform>(TransformComponent)->rotation();
-      auto ballPosition = entityTransform->position() + (bearing * Vector::Forward).normalized() * 4;
+      auto bearing = entity.get<math::Transform>(TransformComponent)->localRotation;
+      auto ballPosition = entityTransform->localPosition + (bearing * Vector::Forward).normalized() * 4;
       ball.assign<math::Transform>(TransformComponent, ballPosition, Vector(1, 1, 1), Vector(0, 0, 0));
       ball.assign<physics::RigidBody>(RigidBodyComponent, 0.1);
       ball.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Sphere);

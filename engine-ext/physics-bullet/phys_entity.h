@@ -131,9 +131,9 @@ namespace wage {
         transform = in;
         btTransform transform = in * centerOfMassOffset;
         auto entityTransform = entity().get<math::Transform>(TransformComponent);
-        entityTransform->position(fromBTVector(transform.getOrigin()));
+        entityTransform->localPosition = fromBTVector(transform.getOrigin());
         btQuaternion rotation = transform.getRotation();
-        entityTransform->rotation(math::Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w()));
+        entityTransform->localRotation = math::Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w());
       }
 
     private:

@@ -43,8 +43,8 @@ public:
         if (!enemy.valid()) {
           continue;
         }
-        auto enemyPosition = enemy.get<math::Transform>(TransformComponent)->position();
-        auto targetPosition = target.get<math::Transform>(TransformComponent)->position();
+        auto enemyPosition = enemy.get<math::Transform>(TransformComponent)->localPosition;
+        auto targetPosition = target.get<math::Transform>(TransformComponent)->localPosition;
         if (chasing && Vector::distance(targetPosition, enemyPosition) < 100) {
           enemy.get<physics::RigidBody>(RigidBodyComponent)->shouldStop(true);
           continue;
@@ -91,8 +91,8 @@ private:
 ecs::Entity addEnemy(scene::Scene& scene, Vector position, float scale) {
   auto entity = IDCHECK(scene.entities().create());
   auto transform = entity.assign<math::Transform>(TransformComponent);
-  transform->position(position);
-  transform->localScale(Vector(scale, scale, scale));
+  transform->localPosition = position;
+  transform->localScale = Vector(scale, scale, scale);
   entity.assign<render::MeshSpec>(MeshComponent, "cube.obj");
   entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
   entity.assign<physics::RigidBody>(RigidBodyComponent, 5, physics::RigidBodyType::dynamic);

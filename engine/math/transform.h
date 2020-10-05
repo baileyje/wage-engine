@@ -12,119 +12,31 @@ namespace wage {
     class Transform {
 
     public:
-      Transform(Vector position, Vector scale, Vector rotation) : _parent(nullptr), _position(position), _scale(scale), _rotation(Quaternion::fromEulers(rotation)) {}
+      Vector3 localPosition;
 
-      Transform(Vector position, Vector scale, Quaternion rotation) : _parent(nullptr), _position(position), _scale(scale), _rotation(rotation) {}
+      Vector3 localScale;
 
-      Transform() : _parent(nullptr), _position(Vector::Zero), _scale(Vector::One), _rotation(Vector::Zero) {}
+      Quaternion localRotation;
 
-      ~Transform() {}
+      Transform(Vector3 position, Vector3 scale, Vector3 eulerRotation);
 
-      inline Vector localPosition() const { return _position; }
+      Transform(Vector3 position, Vector3 scale, Quaternion rotation);
 
-      inline void localPosition(Vector position) { _position = position; };
+      Transform();
 
-      inline Vector position() const {
-        if (_parent) {
-          return _parent->position() + _position;
-        }
-        return localPosition();
-      }
+      ~Transform();
 
-      inline void position(Vector position) {
-        if (_parent) {
-          _position = position - _parent->position();
-          return;
-        }
-        localPosition(position);
-      }
+      Vector position(Vector3 parentPosition = Vector3::Zero) const;
 
-      inline Vector localScale() const {
-        return _scale;
-      }
+      Vector3 scale(Vector3 parentScale = Vector3::One) const;
 
-      inline Vector scale() const {
-        if (_parent) {
-          Vector parentScale = _parent->scale();
-          return Vector(
-              parentScale.x * _scale.x,
-              parentScale.y * _scale.y,
-              parentScale.z * _scale.z);
-        }
-        return localScale();
-      }
+      Quaternion rotation(Quaternion parentQuat = Quaternion()) const;
 
-      inline void localScale(Vector scale) { _scale = scale; };
+      void setEulerRotation(Vector3 eulers);
 
-      inline Quaternion localRotation() const {
-        return _rotation;
-      }
+      Matrix localProjection() const;
 
-      inline Quaternion rotation() const {
-        if (_parent) {
-          Quaternion parentQuat = _parent->rotation();
-          return _rotation * parentQuat;
-        }
-        return localRotation();
-      }
-
-      inline void localRotation(Quaternion rotation) {
-        _rotation = rotation;
-      }
-
-      inline void localRotation(Vector eulers) {
-        _rotation = Quaternion::fromEulers(eulers);
-      }
-
-      inline void rotation(Vector eulers) {
-        rotation(Quaternion::fromEulers(eulers));
-      }
-
-      inline void rotation(Quaternion rotation) {
-        if (_parent) {
-          Quaternion parentQuat = _parent->rotation();
-          _rotation = rotation * Quaternion(
-                                     parentQuat.w,
-                                     -parentQuat.x,
-                                     -parentQuat.y,
-                                     -parentQuat.z);
-        } else {
-          localRotation(rotation);
-        }
-      }
-
-      inline Matrix localProjection() const {
-        Matrix translation = Matrix(1).translate(_position);
-        Matrix scale = Matrix(1).scale(_scale);
-        Matrix rotate = Matrix(_rotation);
-        return translation * rotate * scale;
-      }
-
-      inline Matrix worldProjection() const {
-        Matrix local = localProjection();
-        if (_parent) {
-          Matrix parentProjection = _parent->worldProjection();
-          return parentProjection * local;
-        }
-        return local;
-      }
-
-      inline Transform* parent() const {
-        return _parent;
-      }
-
-      inline void parent(Transform* parent) {
-        _parent = parent;
-      }
-
-    private:
-      Transform* _parent;
-
-      Vector _position;
-
-      Vector _scale;
-
-      Quaternion _rotation;
+      Matrix worldProjection(Transform parent = Transform{}) const;
     };
 
   }

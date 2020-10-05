@@ -3,8 +3,8 @@
 
 namespace wage::render::vulkan {
 
-  ModelRenderable::ModelRenderable( math::Transform transform, MeshSpec* meshSpec, MaterialSpec* material)
-      : transform(transform), meshSpec(*meshSpec), textureSpec(material->texture()) {
+  ModelRenderable::ModelRenderable(math::Transform transform, MeshSpec meshSpec, MaterialSpec material)
+      : transform(transform), meshSpec(meshSpec), textureSpec(material.texture()) {
   }
 
   math::Vector ModelRenderable::position() {
@@ -31,7 +31,12 @@ namespace wage::render::vulkan {
 
   void ModelRenderable::render(RenderContext* context) {
     auto vkContext = static_cast<VulkanRenderContext*>(context);
-    vkContext->modelTree.add(textureSpec, meshSpec, transform);
+    // TODO: FIX THIS BEFORE IT GOES ANY FURTHER AND KILLS SOMEONE.
+    // math::Transform appliedTransform(
+    //     meshSpec.transform.position(transform.localPosition),
+    //     meshSpec.transform.scale(transform.localScale),
+    //     meshSpec.transform.rotation(transform.localRotation));
+    vkContext->modelTree.add(textureSpec, meshSpec, meshSpec.transform.worldProjection(transform));
   }
 
 }

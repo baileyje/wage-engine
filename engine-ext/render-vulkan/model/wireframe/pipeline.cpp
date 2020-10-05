@@ -1,4 +1,4 @@
-#include "render-vulkan/text/pipeline.h"
+#include "render-vulkan/model/wireframe/pipeline.h"
 
 #include <array>
 
@@ -10,21 +10,20 @@
 #include "render-vulkan/core/device.h"
 #include "render-vulkan/core/swap_chain.h"
 #include "render-vulkan/core/shader.h"
-#include "render-vulkan/ui/vertex.h"
+#include "render-vulkan/core/vertex.h"
 #include "render-vulkan/core/render_pass.h"
 #include "render-vulkan/core/context.h"
-#include "render-vulkan/text/font/glyph.h"
 
 namespace wage::render::vulkan {
 
-  TextPipeline::TextPipeline(VulkanContext* context) : Pipeline(context) {}
+  WireframePipeline::WireframePipeline(VulkanContext* context) : Pipeline(context) {}
 
-  void TextPipeline::create() {
+  void WireframePipeline::create() {
     createDescriptorSetLayouts();
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    auto bindingDescription = UiVertex::getBindingDescription();
-    auto attributeDescriptions = UiVertex::getAttributeDescriptions();
+    auto bindingDescription = VulkanVertex::getBindingDescription();
+    auto attributeDescriptions = VulkanVertex::getAttributeDescriptions();
     vertexInputInfo.vertexBindingDescriptionCount = 1;
     vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
     vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
@@ -58,7 +57,7 @@ namespace wage::render::vulkan {
     rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     rasterizer.depthClampEnable = VK_FALSE;
     rasterizer.rasterizerDiscardEnable = VK_FALSE;
-    rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
+    rasterizer.polygonMode = VK_POLYGON_MODE_LINE;
     rasterizer.lineWidth = 1.0f;
     rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
     rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
@@ -79,13 +78,13 @@ namespace wage::render::vulkan {
 
     VkPipelineColorBlendAttachmentState colorBlendAttachment{};
     colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-    colorBlendAttachment.blendEnable = VK_TRUE;
-    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-    colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-    colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-    colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-    colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+    colorBlendAttachment.blendEnable = VK_FALSE;
+    // colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    // colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    // colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+    // colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    // colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    // colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
     VkPipelineColorBlendStateCreateInfo colorBlending{};
     colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -107,10 +106,10 @@ namespace wage::render::vulkan {
     VkPushConstantRange pushConstantRange{};
     pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
     pushConstantRange.offset = 0;
-    pushConstantRange.size = sizeof(GlyphPushData);
-    std::vector<VkPushConstantRange> pushRanges = {pushConstantRange};
-    pipelineLayoutInfo.pushConstantRangeCount = 1;
-    pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
+    pushConstantRange.size = sizeof(glm::mat4);
+    std::vector<VkPushConstantRange> pushRanges = { pushConstantRange };
+    pipelineLayoutInfo.pushConstantRangeCount = pushRanges.size();
+    pipelineLayoutInfo.pPushConstantRanges = pushRanges.data();
 
     if (vkCreatePipelineLayout(context->device.logical, &pipelineLayoutInfo, nullptr, &layout) != VK_SUCCESS) {
       throw std::runtime_error("failed to create pipeline layout!");
@@ -137,9 +136,9 @@ namespace wage::render::vulkan {
 
     auto fs = core::Core::Instance->get<fs::FileSystem>();
     Shader modelVertShader(&context->device, VK_SHADER_STAGE_VERTEX_BIT);
-    modelVertShader.create(fs->read({{"resources/shader/font.vert.spv"}}, memory::Allocator::Temporary()));
+    modelVertShader.create(fs->read({{"resources/shader/model_wireframe.vert.spv"}}, memory::Allocator::Temporary()));
     Shader modelFragShader(&context->device, VK_SHADER_STAGE_FRAGMENT_BIT);
-    modelFragShader.create(fs->read({{"resources/shader/font.frag.spv"}}, memory::Allocator::Temporary()));
+    modelFragShader.create(fs->read({{"resources/shader/model_wireframe.frag.spv"}}, memory::Allocator::Temporary()));
     shaderStages[0] = modelVertShader.createInfo();
     shaderStages[1] = modelFragShader.createInfo();
 
@@ -150,13 +149,13 @@ namespace wage::render::vulkan {
     modelFragShader.destroy();
   }
 
-  void TextPipeline::cleanup() {
+  void WireframePipeline::cleanup() {
     Pipeline::cleanup();
     vkDestroyDescriptorSetLayout(context->device.logical, textureLayout, nullptr);
     vkDestroyDescriptorSetLayout(context->device.logical, uboLayout, nullptr);
   }
 
-  void TextPipeline::createDescriptorSetLayouts() {
+  void WireframePipeline::createDescriptorSetLayouts() {
     VkDescriptorSetLayoutBinding samplerLayoutBinding{};
     samplerLayoutBinding.binding = 0;
     samplerLayoutBinding.descriptorCount = 1;

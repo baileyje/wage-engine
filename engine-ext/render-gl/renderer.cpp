@@ -58,8 +58,8 @@ namespace wage {
           assetManager, position, size, color, texture);
     }
 
-    void GlRenderer::renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material) {
-      auto meshData = meshManager.load(*mesh);
+    void GlRenderer::renderMesh(math::Transform transform, MeshSpec mesh, MaterialSpec material) {
+      auto meshData = meshManager.load(mesh);
       updateFrame()->meshQueue().add<GlMeshRenderable>(assetManager, &vaoManager, transform, meshData, material);
     }
 

@@ -27,7 +27,7 @@ namespace wage {
         auto camTransform = cameraEntity.get<math::Transform>(TransformComponent);
         _screenProjection = camera->screenProjection(screenSize);
         _viewProjection = camera->viewProjection(camTransform);
-        _cameraPosition = camTransform->position();
+        _cameraPosition = camTransform->localPosition;
         _cameraFrustum = camera->frustum(screenSize, camTransform);
       }
 

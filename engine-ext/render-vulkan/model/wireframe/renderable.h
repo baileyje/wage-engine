@@ -10,10 +10,10 @@
 
 namespace wage::render::vulkan {
 
-  class ModelRenderable : public Renderable {
+  class WireframeRenderable : public Renderable {
 
   public:
-    ModelRenderable(math::Transform transform, MeshSpec meshSpec, MaterialSpec material);
+    WireframeRenderable(math::Transform transform, MeshSpec meshSpec);
 
     virtual math::Vector position();
 
@@ -26,9 +26,6 @@ namespace wage::render::vulkan {
   private:
     math::Transform transform;
 
-    MeshSpec meshSpec;
-
-    TextureSpec textureSpec;
-
+    MeshSpec meshSpec;    
   };
 }

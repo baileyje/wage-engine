@@ -30,7 +30,7 @@ namespace wage {
 
       void renderSprite(math::Vector2 position, math::Vector2 size, component::Color color, TextureSpec texture);
 
-      void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material);
+      void renderMesh(math::Transform transform, MeshSpec mesh, MaterialSpec material);
 
       virtual void beginRender();
 

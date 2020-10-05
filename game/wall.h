@@ -11,17 +11,29 @@ using namespace wage;
 class Wall {
 };
 
+ecs::Entity addBlock(scene::Scene& scene, Vector position, float scale) {
+  auto entity = IDCHECK(scene.entities().create());
+  auto transform = entity.assign<math::Transform>(TransformComponent);
+  transform->localPosition = position;
+  transform->localScale = Vector(scale, scale, scale);
+  entity.assign<render::MeshSpec>(MeshComponent, "cube.obj");
+  entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
+  entity.assign<physics::RigidBody>(RigidBodyComponent, 1000, physics::RigidBodyType::immovable);
+  entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
+  return entity;
+}
+
 void addWall(scene::Scene &scene) {
   int width = 40;
   int height = 40;
-  float margin = 1;
+  float margin = 0;
   float enemyScale = 5;
   float offsetX = -(enemyScale * width / 2);
   float offsetY = -(enemyScale * height / 2);
 
   for (int col = 0; col < width; col++) {
     for (int row = 0; row < height; row++) {
-      auto enemy = addEnemy(scene, math::Vector{offsetX, offsetY, 40}, enemyScale);
+      auto enemy = addBlock(scene, math::Vector{offsetX, offsetY, 40}, enemyScale);
       enemy.assign<Wall>(WallComponent);
       offsetY += enemyScale + margin;
     }

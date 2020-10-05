@@ -22,6 +22,7 @@
 #include "camera.h"
 #include "hud.h"
 #include "music.h"
+#include "tmp.h"
 
 using namespace wage;
 
@@ -50,6 +51,8 @@ void setupCoreSystems(scene::Scene& scene) {
   scene.systems().create<PlanetLauncher>();
   scene.systems().create<DumbMusicSystem>();
   scene.systems().create<WallSystem>();
+
+  scene.systems().create<ColliderDebug>();
 }
 
 void registerKnownComponents(scene::Scene& scene) {
@@ -149,6 +152,10 @@ class GameController : public messaging::MessageListener<input::KeyEvent> {
     }
     if (event.key() == input::Key::f2 && event.type() == input::KeyEventType::press) {
       core::Core::Instance->reset();
+    }
+    if (event.key() == input::Key::f4 && event.type() == input::KeyEventType::press) {
+      auto renderer = core::Core::Instance->get<render::Renderer>();
+      renderer->renderWireFrames = !renderer->renderWireFrames;
     }
     return false;
   }

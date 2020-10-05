@@ -2,10 +2,11 @@
 
 #include "render-vulkan/ubo_scene.h"
 #include "render-vulkan/ui/ubo.h"
+#include "render-vulkan/model/wireframe/renderable.h"
 
 namespace wage::render::vulkan {
 
-  VulkanRenderer::VulkanRenderer() : modelPipeline(&context), textPipeline(&context), commandPool(&context) {}
+  VulkanRenderer::VulkanRenderer() : modelPipeline(&context), wireframePipeline(&context), textPipeline(&context), commandPool(&context) {}
 
   void VulkanRenderer::start() {
     Renderer::start();
@@ -25,6 +26,8 @@ namespace wage::render::vulkan {
 
     context.create(window);
     modelPipeline.create();
+    // TODO: Don't do this in real game...
+    wireframePipeline.create();
     textPipeline.create();
     commandPool.create();
     createSyncObjects();
@@ -39,7 +42,8 @@ namespace wage::render::vulkan {
     scene.destroy(&context.device);
     commandPool.cleanupBuffers();
     modelPipeline.cleanup();
-    modelPipeline.cleanup();
+    wireframePipeline.cleanup();
+    textPipeline.cleanup();
     destroySyncObjects();
     commandPool.destroy();
     context.destroy();
@@ -76,7 +80,10 @@ namespace wage::render::vulkan {
   void VulkanRenderer::beginMeshRender(RenderContext* renderContext) {
     auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
     auto commandBuffer = vkContext->commandBuffer;
-    modelPipeline.bind(commandBuffer);
+    if (renderWireFrames)
+      wireframePipeline.bind(commandBuffer);
+    else
+      modelPipeline.bind(commandBuffer);
 
     UniformBufferScene ubo{};
     ubo.view = renderContext->viewProjection().glm();
@@ -89,6 +96,24 @@ namespace wage::render::vulkan {
   void VulkanRenderer::endMeshRender(RenderContext* renderContext) {
     auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
     vkContext->modelTree.render(vkContext);
+  }
+
+  void VulkanRenderer::beginWireframeRender(RenderContext* renderContext) {
+    auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
+    auto commandBuffer = vkContext->commandBuffer;
+    wireframePipeline.bind(commandBuffer);
+
+    UniformBufferScene ubo{};
+    ubo.view = renderContext->viewProjection().glm();
+    ubo.proj = renderContext->screenProjection().glm();
+    ubo.proj[1][1] *= -1;
+    scene.modelUniformBuffers[vkContext->imageIndex].fillWith(&ubo, sizeof(ubo));
+    vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, wireframePipeline.layout, 0, 1, &scene.modelDescriptorSets[vkContext->imageIndex], 0, nullptr);
+  }
+
+  void VulkanRenderer::endWireframeRender(RenderContext* renderContext) {
+    auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
+    vkContext->wireframeTree.render(vkContext);
   }
 
   void VulkanRenderer::beginUiRender(RenderContext* renderContext) {
@@ -162,8 +187,12 @@ namespace wage::render::vulkan {
     // renderer->framebufferResized = true;
   }
 
-  void VulkanRenderer::renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material) {
+  void VulkanRenderer::renderMesh(math::Transform transform, MeshSpec mesh, MaterialSpec material) {
     updateFrame()->meshQueue().add<ModelRenderable>(transform, mesh, material);
+  }
+
+  void VulkanRenderer::renderWireframe(math::Transform transform, MeshSpec mesh) {
+    updateFrame()->wireframeQueue().add<WireframeRenderable>(transform, mesh);
   }
 
   void VulkanRenderer::renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color) {

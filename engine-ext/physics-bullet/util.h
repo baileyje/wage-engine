@@ -19,8 +19,8 @@ namespace wage {
     inline btTransform fromTransform(math::Transform* transform) {
       btTransform btTransform;
       btTransform.setIdentity();
-      btTransform.setOrigin(fromVector(transform->position()));
-      math::Quaternion transformRotation = transform->rotation();
+      btTransform.setOrigin(fromVector(transform->localPosition));
+      math::Quaternion transformRotation = transform->localRotation;
       btQuaternion rotation(transformRotation.x, transformRotation.y, transformRotation.z, transformRotation.w);
       btTransform.setRotation(rotation);
       return btTransform;

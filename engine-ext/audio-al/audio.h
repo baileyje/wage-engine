@@ -25,9 +25,9 @@ namespace wage {
 
         core::Core::Instance->onUpdate([&](const core::Frame& frame) {
           auto camTransform = cameraTransform();
-          auto camPosition = camTransform.position();
+          auto camPosition = camTransform.localPosition;
           AL_FAIL_CHECK(alListener3f(AL_POSITION, camPosition.x, camPosition.y, camPosition.z));
-          auto eulers = camTransform.rotation().eulerAngles();
+          auto eulers = camTransform.localRotation.eulerAngles();
           auto up = math::Vector3::Up;
           float direction[6];
           direction[0] = eulers.x;

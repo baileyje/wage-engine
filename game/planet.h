@@ -48,7 +48,7 @@ public:
       if (!planent.valid()) {
         continue;
       }
-      planent.get<math::Transform>(TransformComponent)->rotation().rotated(4, math::Vector3::Up);
+      planent.get<math::Transform>(TransformComponent)->localRotation.rotated(4, math::Vector3::Up);
     }
   }
 };
@@ -56,8 +56,8 @@ public:
 void addPlanet(scene::Scene& scene, math::Vector position, float scale, int texture) {
   auto entity = IDCHECK(scene.entities().create());
   auto transform = entity.assign<math::Transform>(TransformComponent);
-  transform->position(position);
-  transform->localScale(math::Vector(scale, scale, scale));
+  transform->localPosition = position;
+  transform->localScale = math::Vector(scale, scale, scale);
   entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::immovable);
   entity.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Sphere);
   entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);

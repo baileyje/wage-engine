@@ -21,7 +21,7 @@ namespace wage {
       void update(const ecs::SystemContext& context) {
         auto& entities = scene::Scene::current().entities();
         for (auto entity : entities.with({MeshComponent, TransformComponent, MaterialComponent})) {
-          core::Core::Instance->get<Renderer>()->renderMesh(*entity.get<math::Transform>(TransformComponent), entity.get<MeshSpec>(MeshComponent), entity.get<MaterialSpec>(MaterialComponent));
+          core::Core::Instance->get<Renderer>()->renderMesh(*entity.get<math::Transform>(TransformComponent), *entity.get<MeshSpec>(MeshComponent), *entity.get<MaterialSpec>(MaterialComponent));
         }
       }
     };

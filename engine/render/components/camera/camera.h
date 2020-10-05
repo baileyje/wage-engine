@@ -30,8 +30,8 @@ namespace wage {
       virtual math::Matrix screenProjection(math::Vector2 screenSize) const = 0;
 
       math::Matrix viewProjection(math::Transform* trans) const {
-        math::Vector camPos = trans->position();
-        math::Quaternion rotation = trans->rotation();
+        math::Vector camPos = trans->localPosition;
+        math::Quaternion rotation = trans->localRotation;
         math::Vector camFront = rotation * math::Vector::Forward;
         math::Vector camUp = rotation * math::Vector::Up;
         return math::Matrix::lookAt(camPos, camPos + camFront, camUp);

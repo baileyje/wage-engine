@@ -36,7 +36,7 @@ namespace wage::render::vulkan {
   void VulkanScene::createDescriptorPool(Device* device, int imageCount) {
     std::array<VkDescriptorPoolSize, 1> poolSizes{};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    poolSizes[0].descriptorCount = static_cast<uint32_t>(imageCount);
+    poolSizes[0].descriptorCount = static_cast<uint32_t>(imageCount * 2);
     poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     // TODO: Do we have a max number of textures to load....
     poolSizes[1].descriptorCount = static_cast<uint32_t>(imageCount * 100);

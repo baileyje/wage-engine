@@ -103,6 +103,11 @@ namespace wage::render::vulkan {
     if (physical == VK_NULL_HANDLE) {
       throw std::runtime_error("failed to find a suitable GPU!");
     }
+    // VkPhysicalDeviceProperties physicalProperties = {};
+    // vkGetPhysicalDeviceProperties(physical, &physicalProperties);
+    // fprintf(stdout, "Device Name:    %s\n", physicalProperties.deviceName);
+    // fprintf(stdout, "Device Type:    %d\n", physicalProperties.deviceType);
+    // fprintf(stdout, "Driver Version: %d\n", physicalProperties.driverVersion);
   }
 
   bool Device::isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
@@ -133,6 +138,7 @@ namespace wage::render::vulkan {
     }
     VkPhysicalDeviceFeatures deviceFeatures{};
     deviceFeatures.samplerAnisotropy = VK_TRUE;
+    deviceFeatures.fillModeNonSolid = VK_TRUE;
     VkDeviceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());

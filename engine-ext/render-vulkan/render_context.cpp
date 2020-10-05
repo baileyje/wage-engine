@@ -7,6 +7,7 @@
 #include "render-vulkan/scene.h"
 #include "render-vulkan/model/mesh_manager.h"
 #include "render-vulkan/model/texture_manager.h"
+#include "render-vulkan/model/wireframe/pipeline.h"
 
 namespace wage::render::vulkan {
 

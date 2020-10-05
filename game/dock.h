@@ -14,8 +14,8 @@ class Dock {
 void addDock(scene::Scene& scene, Vector position, float scale) {
   auto entity = scene.entities().create();
   auto transform = entity.assign<math::Transform>(TransformComponent);
-  transform->position(position);
-  transform->localScale(Vector(scale, scale, scale));
+  transform->localPosition = position;
+  transform->localScale = Vector(scale, scale, scale);
   entity.assign<render::MeshSpec>(MeshComponent, "dock.obj");
   entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
   entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::immovable);

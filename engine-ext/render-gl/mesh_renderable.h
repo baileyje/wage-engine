@@ -25,7 +25,7 @@ namespace wage {
     class GlMeshRenderable : public Renderable {
 
     public:
-      GlMeshRenderable(asset::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, Mesh* meshData, MaterialSpec* material)
+      GlMeshRenderable(asset::Manager* assetManager, VaoManager* vaoManager, math::Transform transform, Mesh* meshData, MaterialSpec material)
           : _assetManager(assetManager), _vaoManager(vaoManager), transform(transform), meshData(meshData), material(material) {}
 
       inline VaoManager* vaoManager() {
@@ -33,7 +33,7 @@ namespace wage {
       }
 
       virtual math::Vector position() {
-        return transform.position();
+        return transform.localPosition;
       }
 
       virtual math::BoundingBox boundingBox() {
@@ -41,7 +41,7 @@ namespace wage {
           return math::BoundingBox(position(), {0, 0, 0});
         }
         math::Vector maxDims = meshData->maxDim;
-        math::Vector scale = transform.scale();
+        math::Vector scale = transform.localScale;
         math::Vector scaledMaxHalfDim(
             maxDims.x * scale.x,
             maxDims.y * scale.y,
@@ -126,7 +126,7 @@ namespace wage {
         //   glMaterial.setFloat(base.str() + ".cutOff", glm::cos(glm::radians(light->cutOff())));
         //   glMaterial.setFloat(base.str() + ".outerCutoff", glm::cos(glm::radians(light->outerCutOff())));
         // }
-        GlTexture* glTexture = _assetManager->load<GlTexture>(material->texture());
+        GlTexture* glTexture = _assetManager->load<GlTexture>(material.texture());
         glTexture->bind();
         glMaterial.setInt("material.diffuse", 0);
         glMaterial.setFloat("material.shininess", 32.0f);
@@ -163,7 +163,7 @@ namespace wage {
 
       Mesh* meshData;
 
-      MaterialSpec* material;
+      MaterialSpec material;
     };
 
   } // namespace render

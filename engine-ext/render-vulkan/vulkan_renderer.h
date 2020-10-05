@@ -25,6 +25,7 @@
 #include "render-vulkan/core/render_pass.h"
 #include "render-vulkan/core/context.h"
 #include "render-vulkan/model/pipeline.h"
+#include "render-vulkan/model/wireframe/pipeline.h"
 #include "render-vulkan/text/pipeline.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -43,7 +44,9 @@ namespace wage::render::vulkan {
 
     void endRender(RenderContext* renderContext);
 
-    void renderMesh(math::Transform transform, MeshSpec* mesh, MaterialSpec* material);
+    void renderMesh(math::Transform transform, MeshSpec mesh, MaterialSpec material);
+
+    void renderWireframe(math::Transform transform, MeshSpec mesh);
 
     void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color);
 
@@ -55,6 +58,10 @@ namespace wage::render::vulkan {
     void beginMeshRender(RenderContext* renderContext);
 
     void endMeshRender(RenderContext* renderContext);
+
+    void beginWireframeRender(RenderContext* renderContext);
+
+    void endWireframeRender(RenderContext* renderContext);
 
     void beginUiRender(RenderContext* renderContext);
 
@@ -73,6 +80,8 @@ namespace wage::render::vulkan {
 
     ModelPipeline modelPipeline;
     
+    WireframePipeline wireframePipeline;
+
     TextPipeline textPipeline;
 
     CommandPool commandPool;

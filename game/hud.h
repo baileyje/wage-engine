@@ -28,7 +28,7 @@ public:
 
   void update(const ecs::SystemContext& context) {
     auto player = *(scene::Scene::current().entities().with({PlayerComponent}).begin());
-    auto pos = player.get<math::Transform>(TransformComponent)->position();
+    auto pos = player.get<math::Transform>(TransformComponent)->localPosition;
     std::ostringstream os;
     os << "Player POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
     label->set(os.str());
@@ -45,7 +45,7 @@ public:
 
   void update(const ecs::SystemContext& context) {
     auto camera = *(scene::Scene::current().entities().with({PerspectiveCameraComponent}).begin());
-    auto pos = camera.get<math::Transform>(TransformComponent)->position();
+    auto pos = camera.get<math::Transform>(TransformComponent)->localPosition;
     std::ostringstream os;
     os << "Cam POS: " << int(pos.x) << ":" << int(pos.y) << ":" << int(pos.z);
     label->set(os.str());

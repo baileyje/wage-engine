@@ -9,8 +9,12 @@ namespace wage {
       if (!entity.has(ColliderComponent)) {
         return memory::make<btEmptyShape>();
       }
-      auto scale = entity.get<math::Transform>(TransformComponent)->scale();
-      switch (entity.get<Collider>(ColliderComponent)->type()) {
+      // TODO: FIX THIS BEFORE IT GOES ANY FURTHER AND KILLS SOMEONE.
+      auto parentTransform = entity.get<math::Transform>(TransformComponent);
+      auto collider = entity.get<Collider>(ColliderComponent);
+      auto scale = collider->transform.scale(parentTransform->localScale);
+
+      switch (collider->type) {
       // TODO: Support more shapes
       case ColliderType::box: {
         btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);
