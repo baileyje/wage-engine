@@ -69,7 +69,7 @@ namespace wage {
       ~Local() {}
 
       virtual memory::InputStream* readStream(File::Path path) const {
-        return new LocalFileInputStream(path.string());
+        return new LocalFileInputStream(fullPath(path));
       }
 
     private:

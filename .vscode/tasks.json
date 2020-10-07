@@ -68,6 +68,50 @@
         "isDefault": true
       },
       "problemMatcher": []
-    }
+    },
+
+
+    {
+      "label": "build-editor",
+      "type": "shell",
+      "command": "bazel build :wage-edit",
+      "options": {
+        "cwd": "${workspaceFolder}/editor"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "run-editor",
+      "type": "shell",
+      "command": "./bazel-bin/wage-edit",
+      "options": {
+        "cwd": "${workspaceFolder}/editor"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "dependsOn": [
+        "build-editor"
+      ]
+    },
+    {
+      "label": "build-editor-debug",
+      "type": "shell",
+      "command": "bazel build -c dbg --spawn_strategy=standalone :wage-edit && bazel build -c dbg --spawn_strategy=standalone :wage-edit_dsym",
+      "options": {
+        "cwd": "${workspaceFolder}/editor"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
   ]
 }

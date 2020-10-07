@@ -34,7 +34,7 @@ namespace wage {
     class Renderer : public core::Service {
 
     public:
-      Renderer() : Service("Renderer"), _updateFrame(new Frame()), _renderFrame(nullptr), _readyFrame(nullptr) {}
+      Renderer() : Service("Renderer"), _renderFrame(nullptr), _readyFrame(nullptr), _updateFrame(new Frame()) {}
 
       ~Renderer() {}
 

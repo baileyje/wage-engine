@@ -26,7 +26,7 @@ namespace wage {
     class GlfwInput : public Input {
 
     public:
-      GlfwInput() : Input() {}
+      GlfwInput(bool disableCursor = true) : Input(), disableCursor(disableCursor) {}
 
       ~GlfwInput() {}
 
@@ -81,7 +81,9 @@ namespace wage {
           MouseScrollEvent event(math::Vector2(x, y));
           input->messaging->send(event);
         });
-        glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        if (disableCursor) {
+          glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
       }
 
       bool isPressed(Key key) const override {
@@ -106,6 +108,9 @@ namespace wage {
         glfwGetCursorPos(window->as<GLFWwindow>(), &x, &y);
         return math::Vector2(x, y);
       }
+
+      private:
+        bool disableCursor = true;
     };
   }
 }

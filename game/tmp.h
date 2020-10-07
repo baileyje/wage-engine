@@ -30,12 +30,12 @@ public:
       auto collider = entity.get<physics::Collider>(ColliderComponent);
       // TODO: FIX THIS BEFORE IT GOES ANY FURTHER AND KILLS SOMEONE.
       math::Transform colliderRenderTransform(collider->transform.worldProjection(*transform));
-      auto scale = transform->scale();
       if (collider->type == physics::ColliderType::box)
         renderer->renderWireframe(colliderRenderTransform, {"cube.obj"});
       else if (collider->type == physics::ColliderType::sphere)
         renderer->renderWireframe(colliderRenderTransform, {render::MeshSpec::Sphere});
 
+      auto scale = transform->scale();
       Transform forwardHandleTransform(Transform(Vector3(0, 0, 2 / scale.z), {.1f / scale.x, .1f / scale.y, 4.0f / scale.z}, Quaternion()).worldProjection(*transform));
       renderer->renderMesh(forwardHandleTransform, {"cube.obj"}, {{"blue.png"}});
 

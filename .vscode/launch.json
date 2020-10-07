@@ -29,6 +29,19 @@
       "externalConsole": false,
       "MIMode": "lldb",
       "preLaunchTask": "build-test-debug"
-    }
+    },
+    {
+      "name": "(lldb) Editor",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/editor/bazel-bin/wage-edit",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/editor",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "preLaunchTask": "build-game-debug"
+    },
   ]
 }

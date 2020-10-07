@@ -1,0 +1,13 @@
+
+local_repository(
+    name = "engine",
+    path = "../engine"
+)
+
+local_repository(
+    name = "engine_ext",
+    path = "../engine-ext"
+)
+
+load("@engine_ext//:repositories.bzl", "engine_ext_repositories")
+engine_ext_repositories()
