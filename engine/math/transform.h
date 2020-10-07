@@ -22,6 +22,8 @@ namespace wage {
 
       Transform(Vector3 position, Vector3 scale, Quaternion rotation);
 
+      Transform(Matrix matrix);
+
       Transform();
 
       ~Transform();

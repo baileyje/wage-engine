@@ -9,6 +9,10 @@ namespace wage::math {
 
   Transform::~Transform() {}
 
+  Transform::Transform(Matrix matrix) {
+    matrix.decompose(localPosition, localScale, localRotation);
+  }
+
   Vector Transform::position(Vector3 parentPosition) const {
     return parentPosition + localPosition;
   }

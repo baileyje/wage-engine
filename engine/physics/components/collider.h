@@ -34,7 +34,7 @@ namespace wage {
       /**
        * Create a collider with a specifc collider type.
        */
-      Collider(ColliderType type) : type(type) {      
+      Collider(ColliderType type) : type(type) {
       }
 
       ~Collider() {}
@@ -42,7 +42,6 @@ namespace wage {
       ColliderType type;
 
       math::Transform transform;
-
     };
 
   }

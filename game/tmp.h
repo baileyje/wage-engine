@@ -29,14 +29,21 @@ public:
       auto transform = entity.get<math::Transform>(TransformComponent);
       auto collider = entity.get<physics::Collider>(ColliderComponent);
       // TODO: FIX THIS BEFORE IT GOES ANY FURTHER AND KILLS SOMEONE.
-      math::Transform jank(
-          collider->transform.position(transform->localPosition),
-          collider->transform.scale(transform->localScale),
-          collider->transform.rotation(transform->localRotation));
+      math::Transform colliderRenderTransform(collider->transform.worldProjection(*transform));
+      auto scale = transform->scale();
       if (collider->type == physics::ColliderType::box)
-        renderer->renderWireframe(jank, {"cube.obj"});
+        renderer->renderWireframe(colliderRenderTransform, {"cube.obj"});
       else if (collider->type == physics::ColliderType::sphere)
-        renderer->renderWireframe(jank, {render::MeshSpec::Sphere});
+        renderer->renderWireframe(colliderRenderTransform, {render::MeshSpec::Sphere});
+
+      Transform forwardHandleTransform(Transform(Vector3(0, 0, 2 / scale.z), {.1f / scale.x, .1f / scale.y, 4.0f / scale.z}, Quaternion()).worldProjection(*transform));
+      renderer->renderMesh(forwardHandleTransform, {"cube.obj"}, {{"blue.png"}});
+
+      Transform upHandleTransform(Transform(Vector3(0, 2 / scale.y, 0), {.1f / scale.x, 4.0f / scale.y, .1f / scale.z}, Quaternion()).worldProjection(*transform));
+      renderer->renderMesh(upHandleTransform, {"cube.obj"}, {{"green.png"}});
+
+      Transform rightHandleTransform(Transform(Vector3(2 / scale.x, 0, 0), {4.0f / scale.x, .1f / scale.y, .1f / scale.z}, Quaternion()).worldProjection(*transform));
+      renderer->renderMesh(rightHandleTransform, {"cube.obj"}, {{"red.png"}});
     }
   }
 };

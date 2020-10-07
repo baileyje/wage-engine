@@ -15,7 +15,7 @@ class Player {
 class PlayerPhysicsMovement : public ecs::System {
 
 public:
-  PlayerPhysicsMovement() : System(), lastPos(Vector2()), mouseSpeed(10) {
+  PlayerPhysicsMovement() : System(), lastPos(Vector2()), mouseSpeed(2) {
   }
 
   void start(const ecs::SystemContext& context) {
@@ -151,6 +151,7 @@ ecs::Entity addPlayer(scene::Scene& scene) {
   // mesh->transform.localScale = { 1, 1, 1 };
   auto collider = player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
   collider->transform.localScale = {2, 2, 2};
+  // collider->transform.localPosition = {0, 0, 10};m
   player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space.png"));
   player.assign<Player>(PlayerComponent);
   addCannonTo(player);

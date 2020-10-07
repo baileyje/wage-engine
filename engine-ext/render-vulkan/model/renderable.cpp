@@ -31,11 +31,6 @@ namespace wage::render::vulkan {
 
   void ModelRenderable::render(RenderContext* context) {
     auto vkContext = static_cast<VulkanRenderContext*>(context);
-    // TODO: FIX THIS BEFORE IT GOES ANY FURTHER AND KILLS SOMEONE.
-    // math::Transform appliedTransform(
-    //     meshSpec.transform.position(transform.localPosition),
-    //     meshSpec.transform.scale(transform.localScale),
-    //     meshSpec.transform.rotation(transform.localRotation));
     vkContext->modelTree.add(textureSpec, meshSpec, meshSpec.transform.worldProjection(transform));
   }
 

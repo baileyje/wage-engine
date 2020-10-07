@@ -1,7 +1,9 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
-#include "glm/gtc/matrix_transform.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include "math/vector.h"
 #include "math/quaternion.h"
@@ -44,6 +46,25 @@ namespace wage { namespace math {
 
     inline glm::mat4 glm() const {
       return wrapped;
+    }
+
+    void decompose(Vector3& position, Vector3& scale, Quaternion& rotation) {
+      glm::vec3 tmpScale;
+      glm::quat tmpRotation;
+      glm::vec3 tmpTranslation;
+      glm::vec3 skew;
+      glm::vec4 perspective;
+      glm::decompose(wrapped, tmpScale, tmpRotation, tmpTranslation, skew, perspective);
+      position.x = tmpTranslation.x;
+      position.y = tmpTranslation.y;
+      position.z = tmpTranslation.z;
+      scale.x = tmpScale.x;
+      scale.y = tmpScale.y;
+      scale.z = tmpScale.z;
+      rotation.x = tmpRotation.x;
+      rotation.y = tmpRotation.y;
+      rotation.z = tmpRotation.z;
+      rotation.w = tmpRotation.w;
     }
 
   private:
