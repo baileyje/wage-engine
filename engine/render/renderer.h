@@ -77,6 +77,7 @@ namespace wage {
 
         timer.tick();
         // std::cout << "Ftime: " << timer.averageTime() << "\n";
+        destroyContext(currentFrame->context());
         delete currentFrame;
         _renderFrame.store(nullptr);
       }
@@ -125,6 +126,10 @@ namespace wage {
     protected:
       virtual RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera) = 0;
 
+      virtual void destroyContext(RenderContext* context) {
+        if (context) delete context;
+      } 
+
       // {
       //   return new RenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
       // }
@@ -163,9 +168,9 @@ namespace wage {
 
       asset::Manager* assetManager;
 
-      std::atomic<Frame*> _renderFrame;
-      std::atomic<Frame*> _readyFrame;
-      Frame* _updateFrame;
+      std::atomic<std::unique_ptr<Frame>> _renderFrame;
+      std::atomic<std::unique_ptr<Frame>> _readyFrame;
+      std::unique_ptr<Frame> _updateFrame;
 
       // For FPS calculation
       util::Timer timer;

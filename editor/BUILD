@@ -5,6 +5,7 @@ cc_library(
 	hdrs = glob(["**/*.h"]),
 	deps = [
     "@engine",
+    "//third_party/imgui"
 	],
 	visibility = ["//visibility:public"]
 )

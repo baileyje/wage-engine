@@ -27,6 +27,7 @@
 #include "render-vulkan/model/pipeline.h"
 #include "render-vulkan/model/wireframe/pipeline.h"
 #include "render-vulkan/text/pipeline.h"
+#include "render-vulkan/task.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -34,6 +35,10 @@ namespace wage::render::vulkan {
 
   class VulkanRenderer : public Renderer {
   public:
+    VulkanContext context;
+
+    CommandPool commandPool;
+
     VulkanRenderer();
 
     void start();
@@ -51,6 +56,8 @@ namespace wage::render::vulkan {
     void renderText(math::Vector2 position, std::string text, FontSpec font, component::Color color);
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+
+    void addTask(RenderTask task);
 
   protected:
     RenderContext* createContext(ecs::Entity cameraEntity, Camera* camera);
@@ -76,15 +83,11 @@ namespace wage::render::vulkan {
 
     void cleanupSwapChain();
 
-    VulkanContext context;
-
     ModelPipeline modelPipeline;
     
     WireframePipeline wireframePipeline;
 
     TextPipeline textPipeline;
-
-    CommandPool commandPool;
 
     VulkanScene scene;
 
@@ -100,6 +103,8 @@ namespace wage::render::vulkan {
     VulkanTextureManager textureManager;
 
     FontManager fontManager;
+
+    std::vector<RenderTask> tasks;
   };
 
 }

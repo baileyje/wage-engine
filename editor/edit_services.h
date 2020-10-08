@@ -14,7 +14,6 @@ namespace wage::editor {
 
     inline bool on(const input::KeyEvent& event) {
 
-      std::cout << "Key\n";
 
       return false;
     }

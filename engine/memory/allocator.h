@@ -26,6 +26,7 @@ namespace wage {
       }
 
       virtual ~Allocator() {
+        std::cout << "Free as a bird...\n";
         free(memory);
       }
 

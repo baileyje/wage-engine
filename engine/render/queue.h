@@ -25,9 +25,9 @@ namespace wage {
         renderables.reserve(100);
       }
 
-      virtual ~RenderQueue() {
-        allocator.clear();
-      }
+      // virtual ~RenderQueue() {
+      //   allocator.clear();
+      // }
 
       /**
        * Add a renderable to the queue. This will create a new instance of the renderable in the allocator

@@ -20,6 +20,11 @@ namespace wage {
      */
     class Frame {
     public:
+
+      ~Frame() {
+        std::cout << "Destruct frame\n";
+      }
+
       /**
        * Get access to the ui component render queue.
        */

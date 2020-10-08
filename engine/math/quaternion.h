@@ -26,7 +26,7 @@ namespace wage { namespace math {
 
     static Quaternion fromEulers(const Vector& vector);
 
-    Vector eulerAngles() const;
+    Vector3 eulerAngles() const;
 
     Quaternion& operator*=(const Quaternion& rhs);
 

@@ -15,6 +15,7 @@ namespace wage {
     }
 
     bool Entity::valid() {
+      if (_id.id() == INVALID_ENTITY_ID) return false;
       return registry->valid(_id);
     }
 

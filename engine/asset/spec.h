@@ -19,7 +19,7 @@ namespace wage {
       /**
        * Create a asset specification with a type and key.
        */
-      AssetSpec(Type type, Key key) : _type(type), _key(key) {
+      AssetSpec(Type type, Key key) :_key(key),  _type(type) {
       }
 
       virtual ~AssetSpec() {}
@@ -38,10 +38,16 @@ namespace wage {
         return _key;
       }
 
+      virtual void key(std::string newKey) {
+        _key = newKey;
+      }
+
+    protected:
+      Key _key;
+
     private:
       Type _type;
 
-      Key _key;
     };
   }
 }

@@ -20,7 +20,7 @@ namespace wage { namespace math {
                        glm::radians(vector.z)});
   }
 
-  Vector Quaternion::eulerAngles() const {
+  Vector3 Quaternion::eulerAngles() const {
     return Vector(glm::eulerAngles(wrap(*this)));
   }
 

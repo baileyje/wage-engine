@@ -134,6 +134,11 @@ namespace wage::render::vulkan {
 
   void VulkanRenderer::endRender(RenderContext* renderContext) {
     auto vkContext = static_cast<VulkanRenderContext*>(renderContext);
+
+    for(RenderTask task : tasks) {
+      task(vkContext);
+    }
+
     context.renderPass.end(vkContext->commandBuffer);
     commandPool.endCommandBuffer(vkContext->commandBuffer);
     VkSubmitInfo submitInfo{};
@@ -261,4 +266,8 @@ namespace wage::render::vulkan {
     textPipeline.cleanup();
     context.swapChain.cleanup();
   }
+
+    void VulkanRenderer::addTask(RenderTask task) {
+      tasks.push_back(task);
+    }
 }
