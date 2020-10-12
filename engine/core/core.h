@@ -41,9 +41,9 @@ namespace wage {
       void start() {
         if (mode != Mode::stopped) return;
         Logger::info("Starting WAGE Engine");
-        mode = Mode::starting;
+        setMode(Mode::starting);
         startServices();
-        mode = Mode::running;
+        setMode(Mode::running);
         startUpdateLoop();
         startRenderLoop();
       }
@@ -53,14 +53,7 @@ namespace wage {
        */
       void stop() {
         if (mode == Mode::stopping || mode == Mode::stopped) return;
-        Logger::info("Stopping WAGE Core.");
-        mode = Mode::stopping;
-        updateThread.join();
-        for (auto service : services) {
-          Logger::info("Stopping ", service->name().c_str());
-          service->stop();
-        }
-        mode = Mode::stopped;
+        requestedMode = Mode::stopped;
       }
 
       /**
@@ -147,12 +140,7 @@ namespace wage {
        */
       inline void pause() {
         if (mode != Mode::running) return;
-        _frame.pause();
-        mode = Mode::paused;
-        for (auto service : services) {
-          Logger::info("Pausing ", service->name().c_str());
-          service->pause();
-        }
+        requestedMode = Mode::paused;
       }
 
       /**
@@ -160,22 +148,61 @@ namespace wage {
        */
       inline void unpause() {
         if (mode != Mode::paused) return;
-        _frame.unpause();
-        mode = Mode::running;
-        for (auto service : services) {
-          Logger::info("Unpausing ", service->name().c_str());
-          service->unpause();
-        }
+        requestedMode = Mode::unpaused;
       }
 
       /**
        * Pause the game execution. 
        */
       inline void reset() {
-        mode = Mode::resetting;
+        requestedMode = Mode::resetting;
       }
 
     private:
+      void setMode(Mode newMode) {
+        mode = newMode;
+        requestedMode = Mode::none;
+      }
+
+      void performStop() {
+        Logger::info("Stopping WAGE Core.");
+        setMode(Mode::stopping);
+        for (auto service : services) {
+          Logger::info("Stopping ", service->name().c_str());
+          service->stop();
+        }
+        setMode(Mode::stopped);
+      }
+
+      void performPause() {
+        _frame.pause();
+        setMode(Mode::paused);
+        for (auto service : services) {
+          Logger::info("Pausing ", service->name().c_str());
+          service->pause();
+        }
+      }
+
+      void performUnpause() {
+        _frame.unpause();
+        setMode(Mode::running);
+        for (auto service : services) {
+          Logger::info("Unpausing ", service->name().c_str());
+          service->unpause();
+        }
+      }
+
+      void performReset() {
+        memory::Allocator::Permanent()->clear();
+        memory::Allocator::Assets()->clear();
+        for (auto service : services) {
+          Logger::info("Resetting ", service->name().c_str());
+          service->reset();
+        }
+        // TODO: Reload scene
+        setMode(Mode::running);
+      }
+
       void processInput() {
         for (auto listener : inputListeners) {
           listener(frame());
@@ -243,6 +270,8 @@ namespace wage {
       ServiceMap services;
 
       volatile Mode mode = Mode::stopped;
+
+      volatile Mode requestedMode = Mode::none;
 
       Frame _frame;
 

@@ -44,7 +44,7 @@ namespace wage {
       virtual void fixedUpdate(const core::Frame& frame) = 0;
 
       virtual void postUpdate() {
-        // std::cout << "Total Colls: " << _collisions.size() << "\n";
+        core::Logger::debug("Total Colls: ", _collisions.size());
         _collisions.clear();
         _collisionsById.clear();
       }

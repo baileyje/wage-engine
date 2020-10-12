@@ -27,7 +27,7 @@ namespace wage::editor {
           newDir = glm::rotate(newDir, -dy / 150, math::Vector3::Right.glm());
           transform->localRotation = {newDir.x, newDir.y, newDir.z, newDir.w};
         }
-        float speed = 0.01;
+        float speed = 20 * frame.deltaTime();
         auto movement = math::Vector3::Zero;
         if (input->isPressed(input::Key::w)) {
           movement += (transform->localRotation * math::Vector::Forward).normalized() * speed;

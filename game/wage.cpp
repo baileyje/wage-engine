@@ -116,15 +116,15 @@ void setupScene(scene::Scene& scene) {
 
   addPlayer(scene);
 
-  addEnemy(scene, {0, 0, 100}, 1 /*scale*/);
+  // addEnemy(scene, {0, 0, 100}, 1 /*scale*/);
 
-  // addPlanet(scene, {100, 0, 1200}, 1000, 0);
+  addPlanet(scene, {100, 0, 1200}, 1000, 0);
 
   addCamera(scene);
 
   setupHud(scene);
 
-  // addWall(scene);
+  addWall(scene);
 
   // for (int i = 0; i < 200; i++) {
   //   addRandomEnemy(scene);

@@ -6,9 +6,11 @@ namespace wage {
       starting,
       running,
       paused,
+      unpaused,
       resetting,
       stopping,
-      stopped
+      stopped,
+      none
     };
   }
 }

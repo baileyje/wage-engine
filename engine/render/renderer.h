@@ -1,7 +1,10 @@
 #pragma once
 
 #include <unordered_map>
+#include <array>
 #include <atomic>
+#include <mutex>
+#include <condition_variable>
 
 #include "core/service.h"
 #include "platform/window.h"
@@ -34,7 +37,9 @@ namespace wage {
     class Renderer : public core::Service {
 
     public:
-      Renderer() : Service("Renderer"), _renderFrame(nullptr), _readyFrame(nullptr), _updateFrame(new Frame()) {}
+      Renderer() : Service("Renderer") /*, _renderFrame(nullptr), _readyFrame(nullptr), _updateFrame(new Frame())*/ {
+        
+      }
 
       ~Renderer() {}
 
@@ -43,14 +48,25 @@ namespace wage {
         window = platform->window();
         assetManager = core::Core::Instance->get<asset::Manager>();
         core::Core::Instance->onRender([&](const core::Frame& frame) {
-          render();
+          if (rendering) render();
         });
       }
 
+      void stop() {
+        // std::cout << "Stopping Renderer" <<  std::endl; 
+        // std::unique_lock<std::mutex> lock(renderLock);
+        // renderReady = true;
+        // rendering = false;
+        // lock.unlock();
+        // renderReadyCv.notify_all();
+      }
+
       void reset() {
-        _renderFrame.store(nullptr);
-        _readyFrame.store(nullptr);
-        _updateFrame = new Frame();
+        for (auto frame : frames) {
+          frame.clear();
+        }
+        updateFrameIdx = 0;
+        renderFrameIdx = 1;
       }
 
       /**
@@ -59,8 +75,13 @@ namespace wage {
        * camera and world information.
        */
       void render() {
-        auto currentFrame = _renderFrame.load(std::memory_order_acquire);
+        std::unique_lock<std::mutex> lock(renderLock);
+        renderReadyCv.wait(lock, [this](){ return renderReady; });
+        renderReady = false;
+        auto currentFrame = &frames[renderFrameIdx];
         if (!currentFrame || !currentFrame->context())  {
+          lock.unlock();
+          renderReadyCv.notify_one();
           return;
         }
         beginRender(currentFrame->context());
@@ -76,10 +97,9 @@ namespace wage {
         endRender(currentFrame->context());
 
         timer.tick();
-        // std::cout << "Ftime: " << timer.averageTime() << "\n";
         destroyContext(currentFrame->context());
-        delete currentFrame;
-        _renderFrame.store(nullptr);
+        lock.unlock();
+        renderReadyCv.notify_one();
       }
 
       /**
@@ -107,14 +127,19 @@ namespace wage {
        * at the end of every game update look.
        */
       inline void swapFrames() {
-        _renderFrame.store(_readyFrame);
+        std::unique_lock<std::mutex> lock(renderLock);
+        renderReadyCv.wait(lock, [this](){ return !renderReady; });
+        updateFrameIdx = (updateFrameIdx + 1) % frames.size();
+        renderFrameIdx = (renderFrameIdx + 1) % frames.size();
         auto manager = &scene::Scene::current().entities();
         auto camera = cameraAndEntity(manager);
         if (std::get<1>(camera)) {
-          _updateFrame->prepare(createContext(std::get<0>(camera), std::get<1>(camera)));
+          frames[renderFrameIdx].prepare(createContext(std::get<0>(camera), std::get<1>(camera)));
         }
-        _readyFrame.store(_updateFrame);
-        _updateFrame = new Frame();
+        frames[updateFrameIdx].clear();        
+        renderReady = true;
+        lock.unlock();
+        renderReadyCv.notify_one();
       }
 
       inline double averageFrameTime() {
@@ -130,12 +155,8 @@ namespace wage {
         if (context) delete context;
       } 
 
-      // {
-      //   return new RenderContext(cameraEntity, camera, math::Vector2(window->width(), window->height()), /*dirLights, pointLights, spotlights*/ {}, {}, {});
-      // }
-
       inline Frame* updateFrame() {
-        return _updateFrame;
+        return &frames[updateFrameIdx];
       }
 
       std::tuple<ecs::Entity, Camera*> cameraAndEntity(ecs::EntityManager* manager) {
@@ -168,13 +189,20 @@ namespace wage {
 
       asset::Manager* assetManager;
 
-      std::atomic<std::unique_ptr<Frame>> _renderFrame;
-      std::atomic<std::unique_ptr<Frame>> _readyFrame;
-      std::unique_ptr<Frame> _updateFrame;
+      std::array<Frame, 2> frames;
+
+      volatile int updateFrameIdx = 0;
+      volatile int renderFrameIdx = 1;
+
+      std::mutex renderLock;
+      std::condition_variable renderReadyCv;
+      bool renderReady;
 
       // For FPS calculation
       util::Timer timer;
-
+      
+    private:
+      volatile bool rendering = true;
     };
 
   } // namespace render

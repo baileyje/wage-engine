@@ -116,25 +116,15 @@ namespace wage
       }
       // // Determine object scale to force unit s
 
-      std::cout << "MinMaxX " << minX << ":" << maxX << "\n";
-      std::cout << "MinMaxY " << minY << ":" << maxY << "\n";
-      std::cout << "MinMaxZ " << minZ << ":" << maxZ << "\n";
       float offsetX = 0.5f * (minX + maxX);
       float offsetY = 0.5f * (minY + maxY);
       float offsetZ = 0.5f * (minZ + maxZ);
-      std::cout << "OffsetX " << offsetX << "\n";
-      std::cout << "OffsetY " << offsetY << "\n";
-      std::cout << "OffsetZ " << offsetZ << "\n";
       float scaleX = abs(minX - offsetX) > abs(maxX - offsetX) ? abs(minX - offsetX) : abs(maxX - offsetX);
       float scaleY = abs(minY - offsetY) > abs(maxY - offsetY) ? abs(minY - offsetY) : abs(maxY - offsetY);
       float scaleZ = abs(minZ - offsetZ) > abs(maxZ - offsetZ) ? abs(minZ - offsetZ) : abs(maxZ - offsetZ);
-      std::cout << "ScaleX " << scaleX << "\n";
-      std::cout << "ScaleY " << scaleY << "\n";
-      std::cout << "ScaleZ " << scaleZ << "\n";
       float scale = scaleX > scaleY ? scaleX : scaleY;
       scale = scaleZ > scale ? 1.0f / scaleZ : 1.0f / scale;
       scale /= 2;
-      std::cout << "Scale (" << spec().key() << ") " << scale << "\n";
       for (auto &vertex : vertices)
       {
         vertex.position.x = scale * (vertex.position.x - offsetX);
@@ -144,101 +134,7 @@ namespace wage
         maxDim.y = std::max(maxDim.y, std::abs(vertex.position.y));
         maxDim.z = std::max(maxDim.z, std::abs(vertex.position.z));
       }
-      std::cout << "Vert 1: " << vertices[0].position << "\n";
-      // std::string err;
-      // std::string warn;
-      // tinyobj::attrib_t attrib;
-      // std::vector<tinyobj::shape_t> shapes;
-      // std::vector<tinyobj::material_t> materials;
-      // auto bufferSize = stream->size();
-      // auto buffer = (memory::Byte*)malloc(bufferSize);
-      // stream->read(buffer, bufferSize);
-      // memory::BufferStream bufferStream(buffer, bufferSize);
-      // std::istream istream(&bufferStream);
-      // bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, &istream);
-      // if (!err.empty()) {
-      //   std::cerr << err << std::endl;
-      // }
-      // if (!warn.empty()) {
-      //   std::cerr << warn << std::endl;
-      // }
-      // if (!ret) {
-      //   std::cerr << "Failed to load .obj" << std::endl;
-      // }
-      // float minX = attrib.vertices[0];
-      // float maxX = attrib.vertices[0];
-      // float minY = attrib.vertices[1];
-      // float maxY = attrib.vertices[1];
-      // float minZ = attrib.vertices[2];
-      // float maxZ = attrib.vertices[2];
-      // unsigned int index = 0;
-      // // Loop over shapes
-      // for (size_t s = 0; s < 1; s++) {
-      //   // Loop over faces(polygon)
-      //   size_t index_offset = 0;
-      //   for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-      //     int fv = shapes[s].mesh.num_face_vertices[f];
-
-      //     // Loop over vertices in the face.
-      //     for (size_t v = 0; v < fv; v++) {
-      //       // access to vertex
-      //       tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-
-      //       float vertX = attrib.vertices[3 * idx.vertex_index + 0];
-      //       float vertY = attrib.vertices[3 * idx.vertex_index + 1];
-      //       float vertZ = attrib.vertices[3 * idx.vertex_index + 2];
-
-      //       if (vertX < minX) {
-      //         minX = vertX;
-      //       }
-      //       if (vertX > maxX) {
-      //         maxX = vertX;
-      //       }
-      //       if (vertY < minY) {
-      //         minY = vertY;
-      //       }
-      //       if (vertY > maxY) {
-      //         maxY = vertY;
-      //       }
-      //       if (vertZ < minZ) {
-      //         minZ = vertZ;
-      //       }
-      //       if (vertZ > maxZ) {
-      //         maxZ = vertZ;
-      //       }
-      //       _vertices.push_back({vertX, vertY, vertZ});
-      //       if (!attrib.normals.empty()) {
-      //         _normals.push_back({attrib.normals[3 * idx.normal_index + 0],
-      //             attrib.normals[3 * idx.normal_index + 1],
-      //             attrib.normals[3 * idx.normal_index + 2]});
-      //       } else {
-      //         _normals.push_back(math::Vector3::Zero);
-      //       }
-      //       if (!attrib.texcoords.empty()) {
-      //         _uvs.push_back({attrib.texcoords[2 * idx.texcoord_index + 0],
-      //             attrib.texcoords[2 * idx.texcoord_index + 1]});
-      //       } else {
-      //         _uvs.push_back(math::Vector2(0.5, 0.5));
-      //       }
-      //       _indices.push_back(index++);
-      //     }
-      //     index_offset += fv;
-      //     auto norm = calculateNormals(_vertices[index - 3], _vertices[index - 2], _vertices[index - 1]);
-      //     _normals[index - 3] = norm;
-      //     _normals[index - 2] = norm;
-      //     _normals[index - 1] = norm;
-      //   }
-      // }
-      // // Determine object scale to force unit s
-      // float offsetX = 0.5f * (minX + maxX);
-      // float offsetY = 0.5f * (minY + maxY);
-      // float offsetZ = 0.5f * (minZ + maxZ);
-      // float scaleX = abs(minX - offsetX) > abs(maxX - offsetX) ? abs(minX - offsetX) : abs(maxX - offsetX);
-      // float scaleY = abs(minY - offsetY) > abs(maxY - offsetY) ? abs(minY - offsetY) : abs(maxY - offsetY);
-      // float scaleZ = abs(minZ - offsetZ) > abs(maxZ - offsetZ) ? abs(minZ - offsetZ) : abs(maxZ - offsetZ);
-      // float scale = scaleX > scaleY ? scaleX : scaleY;
-      // scale = scaleZ > scale ? 1.0f / scaleZ : 1.0f / scale;
-
+    
       return true;
     }
 

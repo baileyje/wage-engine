@@ -134,7 +134,6 @@ namespace wage {
        * Destroy the component for a specific entity id.
        */
       void destroy(EntityId entityId) {
-        // std::cout << "Destroying from pool: " << entityId << " -- " << std::this_thread::get_id() << "\n";
         auto item = sparseRefs[entityId];
         if (item._storage != nullptr) {
           pool.deallocate(item._storage);

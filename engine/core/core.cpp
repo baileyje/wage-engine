@@ -8,25 +8,32 @@ namespace wage {
     Core* Core::Instance = new Core();
 
     void Core::postUpdate() {
-      // Signal to the render that we need the next render queue to fill.
-      // TODO: What if there is no renderer??
-      get<render::Renderer>()->swapFrames();
-      memory::Allocator::Temporary()->clear();
-      // Fire any post update listeners.
       for (auto listener : postUpdateListeners) {
         listener(frame());
       }
-      // Last post update step....
-      if (mode == Mode::resetting) {
-        memory::Allocator::Permanent()->clear();
-        memory::Allocator::Assets()->clear();
-        for (auto service : services) {
-          Logger::info("Resetting ", service->name().c_str());
-          service->reset();
+      if (requestedMode != Mode::none) {
+        switch (requestedMode) {
+        case Mode::stopped:
+          performStop();
+          return;
+        case Mode::paused:
+          performPause();
+          return;
+        case Mode::unpaused:
+          performUnpause();
+          return;
+        case Mode::resetting:
+          performReset();
+          return;
         }
-        // TODO: Reload scene
-        mode = Mode::running;
       }
+
+      // Signal to the render that we need the next render queue to fill.
+      // TODO: What if there is no renderer??
+      if (mode != Mode::stopping && mode != Mode::stopped)
+        get<render::Renderer>()->swapFrames();
+      memory::Allocator::Temporary()->clear();
+      // Fire any post update listeners.
     }
 
   }

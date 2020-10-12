@@ -35,6 +35,7 @@ namespace wage::render::vulkan {
   }
 
   void VulkanRenderer::stop() {
+    Renderer::stop();
     vkDeviceWaitIdle(context.device.logical);
     fontManager.destroy(&context.device);
     meshManager.destroy(&context.device);

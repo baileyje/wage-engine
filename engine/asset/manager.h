@@ -36,7 +36,6 @@ namespace wage {
       }
 
       void reset() {
-        std::cout << "Cleared assets stuff maybe???\n"; 
         cache.clear();
         loaded.clear();
       }

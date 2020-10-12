@@ -49,7 +49,7 @@ void setupServices(core::Core* core, std::string path) {
   core->create<EditorController>();
   core->create<EditorGizmos>();
   core->create<CameraController>();
-  // core->create<Gui>();
+  core->create<Gui>( std::filesystem::path(path) / "resources");
 }
 
 void setupCoreSystems(scene::Scene& scene) {
@@ -98,16 +98,16 @@ void setupScene(scene::Scene& scene) {
   setupCoreSystems(scene);
   addCamera(scene);
 
-  for (int i = 0; i < 10; ++i) {
-    auto entity = scene.entities().create();
-    auto transform = entity.assign<math::Transform>(TransformComponent);
-    transform->localPosition = {static_cast<float>(-30 + i * 6), 0, 0};
-    transform->localScale = {1, 1, 1};
-    entity.assign<render::MeshSpec>(MeshComponent, "cube.obj");
-    entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
-    auto collider = entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
-    collider->transform.localScale = {2, 2, 2};
-  }
+  // for (int i = 0; i < 1; ++i) {
+  //   auto entity = scene.entities().create();
+  //   auto transform = entity.assign<math::Transform>(TransformComponent);
+  //   transform->localPosition = {static_cast<float>(i * 6), 0, 0};
+  //   transform->localScale = {1, 1, 1};
+  //   entity.assign<render::MeshSpec>(MeshComponent, "cube.obj");
+  //   entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space_2.png"));
+  //   auto collider = entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
+  //   collider->transform.localScale = {2, 2, 2};
+  // }
   //   setupHud(scene);
 }
 

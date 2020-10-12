@@ -1,13 +1,17 @@
 #pragma once
 
+#pragma < filesystem>
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
 #include "engine.h"
 #include "render-vulkan/vulkan_renderer.h"
-#include "gui/model.h"
+#include "gui/widgets/model.h"
+#include "gui/windows/asset_browser.h"
+#include "gui/windows/entity_browser.h"
 
-static void check_vk_result(VkResult err) {
+static void checkVkResult(VkResult err) {
   if (err == 0)
     return;
   fprintf(stderr, "[vulkan] Error: VkResult = %d\n", err);
@@ -19,7 +23,7 @@ namespace wage::editor {
 
   class Gui : public core::Service {
   public:
-    Gui() : Service("ImGui") {}
+    Gui(std::filesystem::path resourceBase) : Service("ImGui"), meshBrowser("Mesh", resourceBase / "mesh"), textureBrowser("Texture", resourceBase / "texture"), entityBrowser(&meshBrowser, &textureBrowser) {}
 
     void start() {
       renderer = static_cast<render::vulkan::VulkanRenderer*>(core::Core::Instance->get<render::Renderer>());
@@ -48,7 +52,7 @@ namespace wage::editor {
       init_info.Allocator = nullptr;
       init_info.MinImageCount = renderer->context.swapChain.images.size();
       init_info.ImageCount = renderer->context.swapChain.images.size();
-      init_info.CheckVkResultFn = check_vk_result;
+      init_info.CheckVkResultFn = checkVkResult;
       ImGui_ImplVulkan_Init(&init_info, renderer->context.renderPass.wrapped);
 
       uploadFonts();
@@ -67,34 +71,11 @@ namespace wage::editor {
     }
 
     void buildUi() {
-      bool show_demo_window = true;
-      ImGui::ShowDemoWindow(&show_demo_window);
+      if (showDemoWindow) ImGui::ShowDemoWindow(&showDemoWindow);
 
-      ImGui::Begin("Entities");
-      ImGui::BeginChild("Scrolling"); 
-      auto& entities = scene::Scene::current().entities();
-      for (auto entity : entities.with({TransformComponent})) {
-        ImGui::Text("Entity: %d", entity.id().id());
-        if (ImGui::IsItemClicked()) {
-          selectedEntity = entity;
-          auto transform = entity.get<math::Transform>(TransformComponent);
-          render::MeshSpec* meshSpec = nullptr;
-          if (entity.has(MeshComponent)) {
-            meshSpec = entity.get<render::MeshSpec>(MeshComponent);
-          } 
-          modelWidget = ModelWidget(transform, meshSpec);
-        }
-      }
-      ImGui::EndChild();
-      ImGui::End();
-
-      if (selectedEntity.valid())  {        
-        ImGui::Begin("Entity");
-        ImGui::Text("ID: %d", selectedEntity.id().id());
-        modelWidget.apply();
-        ImGui::End();
-      }
-
+      entityBrowser.apply();
+      meshBrowser.apply();
+      textureBrowser.apply();
     }
 
   private:
@@ -120,7 +101,7 @@ namespace wage::editor {
         pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
         pool_info.pPoolSizes = pool_sizes;
         err = vkCreateDescriptorPool(renderer->context.device.logical, &pool_info, nullptr, &descriptorPool);
-        check_vk_result(err);
+        checkVkResult(err);
       }
 
       {
@@ -145,14 +126,20 @@ namespace wage::editor {
       ImGui_ImplVulkan_DestroyFontUploadObjects();
     }
 
+    std::filesystem::path resourceBase;
+
     render::vulkan::VulkanRenderer* renderer;
 
     VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
 
     uint32_t queueFamily = (uint32_t)-1;
 
-    ecs::Entity selectedEntity = ecs::Entity::Invalid;
+    AssetBrowser meshBrowser;
 
-    ModelWidget modelWidget;
+    AssetBrowser textureBrowser;
+
+    EntityBrowser entityBrowser;
+
+    bool showDemoWindow = false;
   };
 }
