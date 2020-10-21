@@ -45,7 +45,7 @@ namespace wage {
         startServices();
         setMode(Mode::running);
         startUpdateLoop();
-        startRenderLoop();
+        startRenderLoop(  );
       }
 
       /**

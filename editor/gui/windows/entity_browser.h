@@ -5,6 +5,7 @@
 #include "engine.h"
 
 #include "../widgets/model.h"
+#include "../widgets/physics.h"
 #include "asset_browser.h"
 
 namespace wage::editor {
@@ -15,7 +16,6 @@ namespace wage::editor {
 
     void
     apply() {
-      ImGui::SetNextWindowSize(ImVec2(380, 600));
       if (ImGui::Begin("Entities", &open, ImGuiWindowFlags_MenuBar)) {
         if (ImGui::BeginMenuBar()) {
           if (ImGui::BeginMenu("File")) {
@@ -31,19 +31,11 @@ namespace wage::editor {
           ImGui::BeginChild("left pane", ImVec2(120, -ImGui::GetFrameHeightWithSpacing()), true);
           auto& entities = scene::Scene::current().entities();
           for (auto entity : entities.with({TransformComponent})) {
+
             ImGui::Text("Entity: %d", entity.id().id());
             if (ImGui::IsItemClicked()) {
-              selectedEntity = entity;
-              auto transform = entity.get<math::Transform>(TransformComponent);
-              render::MeshSpec* meshSpec = nullptr;
-              if (entity.has(MeshComponent)) {
-                meshSpec = entity.get<render::MeshSpec>(MeshComponent);
-              }
-              render::MaterialSpec* materialSpec = nullptr;
-              if (entity.has(MaterialComponent)) {
-                materialSpec = entity.get<render::MaterialSpec>(MaterialComponent);
-              }
-              modelWidget = ModelWidget(transform, meshSpec, materialSpec, meshBrowser, textureBrowser);
+              selectEntity(entity);
+              camToEntity(entity);
             }
           }
           ImGui::EndChild();
@@ -66,6 +58,10 @@ namespace wage::editor {
                 modelWidget.apply();
                 ImGui::EndTabItem();
               }
+              if (ImGui::BeginTabItem("Physics")) {
+                physicsWidget.apply();
+                ImGui::EndTabItem();
+              }
 
               // if (ImGui::BeginTabItem("Extra")) {
               // }
@@ -81,6 +77,39 @@ namespace wage::editor {
 
     bool open = true;
 
+    void selectEntity(ecs::Entity entity) {
+      selectedEntity = entity;
+      auto transform = entity.get<math::Transform>(TransformComponent);
+      render::MeshSpec* meshSpec = nullptr;
+      if (entity.has(MeshComponent)) {
+        meshSpec = entity.get<render::MeshSpec>(MeshComponent);
+      }
+      render::MaterialSpec* materialSpec = nullptr;
+      if (entity.has(MaterialComponent)) {
+        materialSpec = entity.get<render::MaterialSpec>(MaterialComponent);
+      }
+      modelWidget = ModelWidget(transform, meshSpec, materialSpec, meshBrowser, textureBrowser);
+      open = true;
+
+      physics::RigidBody* rigidBody = nullptr;
+      if (entity.has(RigidBodyComponent))
+        rigidBody = entity.get<physics::RigidBody>(RigidBodyComponent);
+      physics::Collider* collider = nullptr;
+      if (entity.has(ColliderComponent))
+        collider = entity.get<physics::Collider>(ColliderComponent);
+      
+      physicsWidget = PhysicsWidget(rigidBody, collider);
+    }
+
+    void camToEntity(ecs::Entity entity) {
+      auto transform = entity.get<math::Transform>(TransformComponent);
+      auto& entities = scene::Scene::current().entities();
+      auto cameraEntity = *entities.with({PerspectiveCameraComponent}).begin();
+      auto camTransform = cameraEntity.get<math::Transform>(TransformComponent);
+      camTransform->localPosition = transform->localPosition + math::Vector3(0, 0, -10);
+      camTransform->localRotation = math::Quaternion::fromEulers(math::Vector3::Forward);
+    }
+
   private:
     void addEntity() {
       auto& entities = scene::Scene::current().entities();
@@ -88,10 +117,12 @@ namespace wage::editor {
       entity.assign<math::Transform>(TransformComponent);
       entity.assign<render::MeshSpec>(MeshComponent, "cube.obj");
       entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("default.png"));
-      // auto collider = entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
-      // collider->transform.localScale = {2, 2, 2};
+      auto collider = entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
+      collider->transform.localScale = {2, 2, 2};
+      entity.assign<physics::RigidBody>(RigidBodyComponent, 2.0);
+      camToEntity(entity);
+      selectEntity(entity);
     }
-
     ecs::Entity selectedEntity = ecs::Entity::Invalid;
 
     AssetBrowser* meshBrowser;
@@ -99,5 +130,7 @@ namespace wage::editor {
     AssetBrowser* textureBrowser;
 
     ModelWidget modelWidget;
+
+    PhysicsWidget physicsWidget;
   };
 }

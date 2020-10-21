@@ -30,32 +30,26 @@ namespace wage {
 
     public:
       /**
+       * The mass of the rigid body.
+       */
+      float mass;
+
+      /**
+       * Whether this rigid body is affected by gravity.
+       */
+      bool affectedByGravity;
+
+      /**
+       * Get the rigid body type.
+       */
+      RigidBodyType type;
+
+      /**
        * Create a rigid body with a specified mass and type.
        */
-      RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : _mass(mass), _affectedByGravity(true), _type(type), _shouldStop(false) {}
+      RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : mass(mass), affectedByGravity(true), type(type), _shouldStop(false) {}
 
       ~RigidBody() {}
-
-      /**
-       * Get the mass of the rigid body.
-       */
-      inline float mass() const {
-        return _mass;
-      }
-
-      /**
-       * Set whether this rigid body is affected by gravity.
-       */
-      inline void affectedByGravity(bool affected) {
-        _affectedByGravity = affected;
-      }
-
-      /**
-       * Determine if this rigid body is affected by gravity.
-       */
-      inline bool isAffectedByGravity() const {
-        return _affectedByGravity;
-      }
 
       /**
        * Add a force to this rigid body.
@@ -87,13 +81,6 @@ namespace wage {
       inline void addTorqueImpulse(math::Vector impulse) {
         _torqueImpulse += impulse;
         _shouldClearAngularVelocity = false;
-      }
-
-      /**
-       * Get the rigid body type.
-       */
-      inline RigidBodyType type() const {
-        return _type;
       }
 
       /**
@@ -199,10 +186,7 @@ namespace wage {
       }
 
     private:
-      float _mass;
-
-      bool _affectedByGravity;
-
+  
       math::Vector _impulse;
 
       math::Vector _force;
@@ -212,8 +196,6 @@ namespace wage {
       math::Vector _torqueImpulse;
 
       math::Vector _linearVelocity;
-
-      RigidBodyType _type;
 
       bool _shouldStop;
 

@@ -49,7 +49,8 @@ void setupServices(core::Core* core, std::string path) {
   core->create<EditorController>();
   core->create<EditorGizmos>();
   core->create<CameraController>();
-  core->create<Gui>( std::filesystem::path(path) / "resources");
+  core->create < EditorSelectionController>();
+  core->create<Gui>(std::filesystem::path(path) / "resources");
 }
 
 void setupCoreSystems(scene::Scene& scene) {
@@ -77,7 +78,7 @@ void registerKnownComponents(scene::Scene& scene) {
 
   //   // Physics
   scene.entities().registerComponent(ColliderComponent, sizeof(physics::Collider));
-  //   scene.entities().registerComponent(RigidBodyComponent, sizeof(physics::RigidBody));
+  scene.entities().registerComponent(RigidBodyComponent, sizeof(physics::RigidBody));
 
   //   // UI
   //   scene.entities().registerComponent(UiLabelComponent, sizeof(ui::UiLabel));

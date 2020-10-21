@@ -41,7 +41,7 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
-      "preLaunchTask": "build-game-debug"
+      "preLaunchTask": "build-editor-debug"
     },
   ]
 }
