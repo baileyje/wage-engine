@@ -31,18 +31,19 @@ namespace wage { namespace input {
       return _modifiers;
     }
 
-    bool set(KeyModifier mod) {
+    bool set(KeyModifier mod) const {
       int intMod = (int)mod;
       return (_modifiers & intMod) > 0;
     }
 
-    bool set(std::initializer_list<KeyModifier> mods) {
+    bool set(std::initializer_list<KeyModifier> mods) const {
       bool all = true;
       for (auto mod : mods) {
         all = all && set(mod);
       }
       return all;
     }
+
 
   private:
     Key _key;

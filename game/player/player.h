@@ -68,7 +68,7 @@ public:
     }
     if (input->isPressed(input::Key::zero)) {
       body->shouldStop(true);
-      // player.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::kinematic);
+      // player.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBody::Type::kinematic);
       player.get<math::Transform>(TransformComponent)->position({0, 0, 0});
     }
     lastPos = mousePos;
@@ -149,7 +149,7 @@ ecs::Entity addPlayer(scene::Scene& scene) {
   auto mesh = player.assign<render::MeshSpec>(MeshComponent, "player.obj");
   mesh->transform.localPosition = { 0,0,0.2 };
   // mesh->transform.localScale = { 1, 1, 1 };
-  auto collider = player.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
+  auto collider = player.assign<physics::Collider>(ColliderComponent, physics::Collider::Type::sphere);
   collider->transform.localScale = {2, 2, 2};
   // collider->transform.localPosition = {0, 0, 10};m
   player.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("odd_space.png"));

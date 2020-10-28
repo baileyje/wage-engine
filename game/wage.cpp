@@ -12,6 +12,8 @@
 #include "platform-glfw/platform.h"
 #include "input-glfw/input.h"
 #include "audio-al/audio.h"
+#include "scene-serializer/serializer.h"
+
 
 #include "player/player.h"
 #include "player/cannon.h"
@@ -37,6 +39,7 @@ void setupServices(core::Core* core, std::string path) {
   core->create<physics::Physics, physics::BulletPhysics>();
   // core->create<render::Renderer, render::GlRenderer>();
   core->create<render::Renderer, render::vulkan::VulkanRenderer>();
+  core->create<serialize::SceneSerializer>();
   core->create<scene::Manager>();
 }
 
@@ -52,7 +55,7 @@ void setupCoreSystems(scene::Scene& scene) {
   scene.systems().create<DumbMusicSystem>();
   scene.systems().create<WallSystem>();
 
-  scene.systems().create<ColliderDebug>();
+  // scene.systems().create<ColliderDebug>();
 }
 
 void registerKnownComponents(scene::Scene& scene) {
@@ -93,8 +96,11 @@ void registerKnownComponents(scene::Scene& scene) {
 void setupScene(scene::Scene& scene) {
 
   registerKnownComponents(scene);
-
   setupCoreSystems(scene);
+
+  auto serializer = core::Core::Instance->get<serialize::SceneSerializer>();
+  serializer->load({{"scenes", "test"}}, scene);
+
   // auto topLightEnt = entityManager->create();
   // topLightEnt.assign<math::Transform>(TransformComponent)->rotation(math::Vector(-90, 0, 0));
   // auto topLight = topLightEnt.assign<render::DirectionalLight>(DirectionalLightComponent);
@@ -110,15 +116,15 @@ void setupScene(scene::Scene& scene) {
   // auto launchPadEnt = entityManager->create();
   // launchPadEnt.assign<math::Transform>(TransformComponent, Vector(0, -15, 75), Vector(200, 15, 800), Vector(0, 0, 0));
   // launchPadEnt.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Cube);
-  // launchPadEnt.assign<physics::RigidBody>(RigidBodyComponent, 1, physics::RigidBodyType::immovable);
-  // launchPadEnt.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
+  // launchPadEnt.assign<physics::RigidBody>(RigidBodyComponent, 1, physics::RigidBody::Type::immovable);
+  // launchPadEnt.assign<physics::Collider>(ColliderComponent, physics::Collider::Type::box);
   // launchPadEnt.assign<render::MaterialSpec>(MaterialComponent, component::Color::White);
 
   addPlayer(scene);
 
   // addEnemy(scene, {0, 0, 100}, 1 /*scale*/);
 
-  addPlanet(scene, {100, 0, 1200}, 1000, 0);
+  // addPlanet(scene, {100, 0, 1200}, 1000, 0);
 
   addCamera(scene);
 
@@ -135,6 +141,8 @@ void setupScene(scene::Scene& scene) {
   // for (int i = 0; i < 5; i++) {
   //   addRandomDock(scene);
   // }
+
+  
 }
 
 class GameController : public messaging::MessageListener<input::KeyEvent> {

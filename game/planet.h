@@ -58,9 +58,9 @@ void addPlanet(scene::Scene& scene, math::Vector position, float scale, int text
   auto transform = entity.assign<math::Transform>(TransformComponent);
   transform->localPosition = position;
   transform->localScale = math::Vector(scale, scale, scale);
-  entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBodyType::immovable);
+  entity.assign<physics::RigidBody>(RigidBodyComponent, 0.01, physics::RigidBody::Type::immovable);
   entity.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Sphere);
-  entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
+  entity.assign<physics::Collider>(ColliderComponent, physics::Collider::Type::sphere);
   if (texture == 0) {
     entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("earthlike_planet.png"));
   } else {

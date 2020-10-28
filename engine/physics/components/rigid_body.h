@@ -14,21 +14,22 @@
 namespace wage {
   namespace physics {
 
-    /**
-     * Enumeration of rigid body types.
-     */
-    enum class RigidBodyType {
-      dynamic,
-      kinematic,
-      immovable
-    };
-
+  
     /**
      * Component class used to add a physics rigid body to an entity.
      */
     class RigidBody {
 
     public:
+      /**
+       * Enumeration of rigid body types.
+       */
+      enum class Type {
+        dynamic,
+        kinematic,
+        immovable
+      };
+
       /**
        * The mass of the rigid body.
        */
@@ -42,12 +43,12 @@ namespace wage {
       /**
        * Get the rigid body type.
        */
-      RigidBodyType type;
+      Type type;
 
       /**
        * Create a rigid body with a specified mass and type.
        */
-      RigidBody(float mass = 0, RigidBodyType type = RigidBodyType::dynamic) : mass(mass), affectedByGravity(true), type(type), _shouldStop(false) {}
+      RigidBody(float mass = 0, Type type = Type::dynamic) : mass(mass), affectedByGravity(true), type(type), _shouldStop(false) {}
 
       ~RigidBody() {}
 

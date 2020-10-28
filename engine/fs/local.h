@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <filesystem>
 
 #include "fs/file_system.h"
 #include "memory/input_stream.h"
@@ -56,6 +57,7 @@ namespace wage {
         if (file)
           std::fclose(file);
       }
+      
 
     private:
       std::FILE* file;
@@ -70,6 +72,19 @@ namespace wage {
 
       virtual memory::InputStream* readStream(File::Path path) const {
         return new LocalFileInputStream(fullPath(path));
+      }
+
+      virtual bool exists(File::Path path) const {
+        return std::filesystem::exists(fullPath(path));
+      }
+
+      /**
+       * Read the contents of a file path into a memory buffer intialized using the provided allocator.
+       */
+      virtual void write(File::Path path, memory::Byte* data, size_t length) const {
+        std::FILE* file = std::fopen(fullPath(path).c_str(), "wb");
+        std::fwrite(data, length, 1, file);
+        std::fclose(file);
       }
 
     private:

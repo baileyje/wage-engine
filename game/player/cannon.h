@@ -87,7 +87,7 @@ public:
       ball.assign<math::Transform>(TransformComponent, ballPosition, Vector(1, 1, 1), Vector(0, 0, 0));
       ball.assign<physics::RigidBody>(RigidBodyComponent, 0.1);
       ball.assign<render::MeshSpec>(MeshComponent, render::MeshSpec::Sphere);
-      ball.assign<physics::Collider>(ColliderComponent, physics::ColliderType::sphere);
+      ball.assign<physics::Collider>(ColliderComponent, physics::Collider::Type::sphere);
       ball.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("mover.png"));
       ball.assign<CannonBall>(CannonBallComponent);
       ball.get<physics::RigidBody>(RigidBodyComponent)->addForce((bearing * Vector::Forward).normalized() * cannon->power);

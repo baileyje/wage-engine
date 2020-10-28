@@ -21,6 +21,7 @@ cc_binary(
     "@engine_ext//render-vulkan",
     "@engine_ext//physics-bullet",
     "@engine_ext//audio-al",
+    "@engine_ext//scene-serializer",
     ":wage-edit_lib"
   ],
   linkopts = ["-framework Cocoa -framework OpenGL -framework IOKit"],

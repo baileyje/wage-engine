@@ -16,11 +16,11 @@ namespace wage {
 
       switch (collider->type) {
       // TODO: Support more shapes
-      case ColliderType::box: {
+      case Collider::Type::box: {
         btVector3 halfExtents = btVector3(scale.x / 2.0, scale.y / 2.0, scale.z / 2.0);
         return memory::make<btBoxShape>(halfExtents);
       }
-      case ColliderType::sphere: {
+      case Collider::Type::sphere: {
         return memory::make<btSphereShape>(scale.x / 2.0);
       }
       default:

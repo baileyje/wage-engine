@@ -16,15 +16,7 @@ namespace wage::editor {
 
     void
     apply() {
-      if (ImGui::Begin("Entities", &open, ImGuiWindowFlags_MenuBar)) {
-        if (ImGui::BeginMenuBar()) {
-          if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Close")) open = false;
-            ImGui::EndMenu();
-          }
-          ImGui::EndMenuBar();
-        }
-
+      if (ImGui::Begin("Entities", &open, ImGuiWindowFlags_None)) {
         // Left
         {
           ImGui::BeginGroup();
@@ -117,7 +109,7 @@ namespace wage::editor {
       entity.assign<math::Transform>(TransformComponent);
       entity.assign<render::MeshSpec>(MeshComponent, "cube.obj");
       entity.assign<render::MaterialSpec>(MaterialComponent, render::TextureSpec("default.png"));
-      auto collider = entity.assign<physics::Collider>(ColliderComponent, physics::ColliderType::box);
+      auto collider = entity.assign<physics::Collider>(ColliderComponent, physics::Collider::Type::box);
       collider->transform.localScale = {2, 2, 2};
       entity.assign<physics::RigidBody>(RigidBodyComponent, 2.0);
       camToEntity(entity);

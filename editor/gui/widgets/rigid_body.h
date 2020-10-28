@@ -11,13 +11,13 @@ namespace wage::editor {
     RigidBodyWidget(physics::RigidBody* body = nullptr) : body(body) {
       if (body) {
         switch (body->type) {
-        case physics::RigidBodyType::dynamic:
+        case physics::RigidBody::Type::dynamic:
           selectedType = 0;
           break;
-        case physics::RigidBodyType::kinematic:
+        case physics::RigidBody::Type::kinematic:
           selectedType = 1;
           break;
-        case physics::RigidBodyType::immovable:
+        case physics::RigidBody::Type::immovable:
           selectedType = 2;
           break;
         }
@@ -32,13 +32,13 @@ namespace wage::editor {
       if (ImGui::Combo("Type", &selectedType, items, IM_ARRAYSIZE(items))) {
         switch (selectedType) {
         case 0:
-          body->type = physics::RigidBodyType::dynamic;
+          body->type = physics::RigidBody::Type::dynamic;
           break;
         case 1:
-          body->type = physics::RigidBodyType::kinematic;
+          body->type = physics::RigidBody::Type::kinematic;
           break;
         case 2:
-          body->type = physics::RigidBodyType::immovable;
+          body->type = physics::RigidBody::Type::immovable;
           break;
         }
       }

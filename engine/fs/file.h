@@ -70,6 +70,11 @@ namespace wage {
          * Read the contents of a file at the provide into an allocated memory buffer.
          */
         virtual memory::Buffer read(Path path, memory::Allocator* allocator) const = 0;
+
+        /**
+         * Determine if a file exists at the provided path.
+         */
+        virtual bool exists(Path path) const = 0;
       };
 
       /**
@@ -82,6 +87,13 @@ namespace wage {
        */
       inline Path path() const {
         return _path;
+      }
+
+      /**
+       * Does this file exist.
+       */
+      inline bool exists() const {
+        return provider->exists(_path);
       }
 
       /**

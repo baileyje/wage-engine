@@ -41,9 +41,9 @@ namespace wage::editor {
           auto collider = entity.get<physics::Collider>(ColliderComponent);
           // TODO: FIX THIS BEFORE IT GOES ANY FURTHER AND KILLS SOMEONE.
           math::Transform colliderRenderTransform(collider->transform.worldProjection(*transform));
-          if (collider->type == physics::ColliderType::box)
+          if (collider->type == physics::Collider::Type::box)
             renderer->renderWireframe(colliderRenderTransform, {"cube.obj"});
-          else if (collider->type == physics::ColliderType::sphere)
+          else if (collider->type == physics::Collider::Type::sphere)
             renderer->renderWireframe(colliderRenderTransform, {render::MeshSpec::Sphere});
         }
         for (auto entity : entities.with({TransformComponent})) {
@@ -184,7 +184,6 @@ namespace wage::editor {
         auto entityHolder = static_cast<EntityHolder*>(collisionObject->getUserPointer());
         auto entity = entityHolder->entity;
         if (entity.valid()) {
-          std::cout << "Hit..." << entity.id().id() << std::endl;
           auto gui = core::Core::Instance->get<Gui>();
           gui->entityBrowser.selectEntity(entity);
           return;
@@ -211,5 +210,43 @@ namespace wage::editor {
     btDiscreteDynamicsWorld dynamicsWorld;
 
     std::vector<EntityHolder> entities;
+  };
+
+
+  class SceneController : public core::Service, public messaging::MessageListener<input::KeyEvent> {
+  public:
+    SceneController() : Service("SceneController") {}
+
+    void start() {
+      core::Core::Instance->get<messaging::Messaging>()->listen<input::KeyEvent>(this);
+    }
+
+    inline bool on(const input::KeyEvent& event) {
+      // if (event.key() == input::Key::l && event.type() == input::KeyEventType::press) {
+      //   std::cout << "Loading scene...\n";
+      //   auto serializer = core::Core::Instance->get<serialize::SceneSerializer>();
+      //   serializer->load({{"scenes/test.wscene.json"}}, scene::Scene::current());
+      // }
+      // if (event.key() == input::Key::k && event.type() == input::KeyEventType::press) {
+      //   std::cout << "Writing scene...\n";
+      //   auto serializer = core::Core::Instance->get<serialize::SceneSerializer>();
+      //   serializer->store({{"scenes/test2.wscene.json"}}, scene::Scene::current());
+      // }
+      // if (event.key() == input::Key::n && event.type() == input::KeyEventType::press && event.set(input::KeyModifier::super)) {
+      //   std::cout << "New scene...\n";
+      //   memory::Allocator::Permanent()->clear();
+      //   core::Core::Instance->get<scene::Manager>()->reset();
+      // }
+      // if (event.key() == input::Key::s && event.type() == input::KeyEventType::press && event.set(input::KeyModifier::super)) {
+      //   std::cout << "Save scene...\n";
+      //   auto serializer = core::Core::Instance->get<serialize::SceneSerializer>();
+      //   serializer->store({{"scenes/test2.wscene.json"}}, scene::Scene::current());
+      // }
+      // if (event.key() == input::Key::o && event.type() == input::KeyEventType::press && event.set(input::KeyModifier::super)) {
+      //   std::cout << "Open scene...\n";
+      //   memory::Allocator::Permanent()->clear();
+      //   core::Core::Instance->get<scene::Manager>()->reset();
+      // }
+    }
   };
 }

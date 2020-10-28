@@ -12,13 +12,13 @@ namespace wage::editor {
     ColliderWidget(physics::Collider* collider = nullptr) : collider(collider), transform(nullptr) {
       if (collider) {
         switch (collider->type) {
-        case physics::ColliderType::box:
+        case physics::Collider::Type::box:
           selectedType = 0;
           break;
-        case physics::ColliderType::sphere:
+        case physics::Collider::Type::sphere:
           selectedType = 1;
           break;
-        case physics::ColliderType::mesh:
+        case physics::Collider::Type::mesh:
           selectedType = 2;
           break;
         }
@@ -33,13 +33,13 @@ namespace wage::editor {
       if (ImGui::Combo("Type", &selectedType, items, IM_ARRAYSIZE(items))) {
         switch (selectedType) {
         case 0:
-          collider->type = physics::ColliderType::box;
+          collider->type = physics::Collider::Type::box;
           break;
         case 1:
-          collider->type = physics::ColliderType::sphere;
+          collider->type = physics::Collider::Type::sphere;
           break;
         case 2:
-          collider->type = physics::ColliderType::mesh;
+          collider->type = physics::Collider::Type::mesh;
           break;
         }
       }

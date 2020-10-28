@@ -52,6 +52,16 @@ namespace wage {
        * Get the read stream for a specific path.
        */
       virtual memory::InputStream* readStream(File::Path path) const = 0;
+
+      /**
+       * Determine if a file exists at the provided path.
+       */
+      virtual bool exists(File::Path path) const = 0;
+
+      /**
+       * Read the contents of a file path into a memory buffer intialized using the provided allocator.
+       */
+      virtual void write(File::Path path, memory::Byte* data, size_t length) const = 0;
     };
 
   }

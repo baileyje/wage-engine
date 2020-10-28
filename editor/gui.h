@@ -10,6 +10,8 @@
 #include "gui/widgets/model.h"
 #include "gui/windows/asset_browser.h"
 #include "gui/windows/entity_browser.h"
+#include "gui/windows/scene_browser.h"
+#include "gui/windows/scene_save.h"
 
 static void checkVkResult(VkResult err) {
   if (err == 0)
@@ -21,11 +23,11 @@ static void checkVkResult(VkResult err) {
 
 namespace wage::editor {
 
-  class Gui : public core::Service {
+  class Gui : public core::Service, public messaging::MessageListener<input::KeyEvent> {
   public:
     EntityBrowser entityBrowser;
 
-    Gui(std::filesystem::path resourceBase) : Service("ImGui"), meshBrowser("Mesh", resourceBase / "mesh"), textureBrowser("Texture", resourceBase / "texture"), entityBrowser(&meshBrowser, &textureBrowser) {}
+    Gui(std::filesystem::path resourceBase) : Service("ImGui"), meshBrowser("Mesh", resourceBase / "mesh"), textureBrowser("Texture", resourceBase / "texture"), entityBrowser(&meshBrowser, &textureBrowser), sceneBrowser(resourceBase / ".." / "scenes"), sceneSave(resourceBase / ".." / "scenes") {}
 
     void start() {
       renderer = static_cast<render::vulkan::VulkanRenderer*>(core::Core::Instance->get<render::Renderer>());
@@ -47,7 +49,7 @@ namespace wage::editor {
       io.ConfigDockingWithShift = true;
 
       ImGui::StyleColorsDark();
-      setupStyle();
+      // setupStyle();
 
       ImGui_ImplGlfw_InitForVulkan(glfwWindow, true);
       ImGui_ImplVulkan_InitInfo init_info = {};
@@ -79,14 +81,56 @@ namespace wage::editor {
         ImDrawData* drawData = ImGui::GetDrawData();
         ImGui_ImplVulkan_RenderDrawData(drawData, context->commandBuffer);
       });
+
+      sceneBrowser.onSelect = [&](std::string path) {
+        std::cout << "Open Scene: " << path << "\n";
+        memory::Allocator::Permanent()->clear();
+        // core::Core::Instance->get<physics::Physics>()->reset();
+        core::Core::Instance->get<scene::Manager>()->reset();
+        auto serializer = core::Core::Instance->get<serialize::SceneSerializer>();
+        serializer->load({{"scenes", path}}, scene::Scene::current());
+      };
+
+      core::Core::Instance->get<messaging::Messaging>()->listen<input::KeyEvent>(this);
     }
 
     void buildUi() {
       if (showDemoWindow) ImGui::ShowDemoWindow(&showDemoWindow);
+      if (ImGui::BeginMainMenuBar()) {
+        if (ImGui::BeginMenu("File")) {
+          if (ImGui::MenuItem("New", "Cmd+N")) {
+            newScene();
+          }
+          if (ImGui::MenuItem("Open", "Cmd+O")) {
+            sceneBrowser.show();
+          }
+          if (ImGui::MenuItem("Save", "Cmd+S")) {
+            sceneSave.show();
+          }
+          ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+      }
 
       entityBrowser.apply();
       meshBrowser.apply();
       textureBrowser.apply();
+      sceneBrowser.apply();
+      sceneSave.apply();
+    }
+
+    inline bool on(const input::KeyEvent& event) {
+      if (event.key() == input::Key::n && event.type() == input::KeyEventType::press && event.set(input::KeyModifier::super)) {
+        std::cout << "New scene...\n";
+        newScene();
+      }
+      if (event.key() == input::Key::s && event.type() == input::KeyEventType::press && event.set(input::KeyModifier::super)) {
+        std::cout << "Save scene...\n";
+        sceneSave.show();
+      }
+      if (event.key() == input::Key::o && event.type() == input::KeyEventType::press && event.set(input::KeyModifier::super)) {
+        sceneBrowser.show();
+      }
     }
 
   private:
@@ -214,6 +258,11 @@ namespace wage::editor {
       ImGui_ImplVulkan_DestroyFontUploadObjects();
     }
 
+    void newScene() {
+      memory::Allocator::Permanent()->clear();
+      core::Core::Instance->get<scene::Manager>()->reset();
+    }
+
     std::filesystem::path resourceBase;
 
     render::vulkan::VulkanRenderer* renderer;
@@ -225,6 +274,11 @@ namespace wage::editor {
     AssetBrowser meshBrowser;
 
     AssetBrowser textureBrowser;
+
+    SceneBrowser sceneBrowser;
+    
+    SceneSave sceneSave;
+
 
     bool showDemoWindow = false;
   };

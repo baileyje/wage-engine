@@ -34,9 +34,9 @@ namespace wage {
         }
         btRigidBody::btRigidBodyConstructionInfo cInfo(mass, this, shape, localInertia);
         _rigidBody = memory::make<btRigidBody>(cInfo);
-        if (rigidBody->type == RigidBodyType::kinematic) {
+        if (rigidBody->type == RigidBody::Type::kinematic) {
           _rigidBody->setCollisionFlags(_rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-        } else if (rigidBody->type == RigidBodyType::immovable) {
+        } else if (rigidBody->type == RigidBody::Type::immovable) {
           _rigidBody->setCollisionFlags(_rigidBody->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
         }
         //body->setContactProcessingThreshold(m_defaultContactProcessingThreshold);
@@ -58,7 +58,7 @@ namespace wage {
           return;
         }
         auto entityBody = entity().get<RigidBody>(RigidBodyComponent);
-        if (entityBody->type != RigidBodyType::dynamic) {
+        if (entityBody->type != RigidBody::Type::dynamic) {
           return;
         }
         btVector3 impulse = fromVector(entityBody->impulse());
@@ -101,7 +101,7 @@ namespace wage {
           return;
         }
         auto entityBody = entity().get<RigidBody>(RigidBodyComponent);
-        if (entityBody->type == RigidBodyType::dynamic) {
+        if (entityBody->type == RigidBody::Type::dynamic) {
           return;
         }
         transform = fromTransform(entity().get<math::Transform>(TransformComponent));

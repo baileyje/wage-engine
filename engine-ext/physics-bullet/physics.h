@@ -51,7 +51,7 @@ namespace wage {
           }
           auto entity = physicsEntity->entity();
           auto rigidBody = entity.get<RigidBody>(RigidBodyComponent);
-          if (rigidBody->type == RigidBodyType::dynamic) {
+          if (rigidBody->type == RigidBody::Type::dynamic) {
             physicsEntity->applyForces();
           } else {
             physicsEntity->updateShapeTransform();

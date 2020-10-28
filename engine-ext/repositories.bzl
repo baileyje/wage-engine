@@ -1,4 +1,22 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 def engine_ext_repositories():
+
+  http_archive(
+    name = "jsoncpp",
+    urls = ["https://github.com/open-source-parsers/jsoncpp/archive/1.8.0.tar.gz"],
+    strip_prefix = "jsoncpp-1.8.0",
+    sha256 = "5deb2462cbf0c0121c9d6c9823ec72fe71417e34242e3509bc7c003d526465bc",
+    build_file_content = """
+cc_library(
+  name = "jsoncpp",
+  includes = ["include"],
+  hdrs = glob(["include/json/*.h", "src/lib_json/*.h", "src/lib_json/*.inl"]),
+  srcs = glob(["src/lib_json/*.cpp"]),
+  visibility = ["//visibility:public"],
+)
+    """
+  )
 
   native.new_local_repository(
       name = "bullet_osx",
